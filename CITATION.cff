@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Aristizabal"
+  given-names: "Fernando"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Petrochenkov"
+  given-names: "Gregory"
+  orcid: "https://orcid.org/0000-0001-9247-821X"
+title: "gVal: Geospatial Evaluation Engine"
+version: 0.0.1
+doi: 
+date-released: 
+url: "https://github.com/NOAA-OWP/gval"

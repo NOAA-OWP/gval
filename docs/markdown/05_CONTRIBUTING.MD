@@ -1,9 +1,10 @@
-# Guidance on how to contribute
+# Contributing
+
 
 > All contributions to this project will be released to the public domain.
 > By submitting a pull request or filing a bug, issue, or
 > feature request, you are agreeing to comply with this waiver of copyright interest.
-> Details can be found in our [TERMS](TERMS.md) and [LICENSE](LICENSE).
+> Details can be found in our [TERMS](07_TERMS.MD) and [LICENSE](08_LICENSE.MD).
 
 
 There are two primary ways to help:
@@ -30,3 +31,16 @@ unit tests that validate implemented features and the presence or lack of defect
 Additionally, the code should follow any stylistic and architectural guidelines
 prescribed by the project. In the absence of such guidelines, mimic the styles
 and patterns in the existing code-base.
+
+![alt text](../../images/ContributionGraphic.png)
+
+### Guidelines
+
+If you would like to contribute, please follow the following steps:
+
+1. Fork the project.
+2. Clone your fork: `git clone <your_username>/gval`
+2. Create a feature branch: `git checkout -b <your_feature>`)
+3. Commit your changes: `git commit -m 'feature message'`
+4. Push to the branch: `git push origin <your_username> <your_feature>`
+5. Open a pull request.
