@@ -1,0 +1,17 @@
+rioxarray==0.13.3
+geopandas==0.12.2
+dask==2023.1.1
+tqdm==4.64.1
+
+###################################
+# Potential future packages
+#numba
+#xarray-spatial
+#argcomplete
+#scipy
+#statsmodels
+#geocube
+#boto3
+#pint-xarray (conversion of units)
+#typer[all] - for CLI. alternative to argparse, Doesn't support Union types :/
+# graphviz OR ipycytoscape - for dask graph visualizations

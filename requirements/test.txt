@@ -1,0 +1,14 @@
+pytest
+pytest-benchmark
+pytest-cov
+flake8
+allure-pytest
+jupyter
+sphinx
+yappi
+memray
+dask-memusage
+pandoc
+sphinx-rtd-theme
+py
+

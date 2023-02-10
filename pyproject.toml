@@ -1,0 +1,34 @@
+[build-system]
+requires = ['setuptools>=42']
+build-backend = 'setuptools.build_meta'
+
+[metadata]
+name = 'gval'
+version = '0.0.1'
+authors = [
+    {name = "Fernando Aristizabal", email = "fernando.aristizabal@noaa.gov"},
+    {name = "Gregory Petrochenkov", email = "gregory.petrochenkov@noaa.gov"},
+]
+description = "Geospatial Evaluations for 2d Datasets"
+readme = "README.MD"
+
+requires-python = ">=3.10"
+keywords = ["one", "two"]
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "rioxarray",
+    "geopandas",
+    "dask",
+    "tqdm"
+]
+dynamic = ["version"]
+
+#[project.optional-dependencies]
+#pdf = ["ReportLab>=1.2", "RXP"]
+#rest = ["docutils>=0.3", "pack ==1.1, ==1.3"]
+
+#[project.scripts]
+#my-script = "my_package.module:function"
