@@ -8,7 +8,6 @@ sphinx
 yappi
 memray
 dask-memusage
-pandoc
 sphinx-rtd-theme
 py
 

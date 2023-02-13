@@ -34,8 +34,8 @@ team.
 
 ## General Use
 
-To install gval in a python environment of choice: <br /> <code>pip
-install gval</code><br />
+To install gval in a python environment of choice: <br />
+<code>pip install gval</code><br />
 
 # Development Installation
 
@@ -45,23 +45,22 @@ install gval</code><br />
 choice.)
 
 First setup docker instance and in the root directory of the project:
-<br /> <code> sudo docker build -t gval-image .</code>
+<br /> <code>sudo docker build -t gval-image .</code>
 
 You can either set up your IDE to run this docker image directly:
 
   - [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
-  - [Visual Studio
-    Code](https://code.visualstudio.com/docs/containers/quickstart-python)
+  - [Visual Studio Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
 Or, running from the command line (from the root directory of the
-project): <br /> <code> sudo docker run -v $(pwd):/home/user/ --name
+project): <br /> <code>sudo docker run -v -d $(pwd):/home/user/ --name
 gval-python gval-image</code> <br />
 
-Or start up the existing container: <br /> <code> sudo docker start
-gval-python </code>
+Or start up the existing container: <br /> <code>sudo docker start
+gval-python</code>
 
-Then run a python file: <code> sudo docker exec gval-python
-/usr/local/gval_env/bin/python test.py</code>
+Then run a python file: <code>sudo docker exec gval-python python
+test.py</code>
 
 # Packaging
 
@@ -77,18 +76,16 @@ To build the gval package and install locally:
 The packaging process using docker container would look as follows (on
 linux):
 
-<code>sudo docker exec -v $(pwd):/home/user/ --user root gval-image
-/usr/local/gval_env/bin/python -m build && /usr/local/gval_env/bin/pip
-install dist/*.whl --force-reinstall </code>
+<code>sudo docker exec -v $(pwd):/home/user/ --user root python -m build
+&& pip install dist/*.whl --force-reinstall </code>
 
 # Dependencies
 
 ## Standards
 
   - Python 3.10 or higher
-  - [Numpy Style
-    Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
-  - [Python Type Hints](https://docs.python.org/3/library/typing.html)
+  - [Numpy Style Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
+  - [Python Type Hints](https://docs.python.org/3/library/typing.html)
   - [PEP8](https://pep8.org/) Styling (and
     [this](https://peps.python.org/pep-0008/))
 

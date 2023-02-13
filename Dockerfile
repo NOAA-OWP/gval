@@ -1,5 +1,5 @@
 FROM python:3.10 AS builder
-
+SHELL ["/bin/bash", "-c"]
 # TRICK TO USE DIFFERENT PYTHON VERSIONS
 #ARG PYTHON_VERSION=3.7.0-alpine3.8
 #FROM python:${PYTHON_VERSION} as builder
@@ -37,6 +37,7 @@ RUN apt update --fix-missing && \
     $VENV/bin/pip install -r /tmp/$REQS.txt && \
     $VENV/bin/pip install -r /tmp/$DEVREQS.txt && \
     rm -rf /tmp/*
+
 
 # If we want the GDAL python dep we need this
 #RUN $VENV/bin/pip install setuptools==57.5.0 && \
@@ -88,8 +89,8 @@ USER $UNAME
 WORKDIR /home/$UNAME
 
 ## ADDING ALIASES TO USER'S BASH ALIASES FILE ##
-RUN echo 'alias python="$VENV/bin/python3"' >> /home/$UNAME/.bash_aliases
-RUN echo 'alias pip="$VENV/bin/pip"' >> /home/$UNAME/.bash_aliases
+#RUN echo 'alias python="$VENV/bin/python3"' >> /home/$UNAME/.bash_aliases
+#RUN echo 'alias pip="$VENV/bin/pip"' >> /home/$UNAME/.bash_aliases
 
 ## ENTRYPOINT: infinitely tails nothing to keep container alive
 ENTRYPOINT ["tail", "-f", "/dev/null"]
