@@ -1,6 +1,4 @@
 from gval.outputs.agreement_map import *
-from gval.outputs.encodings import *
-from gval.prep_comparison.discretize_maps import *
 from gval.prep_comparison.spatial_alignment import *
 from gval.utils.exceptions import *
 from gval.utils.loading_datasets import *

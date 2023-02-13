@@ -1,14 +1,37 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+title: 'gval: Geospatial Evaluation Engine'
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
 authors:
-- family-names: "Aristizabal"
-  given-names: "Fernando"
-  orcid: "https://orcid.org/0000-0000-0000-0000"
-- family-names: "Petrochenkov"
-  given-names: "Gregory"
-  orcid: "https://orcid.org/0000-0001-9247-821X"
-title: "gVal: Geospatial Evaluation Engine"
+  - given-names: Fernando
+    family-names: Aristizabal
+    email: fernando.aristizabal@noaa.gov
+    affiliation: Lynker / NOAA
+    orcid: 'https://orcid.org/0000-0003-2525-4712'
+  - given-names: Gregory
+    family-names: Petrochenkov
+    email: greg.petrochenkov@noaa.gov
+    affiliation: Lynker / NOAA
+    orcid: 'https://orcid.org/0000-0001-9247-821X'
+repository-code: 'https://github.com/NOAA-OWP/gval'
+abstract: >-
+  gval (pronounced "g-val") is a high-level Python framework
+  to evaluate the geospatial skill of candidate maps
+  compared to benchmarks producing agreement maps and
+  metrics.
+keywords:
+  - science
+  - research
+  - statistics
+  - geospatial
+  - environment
+  - hydrology
+  - flooding
+  - xarray
+  - geopandas
 version: 0.0.1
-doi: 
-date-released: 
-url: "https://github.com/NOAA-OWP/gval"
