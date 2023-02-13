@@ -11,7 +11,7 @@ FROM python:3.10 AS builder
 ARG REQS=base
 ARG DEVREQS=test
 ARG VENV=/usr/local/gval_env
-ARG PROJDIR=/gval
+ARG PROJDIR=/home/user/
 ARG VERSION=''
 ARG MAINTANER='Fernando Aristizabal'
 ARG RELEASE_DATE=''
@@ -29,10 +29,7 @@ COPY requirements/$DEVREQS.txt /tmp
 RUN apt update --fix-missing && \
     DEBIAN_FRONTEND=noninteractive \
         apt install -qy \
-            gdal-bin=3.2.2+dfsg-2+deb11u2 \
-            libgdal-dev=3.2.2+dfsg-2+deb11u2 \
-            python3-gdal=3.2.2+dfsg-2+deb11u2 && \
-            pandoc=2.9.2.1 && \
+            pandoc=2.9.2.1-1+b1 && \
     apt auto-remove -y && \
     python3 -m venv $VENV && \
     rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \
@@ -42,8 +39,8 @@ RUN apt update --fix-missing && \
     rm -rf /tmp/*
 
 # If we want the GDAL python dep we need this
-RUN $VENV/bin/pip install setuptools==57.5.0 && \
-    $VENV/bin/pip install GDAL==3.2.2
+#RUN $VENV/bin/pip install setuptools==57.5.0 && \
+#   $VENV/bin/pip install GDAL==3.2.2
 
 # TRY USING $VENV/bin/pip???
 #RUN $VENV/bin/pip install -r /tmp/$REQS.txt && \
