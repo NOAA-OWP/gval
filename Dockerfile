@@ -11,14 +11,14 @@ FROM python:3.10 AS builder
 ARG REQS=base
 ARG DEVREQS=test
 ARG VENV=/usr/local/gval_env
-ARG PROJDIR=/home/user/
-ARG VERSION=''
+ARG PROJDIR=/home/user/gval
+ARG VERSION='0.0.1'
 ARG MAINTANER='Fernando Aristizabal'
 ARG RELEASE_DATE=''
 
 ## SETUP ENV VARS ##
-ARG VENV=$VENV
-ARG PROJDIR=$PROJDIR
+ENV VENV=$VENV
+ENV PROJDIR=$PROJDIR
 
 ## COPY IN REQUIREMENTS ##
 COPY requirements/$REQS.txt /tmp
@@ -51,26 +51,34 @@ RUN apt update --fix-missing && \
 ###############################################################################################
 FROM python:3.10 AS development
 
-## SETTING ENV VARIABLES ##
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
-# ensures stdout stderr are sent straight to terminal
-ENV PYTHONUNBUFFERED=TRUE 
-
-## Virtual and project directories ##
-#ARG VENV=$VENV
-#ARG PROJDIR=$PROJDIR
+## ARGS ##
+ARG REQS=base
+ARG DEVREQS=test
+ARG VENV=/usr/local/gval_env
+ARG PROJDIR=/home/user/gval
+ARG VERSION='0.0.1'
+ARG MAINTANER='Fernando Aristizabal'
+ARG RELEASE_DATE=''
 
 # Label docker image
 LABEL version=$VERSION \
       maintaner=$MAINTANER \
       release-date=$RELEASE_DATE
 
+## SETTING ENV VARIABLES ##
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+# ensures stdout stderr are sent straight to terminal
+ENV PYTHONUNBUFFERED=TRUE 
+ENV VENV=$VENV
+ENV PROJDIR=$PROJDIR
+# set path to virtual env so that future python commands use it
+ENV PATH="$VENV/bin:$PATH"
+
 # RETRIEVE BUILT DEPENDENCIES
 COPY --from=builder $VENV $VENV
 
-# set path to virtual env so that future python commands use it
-ENV PATH="$VENV/bin:$PATH"
+
 
 ## ADDING USER GROUP ##
 ARG UID=1001
@@ -79,9 +87,12 @@ RUN useradd -Ums /bin/bash -u $UID $UNAME
 USER $UNAME
 WORKDIR /home/$UNAME
 
-#RUN alias python=$VENV/bin/python3
-#RUN alias pip=$VENV/bin/pip
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+## ADDING ALIASES TO USER'S BASH ALIASES FILE ##
+RUN echo 'alias python="$VENV/bin/python3"' >> /home/$UNAME/.bash_aliases
+RUN echo 'alias pip="$VENV/bin/pip"' >> /home/$UNAME/.bash_aliases
+
+## ENTRYPOINT: infinitely tails nothing to keep container alive
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 ###############################################################################################
 # runtime stage
