@@ -53,8 +53,8 @@ You can either set up your IDE to run this docker image directly:
   - [Visual Studio Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
 Or, running from the command line (from the root directory of the
-project): <br /> <code>sudo docker run -v -d $(pwd):/home/user/ --name
-gval-python gval-image</code> <br />
+project): <br /> <code>sudo docker run -v -d $(pwd):/home/user/
+--name gval-python gval-image</code> <br />
 
 Or start up the existing container: <br /> <code>sudo docker start
 gval-python</code>
