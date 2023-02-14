@@ -1,5 +1,6 @@
 import subprocess
 import os
+import re
 
 abs_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -12,6 +13,12 @@ with open(f"{abs_path}/../README.MD", "r") as file:
     contents = contents.replace('../../images', './images')
     contents = contents.replace('\\_', '_')
     contents = contents.replace('\\*', '*')
+
+    matches = re.findall("<code>[^>]*>[^~]*?", contents)
+    print(matches)
+
+    for match in matches:
+        contents = contents.replace(match, match.replace(' ', '&nbsp;'))
 
 with open(f"{abs_path}/../README.MD", "w") as file:
 

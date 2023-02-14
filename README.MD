@@ -34,8 +34,9 @@ team.
 
 ## General Use
 
-To install gval in a python environment of choice: <br />
-<code>pip install gval</code><br />
+To install gval in a python environment of choice:
+
+<code>pip&nbsp;install&nbsp;gval</code>
 
 # Development Installation
 
@@ -46,24 +47,26 @@ choice.)
 
 First setup docker instance and in the root directory of the project:
 
-<code>sudo docker build -t gval-image .</code>
+<code>sudo&nbsp;docker&nbsp;build&nbsp;-t&nbsp;gval-image&nbsp;.</code>
 
 You can either set up your IDE to run this docker image directly:
 
   - [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
-  - [Visual Studio Code](https://code.visualstudio.com/docs/containers/quickstart-python)
+  - [Visual Studio
+    Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
 Or, running from the command line (from the root directory of the
 project):
 
-<code>sudo docker run -d -v $(pwd):/home/user/ --name gval-python gval-image</code>
+<code>sudo&nbsp;docker&nbsp;run&nbsp;-d&nbsp;-v&nbsp;$(pwd):/home/user/&nbsp;--name&nbsp;gval-python
+gval-image</code>
 
 Or start up the existing container:
 
-<code>sudo docker start gval-python</code>
+<code>sudo&nbsp;docker&nbsp;start&nbsp;gval-python</code>
 
-Then run a python file: <code>sudo docker exec gval-python
-python test.py</code>
+Then run a python file: <code>sudo&nbsp;docker&nbsp;exec&nbsp;gval-python&nbsp;python
+test.py</code>
 
 # Packaging
 
@@ -71,22 +74,22 @@ To build the gval package and install locally:
 
   - In the root directory install the gVal package:
     
-    <code>python -m build && pip install
-    dist/*.whl --force-reinstall</code>
+    <code>python&nbsp;-m&nbsp;build&nbsp;&&&nbsp;pip&nbsp;install&nbsp;dist/*.whl
+&nbsp;&nbsp;&nbsp;&nbsp;--force-reinstall</code>
 
   - Or on Windows replacing version number with current version number:
     
-    <code>py -m build</code> then get the name of the wheel in the dist
+    <code>py&nbsp;-m&nbsp;build</code> then get the name of the wheel in the dist
     directory, e.g.:
     
-    <code>pip install
-    dist/gval-0.0.1-py3-none-any.whl --force-reinstall</code>
+    <code>pip&nbsp;install&nbsp;dist/gval-0.0.1-py3-none-any.whl
+&nbsp;&nbsp;&nbsp;&nbsp;--force-reinstall</code>
 
 The packaging process using docker container would look as follows (on
 linux):
 
-<code>sudo docker exec -v $(pwd):/home/user/ --user root python -m
-build && pip install dist/*.whl --force-reinstall </code>
+<code>sudo&nbsp;docker&nbsp;exec&nbsp;-v&nbsp;$(pwd):/home/user/&nbsp;--user&nbsp;root&nbsp;python&nbsp;-m&nbsp;build
+&&&nbsp;pip&nbsp;install&nbsp;dist/*.whl&nbsp;--force-reinstall&nbsp;</code>
 
 # Dependencies
 

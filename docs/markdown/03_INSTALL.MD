@@ -2,8 +2,9 @@
 
 ## General Use
 
-To install gval in a python environment of choice: <br />
-<code>pip&nbsp;install&nbsp;gval</code><br />
+To install gval in a python environment of choice:
+
+<code>pip install gval</code>
 
 # Development Installation
 
@@ -17,18 +18,18 @@ First setup docker instance and in the root directory of the project:
 
 You can either set up your IDE to run this docker image directly:
 - [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
-- [Visual&nbsp;Studio&nbsp;Code](https://code.visualstudio.com/docs/containers/quickstart-python)
+- [Visual Studio Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
 Or, running from the command line (from the root directory of the project):
 
-<code>sudo&nbsp;docker&nbsp;run&nbsp;-d&nbsp;-v&nbsp;$(pwd):/home/user/&nbsp;--name&nbsp;gval-python&nbsp;gval-image</code>
+<code>sudo docker run -d -v $(pwd):/home/user/ --name gval-python gval-image</code>
 
 Or start up the existing container:
 
 <code>sudo docker start gval-python</code>
 
 Then run a python file:
-<code>sudo docker exec gval-python python&nbsp;test.py</code>
+<code>sudo docker exec gval-python python test.py</code>
 
 # Packaging
 
@@ -36,14 +37,14 @@ To build the gval package and install locally:
 
 - In the root directory install the gVal package:
 
-  <code>python -m build && pip install dist/*.whl&nbsp;--force-reinstall</code>
+  <code>python -m build && pip install dist/*.whl --force-reinstall</code>
 - Or on Windows replacing version number with current version number: 
 
   <code>py -m build</code> then get the name of the wheel in the dist directory, e.g.:
 
-  <code>pip install dist/gval-0.0.1-py3-none-any.whl&nbsp;--force-reinstall</code>
+  <code>pip install dist/gval-0.0.1-py3-none-any.whl --force-reinstall</code>
 
 The packaging process using docker container would look as follows (on linux):
 
-<code>sudo docker exec -v $(pwd):/home/user/  --user root python -m build&nbsp;&&
+<code>sudo docker exec -v $(pwd):/home/user/  --user root python -m build &&
 pip install dist/*.whl --force-reinstall </code>
