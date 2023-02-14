@@ -56,8 +56,7 @@ You can either set up your IDE to run this docker image directly:
 Or, running from the command line (from the root directory of the
 project):
 
-<code>sudo docker run -d -v $(pwd):/home/user/
---name gval-python gval-image</code>
+<code>sudo docker run -d -v $(pwd):/home/user/ --name gval-python gval-image</code>
 
 Or start up the existing container:
 

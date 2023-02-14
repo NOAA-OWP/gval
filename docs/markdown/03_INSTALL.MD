@@ -21,7 +21,7 @@ You can either set up your IDE to run this docker image directly:
 
 Or, running from the command line (from the root directory of the project):
 
-<code>sudo docker run -d -v $(pwd):/home/user/ --name&nbsp;gval-python&nbsp;gval-image</code>
+<code>sudo&nbsp;docker&nbsp;run&nbsp;-d&nbsp;-v&nbsp;$(pwd):/home/user/&nbsp;--name&nbsp;gval-python&nbsp;gval-image</code>
 
 Or start up the existing container:
 
