@@ -36,7 +36,7 @@ team.
 
 To install gval in a python environment of choice:
 
-<code>pip&nbsp;install&nbsp;gval</code>
+`pip install gval`
 
 # Development Installation
 
@@ -47,7 +47,7 @@ choice.)
 
 First setup docker instance and in the root directory of the project:
 
-<code>sudo&nbsp;docker&nbsp;build&nbsp;-t&nbsp;gval-image&nbsp;.</code>
+`sudo docker build -t gval-image .`
 
 You can either set up your IDE to run this docker image directly:
 
@@ -58,15 +58,13 @@ You can either set up your IDE to run this docker image directly:
 Or, running from the command line (from the root directory of the
 project):
 
-<code>sudo&nbsp;docker&nbsp;run&nbsp;-d&nbsp;-v&nbsp;$(pwd):/home/user/&nbsp;--name&nbsp;gval-python
-gval-image</code>
+`sudo docker run -d -v $(pwd):/home/user/ --name gval-python gval-image`
 
 Or start up the existing container:
 
-<code>sudo&nbsp;docker&nbsp;start&nbsp;gval-python</code>
+`sudo docker start gval-python`
 
-Then run a python file: <code>sudo&nbsp;docker&nbsp;exec&nbsp;gval-python&nbsp;python
-test.py</code>
+Then run a python file: `sudo docker exec gval-python python test.py`
 
 # Packaging
 
@@ -74,22 +72,20 @@ To build the gval package and install locally:
 
   - In the root directory install the gVal package:
     
-    <code>python&nbsp;-m&nbsp;build&nbsp;&&&nbsp;pip&nbsp;install&nbsp;dist/*.whl
-&nbsp;&nbsp;&nbsp;&nbsp;--force-reinstall</code>
+    `python -m build && pip install dist/*.whl --force-reinstall`
 
   - Or on Windows replacing version number with current version number:
     
-    <code>py&nbsp;-m&nbsp;build</code> then get the name of the wheel in the dist
-    directory, e.g.:
+    `py -m build` then get the name of the wheel in the dist directory,
+    e.g.:
     
-    <code>pip&nbsp;install&nbsp;dist/gval-0.0.1-py3-none-any.whl
-&nbsp;&nbsp;&nbsp;&nbsp;--force-reinstall</code>
+    `pip install dist/gval-0.0.1-py3-none-any.whl --force-reinstall`
 
 The packaging process using docker container would look as follows (on
 linux):
 
-<code>sudo&nbsp;docker&nbsp;exec&nbsp;-v&nbsp;$(pwd):/home/user/&nbsp;--user&nbsp;root&nbsp;python&nbsp;-m&nbsp;build
-&&&nbsp;pip&nbsp;install&nbsp;dist/*.whl&nbsp;--force-reinstall&nbsp;</code>
+` sudo docker exec -v $(pwd):/home/user/ --user root python -m build &&
+pip install dist/*.whl --force-reinstall  `
 
 # Dependencies
 
