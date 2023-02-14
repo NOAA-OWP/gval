@@ -45,7 +45,8 @@ To install gval in a python environment of choice: <br />
 choice.)
 
 First setup docker instance and in the root directory of the project:
-<br /> <code>sudo docker build -t gval-image .</code>
+
+<code>sudo docker build -t gval-image .</code>
 
 You can either set up your IDE to run this docker image directly:
 
@@ -53,11 +54,14 @@ You can either set up your IDE to run this docker image directly:
   - [Visual Studio Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
 Or, running from the command line (from the root directory of the
-project): <br /> <code>sudo docker run -v -d $(pwd):/home/user/
---name gval-python gval-image</code> <br />
+project):
 
-Or start up the existing container: <br /> <code>sudo docker start
-gval-python</code>
+<code>sudo docker run -v -d $(pwd):/home/user/ --name gval-python
+gval-image</code>
+
+Or start up the existing container:
+
+<code>sudo docker start gval-python</code>
 
 Then run a python file: <code>sudo docker exec gval-python python
 test.py</code>
@@ -66,12 +70,18 @@ test.py</code>
 
 To build the gval package and install locally:
 
-  - In the root directory install the gVal package: <br /> <code>python
-    -m build && pip install dist/*.whl --force-reinstall</code>
+  - In the root directory install the gVal package:
+    
+    <code>python -m build && pip install dist/*.whl
+    --force-reinstall</code>
+
   - Or on Windows replacing version number with current version number:
-    <br /> <code>py -m build</code> then get the name of the wheel in
-    the dist directory, e.g.: <br /> <code>pip install
-    dist/gval-0.0.1-py3-none-any.whl --force-reinstall</code>
+    
+    <code>py -m build</code> then get the name of the wheel in the dist
+    directory, e.g.:
+    
+    <code>pip install dist/gval-0.0.1-py3-none-any.whl
+    --force-reinstall</code>
 
 The packaging process using docker container would look as follows (on
 linux):
