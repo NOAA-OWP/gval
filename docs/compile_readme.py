@@ -2,6 +2,7 @@ import subprocess
 import os
 import re
 
+
 def compile_readme():
     abs_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,7 +17,8 @@ def compile_readme():
                         shell=True
                         )
 
-    subprocess.call(f"pandoc -f gfm -t gfm {abs_path}/markdown/*.MD > {abs_path}/../README.MD", shell=True)
+    subprocess.call(f"pandoc -f gfm -t gfm {abs_path}/markdown/*.MD >" +
+                    f"{abs_path}/../README.MD", shell=True)
 
     contents = None
     with open(f"{abs_path}/../README.MD", "r") as file:
@@ -40,5 +42,3 @@ def compile_readme():
 if __name__ == '__main__':
 
     compile_readme()
-
-
