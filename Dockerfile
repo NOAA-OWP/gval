@@ -11,6 +11,7 @@ SHELL ["/bin/bash", "-c"]
 ARG REQS=base
 ARG DEVREQS=test
 ARG VENV=/usr/local/gval_env
+ARG PANDOC=/usr/local
 ARG PROJDIR=/home/user/gval
 ARG VERSION='0.0.1'
 ARG MAINTANER='Fernando Aristizabal'
@@ -24,12 +25,10 @@ ENV PROJDIR=$PROJDIR
 COPY requirements/$REQS.txt /tmp
 COPY requirements/$DEVREQS.txt /tmp
 
+
 ## INSTALL EXTERNAL DEPENDENCIES ##
 # remove versions if errors occur
 RUN apt update --fix-missing && \
-    DEBIAN_FRONTEND=noninteractive \
-        apt install -qy \
-            pandoc=2.9.2.1-1+b1 && \
     apt auto-remove -y && \
     python3 -m venv $VENV && \
     rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \
@@ -74,7 +73,7 @@ ENV PYTHONUNBUFFERED=TRUE
 ENV VENV=$VENV
 ENV PROJDIR=$PROJDIR
 # set path to virtual env so that future python commands use it
-ENV PATH="$VENV/bin:$PATH"
+ENV PATH="$VENV/bin:/home/user/pandoc-3.1/bin:$PATH"
 
 # RETRIEVE BUILT DEPENDENCIES
 COPY --from=builder $VENV $VENV

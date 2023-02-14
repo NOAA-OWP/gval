@@ -4,7 +4,7 @@
 > All contributions to this project will be released to the public domain.
 > By submitting a pull request or filing a bug, issue, or
 > feature request, you are agreeing to comply with this waiver of copyright interest.
-> Details can be found in our [TERMS](07_TERMS.MD) and [LICENSE](08_LICENSE.MD).
+> Details can be found in our [TERMS](TERMS.MD) and [LICENSE](LICENSE.MD).
 
 
 There are two primary ways to help:
@@ -40,7 +40,76 @@ If you would like to contribute, please follow the following steps:
 
 1. Fork the project.
 2. Clone your fork: `git clone <your_username>/gval`
-2. Create a feature branch: `git checkout -b <your_feature>`)
-3. Commit your changes: `git commit -m 'feature message'`
-4. Push to the branch: `git push origin <your_username> <your_feature>`
-5. Open a pull request.
+3. Create a feature branch: `git checkout -b <your_feature>`
+4. Code Standards: Make sure unit tests pass `pytest`, there is code coverage `pytest-cov`, and error/style linting `flake8`
+5. Commit your changes: `git commit -m 'feature message'`
+6. Push to the branch: `git push origin <your_username> <your_feature>`
+7. Open a pull request.
+
+## Tooling Dependencies
+- Code Checking with [Flake8](https://github.com/PyCQA/flake8)
+    - Combines PyFlakes, pycodestyle, and others for linting and style checking.
+- Testing with [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
+    - For timed tests: [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
+    - For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
+- Profiling
+    - [yappi](https://github.com/sumerc/yappi/)
+    - For memory profiling: [memray](https://pypi.org/project/memray/)
+    - Dask memory profiling: [dask-memusage](https://github.com/itamarst/dask-memusage)
+- Dependencies and Packaging
+    - [pip](https://packaging.python.org/en/latest/key_projects/#pip)
+    - Docker
+- Distribution
+    - [PyPI](https://pypi.org/)
+    - DockerHub
+    - GitHub (source, packaging, and images)
+- Docs
+    - [Sphinx](https://www.sphinx-doc.org/)
+    - [pandoc](https://pypi.org/project/pandoc/)
+    - [ReadTheDocs](https://readthedocs.org/)
+    - [Jupyter](https://pypi.org/project/jupyter/)
+
+
+## Development Installation
+
+(In this case, the image name, "gval-image", and container name, "gval-python" can be changed
+to whatever name is more suitable.  Script, "test.py", does not exist and is an arbitrary placeholder for 
+script of choice.)
+
+First setup docker instance and in the root directory of the project:
+
+`sudo docker build -t gval-image .`
+
+You can either set up your IDE to run this docker image directly:
+- [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
+- [Visual Studio Code](https://code.visualstudio.com/docs/containers/quickstart-python)
+
+Or, running from the command line (from the root directory of the project):
+
+`sudo docker run -d -v $(pwd):/home/user/ --name gval-python gval-image`
+
+Or start up the existing container:
+
+`sudo docker start gval-python`
+
+Then run a python file:
+`sudo docker exec gval-python python test.py`
+
+## Packaging
+
+To build the gval package and install locally:
+
+- In the root directory install the gVal package:
+
+  `python -m build && pip install dist/*.whl --force-reinstall`
+- Or on Windows replacing version number with current version number: 
+
+  `py -m build` then get the name of the wheel in the dist directory, e.g.:
+
+  `pip install dist/gval-0.0.1-py3-none-any.whl --force-reinstall`
+
+The packaging process using docker container would look as follows (on linux):
+
+`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install dist/*.whl --force-reinstall`
+
+
