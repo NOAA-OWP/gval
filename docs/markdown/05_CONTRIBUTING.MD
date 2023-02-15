@@ -80,9 +80,8 @@ First setup docker instance and in the root directory of the project:
 
 `sudo docker build -t gval-image --target development . `
 
-The default user named 'user' with UID 1001 is created.  The user group has minimal permissions.
-This can be overridden in the build command.  The following example overrides the args with your user and group
-permissions:
+The default user named 'user' with UID 1001 is created.  To use the same user and permissions you
+currently have on your machine override with build arguments:
 
 `sudo docker build -t gval-image --build-arg UID=1002 --build-arg USER=$(id -u):$(id -g) --target development . `
 
