@@ -127,16 +127,18 @@ First setup docker instance and in the root directory of the project:
 ` sudo docker build -t gval-image --target development .  `
 
 The default user named 'user' with UID 1001 is created. The user group
-has minimal permissions. If there is any desire to override these
-permissions upon running that can be done in the urn command.
+has minimal permissions. This can be overridden in the build command.
+The following example overrides the args with your user and group
+permissions:
 
-Standard run examples from the command line (standard, overriding with
-your permissions, or overriding with root):
+` sudo docker build -t gval-image --build-arg UID=1002 --build-arg
+USER=$(id -u):$(id -g) --target development .  `
+
+Standard run examples from the command line (standard, or overriding
+user with root):
 
   - `sudo docker run -d -v $(pwd):/home/user/ --name gval-python
     gval-image`
-  - `sudo docker run -d -v $(pwd):/home/user/ --user $(id -u):$(id -g)
-    --name gval-python gval-image`
   - `sudo docker run -d -v $(pwd):/home/user/ --user root --name
     gval-python gval-image`
 
