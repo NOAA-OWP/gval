@@ -2,6 +2,7 @@ pytest
 pytest-benchmark
 pytest-cov
 flake8
+flake8-black
 allure-pytest
 jupyter
 sphinx

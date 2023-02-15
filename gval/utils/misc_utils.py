@@ -1,5 +1,3 @@
-
-
 def isiterable(obj):
     """
     Checks if object is iterable by seeing if it has the '__iter__' attribute.
@@ -30,7 +28,7 @@ def isiterable(obj):
     True
     >>> isiterable({1:1,2:2})
     True
-    
+
     """
-    
-    return( hasattr(obj,'__iter__') )
+
+    return hasattr(obj, "__iter__")

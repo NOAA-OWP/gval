@@ -2,12 +2,10 @@
 Functions to load datasets
 """
 
-#__all__ = ['*']
-__author__ = 'Fernando Aristizabal'
+# __all__ = ['*']
+__author__ = "Fernando Aristizabal"
 
-from typing import (
-    Union
-)
+from typing import Union
 import os
 
 import rioxarray as rioxarray
@@ -15,15 +13,20 @@ import xarray
 import rasterio
 
 # To-Do: allow for s3 reads
-#import boto3
+# import boto3
 
 
 def load_raster_as_xarray(
-    source: Union[str, os.PathLike, rasterio.io.DatasetReader,
-             rasterio.vrt.WarpedVRT, xarray.DataArray],
+    source: Union[
+        str,
+        os.PathLike,
+        rasterio.io.DatasetReader,
+        rasterio.vrt.WarpedVRT,
+        xarray.DataArray,
+    ],
     *args,
     **kwargs
-    ) -> xarray.DataArray:
+) -> xarray.DataArray:
     """
     Loads a single raster as xarray DataArray from file path or URL.
 
@@ -43,25 +46,26 @@ def load_raster_as_xarray(
     xarray.DataArray
         xarray dataarray.
     """
-    
-    #if isinstance(source,(xarray.Dataset,xarray.DataArray)):
-    
+
+    # if isinstance(source,(xarray.Dataset,xarray.DataArray)):
+
     # existing xarray DataArray
-    if isinstance(source,xarray.DataArray):
+    if isinstance(source, xarray.DataArray):
         return source
-    
+
     # local file path or S3 url
-    elif isinstance(source,(str,os.PathLike)):
+    elif isinstance(source, (str, os.PathLike)):
         # TO-DO: support authentication
         return rioxarray.open_rasterio(source, *args, **kwargs)
-    
+
     # removed DataSet support for now
     # List[xarray.DataArray]
-    #elif isinstance(source,list):
+    # elif isinstance(source,list):
     #    if all( [isinstance(e,xarray.Dataset) for e in source] ):
     #        return source
-    
+
     # if neither rasterio dataset, filepath, or url
     else:
-        raise ValueError("Source should be a filepath to a raster or xarray Dataset, DataArray or list of Datasets.")
-
+        raise ValueError(
+            "Source should be a filepath to a raster or xarray Dataset, DataArray or list of Datasets."
+        )

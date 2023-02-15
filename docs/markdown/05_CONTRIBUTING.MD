@@ -42,13 +42,15 @@ If you would like to contribute, please follow the following steps:
 2. Clone your fork: `git clone <your_username>/gval`
 3. Create a feature branch: `git checkout -b <your_feature>`
 4. Code Standards: Make sure unit tests pass `pytest`, there is code coverage `pytest-cov`, and error/style linting `flake8`
-5. Commit your changes: `git commit -m 'feature message'`
-6. Push to the branch: `git push origin <your_username> <your_feature>`
-7. Open a pull request.
+5. If linting issues either make manual changes and/or use `black .` to autoformat.  Afterwards repeat step 4. 
+6. Commit your changes: `git commit -m 'feature message'`
+7. Push to the branch: `git push origin <your_username> <your_feature>`
+8. Open a pull request.
 
 ## Tooling Dependencies
 - Code Checking with [Flake8](https://github.com/PyCQA/flake8)
     - Combines PyFlakes, pycodestyle, and others for linting and style checking.
+    - For autoformatting: [flake8-black](https://pypi.org/project/flake8-black/)
 - Testing with [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
     - For timed tests: [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
     - For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
