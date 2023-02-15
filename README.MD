@@ -7,6 +7,8 @@ maps and metrics.
 NOTE: THIS PACKAGE IS UNDER ACTIVE DEVELOPMENT AND NOT CURRENTLY
 FUNCTIONING. BREAKING CHANGES ARE OFTEN INTRODUCED.
 
+![alt text](./images/ExampleWorkflow.png)
+
 # Installation
 
 ## General Use
@@ -122,20 +124,29 @@ choice.)
 
 First setup docker instance and in the root directory of the project:
 
-`sudo docker build -t gval-image .`
+` sudo docker build -t gval-image --target development .  `
 
-You can either set up your IDE to run this docker image directly:
+The default user named 'user' with UID 1001 is created. The user group
+has minimal permissions. If there is any desire to override these
+permissions upon running that can be done in the urn command.
+
+Standard run examples from the command line (standard, overriding with
+your permissions, or overriding with root):
+
+  - `sudo docker run -d -v $(pwd):/home/user/ --name gval-python
+    gval-image`
+  - `sudo docker run -d -v $(pwd):/home/user/ --user $(id -u):$(id -g)
+    --name gval-python gval-image`
+  - `sudo docker run -d -v $(pwd):/home/user/ --user root --name
+    gval-python gval-image`
+
+You can also set up your IDE to run this docker image directly:
 
   - [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
   - [Visual Studio
     Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
-Or, running from the command line (from the root directory of the
-project):
-
-`sudo docker run -d -v $(pwd):/home/user/ --name gval-python gval-image`
-
-Or start up the existing container:
+If the container already exists you can start as follows:
 
 `sudo docker start gval-python`
 
