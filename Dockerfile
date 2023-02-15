@@ -1,5 +1,5 @@
 FROM python:3.10 AS builder
-
+SHELL ["/bin/bash", "-c"]
 # TRICK TO USE DIFFERENT PYTHON VERSIONS
 #ARG PYTHON_VERSION=3.7.0-alpine3.8
 #FROM python:${PYTHON_VERSION} as builder
@@ -24,15 +24,10 @@ ENV PROJDIR=$PROJDIR
 COPY requirements/$REQS.txt /tmp
 COPY requirements/$DEVREQS.txt /tmp
 
+
 ## INSTALL EXTERNAL DEPENDENCIES ##
 # remove versions if errors occur
-RUN apt update --fix-missing && \
-    DEBIAN_FRONTEND=noninteractive \
-        apt install -qy \
-            pandoc=2.9.2.1-1+b1 && \
-    apt auto-remove -y && \
-    python3 -m venv $VENV && \
-    rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \
+RUN python3 -m venv $VENV && \
     $VENV/bin/pip install --upgrade build && \
     $VENV/bin/pip install -r /tmp/$REQS.txt && \
     $VENV/bin/pip install -r /tmp/$DEVREQS.txt && \
@@ -88,8 +83,8 @@ USER $UNAME
 WORKDIR /home/$UNAME
 
 ## ADDING ALIASES TO USER'S BASH ALIASES FILE ##
-RUN echo 'alias python="$VENV/bin/python3"' >> /home/$UNAME/.bash_aliases
-RUN echo 'alias pip="$VENV/bin/pip"' >> /home/$UNAME/.bash_aliases
+#RUN echo 'alias python="$VENV/bin/python3"' >> /home/$UNAME/.bash_aliases
+#RUN echo 'alias pip="$VENV/bin/pip"' >> /home/$UNAME/.bash_aliases
 
 ## ENTRYPOINT: infinitely tails nothing to keep container alive
 ENTRYPOINT ["tail", "-f", "/dev/null"]
