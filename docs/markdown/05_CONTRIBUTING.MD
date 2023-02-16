@@ -42,7 +42,7 @@ If you would like to contribute, please follow the following steps:
 2. Clone your fork: `git clone <your_username>/gval`
 3. Create a feature branch: `git checkout -b <your_feature>`
 4. Code Standards: Make sure unit tests pass `pytest`, there is code coverage `pytest-cov`, and error/style linting `flake8`
-5. If linting issues either make manual changes and/or use `black .` to autoformat.  Afterwards repeat step 4. 
+5. If issues with linting occur, make manual changes and/or use `black .` to autoformat.  Afterwards repeat step 4. 
 6. Commit your changes: `git commit -m 'feature message'`
 7. Push to the branch: `git push origin <your_username> <your_feature>`
 8. Open a pull request.
