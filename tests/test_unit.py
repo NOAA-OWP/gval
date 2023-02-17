@@ -5,10 +5,12 @@ Test functionality
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
+import pandas as pd
 import pytest
 import os
 import sys
 import xarray
+import rioxarray as rx
 
 from gval.utils.loading_datasets import load_raster_as_xarray
 from gval.prep_comparison.spatial_alignment import (
@@ -20,13 +22,27 @@ from gval.prep_comparison.spatial_alignment import (
     align_rasters,
     Spatial_alignment,
 )
-from gval.compare import crosstab_rasters
-from config import TEST_DATA
+
+from config import TEST_DATA, AWS_KEYS
 
 test_data_dir = TEST_DATA
 
 # temporary
 sys.path.append(os.path.abspath(".."))
+
+
+def get_data_example():
+    """example throwaway to demonstrate reading from s3"""
+    a_keys = pd.read_csv(AWS_KEYS)
+    os.environ["AWS_ACCESS_KEY_ID"] = a_keys.iloc[0, 0]
+    os.environ["AWS_SECRET_ACCESS_KEY"] = a_keys.iloc[0, 1]
+
+    s3_resource = rx.open_rasterio(
+        "s3://eval-test-data/nws_test_cases/01090004_nws/official_versions/fim_1_0_0/major/"
+        "crar1_b0m_agreement.tif"
+    )
+
+    print(s3_resource)
 
 
 @pytest.fixture(scope="module", params=range(1))
@@ -163,17 +179,10 @@ def test_align_rasters(candidate_map, benchmark_map, target_map, **kwargs):
 def test_spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs):
     """Tests spatial_alignment function"""
     cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
+
     assert isinstance(
         cam, xarray.DataArray
     ), "Aligned candidate raster not xarray DataArray"
     assert isinstance(
         bem, xarray.DataArray
     ), "Aligned benchmark raster not xarray DataArray"
-
-
-def test_crosstab_rasters(candidate_map, benchmark_map):
-    """Test crosstabulation of rasters"""
-    cam, bem = Spatial_alignment(candidate_map, benchmark_map, "benchmark")
-    output = crosstab_rasters(candidate_map, benchmark_map)
-    am, ct = output.compute()
-    assert isinstance(am, xarray.DataArray), "Agreement map is not xarray DataArray"

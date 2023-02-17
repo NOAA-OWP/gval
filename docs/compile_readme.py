@@ -6,8 +6,10 @@ import re
 def compile_readme():
     abs_path = os.path.dirname(os.path.abspath(__file__))
 
-    if os.name == 'nt':
-        ret = subprocess.call("where /q pandoc || ECHO Could not find app. && EXIT /B", shell=True)
+    if os.name == "nt":
+        ret = subprocess.call(
+            "where /q pandoc || ECHO Could not find app. && EXIT /B", shell=True
+        )
         ret_code = 0 if ret != "Could not find app." else 1
     else:
         ret_code = subprocess.call("command -v pandoc", shell=True)
