@@ -24,7 +24,7 @@ from numbers import Number
 import numpy as np 
 import pandas as pd
 from xrspatial.zonal import crosstab
-import xarray
+import xarray as xr
 
 
 def _are_not_natural_numbers(c : Number, b : Number) -> None:
@@ -212,9 +212,9 @@ def compute_agreement_numpy(candidate : np.ndarray, benchmark : np.ndarray,
 
     return agreement
 
-def crosstab_xarray( candidate : xarray.DataArray,
-                     benchmark : xarray.DataArray, 
-                     agreement : xarray.DataArray,
+def crosstab_xarray( candidate : xr.DataArray,
+                     benchmark : xr.DataArray, 
+                     agreement : xr.DataArray,
                      allow_list_candidate : Optional[Iterable[Union[int,float]]] = None,
                      allow_list_benchmark : Optional[Iterable[Union[int,float]]] = None,
                      exclude_values : Optional[Union[int,float]] = None
@@ -224,11 +224,11 @@ def crosstab_xarray( candidate : xarray.DataArray,
 
     Parameters
     ----------
-    candidate : xarray.DataArray
+    candidate : xr.DataArray
         Candidate map
-    benchmark : xarray.DataArray
+    benchmark : xr.DataArray
         Benchmark map
-    agreement : xarray.DataArray
+    agreement : xr.DataArray
         Agreement map
     allow_list_candidate : Optional[Iterable[Union[int,float]]], optional
         List of values in candidate to include in crosstab. Remaining values are excluded, by default None
@@ -239,11 +239,11 @@ def crosstab_xarray( candidate : xarray.DataArray,
 
     Returns
     -------
-    xarray.DataArray
-        _description_
+    xr.DataArray
+        Crosstab table with counts of each combination of candidate map and benchmark map values.
     """
 
-    # according to xarray-spatial docs: 
+    # according to xr-spatial docs: 
     # Nodata value in values raster. Cells with nodata do not belong to any zone, and thus excluded from calculation.
     # would this be necessary? Does this just provide another means to exclude??
     crosstab_df = crosstab(zones = candidate, values = benchmark,
@@ -251,6 +251,8 @@ def crosstab_xarray( candidate : xarray.DataArray,
                            cat_ids = allow_list_benchmark,
                            nodata_values = exclude
     )
+
+    return crosstab_df
              
 
     
