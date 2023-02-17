@@ -1,85 +1,141 @@
-import dask
-import dask.dataframe as dd
+"""
+Comparison functionality
+ - Includes pairing and comparison functions
+"""
+
+#__all__ = ['*']
+__author__ = 'Fernando Aristizabal'
+
+from typing import (
+    Any,
+    Dict,
+    Hashable,
+    Iterable,
+    List,
+    Literal,
+    Mapping,
+    Optional,
+    Tuple,
+    Union,
+)
+from numbers import Number
+
+import numpy as np 
+import pandas as pd
+from xrspatial.zonal import crosstab
 import xarray
+#import numba as nb
 
-@dask.delayed()
-def crosstab_rasters(
-    candidate_map: xarray.DataArray,
-    benchmark_map: xarray.DataArray
-    ) -> tuple[dask.dataframe.DataFrame,dask.array.Array]:
+
+#########################
+# Define comparison functions
+# takes two values returns one unique value based on combination
+# a pairing function can only take two values. One from candidate and another from benchmark.
+
+"""
+Consider implementing cantor and szudzik functions in unsigned form:
+https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik
+"""
+
+def _are_not_natural_numbers(c : Number, b : Number) -> None:
+    """ Checks pair to see if they are both natural numbers or two non-negative integers [0, 1, 2, 3, 4, ...) """
+    for x in (c,b):
+        if np.isnan(x): # checks to make sure it's not a nan value
+            continue
+        elif (x < 0) | ((x - int(x)) != 0): # checks for non-negative and whole number
+            raise ValueError(f"{x} is not natural numbers (non-negative integers) [0, 1, 2, 3, 4, ...)")
+
+## cantor method
+def cantor_pair(c : int, b: int) -> int:
+    """ 
+    Produces unique natural number for two non-negative natural numbers (0,1,2,...) 
     
+    References:
+        https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik
+    """	
+    _are_not_natural_numbers(c, b)
+    return .5 * (c**2 + c + 2*c*b + 3*b + b**2)
+
+def szudzik_pair(c : int, b : int) -> int: 
+    """ Produces unique natural number for two non-negative natural numbers (0,1,2,...)
+    
+    References:
+        https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik
+    """	
+    _are_not_natural_numbers(c, b)
+    return c**2 + c + b if c >= b else b**2 + c
+
+def negative_value_transformation(func):
     """
-    Creates contingency and agreement tables as dds from candidate and benchmark sliceable arrays.
-
-    Only to be used on spatially aligned candidates and benchmarks.
+    Transforms negative values for use with pairing functions that only accept non-negative integers
+    
+    References:
+        https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik
     """
+    
+    _signing = lambda x : 2*x if x >= 0 else -2*x - 1
+    
+    def wrap(c,b):
+        c = _signing(c)
+        b = _signing(b)
+        return func(c,b)
 
+    return wrap
+
+@negative_value_transformation
+def cantor_pair_signed(c : int, b : int) -> int:
     """
-    Another alternative:
-        Checkout groupby operations for xarray:
-            - https://docs.xarray.dev/en/stable/user-guide/groupby.html#split
-            - Consider doing inner join on x,y coords for already aligned candidate and benchmarks.
-            - Then do groupby operation on candidate and benchmark variables \ 
-                    with groupby_obj = merged.groupby(['candidate','benchmark'])
-            - Consider sorting groupby_object in operation above
-            - Checkout methods associated with groupby objects in xarray:
-                - https://docs.xarray.dev/en/stable/api.html?highlight=groupby#groupby-objects
-            - Access groups with groupby_obj.groups or list(groupby_obj)
-            - Try getting length of groupby_obj with nunique = len(groupby_obj) 
-            - With length of groupby_obj, create a new array that will be used as a new variable as uniq_group_idx = np.arange(nunique)
-            - Map the array using cross_tab_xr = groupby_obj.map(lambda x : unique_group_idx.pop(0))
-            - This creates a cross tabulation xarray Dataset
-        - Crosstab table
-            - Convert crosstab xr ds to dask df.
-            - Consider using dask dataframe pivot_table with crosstab xarray Dataset
-            - This should yield crosstab df table
+    Output unique natural number for each unique combination of whole numbers using Cantor signed method.
+
+    Args:
+        c (int): _description_
+        b (int): _description_
+
+    Returns:
+        int: _description_
+    References:
+        https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik
     """
+    return cantor_pair(c, b)
 
-
-    # convert to dask dataframes with only the data via a dataset
-    # only use indices from benchmark
-    candidate_map_dd = candidate_map.to_dataset(name='candidate').to_dask_dataframe().loc[:,'candidate']
-    benchmark_map_dd = benchmark_map.to_dataset(name='benchmark').to_dask_dataframe().loc[:,:]
-
-    # concat dds
-    comparison_dd = dd.concat([candidate_map_dd, benchmark_map_dd],axis=1)
-
-    # create categorical datatypes
-    comparison_dd = comparison_dd.categorize(columns=['benchmark','candidate'])
-
-    # nans index
-    comparison_dd_no_nans = comparison_dd.dropna()
-    #breakpoint()
-
-    # create contingency table with ascending categories
-    contingency_table = comparison_dd.value_counts(ascending=True)
-
-    # create agreement table, extract count column, and convert to dask Array
-    agreement_table = contingency_table.reset_values(name='count').loc[:,'count'].to_dask_array()
-
-    # convert agreement table back to dask array
-    agreement_array = None
-
+@negative_value_transformation
+def szudzik_pair_signed(c : int, b : int) -> int:
     """
-    Alternative idea based on pandas ngroup:
-    https://stackoverflow.com/questions/71702062/for-dask-is-there-something-equivalent-to-ngroup-that-is-not-coumcount
+    Output unique natural number for each unique combination of whole numbers using Szudzik signed method.
 
-    import pandas as pd
-    import dask.dataframe as dd
+    Args:
+        c (int): _description_
+        b (int): _description_
 
-    df = pd.DataFrame({
-        'x': list('aabbcd'),
-    })
-    ddf = dd.from_pandas(df, npartitions=2)
-
-    nuniq = ddf['x'].nunique().compute()
-    c = list(range(nuniq+1))
-
-    ddf.groupby("x").apply(lambda g: g.assign(y = lambda x: c.pop(0)), meta={'x': 'f8', 'y': 'f8'}).compute()
+    Returns:
+        int: _description_
     """
+    return szudzik_pair(c, b)
 
-    return(agreement_table, contingency_table)
+## user defined
+def _make_pairing_dict(
+    unique_candidate_values : Iterable, 
+    unique_benchmark_values : Iterable
+    ):
+    """ Creates a dict pairing each unique value in candidate and benchmark arrays """
+    from itertools import product
+    pairing_dict = { k : v for v,(k,_) in enumerate(product(unique_candidate_values, unique_benchmark_values)) }
 
+def pairing_dict_fn(c : int, b : int) -> int:
+    return pairing_dict[c, b]
 
-def compare_continuous_rasters():
-    pass
+####################################
+# compare numpy arrays
+
+# should this be a decorator for the second stage functions including crosstab???
+def compute_agreement_numpy(candidate : np.ndarray, benchmark : np.ndarray, 
+                            comparison_function : callable
+                           ) -> np.ndarray:
+    """ Computes agreement array from candidate and benchmark given a user provided comparison function """
+
+    if not isinstance(comparison_function,np.ufunc):
+        agreement =  np.frompyfunc(comparison_function,2,1)(candidate,benchmark)
+    else:
+        agreement = comparison_ufunc(candidate, benchmark)
+
+    return agreement

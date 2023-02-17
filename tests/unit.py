@@ -14,7 +14,8 @@ sys.path.append(os.path.abspath('..'))
 
 from gval.utils.loading_datasets import load_raster_as_xarray
 from gval.prep_comparison.spatial_alignment import *
-from gval.compare import crosstab_rasters
+from gval.compare import *
+from gval.compare import _are_not_natural_numbers
 from config import TEST_DATA
 
 test_data_dir = TEST_DATA
@@ -117,3 +118,73 @@ def test_spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs):
     cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
     assert isinstance(cam,xarray.DataArray), "Aligned candidate raster not xarray DataArray"
     assert isinstance(bem,xarray.DataArray), "Aligned benchmark raster not xarray DataArray"
+
+@pytest.fixture(scope='function', params=[(-1,0,2),(1.09,-13,106),(6.090,-10,27),(-10.39023,13,196)])
+def pairs_for_natural_numbers(request):
+    """ makes candidate """
+    yield request.param
+
+def test_are_not_natural_numbers(pairs_for_natural_numbers):
+    c, b, a = pairs_for_natural_numbers
+    with pytest.raises(ValueError) as exc:
+        _are_not_natural_numbers(c,b)
+
+@pytest.fixture(scope='function', params=[(1,0,1),(1,13,118),(6,0,21),(6,13,203)])
+def cantor_pair_input(request):
+    """ makes candidate """
+    yield request.param
+
+def test_cantor_pair(cantor_pair_input):
+    """ tests cantor pairing function """
+    c, b, a = cantor_pair_input
+    np.testing.assert_equal(cantor_pair(c, b), a), \
+        "Cantor function output does not match expected value"
+
+@pytest.fixture(scope='function', params=[(-1,0,1),(1,-13,403),(-6,0,66),(6,-130,37115),(np.nan,-130,np.nan)])
+def cantor_pair_signed_input(request):
+    """ makes candidate """
+    yield request.param
+
+def test_cantor_pair_signed(cantor_pair_signed_input):
+    """ tests cantor pairing function """
+    c, b, a = cantor_pair_signed_input
+    np.testing.assert_equal(cantor_pair_signed(c, b), a), \
+        "Signed cantor function output does not match expected value"
+
+@pytest.fixture(scope='function', params=[(1,0,2),(1,13,170),(6,0,42),(6,13,175)])
+def szudzik_pair_input(request):
+    """ makes candidate """
+    yield request.param
+
+def test_szudzik_pair(szudzik_pair_input):
+    """ tests szudzikpairing function """
+    c, b, a = szudzik_pair_input
+    np.testing.assert_equal(szudzik_pair(c, b), a), \
+        "szudzik function output does not match expected value"
+
+@pytest.fixture(scope='function', params=[(-1,0,2),(1,-13,627),(-6,0,132),(6,-130,67093),(np.nan,-130,np.nan)])
+def szudzik_pair_signed_input(request):
+    """ makes candidate """
+    yield request.param
+
+def test_szudzik_pair_signed(szudzik_pair_signed_input):
+    """ tests szudzik pairing function """
+    c, b, a = szudzik_pair_signed_input
+    np.testing.assert_equal(szudzik_pair_signed(c, b), a), \
+        "Signed szudzik function output does not match expected value"
+    
+@pytest.fixture(scope='function', params=[2,2,2,2,2])
+def candidate_and_benchmark(request):
+    """ makes candidate """
+    yield np.random.randint(0,100,request.param), np.random.randint(0,100,request.param)
+
+@pytest.fixture(scope='function', params=[cantor_pair_signed])
+def comparison_function(request):
+    """ makes comparison function """
+    yield request.param
+
+def test_compute_agreement_numpy(candidate_and_benchmark, comparison_function):
+    """ Tests compute_agreement_numpy """
+    candidate, benchmark = candidate_and_benchmark
+    agreement = compute_agreement_numpy(candidate, benchmark, comparison_function)
+    print(agreement)

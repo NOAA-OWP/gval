@@ -2,8 +2,6 @@ import xarray
 import rasterio
 import numpy as np
 from gval.utils.loading_datasets import load_raster_as_xarray
-from tqdm.dask import TqdmCallback
-# from gval.two_class_confusion_table import two_class_contingency_table
 
 def Raster_comparison( candidate_map, benchmark_map,
                        comparison_type='two-class',
