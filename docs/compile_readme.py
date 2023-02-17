@@ -6,17 +6,14 @@ import re
 def compile_readme():
     abs_path = os.path.dirname(os.path.abspath(__file__))
 
-    ret_code = subprocess.call("command -v pandoc", shell=True)
+    if os.name == 'nt':
+        ret = subprocess.call("where /q pandoc || ECHO Could not find app. && EXIT /B", shell=True)
+        ret_code = 0 if ret != "Could not find app." else 1
+    else:
+        ret_code = subprocess.call("command -v pandoc", shell=True)
 
     if ret_code != 0:
-        subprocess.call(
-            "apt update --fix-missing && \\"
-            + "apt install -y pandoc=2.9.2.1-1+b1 && \\"
-            "apt auto-remove -y && \\"
-            + "rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \\"
-            + "rm -rf /tmp/*",
-            shell=True,
-        )
+        raise "No Pandoc installed"
 
     subprocess.call(
         f"pandoc -f gfm -t gfm {abs_path}/markdown/*.MD >" + f"{abs_path}/../README.MD",
