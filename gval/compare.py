@@ -49,7 +49,7 @@ def crosstab_rasters(
 
     # nans index
     comparison_dd_no_nans = comparison_dd.dropna()
-    breakpoint()
+    #breakpoint()
 
     # create contingency table with ascending categories
     contingency_table = comparison_dd.value_counts(ascending=True)

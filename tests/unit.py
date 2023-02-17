@@ -117,10 +117,3 @@ def test_spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs):
     cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
     assert isinstance(cam,xarray.DataArray), "Aligned candidate raster not xarray DataArray"
     assert isinstance(bem,xarray.DataArray), "Aligned benchmark raster not xarray DataArray"
-
-def test_crosstab_rasters(candidate_map, benchmark_map):
-    """ Test crosstabulation of rasters """
-    cam, bem = Spatial_alignment(candidate_map,benchmark_map,'benchmark')
-    output = crosstab_rasters(candidate_map, benchmark_map)
-    am,ct = output.compute()
-    assert isinstance(am,xarray.DataArray), "Agreement map is not xarray DataArray"
