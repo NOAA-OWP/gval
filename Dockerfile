@@ -86,9 +86,6 @@ WORKDIR /home/$UNAME
 #RUN echo 'alias python="$VENV/bin/python3"' >> /home/$UNAME/.bash_aliases
 #RUN echo 'alias pip="$VENV/bin/pip"' >> /home/$UNAME/.bash_aliases
 
-## ENTRYPOINT: infinitely tails nothing to keep container alive
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-
 ###############################################################################################
 # runtime stage
 ###############################################################################################
