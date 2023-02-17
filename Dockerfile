@@ -67,9 +67,6 @@ WORKDIR /home/$UNAME
 # RETRIEVE BUILT DEPENDENCIES
 COPY --from=builder --chown=$UID $VENV $VENV
 
-## ENTRYPOINT: infinitely tails nothing to keep container alive
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-
 ###############################################################################################
 # runtime stage
 ###############################################################################################
