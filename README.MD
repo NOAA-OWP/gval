@@ -124,22 +124,28 @@ choice.)
 
 First setup docker instance and in the root directory of the project:
 
-` sudo docker build -t gval-image --target development .  `
+` [sudo] docker build -t gval-image --target development .  `
 
 The default user named 'user' with UID 1001 is created. To use the same
 user and permissions you currently have on your machine override with
 build arguments:
 
-` sudo docker build -t gval-image --build-arg UID=1002 --build-arg
+` [sudo] docker build -t gval-image --build-arg UID=1002 --build-arg
 USER=$(id -u):$(id -g) --target development .  `
 
 Standard run examples from the command line (standard, or overriding
 user with root):
 
-  - `sudo docker run -d -v $(pwd):/home/user/ --name gval-python
+  - `[sudo] docker run -v $(pwd):/home/user/gval --name gval-python
     gval-image`
-  - `sudo docker run -d -v $(pwd):/home/user/ --user root --name
+  - `[sudo] docker run -v $(pwd):/home/user/gval --user root --name
     gval-python gval-image`
+
+To keep your container running, try adding `tail -f /dev/null` as your
+command ensuring to detach with `-d`:
+
+  - `[sudo] docker run -d -v $(pwd):/home/user/gval --name gval-python
+    gval-image tail -f /dev/null`
 
 You can also set up your IDE to run this docker image directly:
 
@@ -149,9 +155,10 @@ You can also set up your IDE to run this docker image directly:
 
 If the container already exists you can start as follows:
 
-`sudo docker start gval-python`
+`[sudo] docker start gval-python`
 
-Then run a python file: `sudo docker exec gval-python python test.py`
+To enter the container interactively: `[sudo] docker exec gval-python
+bash`
 
 ## Packaging
 
