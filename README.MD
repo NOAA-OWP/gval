@@ -33,17 +33,10 @@ Or use the docker instance on DockerHub:
 
 ## Code Dependencies
 
-<<<<<<< HEAD
   - [rioxarray](https://corteva.github.io/rioxarray/html/index.html)
   - [geopandas](https://geopandas.org/en/stable/)
   - [dask](https://www.dask.org)
   - [xarray-spatial](https://xarray-spatial.org)
-=======
-- rioxarray
-- geopandas
-- dask
-- tqdm
->>>>>>> main
 
 # Contributing
 
