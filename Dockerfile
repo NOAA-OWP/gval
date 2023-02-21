@@ -22,11 +22,13 @@ COPY requirements/$DEVREQS.txt /tmp
 
 ## INSTALL EXTERNAL DEPENDENCIES ##
 # remove versions if errors occur
-RUN python3 -m venv $VENV && \
-    $VENV/bin/pip install --no-cache-dir --upgrade build && \
-    $VENV/bin/pip install --no-cache-dir -r /tmp/$REQS.txt && \
-    $VENV/bin/pip install --no-cache-dir  -r /tmp/$DEVREQS.txt && \
-    rm -rf /tmp/*
+RUN wget -P /usr/bin/local https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz && \
+    tar -xf /usr/bin/local/pandoc-3.1-linux-amd64.tar.gz --directory /usr/bin/local && \
+    python3 -m venv $VENV && \
+    $VENV/bin/pip install --upgrade build && \
+    $VENV/bin/pip install -r /tmp/$REQS.txt && \
+    $VENV/bin/pip install -r /tmp/$DEVREQS.txt
+
 
 ###############################################################################################
 # development stage
@@ -37,6 +39,7 @@ FROM python:3.10 AS development
 ARG REQS=base
 ARG DEVREQS=test
 ARG VENV=/usr/local/gval_env
+ARG PANDOC=/usr/bin/local/pandoc-3.1/bin
 ARG PROJDIR=/home/user/gval
 ARG VERSION='0.0.1'
 ARG MAINTANER='Fernando Aristizabal & Gregory Petrochenkov'
@@ -55,7 +58,7 @@ ENV PYTHONUNBUFFERED=TRUE
 ENV VENV=$VENV
 ENV PROJDIR=$PROJDIR
 # add path to virtual env so that future python commands use it
-ENV PATH="$VENV/bin:$PATH"
+ENV PATH="$VENV/bin:$PANDOC:$PATH"
 
 ## ADDING USER GROUP ##
 ARG UID=1001
@@ -66,6 +69,7 @@ WORKDIR /home/$UNAME
 
 # RETRIEVE BUILT DEPENDENCIES
 COPY --from=builder --chown=$UID $VENV $VENV
+COPY --from=builder --chown=$UID $PANDOC $PANDOC
 
 ###############################################################################################
 # runtime stage

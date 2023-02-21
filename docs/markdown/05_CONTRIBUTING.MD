@@ -41,14 +41,16 @@ If you would like to contribute, please follow the following steps:
 1. Fork the project.
 2. Clone your fork: `git clone <your_username>/gval`
 3. Create a feature branch: `git checkout -b <your_feature>`
-4. Code Standards: Make sure unit tests pass `pytest`, there is code coverage `pytest-cov`, and error/style linting `flake8`
-5. Commit your changes: `git commit -m 'feature message'`
-6. Push to the branch: `git push origin <your_username> <your_feature>`
-7. Open a pull request.
+4. Code Standards: Make sure unit tests pass `pytest` and there is code coverage `pytest-cov`. 
+5. Run error/style linting with `flake8`. Review any changes or issues by making manual changes and/or use `black .` to autoformat. All linting changes must be re-tested with step 4. 
+6. Commit your changes: `git commit -m 'feature message'`
+7. Push to the branch: `git push origin <your_username> <your_feature>`
+8. Open a pull request.
 
 ## Tooling Dependencies
 - Code Checking with [Flake8](https://github.com/PyCQA/flake8)
     - Combines PyFlakes, pycodestyle, and others for linting and style checking.
+    - For autoformatting: [flake8-black](https://pypi.org/project/flake8-black/)
 - Testing with [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
     - For timed tests: [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
     - For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
@@ -83,7 +85,7 @@ First setup docker instance and in the root directory of the project:
 The default user named 'user' with UID 1001 is created.  To use the same user and permissions you
 currently have on your machine override with build arguments:
 
-`[sudo] docker build -t gval-image --build-arg UID=1002 --build-arg USER=$(id -u):$(id -g) --target development . `
+`[sudo] sudo docker build -t gval-image --build-arg UID=$(id -u) --target development .`
 
 Standard run examples from the command line (standard, or overriding user with root):
 
