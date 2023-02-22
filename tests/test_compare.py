@@ -13,7 +13,7 @@ import pytest
 import xarray as xr
 
 from gval.utils.loading_datasets import load_raster_as_xarray
-from gval.prep_comparison.spatial_alignment import Spatial_alignment
+from gval.homogenize.spatial_alignment import Spatial_alignment
 from gval.compare import (
     _is_not_natural_number,
     cantor_pair,
