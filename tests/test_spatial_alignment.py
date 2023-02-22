@@ -11,7 +11,7 @@ import pytest
 import xarray as xr
 
 from gval.utils.loading_datasets import load_raster_as_xarray
-from gval.prep_comparison.spatial_alignment import (
+from gval.homogenize.spatial_alignment import (
     matching_crs,
     checks_for_single_band,
     matching_spatial_indices,
