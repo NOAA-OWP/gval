@@ -1,16 +1,14 @@
 """
-Test functionality
+Test functionality for gval/prep_comparison/spatial_alignment.py
 """
 
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-import pandas as pd
-import pytest
 import os
-import sys
-import xarray
-import rioxarray as rx
+
+import pytest
+import xarray as xr
 
 from gval.utils.loading_datasets import load_raster_as_xarray
 from gval.prep_comparison.spatial_alignment import (
@@ -24,48 +22,38 @@ from gval.prep_comparison.spatial_alignment import (
 )
 
 from config import TEST_DATA, AWS_KEYS
+from tests.utils import _set_aws_environment_variables
 
 test_data_dir = TEST_DATA
 
-# temporary
-sys.path.append(os.path.abspath(".."))
+# set AWS environment variables
+_set_aws_environment_variables(AWS_KEYS)
+
+#################################################################################
+# TODO: this is duplicated across unit tests.
 
 
-def get_data_example():
-    """example throwaway to demonstrate reading from s3"""
-    a_keys = pd.read_csv(AWS_KEYS)
-    os.environ["AWS_ACCESS_KEY_ID"] = a_keys.iloc[0, 0]
-    os.environ["AWS_SECRET_ACCESS_KEY"] = a_keys.iloc[0, 1]
-
-    s3_resource = rx.open_rasterio(
-        "s3://eval-test-data/nws_test_cases/01090004_nws/official_versions/fim_1_0_0/major/"
-        "crar1_b0m_agreement.tif"
-    )
-
-    print(s3_resource)
-
-
-@pytest.fixture(scope="module", params=range(1))
+@pytest.fixture(scope="package", params=range(1))
 def candidate_map_fp(request):
     """returns candidate maps"""
     filepath = os.path.join(test_data_dir, f"candidate_map_{request.param}.tif")
     yield filepath
 
 
-@pytest.fixture(scope="module", params=range(1))
+@pytest.fixture(scope="package", params=range(1))
 def benchmark_map_fp(request):
     """returns benchmark maps"""
     filepath = os.path.join(test_data_dir, f"benchmark_map_{request.param}.tif")
     yield filepath
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="package")
 def candidate_map(candidate_map_fp):
     """returns candidate maps"""
     yield load_raster_as_xarray(candidate_map_fp)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="package")
 def benchmark_map(benchmark_map_fp):
     """returns benchmark maps"""
     yield load_raster_as_xarray(benchmark_map_fp)
@@ -75,7 +63,7 @@ def test_load_candidate_as_xarray(candidate_map_fp):
     """tests loading candidate raster as xarray DataArray"""
     candidate_map = load_raster_as_xarray(candidate_map_fp)
     assert isinstance(
-        candidate_map, xarray.DataArray
+        candidate_map, xr.DataArray
     ), "candidate_map is not an xarray.DataArray"
 
 
@@ -83,8 +71,11 @@ def test_load_benchmark_as_xarray(benchmark_map_fp):
     """tests loading benchmark raster as xarray DataArray"""
     benchmark_map = load_raster_as_xarray(benchmark_map_fp)
     assert isinstance(
-        benchmark_map, xarray.DataArray
+        benchmark_map, xr.DataArray
     ), "benchmark_map is not an xarray.DataArray"
+
+
+#################################################################################
 
 
 @pytest.fixture(scope="module", params=[True])
@@ -169,10 +160,10 @@ def test_align_rasters(candidate_map, benchmark_map, target_map, **kwargs):
     """Tests the alignment of rasters"""
     cam, bem = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
     assert isinstance(
-        cam, xarray.DataArray
+        cam, xr.DataArray
     ), "Aligned candidate raster not xarray DataArray"
     assert isinstance(
-        bem, xarray.DataArray
+        bem, xr.DataArray
     ), "Aligned benchmark raster not xarray DataArray"
 
 
@@ -181,8 +172,8 @@ def test_spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs):
     cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
 
     assert isinstance(
-        cam, xarray.DataArray
+        cam, xr.DataArray
     ), "Aligned candidate raster not xarray DataArray"
     assert isinstance(
-        bem, xarray.DataArray
+        bem, xr.DataArray
     ), "Aligned benchmark raster not xarray DataArray"

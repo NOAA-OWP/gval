@@ -8,6 +8,7 @@ ARG REQS=base
 ARG DEVREQS=test
 ARG VENV=/usr/local/gval_env
 ARG PROJDIR=/home/user/gval
+ARG PANDOC_PARENT=/usr/bin/local
 ARG VERSION='0.0.1'
 ARG MAINTANER='Fernando Aristizabal & Gregory Petrochenkov'
 ARG RELEASE_DATE=''
@@ -22,8 +23,8 @@ COPY requirements/$DEVREQS.txt /tmp
 
 ## INSTALL EXTERNAL DEPENDENCIES ##
 # remove versions if errors occur
-RUN wget -P /usr/bin/local https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz && \
-    tar -xf /usr/bin/local/pandoc-3.1-linux-amd64.tar.gz --directory /usr/bin/local && \
+RUN wget -P $PANDOC_PARENT https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz && \
+    tar -xf $PANDOC_PARENT/pandoc-3.1-linux-amd64.tar.gz --directory $PANDOC_PARENT && \
     python3 -m venv $VENV && \
     $VENV/bin/pip install --upgrade build && \
     $VENV/bin/pip install -r /tmp/$REQS.txt && \

@@ -1,92 +1,317 @@
-import dask
-import dask.dataframe as dd
-import xarray
+"""
+Comparison functionality
+ - Includes pairing and comparison functions
+ - crosstabbing functionality
+ - Would np.meshgrid lend itself to pairing problem?
+TODO:
+    - Have not tested parallel case.
+    - How to handle xr.Datasets, multiple bands, and multiple variables.
+"""
+
+# __all__ = ['*']
+__author__ = "Fernando Aristizabal"
+
+from typing import (
+    Iterable,
+    Optional,
+    Union,
+)
+from numbers import Number
+
+import numpy as np
+import pandas as pd
+from xrspatial.zonal import crosstab
+import xarray as xr
+import numba as nb
 
 
-@dask.delayed()
-def crosstab_rasters(
-    candidate_map: xarray.DataArray, benchmark_map: xarray.DataArray
-) -> tuple[dask.dataframe.DataFrame, dask.array.Array]:
+@nb.vectorize(nopython=True)
+def _is_not_natural_number(x: Number) -> int:
     """
-    Creates contingency and agreement tables as dds from candidate and benchmark sliceable arrays.
+    Checks value to see if it is a natural number or two non-negative integer [0, 1, 2, 3, 4, ...)
 
-    Only to be used on spatially aligned candidates and benchmarks.
+    FIXME: Must return boolean or some other numba type. Having trouble returning none.
+    """
+    # checks to make sure it's not a nan value
+    if np.isnan(x):
+        return -2  # dummy return
+    # checks for non-negative and whole number
+    elif (x < 0) | ((x - int(x)) != 0):
+        # FIXME: how to print x with message below using numba????
+        raise ValueError(
+            "Negative or non-whole number found (non-negative integers) [0, 1, 2, 3, 4, ...)"
+        )
+    # must return something according to signature
+    else:
+        return -2  # dummy return
+
+
+@nb.vectorize(nopython=True)
+def cantor_pair(c: Number, b: Number) -> Number:
+    """
+    Produces unique natural number for two non-negative natural numbers (0,1,2,...)
+
+    Parameters
+    ----------
+    c : Number
+        Candidate map value.
+    b : Number
+        Benchmark map value.
+
+    Returns
+    -------
+    Number
+        Agreement map value.
+
+    References
+    ----------
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    """
+    _is_not_natural_number(c)
+    _is_not_natural_number(b)
+    return 0.5 * (c**2 + c + 2 * c * b + 3 * b + b**2)
+
+
+@nb.vectorize(nopython=True)
+def szudzik_pair(c: Number, b: Number) -> Number:
+    """
+    Produces unique natural number for two non-negative natural numbers (0,1,2,3,...).
+
+    Parameters
+    ----------
+    c : Number
+        Candidate map value.
+    b : Number
+        Benchmark map value.
+
+    Returns
+    -------
+    Number
+        Agreement map value.
+
+    References
+    ----------
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    """
+    _is_not_natural_number(c)
+    _is_not_natural_number(b)
+    return c**2 + c + b if c >= b else b**2 + c
+
+
+@nb.vectorize(nopython=True)
+def _negative_value_transformation(x: Number) -> Number:
+    """
+    Transforms negative values for use with pairing functions that only accept non-negative integers.
+
+    Parameters
+    ----------
+    x : Number
+        Negative number to be transformed.
+
+    Returns
+    -------
+    Number
+        Transformed value.
+
+    References
+    ----------
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    """
+    return 2 * x if x >= 0 else -2 * x - 1
+
+
+@nb.vectorize(nopython=True)
+def cantor_pair_signed(c: Number, b: Number) -> Number:
+    """
+    Output unique natural number for each unique combination of whole numbers using Cantor signed method.
+
+    Parameters
+    ----------
+    c : Number
+        Candidate map value.
+    b : Number
+        Benchmark map value.
+
+    Returns
+    -------
+    Number
+        Agreement map value.
+
+    References
+    ----------
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    """
+    ct = _negative_value_transformation(c)
+    bt = _negative_value_transformation(b)
+    return cantor_pair(ct, bt)
+
+
+@nb.vectorize(nopython=True)
+def szudzik_pair_signed(c: Number, b: Number) -> Number:
+    """
+    Output unique natural number for each unique combination of whole numbers using Szudzik signed method._summary_
+
+    Parameters
+    ----------
+    c : Number
+        Candidate map value.
+    b : Number
+        Benchmark map value.
+
+    Returns
+    -------
+    Number
+        Agreement map value.
+
+    References
+    ----------
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    """
+    ct = _negative_value_transformation(c)
+    bt = _negative_value_transformation(b)
+    return szudzik_pair(ct, bt)
+
+
+####################################
+# compare
+
+
+def compute_agreement_xarray(
+    candidate_map: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    comparison_function: nb.vectorize,
+) -> Union[xr.DataArray, xr.Dataset]:
+    """
+    Computes agreement map as xarray from candidate and benchmark xarray's.
+
+    Parameters
+    ----------
+    candidate_map : Union[xr.DataArray, xr.Dataset]
+        Candidate map.
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
+        Benchmark map.
+    comparison_function : nb.np.ufunc.dufunc.DUFunc
+        Numba vectorized comparison function. Created by decorating function with @nb.vectorize().
+
+    Returns
+    -------
+    Union[xr.DataArray, xr.Dataset]
+        Agreement map.
+
+    References
+    ----------
+    .. [1] [Creating NumPy universal function](https://numba.readthedocs.io/en/stable/user/vectorize.html)
     """
 
-    """
-    Another alternative:
-        Checkout groupby operations for xarray:
-            - https://docs.xarray.dev/en/stable/user-guide/groupby.html#split
-            - Consider doing inner join on x,y coords for already aligned candidate and benchmarks.
-            - Then do groupby operation on candidate and benchmark variables
-                    with groupby_obj = merged.groupby(['candidate','benchmark'])
-            - Consider sorting groupby_object in operation above
-            - Checkout methods associated with groupby objects in xarray:
-                - https://docs.xarray.dev/en/stable/api.html?highlight=groupby#groupby-objects
-            - Access groups with groupby_obj.groups or list(groupby_obj)
-            - Try getting length of groupby_obj with nunique = len(groupby_obj)
-            - With length of groupby_obj, create a new array that will be used as a new variable as uniq_group_idx = np.arange(nunique)
-            - Map the array using cross_tab_xr = groupby_obj.map(lambda x : unique_group_idx.pop(0))
-            - This creates a cross tabulation xarray Dataset
-        - Crosstab table
-            - Convert crosstab xr ds to dask df.
-            - Consider using dask dataframe pivot_table with crosstab xarray Dataset
-            - This should yield crosstab df table
-    """
-
-    # convert to dask dataframes with only the data via a dataset
-    # only use indices from benchmark
-    candidate_map_dd = (
-        candidate_map.to_dataset(name="candidate")
-        .to_dask_dataframe()
-        .loc[:, "candidate"]
+    # use xarray apply ufunc to apply comparison to candidate and benchmark xarray's
+    agreement_map = xr.apply_ufunc(
+        comparison_function, candidate_map, benchmark_map, dask="forbidden"
     )
-    benchmark_map_dd = (
-        benchmark_map.to_dataset(name="benchmark").to_dask_dataframe().loc[:, :]
-    )
 
-    # concat dds
-    comparison_dd = dd.concat([candidate_map_dd, benchmark_map_dd], axis=1)
+    """ TODO: What does "parallelized" option do?
+        - If parallelized is selected, several other args should be considered
+        - Including dask_gufunc_kwargs, output_dtypes, output_sizes, and meta. """
 
-    # create categorical datatypes
-    comparison_dd = comparison_dd.categorize(columns=["benchmark", "candidate"])
+    return agreement_map
 
-    # nans index
-    # comparison_dd_no_nans = comparison_dd.dropna()
-    # breakpoint()
 
-    # create contingency table with ascending categories
-    contingency_table = comparison_dd.value_counts(ascending=True)
-
-    # create agreement table, extract count column, and convert to dask Array
-    agreement_table = (
-        contingency_table.reset_values(name="count").loc[:, "count"].to_dask_array()
-    )
-
-    # convert agreement table back to dask array
-    agreement_array = None
-    print(type(agreement_array))
-
+def _reorganize_crosstab_output(crosstab_df: pd.DataFrame) -> pd.DataFrame:
     """
-    Alternative idea based on pandas ngroup:
-    https://stackoverflow.com/questions/71702062/for-dask-is-there-something-equivalent-to-ngroup-that-is-not-coumcount
+    Reorganizes crosstab output away from conventions used in xarray-spatial.
 
-    import pandas as pd
-    import dask.dataframe as dd
+    Parameters
+    ----------
+    crosstab_df : pd.DataFrame
+        Output of xarray-spatial.zonal.crosstab.
 
-    df = pd.DataFrame({
-        'x': list('aabbcd'),
-    })
-    ddf = dd.from_pandas(df, npartitions=2)
-
-    nuniq = ddf['x'].nunique().compute()
-    c = list(range(nuniq+1))
-
-    ddf.groupby("x").apply(lambda g: g.assign(y = lambda x: c.pop(0)), meta={'x': 'f8', 'y': 'f8'}).compute()
+    Returns
+    -------
+    pd.DataFrame
+        Crosstab dataframe using candidate and benchmark conventions.
     """
 
-    return (agreement_table, contingency_table)
+    crosstab_df = crosstab_df.set_index("zone").rename_axis(
+        index="candidate", columns="benchmark"
+    )
+
+    return crosstab_df
 
 
-def compare_continuous_rasters():
-    pass
+def crosstab_xarray(
+    candidate_map: xr.DataArray,
+    benchmark_map: xr.DataArray,
+    allow_list_candidate: Optional[Iterable[Number]] = None,
+    allow_list_benchmark: Optional[Iterable[Number]] = None,
+    exclude_value: Optional[Number] = None,
+) -> pd.DataFrame:
+    """
+    Crosstab singular band xarray.DataArrays to produce crosstab df.
+
+    TODO: Manage xr.DataArray's with multiple bands and xr.Datasets with variables of multiple bands.
+
+    Parameters
+    ----------
+    candidate_map : xr.DataArray
+        Candidate map with only one band.
+    benchmark_map : xr.DataArray
+        Benchmark map with only one band.
+    allow_list_candidate : Optional[Iterable[Union[int,float]]], optional
+        List of values in candidate to include in crosstab. Remaining values are excluded, by default None
+    allow_list_benchmark : Optional[Iterable[Union[int,float]]], optional
+        List of values in benchmark to include in crosstab. Remaining values are excluded, by default None
+    exclude_value : Optional[Number], optional
+        Value to exclude from crosstab, by default None
+
+    Returns
+    -------
+    pd.DataFrame
+        Crosstab dataframe with counts of each combination of candidate map and benchmark map values. Row index of dataframe represents unique values in candidate while columns represent unique values in benchmark.
+
+    References
+    ----------
+    .. [1] [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
+    .. [2] [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
+    """
+
+    # check dimensionality
+    assert (
+        candidate_map.shape == benchmark_map.shape
+    ), f"Dimensionalities of candidate {candidate_map.shape} and benchmark {benchmark_map.shape} must match."
+
+    """
+    TODO:
+    Use of `xr.rio._obj.dims` or `xr.rio._check_dimensions()` to get extra dimension name (sometimes called band)
+        - is it always called band? may not always be band?
+        - are there any other methods for doing this??
+        - should this go elsewhere as it might be repeated?
+    """
+
+    # get extra dimension name
+    extra_dim_name_candidate = candidate_map.rio._check_dimensions()
+    extra_dim_name_benchmark = benchmark_map.rio._check_dimensions()
+
+    # get length of extra dimension
+    extra_dim_length = candidate_map[extra_dim_name_candidate].size
+
+    # TEMP TODO: Support multi-band xarray's
+    assert (
+        extra_dim_length == 1
+    ), "Crosstabbing is currently only supporting single band xr.DataArray's"
+
+    # cycle through bands
+    for b in range(1, extra_dim_length + 1):
+        """
+        NOTE: Consider that NoData is being tabulated here if it's not masked out.
+        """
+        crosstab_df = crosstab(
+            zones=candidate_map.sel({extra_dim_name_candidate: b}),
+            values=benchmark_map.sel({extra_dim_name_benchmark: b}),
+            zone_ids=allow_list_candidate,
+            cat_ids=allow_list_benchmark,
+            nodata_values=exclude_value,
+        )
+
+        # reorganize df to follow candidate and benchmark conventions instead of xarray-spatial conventions
+        crosstab_df = _reorganize_crosstab_output(crosstab_df)
+
+    return crosstab_df
