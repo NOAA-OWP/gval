@@ -6,12 +6,9 @@ Test functionality for gval/prep_comparison/spatial_alignment.py
 __author__ = "Fernando Aristizabal"
 
 import os
-import sys
 
-import numpy as np
 import pytest
 import xarray as xr
-import rioxarray as rxr
 
 from gval.utils.loading_datasets import load_raster_as_xarray
 from gval.prep_comparison.spatial_alignment import (

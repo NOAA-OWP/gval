@@ -3,16 +3,16 @@ Comparison functionality
  - Includes pairing and comparison functions
  - crosstabbing functionality
  - Would np.meshgrid lend itself to pairing problem?
+TODO:
+    - Have not tested parallel case.
+    - How to handle xr.Datasets, multiple bands, and multiple variables.
 """
 
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
 from typing import (
-    Any,
-    Callable,
     Iterable,
-    Mapping,
     Optional,
     Union,
 )
@@ -22,176 +22,154 @@ import numpy as np
 import pandas as pd
 from xrspatial.zonal import crosstab
 import xarray as xr
+import numba as nb
 
 
-def _are_not_natural_numbers(c: Number, b: Number) -> None:
-    """Checks pair to see if they are both natural numbers or two non-negative integers [0, 1, 2, 3, 4, ...)"""
-    for x in (c, b):
-        if np.isnan(x):  # checks to make sure it's not a nan value
-            continue
-        elif (x < 0) | ((x - int(x)) != 0):  # checks for non-negative and whole number
-            raise ValueError(
-                f"{x} is not natural numbers (non-negative integers) [0, 1, 2, 3, 4, ...)"
-            )
+@nb.vectorize(nopython=True)
+def _is_not_natural_number(x: Number) -> int:
+    """
+    Checks value to see if it is a natural number or two non-negative integer [0, 1, 2, 3, 4, ...)
+
+    FIXME: Must return boolean or some other numba type. Having trouble returning none.
+    """
+    # checks to make sure it's not a nan value
+    if np.isnan(x):
+        return -2  # dummy return
+    # checks for non-negative and whole number
+    elif (x < 0) | ((x - int(x)) != 0):
+        # FIXME: how to print x with message below using numba????
+        raise ValueError(
+            "Negative or non-whole number found (non-negative integers) [0, 1, 2, 3, 4, ...)"
+        )
+    # must return something according to signature
+    else:
+        return -2  # dummy return
 
 
-## cantor method
-def cantor_pair(c: int, b: int) -> int:
+@nb.vectorize(nopython=True)
+def cantor_pair(c: Number, b: Number) -> Number:
     """
     Produces unique natural number for two non-negative natural numbers (0,1,2,...)
 
     Parameters
     ----------
-    c : int
+    c : Number
         Candidate map value.
-    b : int
+    b : Number
         Benchmark map value.
 
     Returns
     -------
-    int
+    Number
         Agreement map value.
 
     References
     ----------
-    [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    _are_not_natural_numbers(c, b)
+    _is_not_natural_number(c)
+    _is_not_natural_number(b)
     return 0.5 * (c**2 + c + 2 * c * b + 3 * b + b**2)
 
 
-def szudzik_pair(c: int, b: int) -> int:
+@nb.vectorize(nopython=True)
+def szudzik_pair(c: Number, b: Number) -> Number:
     """
     Produces unique natural number for two non-negative natural numbers (0,1,2,3,...).
 
     Parameters
     ----------
-    c : int
+    c : Number
         Candidate map value.
-    b : int
+    b : Number
         Benchmark map value.
 
     Returns
     -------
-    int
+    Number
         Agreement map value.
 
     References
     ----------
-    [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    _are_not_natural_numbers(c, b)
+    _is_not_natural_number(c)
+    _is_not_natural_number(b)
     return c**2 + c + b if c >= b else b**2 + c
 
 
-def negative_value_transformation(func: Callable):
+@nb.vectorize(nopython=True)
+def _negative_value_transformation(x: Number) -> Number:
     """
     Transforms negative values for use with pairing functions that only accept non-negative integers.
 
     Parameters
     ----------
-    func : Callable
-        Pairing function to apply negative value transformation to.
+    x : Number
+        Negative number to be transformed.
 
     Returns
     -------
-    Callable
-        Pairing function able to accept negative values.
+    Number
+        Transformed value.
+
+    References
+    ----------
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    _signing = lambda x: 2 * x if x >= 0 else -2 * x - 1
-
-    def wrap(c, b):
-        c = _signing(c)
-        b = _signing(b)
-        return func(c, b)
-
-    return wrap
+    return 2 * x if x >= 0 else -2 * x - 1
 
 
-@negative_value_transformation
-def cantor_pair_signed(c: int, b: int) -> int:
+@nb.vectorize(nopython=True)
+def cantor_pair_signed(c: Number, b: Number) -> Number:
     """
     Output unique natural number for each unique combination of whole numbers using Cantor signed method.
 
     Parameters
     ----------
-    c : int
+    c : Number
         Candidate map value.
-    b : int
+    b : Number
         Benchmark map value.
 
     Returns
     -------
-    int
+    Number
         Agreement map value.
 
     References
     ----------
-    [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    return cantor_pair(c, b)
+    ct = _negative_value_transformation(c)
+    bt = _negative_value_transformation(b)
+    return cantor_pair(ct, bt)
 
 
-@negative_value_transformation
-def szudzik_pair_signed(c: int, b: int) -> int:
+@nb.vectorize(nopython=True)
+def szudzik_pair_signed(c: Number, b: Number) -> Number:
     """
     Output unique natural number for each unique combination of whole numbers using Szudzik signed method._summary_
 
     Parameters
     ----------
-    c : int
+    c : Number
         Candidate map value.
-    b : int
+    b : Number
         Benchmark map value.
 
     Returns
     -------
-    int
+    Number
         Agreement map value.
 
     References
     ----------
-    [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    return szudzik_pair(c, b)
-
-
-## user defined
-def _make_pairing_dict(
-    unique_candidate_values: Iterable, unique_benchmark_values: Iterable
-):
-    """Creates a dict pairing each unique value in candidate and benchmark arrays"""
-    from itertools import product
-
-    pairing_dict = {
-        k: v
-        for v, (k, _) in enumerate(
-            product(unique_candidate_values, unique_benchmark_values)
-        )
-    }
-
-
-def pairing_dict_fn(c: int, b: int) -> int:
-    """
-    Produces a pairing dictionary that produces a unique result for every combination ranging from 0 to the number of combinations.
-
-    Parameters
-    ----------
-    c : int
-        Candidate map value.
-    b : int
-        Benchmark map value.
-
-    Returns
-    -------
-    int
-        Agreement map value.
-
-    References
-    ----------
-    [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
-    """
-    return pairing_dict[c, b]
+    ct = _negative_value_transformation(c)
+    bt = _negative_value_transformation(b)
+    return szudzik_pair(ct, bt)
 
 
 ####################################
@@ -199,18 +177,42 @@ def pairing_dict_fn(c: int, b: int) -> int:
 
 
 def compute_agreement_xarray(
-    candidate: Union[xr.DataArray, xr.Dataset],
-    benchmark: Union[xr.DataArray, xr.Dataset],
-    comparison_function: Union[Callable, np.ufunc],
+    candidate_map: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    comparison_function: nb.vectorize,
 ) -> Union[xr.DataArray, xr.Dataset]:
-    # converts comparison function to ufunc with 2 inputs and 1 output if not already
-    if not isinstance(comparison_function, np.ufunc):
-        comparison_function_ufunc = np.frompyfunc(comparison_function, 2, 1)
+    """
+    Computes agreement map as xarray from candidate and benchmark xarray's.
+
+    Parameters
+    ----------
+    candidate_map : Union[xr.DataArray, xr.Dataset]
+        Candidate map.
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
+        Benchmark map.
+    comparison_function : nb.np.ufunc.dufunc.DUFunc
+        Numba vectorized comparison function. Created by decorating function with @nb.vectorize().
+
+    Returns
+    -------
+    Union[xr.DataArray, xr.Dataset]
+        Agreement map.
+
+    References
+    ----------
+    .. [1] [Creating NumPy universal function](https://numba.readthedocs.io/en/stable/user/vectorize.html)
+    """
 
     # use xarray apply ufunc to apply comparison to candidate and benchmark xarray's
-    agreement_map_xr = xr.apply_ufunc((candidate, benchmark))
+    agreement_map = xr.apply_ufunc(
+        comparison_function, candidate_map, benchmark_map, dask="forbidden"
+    )
 
-    return agreement_map_xr
+    """ TODO: What does "parallelized" option do?
+        - If parallelized is selected, several other args should be considered
+        - Including dask_gufunc_kwargs, output_dtypes, output_sizes, and meta. """
+
+    return agreement_map
 
 
 def _reorganize_crosstab_output(crosstab_df: pd.DataFrame) -> pd.DataFrame:
@@ -238,38 +240,37 @@ def _reorganize_crosstab_output(crosstab_df: pd.DataFrame) -> pd.DataFrame:
 def crosstab_xarray(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
-    agreement_map: xr.DataArray,
-    allow_list_candidate: Optional[Iterable[Union[int, float]]] = None,
-    allow_list_benchmark: Optional[Iterable[Union[int, float]]] = None,
-    exclude_values: Optional[Union[int, float]] = None,
+    allow_list_candidate: Optional[Iterable[Number]] = None,
+    allow_list_benchmark: Optional[Iterable[Number]] = None,
+    exclude_value: Optional[Number] = None,
 ) -> pd.DataFrame:
     """
-    Crosstab xarray DataArrays to produce crosstab df.
+    Crosstab singular band xarray.DataArrays to produce crosstab df.
+
+    TODO: Manage xr.DataArray's with multiple bands and xr.Datasets with variables of multiple bands.
 
     Parameters
     ----------
     candidate_map : xr.DataArray
-        Candidate map
+        Candidate map with only one band.
     benchmark_map : xr.DataArray
-        Benchmark map
-    agreement_map : xr.DataArray
-        Agreement map
+        Benchmark map with only one band.
     allow_list_candidate : Optional[Iterable[Union[int,float]]], optional
         List of values in candidate to include in crosstab. Remaining values are excluded, by default None
     allow_list_benchmark : Optional[Iterable[Union[int,float]]], optional
         List of values in benchmark to include in crosstab. Remaining values are excluded, by default None
-    exclude_values : Optional[Union[int,float]], optional
-        List of values to exclude from crosstab, by default None
+    exclude_value : Optional[Number], optional
+        Value to exclude from crosstab, by default None
 
     Returns
     -------
-    xr.DataArray
-        Crosstab table with counts of each combination of candidate map and benchmark map values.
+    pd.DataFrame
+        Crosstab dataframe with counts of each combination of candidate map and benchmark map values. Row index of dataframe represents unique values in candidate while columns represent unique values in benchmark.
 
     References
     ----------
-    [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
-    [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
+    .. [1] [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
+    .. [2] [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
     """
 
     # check dimensionality
@@ -292,6 +293,11 @@ def crosstab_xarray(
     # get length of extra dimension
     extra_dim_length = candidate_map[extra_dim_name_candidate].size
 
+    # TEMP TODO: Support multi-band xarray's
+    assert (
+        extra_dim_length == 1
+    ), "Crosstabbing is currently only supporting single band xr.DataArray's"
+
     # cycle through bands
     for b in range(1, extra_dim_length + 1):
         """
@@ -302,7 +308,7 @@ def crosstab_xarray(
             values=benchmark_map.sel({extra_dim_name_benchmark: b}),
             zone_ids=allow_list_candidate,
             cat_ids=allow_list_benchmark,
-            nodata_values=exclude_values,
+            nodata_values=exclude_value,
         )
 
         # reorganize df to follow candidate and benchmark conventions instead of xarray-spatial conventions
