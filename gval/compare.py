@@ -213,6 +213,28 @@ def compute_agreement_xarray(
     return agreement_map_xr
 
 
+def _reorganize_crosstab_output(crosstab_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Reorganizes crosstab output away from conventions used in xarray-spatial.
+
+    Parameters
+    ----------
+    crosstab_df : pd.DataFrame
+        Output of xarray-spatial.zonal.crosstab.
+
+    Returns
+    -------
+    pd.DataFrame
+        Crosstab dataframe using candidate and benchmark conventions.
+    """
+
+    crosstab_df = crosstab_df.set_index("zone").rename_axis(
+        index="candidate", columns="benchmark"
+    )
+
+    return crosstab_df
+
+
 def crosstab_xarray(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
@@ -243,21 +265,25 @@ def crosstab_xarray(
     -------
     xr.DataArray
         Crosstab table with counts of each combination of candidate map and benchmark map values.
+
+    References
+    ----------
+    [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
+    [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
     """
-
-    # according to xr-spatial docs:
-    # Nodata value in values raster. Cells with nodata do not belong to any zone, and thus excluded from calculation.
-    # would this be necessary? Does this just provide another means to exclude??
-
-    # possible to use `xr.rio._obj.dims` or `xr.rio.check_dimensions()` to get first dimension name?
-    # may not always be band?
-    # See https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py
-    # See https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py
 
     # check dimensionality
     assert (
         candidate_map.shape == benchmark_map.shape
     ), f"Dimensionalities of candidate {candidate_map.shape} and benchmark {benchmark_map.shape} must match."
+
+    """
+    TODO:
+    Use of `xr.rio._obj.dims` or `xr.rio._check_dimensions()` to get extra dimension name (sometimes called band)
+        - is it always called band? may not always be band?
+        - are there any other methods for doing this??
+        - should this go elsewhere as it might be repeated?
+    """
 
     # get extra dimension name
     extra_dim_name_candidate = candidate_map.rio._check_dimensions()
@@ -268,6 +294,9 @@ def crosstab_xarray(
 
     # cycle through bands
     for b in range(1, extra_dim_length + 1):
+        """
+        NOTE: Consider that NoData is being tabulated here if it's not masked out.
+        """
         crosstab_df = crosstab(
             zones=candidate_map.sel({extra_dim_name_candidate: b}),
             values=benchmark_map.sel({extra_dim_name_benchmark: b}),
@@ -276,25 +305,7 @@ def crosstab_xarray(
             nodata_values=exclude_values,
         )
 
-    """
-    # try alternative approaches:
-    - numpy histogram
-       - np.histogram2d() (use with xr.apply_ufuncs?)
-       - np.histogramdd() (use with xr.apply_ufuncs?)
-       - np.histogram_bin_edges() (governs binning behaviour)
-    - xhistogram:
-       - xhistogram.xarray.histogram() (for xarray's?)
-       - xhistogram.core.histogram() (for arrays?)
-    - a function that inverses the pairing func to derive the source pairings and their respective counts.
-        - make a ufunc that takes agreement array and produces three equal length arrays:
-            - count for each agreement value
-            - candidate value corresponding to each count
-            - benchmark value corresponding to each count
-    - try making a ufunc that takes in candidate and benchmark arrays and produces four equal length arrays:
-        - unique values in candidate
-        - unique values in benchmark
-        - agreement values 
-        - counts of agreement values
-    """
+        # reorganize df to follow candidate and benchmark conventions instead of xarray-spatial conventions
+        crosstab_df = _reorganize_crosstab_output(crosstab_df)
 
     return crosstab_df

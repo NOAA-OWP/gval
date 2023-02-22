@@ -24,6 +24,7 @@ from gval.compare import (
     szudzik_pair_signed,
     compute_agreement_xarray,
     crosstab_xarray,
+    _reorganize_crosstab_output,
 )
 
 from config import TEST_DATA, AWS_KEYS
@@ -171,7 +172,7 @@ def benchmark_map(benchmark_map_fp):
                     "zone": [-9999, 1, 2],
                     0: [60420648, 41687643, 2232777],
                     2: [143467, 2163307, 10641990],
-                }
+                },
             ),
         )
     ],
@@ -181,11 +182,13 @@ def test_crosstab_xarray(
 ):
     """Test crosstabbing candidate and benchmark xarrays"""
 
-    # todo make inputs that are already spatially aligned as to avoid aligning
+    # TODO: make inputs that are already spatially aligned as to avoid aligning
     candidate_map, benchmark_map = Spatial_alignment(
         candidate_map, benchmark_map, "candidate"
     )
 
     crosstab_df = crosstab_xarray(candidate_map, benchmark_map, comparison_function)
+
+    expected_df = _reorganize_crosstab_output(expected_df)
 
     pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
