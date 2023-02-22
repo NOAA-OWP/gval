@@ -41,11 +41,12 @@ If you would like to contribute, please follow the following steps:
 1. Fork the project.
 2. Clone your fork: `git clone <your_username>/gval`
 3. Create a feature branch: `git checkout -b <your_feature>`
-4. Code Standards: Make sure unit tests pass `pytest` and there is code coverage `pytest-cov`. 
-5. Run error/style linting with `flake8`. Review any changes or issues by making manual changes and/or use `black .` to autoformat. All linting changes must be re-tested with step 4. 
-6. Commit your changes: `git commit -m 'feature message'`
-7. Push to the branch: `git push origin <your_username> <your_feature>`
-8. Open a pull request.
+4. Code Standards: Make sure unit tests pass `pytest` and there is no significant reduction
+in code coverage `pytest --cov=gval ./tests`.
+5. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks that will lint
+the code. Make sure all of these checks pass, if not make changes and re-commit.
+6. Push to the branch: `git push origin <your_username> <your_feature>`
+7. Open a pull request (review checklist in PR template before requesting a review)
 
 ## Tooling Dependencies
 - Code Checking with [Flake8](https://github.com/PyCQA/flake8)
@@ -75,7 +76,7 @@ If you would like to contribute, please follow the following steps:
 ## Development Installation
 
 (In this case, the image name, "gval-image", and container name, "gval-python" can be changed
-to whatever name is more suitable.  Script, "test.py", does not exist and is an arbitrary placeholder for 
+to whatever name is more suitable.  Script, "test.py", does not exist and is an arbitrary placeholder for
 script of choice.)
 
 First setup docker instance and in the root directory of the project:
@@ -113,7 +114,7 @@ To build the gval package and install locally:
 - In the root directory install the gVal package:
 
   `python -m build && pip install dist/*.whl --force-reinstall`
-- Or on Windows replacing version number with current version number: 
+- Or on Windows replacing version number with current version number:
 
   `py -m build` then get the name of the wheel in the dist directory, e.g.:
 
@@ -122,5 +123,3 @@ To build the gval package and install locally:
 The packaging process using docker container would look as follows (on linux):
 
 `sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install dist/*.whl --force-reinstall`
-
-

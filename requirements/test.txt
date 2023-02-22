@@ -11,4 +11,4 @@ memray
 dask-memusage
 sphinx-rtd-theme
 py
-
+pre-commit
