@@ -25,13 +25,14 @@ from gval.compare import (
     crosstab_xarray,
 )
 
-from config import TEST_DATA, AWS_KEYS
-from tests.utils import _set_aws_environment_variables
+from config import TEST_DATA
+
+# from tests.utils import _set_aws_environment_variables
 
 test_data_dir = TEST_DATA
 
 # set AWS environment variables
-_set_aws_environment_variables(AWS_KEYS)
+# _set_aws_environment_variables(AWS_KEYS)
 
 
 @pytest.fixture(

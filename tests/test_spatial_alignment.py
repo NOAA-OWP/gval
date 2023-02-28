@@ -21,13 +21,14 @@ from gval.homogenize.spatial_alignment import (
     Spatial_alignment,
 )
 
-from config import TEST_DATA, AWS_KEYS
-from tests.utils import _set_aws_environment_variables
+from config import TEST_DATA
+
+# from tests.utils import _set_aws_environment_variables
 
 test_data_dir = TEST_DATA
 
 # set AWS environment variables
-_set_aws_environment_variables(AWS_KEYS)
+# _set_aws_environment_variables(AWS_KEYS)
 
 #################################################################################
 # TODO: this is duplicated across unit tests.

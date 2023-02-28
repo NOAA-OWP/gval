@@ -86,7 +86,11 @@ First setup docker instance and in the root directory of the project:
 The default user named 'user' with UID 1001 is created.  To use the same user and permissions you
 currently have on your machine override with build arguments:
 
-`[sudo] sudo docker build -t gval-image --build-arg UID=$(id -u) --target development .`
+`[sudo] docker build -t gval-image --build-arg UID=$(id -u) --target development .`
+
+For running unit tests on docker it can also be built with access and secret keys:
+
+`[sudo] docker build -t gval-image --build-arg UID=$(id -u) --build-arg ACCESS_KEY=[your access key] --build-arg SECRET_KEY=[your secret key]  --target development .`
 
 Standard run examples from the command line (standard, or overriding user with root):
 
