@@ -86,12 +86,16 @@ First setup docker instance and in the root directory of the project:
 The default user named 'user' with UID 1001 is created.  To use the same user and permissions you
 currently have on your machine override with build arguments:
 
-`[sudo] sudo docker build -t gval-image --build-arg UID=$(id -u) --target development .`
+`[sudo] docker build -t gval-image --build-arg UID=$(id -u) --target development .`
 
 Standard run examples from the command line (standard, or overriding user with root):
 
 - `[sudo] docker run -v $(pwd):/home/user/gval --name gval-python gval-image`
 - `[sudo] docker run -v $(pwd):/home/user/gval --user root --name gval-python gval-image`
+
+If given access keys for retrieving test data you can mount the volume as such:
+
+`[sudo] docker run -v ~/.aws:/home/user/.aws -v $(pwd):/home/user/gval --name gval-python gval-image`
 
 To keep your container running, try adding `tail -f /dev/null` as your command ensuring to detach with `-d`:
 - `[sudo] docker run -d -v $(pwd):/home/user/gval --name gval-python gval-image tail -f /dev/null`

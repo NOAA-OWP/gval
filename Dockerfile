@@ -55,7 +55,7 @@ LABEL version=$VERSION \
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 # ensures stdout stderr are sent straight to terminal
-ENV PYTHONUNBUFFERED=TRUE 
+ENV PYTHONUNBUFFERED=TRUE
 ENV VENV=$VENV
 ENV PROJDIR=$PROJDIR
 # add path to virtual env so that future python commands use it
@@ -72,13 +72,13 @@ WORKDIR /home/$UNAME
 COPY --from=builder --chown=$UID $VENV $VENV
 COPY --from=builder --chown=$UID $PANDOC $PANDOC
 
-###############################################################################################
+##############################################################################################
 # runtime stage
-###############################################################################################
-#FROM development AS runtime
+##############################################################################################
+FROM development AS runtime
 
-#COPY . $PROJDIR
-#WORKDIR $PROJDIR
-#RUN $VENV/bin/pip install $PROJDIR
+COPY . $PROJDIR
+WORKDIR $PROJDIR
+RUN $VENV/bin/pip install $PROJDIR
 
-#CMD ["./.venv/bin/python", "-m", "$PROJDIR/main.py"]
+CMD ["./.venv/bin/python", "-m", "$PROJDIR/main.py"]
