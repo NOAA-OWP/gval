@@ -138,13 +138,6 @@ build arguments:
 `[sudo] docker build -t gval-image --build-arg UID=$(id -u) --target
 development .`
 
-For running unit tests on docker it can also be built with access and
-secret keys:
-
-`[sudo] docker build -t gval-image --build-arg UID=$(id -u) --build-arg
-ACCESS_KEY=[your access key] --build-arg SECRET_KEY=[your secret key]
---target development .`
-
 Standard run examples from the command line (standard, or overriding
 user with root):
 
@@ -152,6 +145,12 @@ user with root):
     gval-image`
   - `[sudo] docker run -v $(pwd):/home/user/gval --user root --name
     gval-python gval-image`
+
+If given access keys for retrieving test data you can mount the volume
+as such:
+
+`[sudo] docker run -v ~/.aws:/home/user/.aws -v $(pwd):/home/user/gval
+--name gval-python gval-image`
 
 To keep your container running, try adding `tail -f /dev/null` as your
 command ensuring to detach with `-d`:

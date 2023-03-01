@@ -9,12 +9,9 @@ ARG DEVREQS=test
 ARG VENV=/usr/local/gval_env
 ARG PROJDIR=/home/user/gval
 ARG PANDOC_PARENT=/usr/bin/local
-ARG AWS_CONFIG=/home/user/.aws
 ARG VERSION='0.0.1'
 ARG MAINTANER='Fernando Aristizabal & Gregory Petrochenkov'
 ARG RELEASE_DATE=''
-ARG ACCESS_KEY=''
-ARG SECRET_KEY=''
 
 ## SETUP ENV VARS ##
 ENV VENV=$VENV
@@ -26,10 +23,7 @@ COPY requirements/$DEVREQS.txt /tmp
 
 ## INSTALL EXTERNAL DEPENDENCIES ##
 # remove versions if errors occur
-RUN mkdir -p $AWS_CONFIG && \
-    echo -e "[default]\naws_access_key_id = $ACCESS_KEY\naws_secret_access_key = $SECRET_KEY" > $AWS_CONFIG/credentials && \
-    echo -e "[default]\nregion = us-east-1\noutput = json" > $AWS_CONFIG/config && \
-    wget -P $PANDOC_PARENT https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz && \
+RUN wget -P $PANDOC_PARENT https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz && \
     tar -xf $PANDOC_PARENT/pandoc-3.1-linux-amd64.tar.gz --directory $PANDOC_PARENT && \
     python3 -m venv $VENV && \
     $VENV/bin/pip install --upgrade build && \
@@ -48,7 +42,6 @@ ARG DEVREQS=test
 ARG VENV=/usr/local/gval_env
 ARG PANDOC=/usr/bin/local/pandoc-3.1/bin
 ARG PROJDIR=/home/user/gval
-ARG AWS_CONFIG=/home/user/.aws
 ARG VERSION='0.0.1'
 ARG MAINTANER='Fernando Aristizabal & Gregory Petrochenkov'
 ARG RELEASE_DATE=''
@@ -78,7 +71,6 @@ WORKDIR /home/$UNAME
 # RETRIEVE BUILT DEPENDENCIES
 COPY --from=builder --chown=$UID $VENV $VENV
 COPY --from=builder --chown=$UID $PANDOC $PANDOC
-COPY --from=builder --chown=$UID $AWS_CONFIG $AWS_CONFIG
 
 ##############################################################################################
 # runtime stage

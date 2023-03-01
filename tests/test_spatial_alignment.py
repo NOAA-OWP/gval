@@ -5,8 +5,6 @@ Test functionality for gval/prep_comparison/spatial_alignment.py
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-import os
-
 import pytest
 import xarray as xr
 
@@ -23,41 +21,9 @@ from gval.homogenize.spatial_alignment import (
 
 from config import TEST_DATA
 
-# from tests.utils import _set_aws_environment_variables
-
 test_data_dir = TEST_DATA
 
-# set AWS environment variables
-# _set_aws_environment_variables(AWS_KEYS)
-
 #################################################################################
-# TODO: this is duplicated across unit tests.
-
-
-@pytest.fixture(scope="package", params=range(1))
-def candidate_map_fp(request):
-    """returns candidate maps"""
-    filepath = os.path.join(test_data_dir, f"candidate_map_{request.param}.tif")
-    yield filepath
-
-
-@pytest.fixture(scope="package", params=range(1))
-def benchmark_map_fp(request):
-    """returns benchmark maps"""
-    filepath = os.path.join(test_data_dir, f"benchmark_map_{request.param}.tif")
-    yield filepath
-
-
-@pytest.fixture(scope="package")
-def candidate_map(candidate_map_fp):
-    """returns candidate maps"""
-    yield load_raster_as_xarray(candidate_map_fp)
-
-
-@pytest.fixture(scope="package")
-def benchmark_map(benchmark_map_fp):
-    """returns benchmark maps"""
-    yield load_raster_as_xarray(benchmark_map_fp)
 
 
 def test_load_candidate_as_xarray(candidate_map_fp):
