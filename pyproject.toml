@@ -22,7 +22,7 @@ dependencies = [
     "rioxarray",
     "geopandas",
     "dask",
-    "tqdm"
+    "xarray-spatial"
 ]
 dynamic = ["version"]
 

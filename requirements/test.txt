@@ -1,6 +1,7 @@
 pytest
 pytest-benchmark
 pytest-cov
+pytest-cases
 flake8
 flake8-black
 allure-pytest
