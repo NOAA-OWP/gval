@@ -62,7 +62,8 @@ def benchmark_map(benchmark_map_fp):
 @pytest.fixture(scope="session")
 def agreement_map_fp(comparison):
     """return agreement maps"""
-    _, agreement_map_key = comparison
+    # FIXME: The way this is setup, it only works for test_compute_agreement_xarray(). Need a more correct way of parameterizing these sorts of tests.
+    _, agreement_map_key, _, _ = comparison
     filepath = check_file(
         os.path.join(test_data_dir, f"agreement_map_{agreement_map_key}.tif")
     )

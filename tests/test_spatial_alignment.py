@@ -1,5 +1,5 @@
 """
-Test functionality for gval/prep_comparison/spatial_alignment.py
+Test functionality for gval/homogenize/spatial_alignment.py
 """
 
 # __all__ = ['*']
