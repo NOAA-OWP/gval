@@ -2,10 +2,6 @@
 
 ## General Use
 
-To install gval in a python environment of choice with pip:
+To use this package:
 
-`pip install gval`
-
-Or use the docker instance on DockerHub:
-
-`docker run -it gval:latest python`
+`pip install 'gval @ git+https://github.com/NOAA-OWP/gval`

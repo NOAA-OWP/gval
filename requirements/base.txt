@@ -5,7 +5,6 @@ xarray-spatial==0.3.5
 
 ###################################
 # Potential future packages
-#numba
 #tqdm
 #argcomplete
 #scipy
