@@ -28,16 +28,30 @@ def _is_not_natural_number(x: Number) -> int:
     """
     Checks value to see if it is a natural number or two non-negative integer [0, 1, 2, 3, 4, ...)
 
-    FIXME: Must return boolean or some other numba type. Having trouble returning none.
+    Parameters
+    ----------
+    x : Number
+        Number to test.
+
+    Returns
+    -------
+    int
+        Return -2 by default. Issue with numba usage. Please ignore for now.
+        FIXME: Must return boolean or some other numba type. Having trouble returning none.
+
+    Raises
+    ------
+    ValueError
+        If x not a natural number.
     """
     # checks to make sure it's not a nan value
     if np.isnan(x):
         return -2  # dummy return
     # checks for non-negative and whole number
-    elif (x < 0) | ((x - int(x)) != 0):
+    elif (x < 0) | ((x - nb.int64(x)) != 0):
         # FIXME: how to print x with message below using numba????
         raise ValueError(
-            "Negative or non-whole number found (non-negative integers) [0, 1, 2, 3, 4, ...)"
+            "Non natural number found (non-negative integers, excluding Inf) [0, 1, 2, 3, 4, ...)"
         )
     # must return something according to signature
     else:
