@@ -32,7 +32,7 @@ Additionally, the code should follow any stylistic and architectural guidelines
 prescribed by the project. In the absence of such guidelines, mimic the styles
 and patterns in the existing code-base.
 
-![alt text](../../docs/images/ContributionGraphic.png)
+![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/ContributionGraphic.png)
 
 ### Guidelines
 
