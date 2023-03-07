@@ -1,11 +1,16 @@
+"""
+Package-level configuration file.
+"""
+
+# __all__ = ['*']
+__author__ = "Fernando Aristizabal, Gregory Petrochenkov"
+
+
 import os
 
-# Get absolute path of file
-abs_path = os.path.dirname(os.path.abspath(__file__))
 
-TEST_DATA = os.path.join(abs_path, "data", "data")
-# TEST_DATA = os.path.join("s3://gval-test")
-# AWS_KEYS = os.path.join(abs_path, "data", "access_keys.csv")
+# defines absolute path of project's root directory
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 if __name__ == "__main__":

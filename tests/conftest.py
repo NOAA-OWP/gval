@@ -1,76 +1,133 @@
+"""
+Configuration file for pytests
+"""
+
+# __all__ = ['*']
+__author__ = "Fernando Aristizabal"
+
+from typing import Union, Optional
+
 import os
+
+import numpy as np
+import xarray as xr
 import boto3
-import pytest
 
 from gval.utils.loading_datasets import load_raster_as_xarray
-from config import TEST_DATA
-
-test_data_dir = TEST_DATA
+from config import PROJECT_DIR
 
 
-def check_file(file_path: str) -> str:
+# generate test data dir path
+TEST_DATA_DIR = os.path.join(PROJECT_DIR, "data", "data")
+
+# name of S3 for test data
+TEST_DATA_S3_NAME = "gval-test"
+
+# client
+TEST_DATA_S3_CLIENT = boto3.client("s3")
+
+
+def _check_file(
+    file_path: Union[str, os.PathLike],
+    test_data_s3_name: Optional[str] = TEST_DATA_S3_NAME,
+    test_data_s3_client: Optional[
+        boto3.session.botocore.client.BaseClient
+    ] = TEST_DATA_S3_CLIENT,
+) -> None:
     """
+    Downloads file if not already available locally.
+
+    TODO: Check for modified dates and only download if file has been updated on S3 end.
 
     Parameters
     ----------
-    file_path : str
-        Name of file to check existence for
+    file_path : Union[str, os.PathLike]
+        Local absolute file path the check.
+    test_data_s3_name : str, default = TEST_DATA_S3_NAME
+        Name of S3 to retrieve file from.
+    test_data_s3_client : boto3.session.botocore.client.BaseClient, default = TEST_DATA_S3_CLIENT
+        S3 client object from boto3.
+    """
+    # gets base name of file
+    file_name = os.path.basename(file_path)
+
+    # downloads file if not locally available
+    if not os.path.exists(file_path):
+        test_data_s3_client.download_file(test_data_s3_name, file_name, file_path)
+
+
+"""
+TODO:
+ - Is there a way to create a stack of functions from _load_xarray, _build_map_file_path, and check_file that operates as a fixture/parameterization instead of normal python?
+ - This would create less boilerplate code to maintain by avoiding calls to load_raster_as_xarray and _build_map_file_path
+ - There is also no way to parameterize load_raster_as_xarray function.
+"""
+
+
+def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.PathLike]:
+    """
+    Returns local file path for a given file name.
+
+    Retrieves file from S3 if not already available.
+
+    Parameters
+    ----------
+    file_name : Union[str, os.PathLike]
+        Base filename.
 
     Returns
     -------
-    Full file path of object
+    Union[str, os.PathLike]
+        Local, absolute file path for input.
     """
-
-    file = file_path.split("/")[-1]
-    if not os.path.exists(file_path):
-        s3 = boto3.client("s3")
-        s3.download_file("gval-test", file, file_path)
-
+    file_path = os.path.join(TEST_DATA_DIR, file_name)
+    _check_file(file_path)
     return file_path
 
 
-@pytest.fixture(scope="session", params=range(1))
-def candidate_map_fp(request):
-    """returns candidate maps"""
-    filepath = check_file(
-        os.path.join(test_data_dir, f"candidate_map_{request.param}.tif")
-    )
-    yield filepath
+def _load_xarray(file_name: Union[str, os.PathLike]) -> Union[xr.DataArray, xr.Dataset]:
+    """
+    Loads xarray given a base file name.
+
+    Parameters
+    ----------
+    file_name : Union[str, os.PathLike]
+        Base file name of file within local TEST_DATA_DIR or TEST_DATA_S3_NAME.
+
+    Returns
+    -------
+    Union[xr.DataArray, xr.Dataset]
+        xarray object.
+    """
+    file_path = _build_map_file_path(file_name)
+    return load_raster_as_xarray(file_path)
 
 
-@pytest.fixture(scope="session")
-def candidate_map(candidate_map_fp):
-    """returns candidate map data"""
-    yield load_raster_as_xarray(candidate_map_fp)
+def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None:
+    """
+    Testing function used to test if two pairing dictionaries are equal.
 
+    This is necessary because np.nans can be of float or np.float64 kind which makes operator (==) comparisons false.
 
-@pytest.fixture(scope="session", params=range(1))
-def benchmark_map_fp(request):
-    """returns benchmark maps"""
-    filepath = check_file(
-        os.path.join(test_data_dir, f"benchmark_map_{request.param}.tif")
-    )
-    yield filepath
+    Parameters
+    ----------
+    computed_dict : dict
+        Pairing dict computed to test.
+    expected_dict : dict
+        Expected pairing dict to compare to.
 
+    Returns
+    -------
+    None
 
-@pytest.fixture(scope="session")
-def benchmark_map(benchmark_map_fp):
-    """returns benchmark map data"""
-    yield load_raster_as_xarray(benchmark_map_fp)
+    See also
+    --------
+    :obj:`np.testing.assert_equal`
 
+    Raises
+    ------
+    AssertionError
+    """
 
-@pytest.fixture(scope="session")
-def agreement_map_fp(comparison):
-    """return agreement maps"""
-    # FIXME: The way this is setup, it only works for test_compute_agreement_xarray(). Need a more correct way of parameterizing these sorts of tests.
-    _, agreement_map_key, _, _ = comparison
-    filepath = check_file(
-        os.path.join(test_data_dir, f"agreement_map_{agreement_map_key}.tif")
-    )
-    yield filepath
-
-
-@pytest.fixture(scope="session")
-def agreement_map(agreement_map_fp):
-    """return agreement map data"""
-    yield load_raster_as_xarray(agreement_map_fp)
+    np.testing.assert_equal(list(computed_dict.keys()), list(expected_dict.keys()))
+    np.testing.assert_equal(list(computed_dict.values()), list(expected_dict.values()))

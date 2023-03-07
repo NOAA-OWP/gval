@@ -8,12 +8,9 @@ __author__ = "Fernando Aristizabal"
 from typing import Union, Optional, Tuple, Dict, Any
 import os
 
-import rioxarray as rioxarray
-import xarray
+import rioxarray as rxr
+import xarray as xr
 import rasterio
-
-# To-Do: allow for s3 reads
-# import boto3
 
 
 def load_raster_as_xarray(
@@ -29,7 +26,7 @@ def load_raster_as_xarray(
     default_name: Optional[str] = None,
     band_as_variable: Optional[bool] = False,
     **open_kwargs,
-) -> Union[xarray.DataArray, xarray.Dataset]:
+) -> Union[xr.DataArray, xr.Dataset]:
     """
     Wraps around :obj:`rioxarray.open_rasterio` providing control over some arguments.
 
@@ -81,7 +78,7 @@ def load_raster_as_xarray(
 
     Returns
     -------
-    Union[:obj:`xarray.DataArray`, :obj:`xarray.Dataset`]
+    Union[:obj:`xr.DataArray`, :obj:`xr.Dataset`]
         Loaded data.
 
     References
@@ -90,9 +87,7 @@ def load_raster_as_xarray(
     .. [2] [`rasterio.open()`](https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open)
     """
 
-    # TODO: User could pass mask_and_scale and mask which overrides this.
-
-    return rioxarray.open_rasterio(
+    return rxr.open_rasterio(
         filename=filename,
         parse_coordinates=parse_coordinates,
         cache=cache,

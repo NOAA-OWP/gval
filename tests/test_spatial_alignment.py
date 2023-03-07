@@ -5,13 +5,11 @@ Test functionality for gval/homogenize/spatial_alignment.py
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-import pytest
+from pytest_cases import parametrize_with_cases
 import xarray as xr
 
-from gval.utils.loading_datasets import load_raster_as_xarray
 from gval.homogenize.spatial_alignment import (
     matching_crs,
-    checks_for_single_band,
     matching_spatial_indices,
     transform_bounds,
     rasters_intersect,
@@ -19,128 +17,74 @@ from gval.homogenize.spatial_alignment import (
     Spatial_alignment,
 )
 
-from config import TEST_DATA
 
-test_data_dir = TEST_DATA
-
-#################################################################################
-
-
-def test_load_candidate_as_xarray(candidate_map_fp):
-    """tests loading candidate raster as xarray DataArray"""
-    candidate_map = load_raster_as_xarray(candidate_map_fp)
-    assert isinstance(
-        candidate_map, xr.DataArray
-    ), "candidate_map is not an xarray.DataArray"
-
-
-def test_load_benchmark_as_xarray(benchmark_map_fp):
-    """tests loading benchmark raster as xarray DataArray"""
-    benchmark_map = load_raster_as_xarray(benchmark_map_fp)
-    assert isinstance(
-        benchmark_map, xr.DataArray
-    ), "benchmark_map is not an xarray.DataArray"
-
-
-#################################################################################
-
-
-@pytest.fixture(scope="module", params=[True])
-def expect_matching_crs(request):
-    """Returns expect value for matching CRS test"""
-    yield request.param
-
-
-def test_matching_crs(candidate_map, benchmark_map, expect_matching_crs):
-    """Tests for matching CRSs"""
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_match", glob="matching_crs"
+)
+def test_matching_crs(candidate_map, benchmark_map, expected_match):
+    """Tests if two maps have matching CRSs"""
     matching = matching_crs(candidate_map, benchmark_map)
-    assert (
-        matching == expect_matching_crs
-    ), f"matching_crs result ({matching}) does not agree with expected ({expect_matching_crs})"
+
+    assert matching == expected_match, "CRSs of maps are not matching"
 
 
-@pytest.fixture(scope="function", params=[False])
-def expect_matching_spatial_indices(request):
-    """Returns expect value for matching indices test"""
-    yield request.param
-
-
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_spatial_indices_matches",
+    glob="matching_spatial_indices",
+)
 def test_matching_spatial_indices(
-    candidate_map, benchmark_map, expect_matching_spatial_indices
+    candidate_map, benchmark_map, expected_spatial_indices_matches
 ):
-    """Tests for matching indices in two xarray DataArrays"""
+    """Tests for matching indices in two xarrays"""
     matching = matching_spatial_indices(candidate_map, benchmark_map)
-    assert (
-        matching == expect_matching_spatial_indices
-    ), f"Expected {expect_matching_spatial_indices} while matching indices {matching}"
+    assert matching == expected_spatial_indices_matches, "Indices don't match expected"
 
 
-@pytest.fixture(scope="module", params=["benchmark", "candidate"])
-def target_map(request):
-    """Target map fixture"""
-    yield request.param
-
-
-@pytest.fixture(scope="module", params=[None, "EPSG:4329"])
-def dst_crs(request):
-    """dst_crs fixture"""
-    yield request.param
-
-
-def test_transform_bounds(candidate_map, benchmark_map, target_map, dst_crs):
-    """Tests the transformation of bounds given a target map or dst_crs"""
-    tb = transform_bounds(candidate_map, benchmark_map, target_map, dst_crs)
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, target_crs", glob="transform_bounds"
+)
+def test_transform_bounds(candidate_map, benchmark_map, target_crs):
+    """Tests the transformation of bounds given a target crs"""
+    # TODO: This test is not correct. Need to document the correct bounds and compare to those.
+    tb = transform_bounds(candidate_map, benchmark_map, target_crs)
     assert isinstance(tb, tuple), f"{tb} is not tuple type"
 
 
-def test_rasters_intersect(candidate_map, benchmark_map):
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_intersect", glob="rasters_intersect"
+)
+def test_rasters_intersect(candidate_map, benchmark_map, expected_intersect):
     """Tests the intersection of rasters"""
     intersect = rasters_intersect(
         candidate_map.rio.bounds(), benchmark_map.rio.bounds()
     )
-    assert intersect, "Maps don't spatially intersect"
+    assert intersect == expected_intersect
 
 
-@pytest.fixture(scope="function", params=[True])
-def expect_checks_for_single_band(request):
-    """checks for single band expects fixture"""
-    yield request.param
-
-
-def test_checks_for_single_band(
-    candidate_map, benchmark_map, expect_checks_for_single_band
-):
-    """Tests checks for single band fixture"""
-    bsb = checks_for_single_band(candidate_map, benchmark_map)
-    assert (
-        bsb == expect_checks_for_single_band
-    ), "Both candidate and benchmark expected to be single band"
-
-
-@pytest.fixture(scope="module", params=[None, {"dst_crs": "EPSG:4329"}])
-def kwargs(request):
-    """kwargs fixture"""
-    yield request.param
-
-
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, target_map, kwargs", glob="align_rasters"
+)
 def test_align_rasters(candidate_map, benchmark_map, target_map, **kwargs):
     """Tests the alignment of rasters"""
+
     cam, bem = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
-    assert isinstance(
-        cam, xr.DataArray
-    ), "Aligned candidate raster not xarray DataArray"
-    assert isinstance(
-        bem, xr.DataArray
-    ), "Aligned benchmark raster not xarray DataArray"
+
+    try:
+        # xr.align raises a value error if coordinates don't align
+        xr.align(cam, bem, join="exact")
+    except ValueError:
+        assert False, "Candidate and benchmark failed to align"
 
 
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, target_map, kwargs", glob="align_rasters"
+)
 def test_spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs):
     """Tests spatial_alignment function"""
     cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
 
-    assert isinstance(
-        cam, xr.DataArray
-    ), "Aligned candidate raster not xarray DataArray"
-    assert isinstance(
-        bem, xr.DataArray
-    ), "Aligned benchmark raster not xarray DataArray"
+    try:
+        # xr.align raises a value error if coordinates don't align
+        xr.align(cam, bem, join="exact")
+    except ValueError:
+        assert False, "Candidate and benchmark failed to align"
