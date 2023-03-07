@@ -13,18 +13,42 @@ from tests.conftest import _load_xarray
 from gval.compare import szudzik_pair_signed, cantor_pair_signed
 
 
-numbers = [0, 2, 106.0, 27, 13, 196, 1e10, 1.0, 50.0, np.nan, np.float64(np.nan)]
+numbers_success = [
+    0,
+    2,
+    106.0,
+    27,
+    13,
+    196,
+    1e10,
+    1.0,
+    50.0,
+    np.nan,
+    np.float64(np.nan),
+]
 
 
-@parametrize("number", numbers)
+@parametrize("number", numbers_success)
 def case_is_not_natural_number_successes(number):
     return number
 
 
-numbers = [-1, -13, -10, -10.39023, 98.80480, -1.2e2, -1.0, 48.1, np.inf, 1e99, 1e25]
+numbers_fail = [
+    -1,
+    -13,
+    -10,
+    -10.39023,
+    98.80480,
+    -1.2e2,
+    -1.0,
+    48.1,
+    np.inf,
+    1e99,
+    1e25,
+]
 
 
-@parametrize("number", numbers)
+@parametrize("number", numbers_fail)
 def case_is_not_natural_number_failures(number):
     return number
 
