@@ -7,7 +7,8 @@ maps and metrics.
 NOTE: THIS PACKAGE IS UNDER ACTIVE DEVELOPMENT AND NOT CURRENTLY
 FUNCTIONING. BREAKING CHANGES ARE OFTEN INTRODUCED.
 
-![alt text](../../docs/images/ExampleWorkflow.png)
+![alt
+text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/ExampleWorkflow.png)
 
 # Installation
 
@@ -67,7 +68,8 @@ stylistic and architectural guidelines prescribed by the project. In the
 absence of such guidelines, mimic the styles and patterns in the
 existing code-base.
 
-![alt text](../../docs/images/ContributionGraphic.png)
+![alt
+text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/ContributionGraphic.png)
 
 ### Guidelines
 
