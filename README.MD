@@ -19,18 +19,18 @@ To use this package:
 
 ## Standards
 
-  - Python 3.10 or higher
-  - [Numpy Style Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
-  - [Python Type Hints](https://docs.python.org/3/library/typing.html)
-  - [PEP8](https://pep8.org/) Styling (and
+- Python 3.10 or higher
+- [Numpy Style Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
+- [Python Type Hints](https://docs.python.org/3/library/typing.html)
+- [PEP8](https://pep8.org/) Styling (and
     [this](https://peps.python.org/pep-0008/))
 
 ## Code Dependencies
 
-  - [rioxarray](https://corteva.github.io/rioxarray/html/index.html)
-  - [geopandas](https://geopandas.org/en/stable/)
-  - [dask](https://www.dask.org)
-  - [xarray-spatial](https://xarray-spatial.org)
+- [rioxarray](https://corteva.github.io/rioxarray/html/index.html)
+- [geopandas](https://geopandas.org/en/stable/)
+- [dask](https://www.dask.org)
+- [xarray-spatial](https://xarray-spatial.org)
 
 # Contributing
 
@@ -42,8 +42,8 @@ To use this package:
 
 There are two primary ways to help:
 
-  - Using the issue tracker, and
-  - Changing the code-base.
+- Using the issue tracker, and
+- Changing the code-base.
 
 ## Using the issue tracker
 
@@ -85,34 +85,34 @@ If you would like to contribute, please follow the following steps:
 
 ## Tooling Dependencies
 
-  - Code Checking with [Flake8](https://github.com/PyCQA/flake8)
-      - Combines PyFlakes, pycodestyle, and others for linting and style
-        checking.
-      - For autoformatting:
-        [flake8-black](https://pypi.org/project/flake8-black/)
-  - Testing with
+Code Checking with [Flake8](https://github.com/PyCQA/flake8)
+
+- Combines PyFlakes, pycodestyle, and others for linting and style
+    checking.
+- For autoformatting:
+    [flake8-black](https://pypi.org/project/flake8-black/)
+- Testing with
     [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
-      - For timed tests:
+    - For timed tests:
         [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
-      - For code coverage:
+    - For code coverage:
         [pytest-cov](https://pypi.org/project/pytest-cov/)
-  - Profiling
-      - [yappi](https://github.com/sumerc/yappi/)
-      - For memory profiling: [memray](https://pypi.org/project/memray/)
-      - Dask memory profiling:
+- Profiling
+- [yappi](https://github.com/sumerc/yappi/)
+    - For memory profiling: [memray](https://pypi.org/project/memray/)
+    - Dask memory profiling:
         [dask-memusage](https://github.com/itamarst/dask-memusage)
-  - Dependencies and Packaging
-      - [pip](https://packaging.python.org/en/latest/key_projects/#pip)
-      - Docker
-  - Distribution
-      - [PyPI](https://pypi.org/)
-      - DockerHub
-      - GitHub (source, packaging, and images)
-  - Docs
-      - [Sphinx](https://www.sphinx-doc.org/)
-      - [pandoc](https://pypi.org/project/pandoc/)
-      - [ReadTheDocs](https://readthedocs.org/)
-      - [Jupyter](https://pypi.org/project/jupyter/)
+- Dependencies and Packaging
+    - [pip](https://packaging.python.org/en/latest/key_projects/#pip)
+    - Docker
+- Distribution *[PyPI](https://pypi.org/)
+    - DockerHub
+    - GitHub (source, packaging, and images)
+- Docs
+    - [Sphinx](https://www.sphinx-doc.org/)
+    - [pandoc](https://pypi.org/project/pandoc/)
+    - [ReadTheDocs](https://readthedocs.org/)
+    - [Jupyter](https://pypi.org/project/jupyter/)
 
 ## Development Installation
 
@@ -135,9 +135,9 @@ development .`
 Standard run examples from the command line (standard, or overriding
 user with root):
 
-  - `[sudo] docker run -v $(pwd):/home/user/gval --name gval-python
+- `[sudo] docker run -v $(pwd):/home/user/gval --name gval-python
     gval-image`
-  - `[sudo] docker run -v $(pwd):/home/user/gval --user root --name
+- `[sudo] docker run -v $(pwd):/home/user/gval --user root --name
     gval-python gval-image`
 
 If given access keys for retrieving test data you can mount the volume
@@ -149,13 +149,13 @@ as such:
 To keep your container running, try adding `tail -f /dev/null` as your
 command ensuring to detach with `-d`:
 
-  - `[sudo] docker run -d -v $(pwd):/home/user/gval --name gval-python
+- `[sudo] docker run -d -v $(pwd):/home/user/gval --name gval-python
     gval-image tail -f /dev/null`
 
 You can also set up your IDE to run this docker image directly:
 
-  - [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
-  - [Visual Studio
+- [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
+- [Visual Studio
     Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
 If the container already exists you can start as follows:
@@ -169,11 +169,11 @@ bash`
 
 To build the gval package and install locally:
 
-  - In the root directory install the gVal package:
+- In the root directory install the gVal package:
 
     `python -m build && pip install dist/*.whl --force-reinstall`
 
-  - Or on Windows replacing version number with current version number:
+- Or on Windows replacing version number with current version number:
 
     `py -m build` then get the name of the wheel in the dist directory,
     e.g.:

@@ -30,6 +30,7 @@ def compile_readme():
         )
         contents = contents.replace("\\_", "_")
         contents = contents.replace("\\*", "*")
+        contents = contents.replace("  -", "-")
 
         matches = re.findall("<code>[^>]*>[^~]*?", contents)
         print(matches)
