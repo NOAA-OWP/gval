@@ -273,9 +273,7 @@ def Spatial_alignment(
 
     # transform bounds
     if "dst_crs" in kwargs:
-        cam, bem = transform_bounds(
-            candidate_map, benchmark_map, target_map, kwargs["dst_crs"]
-        )
+        cam, bem = transform_bounds(candidate_map, benchmark_map, kwargs["dst_crs"])
     else:
         cam, bem = transform_bounds(candidate_map, benchmark_map, target_map)
 

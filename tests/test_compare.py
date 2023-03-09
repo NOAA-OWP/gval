@@ -11,7 +11,6 @@ import pytest
 from pytest_cases import parametrize_with_cases
 import xarray as xr
 
-from gval.homogenize.spatial_alignment import Spatial_alignment
 from gval.compare import (
     _is_not_natural_number,
     cantor_pair,
@@ -109,11 +108,6 @@ def test_pairing_dict_fn(c, b, pairing_dict, expected_value):
 def test_crosstab_xarray(candidate_map, benchmark_map, expected_df):
     """Test crosstabbing candidate and benchmark xarrays"""
 
-    # TODO: make inputs that are already spatially aligned as to avoid aligning
-    candidate_map, benchmark_map = Spatial_alignment(
-        candidate_map, benchmark_map, "candidate"
-    )
-
     crosstab_df = crosstab_xarray(candidate_map, benchmark_map)
 
     expected_df = _reorganize_crosstab_output(expected_df)
@@ -134,11 +128,6 @@ def test_compute_agreement_xarray(
     allow_benchmark_values,
 ):
     """Tests computing of agreement xarray from two xarrays"""
-
-    # TODO: make inputs that are already spatially aligned as to avoid aligning
-    candidate_map, benchmark_map = Spatial_alignment(
-        candidate_map, benchmark_map, "candidate"
-    )
 
     agreement_map_computed = compute_agreement_xarray(
         candidate_map,

@@ -25,7 +25,9 @@ def compile_readme():
     contents = None
     with open(f"{abs_path}/../README.MD", "r") as file:
         contents = file.read()
-        contents = contents.replace("../../images", "./images")
+        contents = contents.replace(
+            "../images", "https://github.com/NOAA-OWP/gval/blob/main/docs/images"
+        )
         contents = contents.replace("\\_", "_")
         contents = contents.replace("\\*", "*")
 

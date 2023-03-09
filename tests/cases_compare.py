@@ -186,13 +186,13 @@ def case_pairing_dict_fn(c, b, pairing_dict, expected_value):
 
 crosstab_xarrays = [
     (
-        "candidate_map_0.tif",
-        "benchmark_map_0.tif",
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
         pd.DataFrame(
             {
                 "zone": [-9999, 1, 2],
-                0: [60420648, 41687643, 2232777],
-                2: [143467, 2163307, 10641990],
+                0: [14229651, 10982559, 544467],
+                2: [6465, 679166, 2624332],
             }
         ),
     )
@@ -206,25 +206,25 @@ def case_crosstab_xarray(candidate_map, benchmark_map, expected_df):
 
 compute_agreement_xarrays = [
     (
-        "candidate_map_0.tif",
-        "benchmark_map_0.tif",
-        "agreement_map_szudzik.tif",
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        "agreement_map_00_szudzik_aligned_to_candidate_map_0.tif",
         szudzik_pair_signed,
         None,
         None,
     ),
     (
-        "candidate_map_0.tif",
-        "benchmark_map_0.tif",
-        "agreement_map_cantor.tif",
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        "agreement_map_00_cantor_aligned_to_candidate_map_0.tif",
         cantor_pair_signed,
         None,
         None,
     ),
     (
-        "candidate_map_0.tif",
-        "benchmark_map_0.tif",
-        "agreement_map_pairing_dict.tif",
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        "agreement_map_00_pairing_aligned_to_candidate_map_0.tif",
         "pairing_dict",
         [-9999, 1, 2],
         [0, 2],
