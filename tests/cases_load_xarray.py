@@ -15,6 +15,8 @@ file_names = [
     "benchmark_map_0.tif",
     "candidate_map_1.tif",
     "benchmark_map_1.tif",
+    "target_map_0.tif",
+    "target_map_1.tif",
 ]
 
 
