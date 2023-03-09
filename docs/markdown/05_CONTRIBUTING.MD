@@ -8,8 +8,8 @@
 
 
 There are two primary ways to help:
- - Using the issue tracker, and
- - Changing the code-base.
+- Using the issue tracker, and
+- Changing the code-base.
 
 
 ## Using the issue tracker
@@ -32,7 +32,7 @@ Additionally, the code should follow any stylistic and architectural guidelines
 prescribed by the project. In the absence of such guidelines, mimic the styles
 and patterns in the existing code-base.
 
-![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/ContributionGraphic.png)
+![alt text](../images/ContributionGraphic.png)
 
 ### Guidelines
 
@@ -49,28 +49,28 @@ the code. Make sure all of these checks pass, if not make changes and re-commit.
 7. Open a pull request (review checklist in PR template before requesting a review)
 
 ## Tooling Dependencies
-- Code Checking with [Flake8](https://github.com/PyCQA/flake8)
-    - Combines PyFlakes, pycodestyle, and others for linting and style checking.
-    - For autoformatting: [flake8-black](https://pypi.org/project/flake8-black/)
+Code Checking with [Flake8](https://github.com/PyCQA/flake8)
+- Combines PyFlakes, pycodestyle, and others for linting and style checking.
+- For autoformatting: [flake8-black](https://pypi.org/project/flake8-black/)
 - Testing with [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
-    - For timed tests: [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
-    - For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
+    * For timed tests: [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
+    * For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
 - Profiling
-    - [yappi](https://github.com/sumerc/yappi/)
-    - For memory profiling: [memray](https://pypi.org/project/memray/)
-    - Dask memory profiling: [dask-memusage](https://github.com/itamarst/dask-memusage)
+- [yappi](https://github.com/sumerc/yappi/)
+    * For memory profiling: [memray](https://pypi.org/project/memray/)
+    * Dask memory profiling: [dask-memusage](https://github.com/itamarst/dask-memusage)
 - Dependencies and Packaging
-    - [pip](https://packaging.python.org/en/latest/key_projects/#pip)
-    - Docker
+    * [pip](https://packaging.python.org/en/latest/key_projects/#pip)
+    * Docker
 - Distribution
-    - [PyPI](https://pypi.org/)
-    - DockerHub
-    - GitHub (source, packaging, and images)
+    *[PyPI](https://pypi.org/)
+    * DockerHub
+    * GitHub (source, packaging, and images)
 - Docs
-    - [Sphinx](https://www.sphinx-doc.org/)
-    - [pandoc](https://pypi.org/project/pandoc/)
-    - [ReadTheDocs](https://readthedocs.org/)
-    - [Jupyter](https://pypi.org/project/jupyter/)
+    * [Sphinx](https://www.sphinx-doc.org/)
+    * [pandoc](https://pypi.org/project/pandoc/)
+    * [ReadTheDocs](https://readthedocs.org/)
+    * [Jupyter](https://pypi.org/project/jupyter/)
 
 
 ## Development Installation

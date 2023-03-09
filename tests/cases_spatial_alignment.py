@@ -7,17 +7,19 @@ __author__ = "Fernando Aristizabal"
 
 from itertools import product
 
+import numpy as np
 from pytest_cases import parametrize
 import pyproj
 
 from tests.conftest import _load_xarray
 
 
-candidate_map_fns = ["candidate_map_0.tif", "candidate_map_1.tif"]
-benchmark_map_fns = ["benchmark_map_0.tif", "benchmark_map_1.tif"]
+candidate_map_fns = np.array(["candidate_map_0.tif", "candidate_map_1.tif"])
+benchmark_map_fns = np.array(["benchmark_map_0.tif", "benchmark_map_1.tif"])
+target_map_fns = np.array([None, "target_map_0.tif", "target_map_1.tif"])
 
 # TODO: Needs cases where they don't match and an argument that expects that.
-expected_crs_matches = [True, True]
+expected_crs_matches = np.array([True, False])
 
 
 @parametrize(
@@ -67,7 +69,7 @@ def case_transform_bounds(candidate_map_fn, benchmark_map_fn, target_crs):
     return (_load_xarray(candidate_map_fn), _load_xarray(benchmark_map_fn), target_crs)
 
 
-expected_intersections = [True, True, True, True]
+expected_intersections = [True, False, False, False]
 
 
 @parametrize(
