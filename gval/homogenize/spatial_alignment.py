@@ -275,7 +275,12 @@ def Spatial_alignment(
     if "dst_crs" in kwargs:
         cam, bem = transform_bounds(candidate_map, benchmark_map, kwargs["dst_crs"])
     else:
-        cam, bem = transform_bounds(candidate_map, benchmark_map, target_map)
+        target_crs = (
+            target_map.rio.crs
+            if isinstance(target_map, (xr.DataArray, xr.Dataset))
+            else target_map
+        )
+        cam, bem = transform_bounds(candidate_map, benchmark_map, target_crs)
 
     # check if rasters intersect at all
     if not rasters_intersect(cam, bem):
