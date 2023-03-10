@@ -150,11 +150,8 @@ def rasters_intersect(
     b_min_x, b_min_y, b_max_x, b_max_y = benchmark_map_bounds
 
     # check for intersection
-    if (
-        (b_min_x <= c_min_x <= b_max_x)
-        | (b_min_x <= c_max_x <= b_max_x)
-        | (b_min_y <= c_min_y <= b_max_y)
-        | (b_min_y <= c_max_y <= b_max_y)
+    if ((b_min_x <= c_min_x <= b_max_x) | (b_min_x <= c_max_x <= b_max_x)) & (
+        (b_min_y <= c_min_y <= b_max_y) | (b_min_y <= c_max_y <= b_max_y)
     ):
         return True
     else:
@@ -196,7 +193,7 @@ def align_rasters(
     if matching_crs(candidate_map, benchmark_map) & matching_spatial_indices(
         candidate_map, benchmark_map
     ):
-        return (candidate_map, benchmark_map)
+        return candidate_map, benchmark_map
 
     # align benchmark and candidate to target
     elif isinstance(target_map, (xr.DataArray, xr.Dataset)):
@@ -216,7 +213,7 @@ def align_rasters(
         # override values to pass to rasterio.warp.reproject
         if kwargs:
             candidate_map = candidate_map.rio.reproject(**kwargs)
-            benchmark_map = benchmark_map.rio.reproject(**kwargs)
+            benchmark_map = benchmark_map.rio.reproject_match(candidate_map)
         else:  # must pass either target_map or kwargs
             raise ValueError(
                 "If target_map is none, must pass kwargs for rasterio.warp.reproject function"
@@ -225,7 +222,7 @@ def align_rasters(
         raise ValueError(
             "Target_map argument only accepts xr.DataArray, xr.Dataset, 'candidate', 'benchmark', or None type."
         )
-    return (candidate_map, benchmark_map)
+    return candidate_map, benchmark_map
 
 
 def Spatial_alignment(

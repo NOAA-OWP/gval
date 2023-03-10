@@ -5,6 +5,7 @@ Test functionality for gval/homogenize/spatial_alignment.py
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
+from pytest import raises
 from pytest_cases import parametrize_with_cases
 import xarray as xr
 
@@ -62,29 +63,41 @@ def test_rasters_intersect(candidate_map, benchmark_map, expected_intersect):
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, target_map, kwargs", glob="align_rasters"
+    "candidate_map, benchmark_map, target_map, kwargs, exception", glob="align_rasters"
 )
-def test_align_rasters(candidate_map, benchmark_map, target_map, **kwargs):
+def test_align_rasters(candidate_map, benchmark_map, target_map, kwargs, exception):
     """Tests the alignment of rasters"""
 
-    cam, bem = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
+    if exception is None:
+        cam, bem = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
 
-    try:
-        # xr.align raises a value error if coordinates don't align
-        xr.align(cam, bem, join="exact")
-    except ValueError:
-        assert False, "Candidate and benchmark failed to align"
+        try:
+            # xr.align raises a value error if coordinates don't align
+            xr.align(cam, bem, join="exact")
+        except ValueError:
+            assert False, "Candidate and benchmark failed to align"
+
+    else:
+        with raises(exception):
+            _, _ = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, target_map, kwargs", glob="align_rasters"
+    "candidate_map, benchmark_map, target_map, kwargs, exception",
+    glob="spatial_alignment",
 )
-def test_spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs):
+def test_spatial_alignment(candidate_map, benchmark_map, target_map, kwargs, exception):
     """Tests spatial_alignment function"""
-    cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
 
-    try:
-        # xr.align raises a value error if coordinates don't align
-        xr.align(cam, bem, join="exact")
-    except ValueError:
-        assert False, "Candidate and benchmark failed to align"
+    if exception is None:
+        cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
+
+        try:
+            # xr.align raises a value error if coordinates don't align
+            xr.align(cam, bem, join="exact")
+        except ValueError:
+            assert False, "Candidate and benchmark failed to align"
+
+    else:
+        with raises(exception):
+            _, _ = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)

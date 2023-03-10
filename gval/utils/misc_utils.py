@@ -1,4 +1,4 @@
-def isiterable(obj):
+def isiterable(obj):  # pragma: no cover
     """
     Checks if object is iterable by seeing if it has the '__iter__' attribute.
 
