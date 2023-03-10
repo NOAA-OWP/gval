@@ -15,7 +15,6 @@ from tests.conftest import _load_xarray
 from gval.utils.exceptions import RasterMisalignment
 
 candidate_map_fns = np.array(["candidate_map_0.tif", "candidate_map_1.tif"])
-candidate_map_fns_clone = ["candidate_map_0_clone.tif"]
 benchmark_map_fns = np.array(["benchmark_map_0.tif", "benchmark_map_1.tif"])
 
 # TODO: Needs cases where they don't match and an argument that expects that.
