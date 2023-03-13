@@ -20,8 +20,11 @@ from gval.compare import (
     _make_pairing_dict,
     pairing_dict_fn,
     compute_agreement_xarray,
-    _reorganize_crosstab_output,
-    crosstab_xarray,
+    _convert_crosstab_to_contigency_table,
+    _crosstab_2d_DataArrays,
+    _crosstab_3d_DataArrays,
+    _crosstab_DataArrays,
+    _crosstab_Datasets
 )
 from tests.conftest import _assert_pairing_dict_equal
 
@@ -103,15 +106,47 @@ def test_pairing_dict_fn(c, b, pairing_dict, expected_value):
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, expected_df", glob="crosstab_xarray"
+    "crosstab_df, expected_df", glob="convert_crosstab_to_contigency_table"
 )
-def test_crosstab_xarray(candidate_map, benchmark_map, expected_df):
-    """Test crosstabbing candidate and benchmark xarrays"""
+def test_convert_crosstab_to_contigency_table(crosstab_df, expected_df):
+    computed_df = _convert_crosstab_to_contigency_table(crosstab_df)
+    pd.testing.assert_frame_equal(computed_df, expected_df, check_dtype=False)
 
-    crosstab_df = crosstab_xarray(candidate_map, benchmark_map)
 
-    expected_df = _reorganize_crosstab_output(expected_df)
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_df", glob="crosstab_2d_DataArrays"
+)
+def test_crosstab_2d_DataArrays(candidate_map, benchmark_map, expected_df):
+    """Test crosstabbing candidate and benchmark DataArrays"""
+    crosstab_df = _crosstab_2d_DataArrays(candidate_map, benchmark_map)
+    pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
 
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_df", glob="crosstab_3d_DataArrays"
+)
+def test_crosstab_3d_DataArrays(candidate_map, benchmark_map, expected_df):
+    """Test crosstabbing candidate and benchmark DataArrays"""
+    crosstab_df = _crosstab_3d_DataArrays(candidate_map, benchmark_map)
+    pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_df", glob="crosstab_DataArrays"
+)
+def test_crosstab_DataArrays(candidate_map, benchmark_map, expected_df):
+    """Test crosstabbing candidate and benchmark DataArrays"""
+    crosstab_df = _crosstab_DataArrays(candidate_map, benchmark_map)
+    pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_df", glob="crosstab_Datasets"
+)
+def test_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
+    """Test crosstabbing candidate and benchmark datasets"""
+    crosstab_df = _crosstab_Datasets(candidate_map, benchmark_map)
+    crosstab_df["band"] = crosstab_df["band"].apply(lambda x: int(x.split("_")[-1]))
     pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
 
 

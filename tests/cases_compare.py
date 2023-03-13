@@ -184,24 +184,194 @@ def case_pairing_dict_fn(c, b, pairing_dict, expected_value):
     return c, b, pairing_dict, expected_value
 
 
-crosstab_xarrays = [
+crosstab_dfs = [
     (
-        "candidate_map_0_aligned_to_candidate_map_0.tif",
-        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        pd.DataFrame({"zone": [0, 1, 2], 0: [10, 100, 200], 1: [50, 25, 100]}),
         pd.DataFrame(
             {
-                "zone": [-9999, 1, 2],
-                0: [14229651, 10982559, 544467],
-                2: [6465, 679166, 2624332],
+                "candidate_values": [0, 1, 2, 0, 1, 2],
+                "benchmark_values": [0, 0, 0, 1, 1, 1],
+                "counts": [10, 100, 200, 50, 25, 100],
             }
         ),
     )
 ]
 
 
-@parametrize("candidate_map, benchmark_map, expected_df", crosstab_xarrays)
-def case_crosstab_xarray(candidate_map, benchmark_map, expected_df):
-    return (_load_xarray(candidate_map), _load_xarray(benchmark_map), expected_df)
+@parametrize("crosstab_df, expected_df", crosstab_dfs)
+def case_convert_crosstab_to_contigency_table(crosstab_df, expected_df):
+    return (crosstab_df, expected_df)
+
+
+crosstab_2d_DataArrayss = [
+    (
+        _load_xarray(
+            "candidate_map_0_aligned_to_candidate_map_0.tif",
+            masked=True,
+            mask_and_scale=True,
+        ).sel(band=1, drop=True),
+        _load_xarray(
+            "benchmark_map_0_aligned_to_candidate_map_0.tif",
+            masked=True,
+            mask_and_scale=True,
+        ).sel(band=1, drop=True),
+        pd.DataFrame(
+            {
+                "candidate_values": [1.0, 2.0],
+                "benchmark_values": [0.0, 0.0],
+                "counts": [10982559, 544467],
+            }
+        ),
+    ),
+    (
+        _load_xarray(
+            "candidate_map_1_aligned_to_candidate_map_1.tif",
+            masked=False,
+            mask_and_scale=False,
+        ).sel(band=1, drop=True),
+        _load_xarray(
+            "benchmark_map_1_aligned_to_candidate_map_1.tif",
+            masked=False,
+            mask_and_scale=False,
+        ).sel(band=1, drop=True),
+        pd.DataFrame(
+            {
+                "candidate_values": [-9999.0, 1.0, 2.0, -9999.0, 1.0, 2.0, -9999.0, 1.0, 2.0],
+                "benchmark_values": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
+                "counts": [963789, 856376, 4664, 113119, 199644, 231918, 1086601, 377453, 80368],
+            }
+        ),
+    ),
+]
+
+
+@parametrize("candidate_map, benchmark_map, expected_df", crosstab_2d_DataArrayss)
+def case_crosstab_2d_DataArrays(candidate_map, benchmark_map, expected_df):
+    return candidate_map, benchmark_map, expected_df
+
+
+crosstab_3d_DataArrayss = [
+    (
+        _load_xarray(
+            "candidate_categorical_multiband_aligned_0.tif",
+            masked=True,
+            mask_and_scale=True,
+        ),
+        _load_xarray(
+            "benchmark_categorical_multiband_aligned_0.tif",
+            masked=True,
+            mask_and_scale=True,
+        ),
+        pd.DataFrame(
+            {
+                "band": [1, 1, 2, 2],
+                "candidate_values": [1.0, 2.0, 1.0, 2.0],
+                "benchmark_values": [0.0, 0.0, 0.0, 0.0],
+                "counts": [10982559, 544467, 4845100, 4845025],
+            }
+        ),
+    ),
+    (
+        _load_xarray(
+            "candidate_categorical_multiband_aligned_0.tif",
+            masked=False,
+            mask_and_scale=False,
+        ),
+        _load_xarray(
+            "benchmark_categorical_multiband_aligned_0.tif",
+            masked=False,
+            mask_and_scale=False,
+        ),
+        pd.DataFrame(
+            {
+                "band": [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
+                "candidate_values": [
+                    -9999,
+                    1,
+                    2,
+                    -9999,
+                    1,
+                    2,
+                    -9999,
+                    1,
+                    2,
+                    -9999,
+                    1,
+                    2,
+                ],
+                "benchmark_values": [0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2],
+                "counts": [
+                    14229651,
+                    10982559,
+                    544467,
+                    6465,
+                    679166,
+                    2624332,
+                    4841018,
+                    4845100,
+                    4845025,
+                    4843439,
+                    4844092,
+                    4847966,
+                ],
+            }
+        ),
+    ),
+]
+
+
+@parametrize("candidate_map, benchmark_map, expected_df", crosstab_3d_DataArrayss)
+def case_crosstab_3d_DataArrays(candidate_map, benchmark_map, expected_df):
+    return candidate_map, benchmark_map, expected_df
+
+
+@parametrize(
+    "candidate_map, benchmark_map, expected_df",
+    crosstab_2d_DataArrayss + crosstab_3d_DataArrayss,
+)
+def case_crosstab_DataArrays(candidate_map, benchmark_map, expected_df):
+    return candidate_map, benchmark_map, expected_df
+
+_crosstab_Datasets = crosstab_3d_DataArrayss
+_input_datasets = [
+    (
+        _load_xarray(
+            "candidate_categorical_multiband_aligned_0.tif",
+            masked=True,
+            mask_and_scale=True,
+            band_as_variable=True
+        ),
+        _load_xarray(
+            "benchmark_categorical_multiband_aligned_0.tif",
+            masked=True,
+            mask_and_scale=True,
+            band_as_variable=True
+        ),
+    ),
+    (
+        _load_xarray(
+            "candidate_categorical_multiband_aligned_0.tif",
+            masked=False,
+            mask_and_scale=False,
+            band_as_variable=True
+        ),
+        _load_xarray(
+            "benchmark_categorical_multiband_aligned_0.tif",
+            masked=False,
+            mask_and_scale=False,
+            band_as_variable=True
+        )
+    )
+]
+
+expected_dfs = [(c[2],) for c in crosstab_3d_DataArrayss]
+
+
+@parametrize("candidate_map, benchmark_map, expected_df", 
+    [i + ii for i, ii in zip(_input_datasets, expected_dfs)]
+)
+def case_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
+    return candidate_map, benchmark_map, expected_df
 
 
 compute_agreement_xarrays = [

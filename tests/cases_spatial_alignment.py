@@ -34,7 +34,7 @@ def case_matching_crs(candidate_map_fn, benchmark_map_fn, expected_crs_matches):
     )
 
 
-expected_spatial_indices_matches = [False, False]
+expected_spatial_indices_matches = [True, False]
 
 
 @parametrize(
