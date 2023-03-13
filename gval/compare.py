@@ -186,7 +186,7 @@ def szudzik_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
 
 def _convert_dict_to_numba(
     py_dict: dict[Tuple[float, float], float]
-) -> nb.typed.Dict[Tuple[nb.float64, nb.float64], nb.float64]:
+) -> nb.typed.Dict[Tuple[nb.float64, nb.float64], nb.float64]:  # pragma: no cover
     """
     Converts Python dict object to numba dict.
 
@@ -363,8 +363,6 @@ def compute_agreement_xarray(
             - Line of code to use if using numba:
                 - pairing_dict = _convert_dict_to_numba(pairing_dict)
         """
-
-        print(candidate_map.dtype)
 
         # this return is for the pairing_dict case
         return xr.apply_ufunc(

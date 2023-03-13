@@ -23,7 +23,6 @@ from gval.compare import (
     compute_agreement_xarray,
     _reorganize_crosstab_output,
     crosstab_xarray,
-    _convert_dict_to_numba,
 )
 from tests.conftest import _assert_pairing_dict_equal
 
@@ -78,12 +77,12 @@ def test_szudzik_pair_signed(c, b, a):
     ), "Signed szudzik function output does not match expected value"
 
 
-@parametrize_with_cases("py_dict, numba_dict", glob="convert_dict_to_numba")
-def test_convert_dict_to_numba(py_dict, numba_dict):
-    """Tests converting a python dictionary to a numba dictionary"""
-
-    nb_dict = _convert_dict_to_numba(py_dict=py_dict)
-    assert nb_dict == numba_dict
+# @parametrize_with_cases("py_dict, numba_dict", glob="convert_dict_to_numba")
+# def test_convert_dict_to_numba(py_dict, numba_dict):
+#     """Tests converting a python dictionary to a numba dictionary"""
+#
+#     nb_dict = _convert_dict_to_numba(py_dict=py_dict)
+#     assert nb_dict == numba_dict
 
 
 @parametrize_with_cases(

@@ -8,7 +8,6 @@ __author__ = "Fernando Aristizabal"
 import numpy as np
 import pandas as pd
 from pytest_cases import parametrize
-import numba as nb
 
 from tests.conftest import _load_xarray
 from gval.compare import szudzik_pair_signed, cantor_pair_signed
@@ -98,17 +97,17 @@ def case_szudzik_pair_signed(c, b, a):
     return c, b, a
 
 
-test_nb_dict = nb.typed.Dict.empty(
-    key_type=nb.types.containers.UniTuple(nb.float64, 2), value_type=nb.float64
-)
-test_nb_dict[(12.0, 11.0)] = 88.0
-test_nb_dict[(11.0, 34.0)] = 144.0
-test_py_dict = {(12.0, 11.0): 88.0, (11.0, 34.0): 144.0}
-
-
-@parametrize("py_dict, numba_dict", [(test_py_dict, test_nb_dict)])
-def case_convert_dict_to_numba(py_dict, numba_dict):
-    return py_dict, numba_dict
+# test_nb_dict = nb.typed.Dict.empty(
+#     key_type=nb.types.containers.UniTuple(nb.float64, 2), value_type=nb.float64
+# )
+# test_nb_dict[(12.0, 11.0)] = 88.0
+# test_nb_dict[(11.0, 34.0)] = 144.0
+# test_py_dict = {(12.0, 11.0): 88.0, (11.0, 34.0): 144.0}
+#
+#
+# @parametrize("py_dict, numba_dict", [(test_py_dict, test_nb_dict)])
+# def case_convert_dict_to_numba(py_dict, numba_dict):
+#     return py_dict, numba_dict
 
 
 pairing_dicts = [

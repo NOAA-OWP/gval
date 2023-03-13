@@ -12,7 +12,6 @@ from pytest_cases import parametrize
 import pyproj
 
 from tests.conftest import _load_xarray
-from gval.utils.exceptions import RasterMisalignment
 
 candidate_map_fns = np.array(["candidate_map_0.tif", "candidate_map_1.tif"])
 benchmark_map_fns = np.array(["benchmark_map_0.tif", "benchmark_map_1.tif"])
@@ -91,56 +90,86 @@ def case_rasters_intersect(candidate_map_fn, benchmark_map_fn, expected_intersec
 
 
 @parametrize(
-    "candidate_map_fn, benchmark_map_fn, kwargs, target_map, exception",
+    "candidate_map_fn, benchmark_map_fn, kwargs, target_map",
     list(
         zip(
-            candidate_map_fns[[0, 1, 1, 1, 1, 1, 1]],
-            benchmark_map_fns[[0, 1, 1, 1, 1, 1, 1]],
-            [{}, {}, {}, {}, {"dst_crs": "EPSG:4329"}, {}, {}],
+            candidate_map_fns[[0, 1, 1, 1, 1]],
+            benchmark_map_fns[[0, 1, 1, 1, 1]],
+            [{}, {}, {}, {}, {"dst_crs": "EPSG:4329"}],
             [
                 "candidate",
                 "benchmark",
                 _load_xarray("target_map_0.tif"),
                 "candidate",
                 None,
-                None,
-                4.3,
             ],
-            [None, None, None, None, None, ValueError, ValueError],
         )
     ),
 )
-def case_align_rasters(
-    candidate_map_fn, benchmark_map_fn, target_map, kwargs, exception
-):
+def case_align_rasters(candidate_map_fn, benchmark_map_fn, target_map, kwargs):
     return (
         _load_xarray(candidate_map_fn),
         _load_xarray(benchmark_map_fn),
         target_map,
         kwargs,
-        exception,
     )
 
 
 @parametrize(
-    "candidate_map_fn, benchmark_map_fn, kwargs, target_map, exception",
+    "candidate_map_fn, benchmark_map_fn, kwargs, target_map",
     list(
         zip(
-            candidate_map_fns[[0, 1, 1]],
-            benchmark_map_fns[[0, 1, 0]],
-            [{}, {"dst_crs": "EPSG:4329"}, {}],
-            ["benchmark", None, "candidate"],
-            [None, None, RasterMisalignment],
+            candidate_map_fns[[1, 1]],
+            benchmark_map_fns[[1, 1]],
+            [{}, {}],
+            [None, 4.3],
         )
     ),
 )
-def case_spatial_alignment(
-    candidate_map_fn, benchmark_map_fn, target_map, kwargs, exception
-):
+def case_align_rasters_fail(candidate_map_fn, benchmark_map_fn, target_map, kwargs):
     return (
         _load_xarray(candidate_map_fn),
         _load_xarray(benchmark_map_fn),
         target_map,
         kwargs,
-        exception,
+    )
+
+
+@parametrize(
+    "candidate_map_fn, benchmark_map_fn, kwargs, target_map",
+    list(
+        zip(
+            candidate_map_fns,
+            benchmark_map_fns,
+            [{}, {"dst_crs": "EPSG:4329"}],
+            ["benchmark", None],
+        )
+    ),
+)
+def case_spatial_alignment(candidate_map_fn, benchmark_map_fn, target_map, kwargs):
+    return (
+        _load_xarray(candidate_map_fn),
+        _load_xarray(benchmark_map_fn),
+        target_map,
+        kwargs,
+    )
+
+
+@parametrize(
+    "candidate_map_fn, benchmark_map_fn, kwargs, target_map",
+    list(
+        zip(
+            candidate_map_fns[[1]],
+            benchmark_map_fns[[0]],
+            [{}],
+            ["candidate"],
+        )
+    ),
+)
+def case_spatial_alignment_fail(candidate_map_fn, benchmark_map_fn, target_map, kwargs):
+    return (
+        _load_xarray(candidate_map_fn),
+        _load_xarray(benchmark_map_fn),
+        target_map,
+        kwargs,
     )
