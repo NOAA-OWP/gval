@@ -70,8 +70,6 @@ def generate_aligned_and_agreement_maps(
             cam, bem = Spatial_alignment(candidate, benchmark, align_arg)
             align_string = f"aligned_to_{names[idx][:-4]}"
 
-            print("cand dtype: ", cam.dtype, "bench dtype: ", bem.dtype)
-
             cam.rio.to_raster(f"{generate_dir}/{candidate_map[:-4]}_{align_string}.tif")
             bem.rio.to_raster(f"{generate_dir}/{benchmark_map[:-4]}_{align_string}.tif")
 
@@ -88,7 +86,7 @@ def generate_aligned_and_agreement_maps(
                 )
 
                 agreement_map_computed.rio.set_crs(cam.rio.crs)
-                print("aggreement dtype:", agreement_map_computed.dtype)
+
                 agreement_map_computed.rio.set_nodata(-9999)
                 if np.nan in agreement_map_computed:
                     agreement_map_computed = xr.where(
