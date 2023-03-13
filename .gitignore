@@ -130,7 +130,6 @@ dmypy.json
 
 # Data folder
 data/*
-!data/readme.md
 
 # VSCode
 *.code-workspace
