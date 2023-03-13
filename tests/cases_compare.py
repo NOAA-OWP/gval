@@ -249,9 +249,29 @@ crosstab_2d_DataArrayss = [
         ).sel(band=1, drop=True),
         pd.DataFrame(
             {
-                "candidate_values": [-9999.0, 1.0, 2.0, -9999.0, 1.0, 2.0, -9999.0, 1.0, 2.0],
+                "candidate_values": [
+                    -9999.0,
+                    1.0,
+                    2.0,
+                    -9999.0,
+                    1.0,
+                    2.0,
+                    -9999.0,
+                    1.0,
+                    2.0,
+                ],
                 "benchmark_values": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
-                "counts": [963789, 856376, 4664, 113119, 199644, 231918, 1086601, 377453, 80368],
+                "counts": [
+                    963789,
+                    856376,
+                    4664,
+                    113119,
+                    199644,
+                    231918,
+                    1086601,
+                    377453,
+                    80368,
+                ],
             }
         ),
     ),
@@ -277,10 +297,10 @@ crosstab_3d_DataArrayss = [
         ),
         pd.DataFrame(
             {
-                "band": [1, 1, 2, 2],
-                "candidate_values": [1.0, 2.0, 1.0, 2.0],
-                "benchmark_values": [0.0, 0.0, 0.0, 0.0],
-                "counts": [10982559, 544467, 4845100, 4845025],
+                "band": [1, 1, 1, 2, 2, 2],
+                "candidate_values": [-10000.0, 1.0, 2.0, -10000.0, 1.0, 2.0],
+                "benchmark_values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                "counts": [9489603, 10982559, 544467, 2470284, 4845100, 4845025],
             }
         ),
     ),
@@ -297,33 +317,41 @@ crosstab_3d_DataArrayss = [
         ),
         pd.DataFrame(
             {
-                "band": [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
+                "band": [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
                 "candidate_values": [
+                    -10000,
                     -9999,
                     1,
                     2,
+                    -10000,
                     -9999,
                     1,
                     2,
+                    -10000,
                     -9999,
                     1,
                     2,
+                    -10000,
                     -9999,
                     1,
                     2,
                 ],
-                "benchmark_values": [0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 2],
+                "benchmark_values": [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2],
                 "counts": [
-                    14229651,
+                    9489603,
+                    4740048,
                     10982559,
                     544467,
-                    6465,
+                    4415,
+                    2050,
                     679166,
                     2624332,
-                    4841018,
+                    2470284,
+                    2370734,
                     4845100,
                     4845025,
-                    4843439,
+                    2472075,
+                    2371364,
                     4844092,
                     4847966,
                 ],
@@ -345,6 +373,7 @@ def case_crosstab_3d_DataArrays(candidate_map, benchmark_map, expected_df):
 def case_crosstab_DataArrays(candidate_map, benchmark_map, expected_df):
     return candidate_map, benchmark_map, expected_df
 
+
 _crosstab_Datasets = crosstab_3d_DataArrayss
 _input_datasets = [
     (
@@ -352,13 +381,13 @@ _input_datasets = [
             "candidate_categorical_multiband_aligned_0.tif",
             masked=True,
             mask_and_scale=True,
-            band_as_variable=True
+            band_as_variable=True,
         ),
         _load_xarray(
             "benchmark_categorical_multiband_aligned_0.tif",
             masked=True,
             mask_and_scale=True,
-            band_as_variable=True
+            band_as_variable=True,
         ),
     ),
     (
@@ -366,22 +395,23 @@ _input_datasets = [
             "candidate_categorical_multiband_aligned_0.tif",
             masked=False,
             mask_and_scale=False,
-            band_as_variable=True
+            band_as_variable=True,
         ),
         _load_xarray(
             "benchmark_categorical_multiband_aligned_0.tif",
             masked=False,
             mask_and_scale=False,
-            band_as_variable=True
-        )
-    )
+            band_as_variable=True,
+        ),
+    ),
 ]
 
 expected_dfs = [(c[2],) for c in crosstab_3d_DataArrayss]
 
 
-@parametrize("candidate_map, benchmark_map, expected_df", 
-    [i + ii for i, ii in zip(_input_datasets, expected_dfs)]
+@parametrize(
+    "candidate_map, benchmark_map, expected_df",
+    [i + ii for i, ii in zip(_input_datasets, expected_dfs)],
 )
 def case_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
     return candidate_map, benchmark_map, expected_df

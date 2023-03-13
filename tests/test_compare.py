@@ -25,7 +25,7 @@ from gval.compare import (
     _crosstab_2d_DataArrays,
     _crosstab_3d_DataArrays,
     _crosstab_DataArrays,
-    _crosstab_Datasets
+    _crosstab_Datasets,
 )
 from tests.conftest import _assert_pairing_dict_equal
 

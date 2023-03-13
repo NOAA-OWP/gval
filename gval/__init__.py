@@ -7,4 +7,5 @@ from gval.compare import (
     _crosstab_2d_DataArrays,
     _crosstab_3d_DataArrays,
     _crosstab_DataArrays,
+    _crosstab_Datasets,
 )

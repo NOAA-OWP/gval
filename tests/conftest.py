@@ -89,9 +89,10 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
 
 def _load_xarray(
     file_name: Union[str, os.PathLike],
-    *args, **kwargs
-    #masked: bool = False,
-    #mask_and_scale: bool = False,
+    *args,
+    **kwargs
+    # masked: bool = False,
+    # mask_and_scale: bool = False,
 ) -> Union[xr.DataArray, xr.Dataset]:
     """
     Loads xarray given a base file name.

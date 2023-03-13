@@ -417,6 +417,58 @@ def _convert_crosstab_to_contigency_table(crosstab_df: pd.DataFrame) -> pd.DataF
     return crosstab_df
 
 
+def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataArray"):
+    """
+    Docstring decorator for crosstab functions.
+
+    Parameters
+    ----------
+    dimension : Union[int, str]
+        Number of dimensions function will support. Use either 2 or 3.
+    xarray_obj : str, default = "xr.DataArray"
+        Type of xarray object function accepts. xr.DataArray or xr.Dataset.
+
+    Returns
+    -------
+    Callable
+        Decorated crosstab_* function with new docstring.
+    """
+
+    def decorator(func):
+        docstring = f"""
+            Crosstab {dimension}-dimensional {xarray_obj} to produce Contingency DataFrame.
+
+            Parameters
+            ----------
+            candidate_map : {xarray_obj}
+                Candidate map, {dimension}-dimensional.
+            benchmark_map : {xarray_obj}
+                Benchmark map, {dimension}-dimensional.
+            allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
+                Sequence of values in candidate to include in crosstab. Remaining values are excluded.
+            allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
+                Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
+            exclude_value : Optional[Number], default = None
+                Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
+
+            Returns
+            -------
+            pd.DataFrame
+                Contingency DataFrame.
+
+            References
+            ----------
+            .. [1] :func:[`xrspatial.zonal.crosstab`](https://xarray-spatial.org/reference/_autosummary/xrspatial.zonal.crosstab.html)
+            .. [2] [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
+            .. [3] [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
+            """
+        func.__doc__ = docstring.format(dimension, xarray_obj)
+        return func
+
+    return decorator
+
+
+@_crosstab_docstring(2, "xr.DataArray")
 def _crosstab_2d_DataArrays(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
@@ -424,7 +476,7 @@ def _crosstab_2d_DataArrays(
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
 ) -> pd.DataFrame:
-    """Crosstab 2D xarray.DataArrays to produce crosstab df."""
+    """Please see `_crosstab_docstring` function decorator for docstring"""
 
     crosstab_df = crosstab(
         zones=candidate_map,
@@ -434,12 +486,13 @@ def _crosstab_2d_DataArrays(
         nodata_values=exclude_value,
     )
 
-    # reorganize df to follow candidate and benchmark conventions instead of xarray-spatial conventions
+    # reorganize df to follow contingency table schema instead of xarray-spatial conventions
     crosstab_df = _convert_crosstab_to_contigency_table(crosstab_df)
 
     return crosstab_df
 
 
+@_crosstab_docstring(3, "xr.DataArray")
 def _crosstab_3d_DataArrays(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
@@ -447,33 +500,7 @@ def _crosstab_3d_DataArrays(
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
 ) -> pd.DataFrame:
-    """
-    Crosstab 3D xarray.DataArrays to produce crosstab df.
-
-    Parameters
-    ----------
-    candidate_map : xr.DataArray
-        Candidate map, 3 dimensional.
-    benchmark_map : xr.DataArray
-        Benchmark map, 3 dimensional.
-    allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
-        Sequence of values in candidate to include in crosstab. Remaining values are excluded.
-    allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
-        Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
-    exclude_value : Optional[Number], default = None
-        Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-
-    Returns
-    -------
-    pd.DataFrame
-        Contingency DataFrame.
-
-    References
-    ----------
-    .. [1] :func:[`xrspatial.zonal.crosstab`](https://xarray-spatial.org/reference/_autosummary/xrspatial.zonal.crosstab.html)
-    .. [2] [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
-    .. [3] [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
-    """
+    """Please see `_crosstab_docstring` function decorator for docstring"""
 
     # check number of dimensions
     assert (
@@ -482,9 +509,9 @@ def _crosstab_3d_DataArrays(
 
     # check dimensionality
     # Is this necessary or is this done with functionality that checks band coordinates and within crosstab()
-    #assert (
+    # assert (
     #    candidate_map.shape == benchmark_map.shape
-    #), f"Dimensionalities of candidate {candidate_map.shape} and benchmark {benchmark_map.#shape} must match."
+    # ), f"Dimensionalities of candidate {candidate_map.shape} and benchmark {benchmark_map.#shape} must match."
 
     """
     NOTE:
@@ -514,9 +541,8 @@ def _crosstab_3d_DataArrays(
     )
 
     # cycle through extra dim
-    previous_crosstab_df = None # initializing to avoid having unset 
+    previous_crosstab_df = None  # initializing to avoid having unset
     for i, b in enumerate(candidate_map_band_coordinates):
-        
         crosstab_df = _crosstab_2d_DataArrays(
             candidate_map=candidate_map.sel({band_name_candidate: b}),
             benchmark_map=benchmark_map.sel({band_name_benchmark: b}),
@@ -541,6 +567,7 @@ def _crosstab_3d_DataArrays(
     return crosstab_df
 
 
+@_crosstab_docstring("2/3", "xr.DataArray")
 def _crosstab_DataArrays(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
@@ -548,33 +575,7 @@ def _crosstab_DataArrays(
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
 ) -> pd.DataFrame:
-    """
-    Crosstab 2/3D xarray.DataArrays to produce crosstab df.
-
-    Parameters
-    ----------
-    candidate_map : xr.DataArray
-        Candidate map, 2 or 3 dimensional.
-    benchmark_map : xr.DataArray
-        Benchmark map, 2 or 3 dimensional.
-    allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
-        Sequence of values in candidate to include in crosstab. Remaining values are excluded.
-    allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
-        Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
-    exclude_value : Optional[Number], default = None
-        Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-
-    Returns
-    -------
-    pd.DataFrame
-        Contingency DataFrame.
-
-    References
-    ----------
-    .. [1] :func:[`xrspatial.zonal.crosstab`](https://xarray-spatial.org/reference/_autosummary/xrspatial.zonal.crosstab.html)
-    .. [2] [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
-    .. [3] [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
-    """
+    """Please see `_crosstab_docstring` function decorator for docstring"""
 
     # TODO: these can be predicates and optional exception raising
     # 3d
@@ -595,6 +596,7 @@ def _crosstab_DataArrays(
     )
 
 
+@_crosstab_docstring("3", "xr.Dataset")
 def _crosstab_Datasets(
     candidate_map: xr.Dataset,
     benchmark_map: xr.Dataset,
@@ -602,34 +604,8 @@ def _crosstab_Datasets(
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
 ) -> pd.DataFrame:
-    """
-    Crosstab xarray.DataSets with 2D variables to produce contingency DataFrame.
+    """Please see `_crosstab_docstring` function decorator for docstring"""
 
-    Parameters
-    ----------
-    candidate_map : xr.DataSet
-        Candidate map, 2 dimensional variables.
-    benchmark_map : xr.DataSet
-        Benchmark map, 2 dimensional variables.
-    allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
-        Sequence of values in candidate to include in crosstab. Remaining values are excluded.
-    allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
-        Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
-    exclude_value : Optional[Number], default = None
-        Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-
-    Returns
-    -------
-    pd.DataFrame
-        Contingency DataFrame.
-
-    References
-    ----------
-    .. [1] :func:[`xrspatial.zonal.crosstab`](https://xarray-spatial.org/reference/_autosummary/xrspatial.zonal.crosstab.html)
-    .. [2] [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
-    .. [3] [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
-    """
-    
     # gets variable names
     candidate_variable_names = list(candidate_map.data_vars)
     benchmark_variable_names = list(benchmark_map.data_vars)
@@ -639,13 +615,12 @@ def _crosstab_Datasets(
     np.testing.assert_equal(
         candidate_variable_names,
         benchmark_variable_names,
-        "Variable names must match for candidate and benchmark"
+        "Variable names must match for candidate and benchmark",
     )
 
     # loop variables
-    previous_crosstab_df = None # initializing to avoid having unset 
+    previous_crosstab_df = None  # initializing to avoid having unset
     for i, b in enumerate(candidate_variable_names):
-        
         crosstab_df = _crosstab_2d_DataArrays(
             candidate_map=candidate_map[b],
             benchmark_map=benchmark_map[b],
