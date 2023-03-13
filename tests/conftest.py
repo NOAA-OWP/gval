@@ -5,55 +5,57 @@ Configuration file for pytests
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Union, Optional
+from typing import Union  # , Optional
 
 import os
 
 import numpy as np
 import xarray as xr
-import boto3
+
+# import boto3
 
 from gval.utils.loading_datasets import load_raster_as_xarray
-from config import PROJECT_DIR
+
+# from config import PROJECT_DIR
 
 
 # generate test data dir path
-TEST_DATA_DIR = os.path.join(PROJECT_DIR, "data", "data")
+# TEST_DATA_DIR = os.path.join(PROJECT_DIR, "data", "data")
+
 
 # name of S3 for test data
 TEST_DATA_S3_NAME = "gval-test"
-
+TEST_DATA_DIR = f"s3://{TEST_DATA_S3_NAME}"
 # client
-TEST_DATA_S3_CLIENT = boto3.client("s3")
+# TEST_DATA_S3_CLIENT = boto3.client("s3")
 
-
-def _check_file(
-    file_path: Union[str, os.PathLike],
-    test_data_s3_name: Optional[str] = TEST_DATA_S3_NAME,
-    test_data_s3_client: Optional[
-        boto3.session.botocore.client.BaseClient
-    ] = TEST_DATA_S3_CLIENT,
-) -> None:
-    """
-    Downloads file if not already available locally.
-
-    TODO: Check for modified dates and only download if file has been updated on S3 end.
-
-    Parameters
-    ----------
-    file_path : Union[str, os.PathLike]
-        Local absolute file path the check.
-    test_data_s3_name : str, default = TEST_DATA_S3_NAME
-        Name of S3 to retrieve file from.
-    test_data_s3_client : boto3.session.botocore.client.BaseClient, default = TEST_DATA_S3_CLIENT
-        S3 client object from boto3.
-    """
-    # gets base name of file
-    file_name = os.path.basename(file_path)
-
-    # downloads file if not locally available
-    if not os.path.exists(file_path):
-        test_data_s3_client.download_file(test_data_s3_name, file_name, file_path)
+# def _check_file(
+#     file_path: Union[str, os.PathLike],
+#     test_data_s3_name: Optional[str] = TEST_DATA_S3_NAME,
+#     test_data_s3_client: Optional[
+#         boto3.session.botocore.client.BaseClient
+#     ] = TEST_DATA_S3_CLIENT,
+# ) -> None:
+#     """
+#     Downloads file if not already available locally.
+#
+#     TODO: Check for modified dates and only download if file has been updated on S3 end.
+#
+#     Parameters
+#     ----------
+#     file_path : Union[str, os.PathLike]
+#         Local absolute file path the check.
+#     test_data_s3_name : str, default = TEST_DATA_S3_NAME
+#         Name of S3 to retrieve file from.
+#     test_data_s3_client : boto3.session.botocore.client.BaseClient, default = TEST_DATA_S3_CLIENT
+#         S3 client object from boto3.
+#     """
+#     # gets base name of file
+#     file_name = os.path.basename(file_path)
+#
+#     # downloads file if not locally available
+#     if not os.path.exists(file_path):
+#         test_data_s3_client.download_file(test_data_s3_name, file_name, file_path)
 
 
 """
@@ -81,7 +83,7 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
         Local, absolute file path for input.
     """
     file_path = os.path.join(TEST_DATA_DIR, file_name)
-    _check_file(file_path)
+    # _check_file(file_path)
     return file_path
 
 

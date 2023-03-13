@@ -10,6 +10,7 @@ import pandas as pd
 import pytest
 from pytest_cases import parametrize_with_cases
 import xarray as xr
+from pytest import raises
 
 from gval.compare import (
     _is_not_natural_number,
@@ -77,6 +78,14 @@ def test_szudzik_pair_signed(c, b, a):
     np.testing.assert_equal(
         szudzik_pair_signed(c, b), a
     ), "Signed szudzik function output does not match expected value"
+
+
+# @parametrize_with_cases("py_dict, numba_dict", glob="convert_dict_to_numba")
+# def test_convert_dict_to_numba(py_dict, numba_dict):
+#     """Tests converting a python dictionary to a numba dictionary"""
+#
+#     nb_dict = _convert_dict_to_numba(py_dict=py_dict)
+#     assert nb_dict == numba_dict
 
 
 @parametrize_with_cases(
@@ -174,3 +183,26 @@ def test_compute_agreement_xarray(
 
     # Use xr.testing.assert_identical() if names and attributes need to be compared too
     xr.testing.assert_equal(agreement_map_computed, agreement_map)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values",
+    glob="compute_agreement_xarray_fail",
+)
+def test_compute_agreement_xarray_fail(
+    candidate_map,
+    benchmark_map,
+    comparison_function,
+    allow_candidate_values,
+    allow_benchmark_values,
+):
+    """Tests fail computing of agreement xarray from two xarrays"""
+
+    with raises(ValueError):
+        _ = compute_agreement_xarray(
+            candidate_map,
+            benchmark_map,
+            comparison_function,
+            allow_candidate_values=allow_candidate_values,
+            allow_benchmark_values=allow_benchmark_values,
+        )

@@ -97,6 +97,19 @@ def case_szudzik_pair_signed(c, b, a):
     return c, b, a
 
 
+# test_nb_dict = nb.typed.Dict.empty(
+#     key_type=nb.types.containers.UniTuple(nb.float64, 2), value_type=nb.float64
+# )
+# test_nb_dict[(12.0, 11.0)] = 88.0
+# test_nb_dict[(11.0, 34.0)] = 144.0
+# test_py_dict = {(12.0, 11.0): 88.0, (11.0, 34.0): 144.0}
+#
+#
+# @parametrize("py_dict, numba_dict", [(test_py_dict, test_nb_dict)])
+# def case_convert_dict_to_numba(py_dict, numba_dict):
+#     return py_dict, numba_dict
+
+
 pairing_dicts = [
     (
         range(3),
@@ -418,6 +431,37 @@ def case_compute_agreement_xarray(
         _load_xarray(candidate_map),
         _load_xarray(benchmark_map),
         _load_xarray(agreement_map),
+        comparison_function,
+        allow_candidate_values,
+        allow_benchmark_values,
+    )
+
+
+compute_xarray_fail_case = [
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        "pairing_dict",
+        None,
+        None,
+    )
+]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values",
+    compute_xarray_fail_case,
+)
+def case_compute_agreement_xarray_fail(
+    candidate_map,
+    benchmark_map,
+    comparison_function,
+    allow_candidate_values,
+    allow_benchmark_values,
+):
+    return (
+        _load_xarray(candidate_map),
+        _load_xarray(benchmark_map),
         comparison_function,
         allow_candidate_values,
         allow_benchmark_values,
