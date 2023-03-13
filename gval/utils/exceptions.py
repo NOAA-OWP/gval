@@ -5,7 +5,7 @@ Custom exceptions for gval package
 __author__ = "Fernando Aristizabal"
 
 
-class RasterMisalignment(Exception):
+class RasterMisalignment(Exception):  # pragma: no cover
     """Exception raised when rasters don't spatially align."""
 
     def __init__(self):
@@ -15,7 +15,7 @@ class RasterMisalignment(Exception):
         return "Rasters do not spatially align."
 
 
-class RastersNotSingleBand(Exception):
+class RastersNotSingleBand(Exception):  # pragma: no cover
     """Exception raised when rasters not single band"""
 
     def __init__(self):

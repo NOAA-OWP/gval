@@ -24,7 +24,7 @@ import numba as nb
 
 
 @nb.vectorize(nopython=True)
-def _is_not_natural_number(x: Number) -> int:
+def _is_not_natural_number(x: Number) -> int:  # pragma: no cover
     """
     Checks value to see if it is a natural number or two non-negative integer [0, 1, 2, 3, 4, ...)
 
@@ -59,7 +59,7 @@ def _is_not_natural_number(x: Number) -> int:
 
 
 @nb.vectorize(nopython=True)
-def cantor_pair(c: Number, b: Number) -> Number:
+def cantor_pair(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Produces unique natural number for two non-negative natural numbers (0,1,2,...)
 
@@ -85,7 +85,7 @@ def cantor_pair(c: Number, b: Number) -> Number:
 
 
 @nb.vectorize(nopython=True)
-def szudzik_pair(c: Number, b: Number) -> Number:
+def szudzik_pair(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Produces unique natural number for two non-negative natural numbers (0,1,2,3,...).
 
@@ -111,7 +111,7 @@ def szudzik_pair(c: Number, b: Number) -> Number:
 
 
 @nb.vectorize(nopython=True)
-def _negative_value_transformation(x: Number) -> Number:
+def _negative_value_transformation(x: Number) -> Number:  # pragma: no cover
     """
     Transforms negative values for use with pairing functions that only accept non-negative integers.
 
@@ -133,7 +133,7 @@ def _negative_value_transformation(x: Number) -> Number:
 
 
 @nb.vectorize(nopython=True)
-def cantor_pair_signed(c: Number, b: Number) -> Number:
+def cantor_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Output unique natural number for each unique combination of whole numbers using Cantor signed method.
 
@@ -159,7 +159,7 @@ def cantor_pair_signed(c: Number, b: Number) -> Number:
 
 
 @nb.vectorize(nopython=True)
-def szudzik_pair_signed(c: Number, b: Number) -> Number:
+def szudzik_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Output unique natural number for each unique combination of whole numbers using Szudzik signed method._summary_
 
@@ -186,7 +186,7 @@ def szudzik_pair_signed(c: Number, b: Number) -> Number:
 
 def _convert_dict_to_numba(
     py_dict: dict[Tuple[float, float], float]
-) -> nb.typed.Dict[Tuple[nb.float64, nb.float64], nb.float64]:
+) -> nb.typed.Dict[Tuple[nb.float64, nb.float64], nb.float64]:  # pragma: no cover
     """
     Converts Python dict object to numba dict.
 
@@ -245,7 +245,9 @@ def _make_pairing_dict(
 
 @np.vectorize
 def pairing_dict_fn(
-    c: Number, b: Number, pairing_dict: dict[Tuple[Number, Number], Number]
+    c: Number,
+    b: Number,
+    pairing_dict: dict[Tuple[Number, Number], Number],  # pragma: no cover
 ) -> Number:
     """
     Produces a pairing dictionary that produces a unique result for every combination ranging from 256 to the number of combinations.
