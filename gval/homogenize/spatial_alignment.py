@@ -15,14 +15,14 @@ from typing import (
     Union,
 )
 
-import rasterio
-import pyproj
 import xarray as xr
+from shapely.geometry import box
+from rasterio.enums import Resampling
 
-from gval.utils.exceptions import RasterMisalignment
+from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
 
 
-def matching_crs(
+def _matching_crs(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> bool:
@@ -45,14 +45,15 @@ def matching_crs(
     return match
 
 
-def matching_spatial_indices(
+def _matching_spatial_indices(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
+    raise_exception: bool = False,
 ) -> bool:
     """
     Checks for matching indices in candidate and benchmark maps.
 
-    TODO: How does this do with bands?
+    TODO: How does this do with 3d DataArrays and Datasets?
 
     Parameters
     ----------
@@ -65,22 +66,34 @@ def matching_spatial_indices(
     -------
     bool
         Whether or not maps are perfectly aligned.
+
+    Raises
+    ------
+    RasterMisalignment
     """
     try:
         xr.align(candidate_map, benchmark_map, join="exact")
     except ValueError:
-        return False
+        aligned = False
     else:
-        return True
+        aligned = True
+
+    # raises exception if not aligned and desired to raise
+    if (not aligned) & (raise_exception):
+        raise RasterMisalignment
+
+    return aligned
 
 
-def transform_bounds(
+def _rasters_intersect(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
-    target_crs: Union[rasterio.crs.CRS, pyproj.crs.CRS, dict, str],
-) -> Tuple[Tuple[float, float, float, float], Tuple[float, float, float, float]]:
+    raise_exception: bool = False,
+) -> bool:
     """
-    Transforms bounds of xarray datasets to target map or desired CRS.
+    Predicates spatial intersection of two `xr.DataArrays` or `xr.Datasets`.
+
+    CRS's don't have to be the same.
 
     Parameters
     ----------
@@ -88,84 +101,52 @@ def transform_bounds(
         Candidate map.
     benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
-    target_crs : Union[rasterio.crs.CRS, pyproj.crs.CRS, dict, str]
-        Target CRS to project bounds to. Can be a string denoting 'candidate', 'benchmark', OGC WKT string, or Proj.4 string. Passing 'candidate' or 'benchmark' will transform both bounds to the CRS of that respective xarray.Additionally, values accepted by the argument `dst_crs` in :func:`rasterio.reproject` are allowed including :obj:`rasterio.crs.CRS`, :obj:`dict`, or :obj:`pyproj.crs.CRS`.
-
-    Returns
-    -------
-    Tuple[Tuple[float, float, float, float], Tuple[float, float, float, float]]
-        Transformed bounds in tuple form for candidate and benchmark respectively.
-    """
-
-    # already matching crs's
-    if matching_crs(candidate_map, benchmark_map):
-        return (candidate_map.rio.bounds(), benchmark_map.rio.bounds())
-
-    # match candidate to benchmark
-    elif target_crs == "benchmark":
-        return (
-            candidate_map.rio.transform_bounds(benchmark_map.rio.crs),
-            benchmark_map.rio.bounds(),
-        )
-
-    # match benchmark to candidate
-    elif target_crs == "candidate":
-        return (
-            candidate_map.rio.bounds(),
-            benchmark_map.rio.transform_bounds(candidate_map.rio.crs),
-        )
-
-    # match candidate to benchmark
-    else:
-        return (
-            candidate_map.rio.transform_bounds(target_crs),
-            benchmark_map.rio.transform_bounds(target_crs),
-        )
-
-
-def rasters_intersect(
-    candidate_map_bounds: Tuple[float, float, float, float],
-    benchmark_map_bounds: Tuple[float, float, float, float],
-) -> bool:
-    """
-    Checks if two rasters intersect spatially at all given their bounds.
-
-    CRS' are assumed to be equal.
-
-    Parameters
-    ----------
-    candidate_map_bounds : Tuple[float, float, float, float]
-        Bounds for candidate map.
-    benchmark_map_bounds : Tuple[float, float, float, float]
-        Bounds for benchmark map.
 
     Returns
     -------
     bool
         Tests spatial intersection.
+
+    Raises
+    ------
+    RasterDontIntersect
+        Rasters do not intersect.
     """
+
+    # already matching crs's
+    if _matching_crs(candidate_map, benchmark_map):
+        candidate_map_bounds = candidate_map.rio.bounds()
+        benchmark_map_bounds = benchmark_map.rio.bounds()
+
+    # else transform bounds
+    else:
+        # use benchmark crs just to test for intersection
+        target_crs = benchmark_map.rio.crs
+
+        candidate_map_bounds = candidate_map.rio.transform_bounds(target_crs)
+        benchmark_map_bounds = benchmark_map.rio.transform_bounds(target_crs)
 
     # convert bounds to shapely boxes
-    c_min_x, c_min_y, c_max_x, c_max_y = candidate_map_bounds
-    b_min_x, b_min_y, b_max_x, b_max_y = benchmark_map_bounds
+    candidate_map_box = box(*candidate_map_bounds)
+    benchmark_map_box = box(*benchmark_map_bounds)
 
-    # check for intersection
-    if ((b_min_x <= c_min_x <= b_max_x) | (b_min_x <= c_max_x <= b_max_x)) & (
-        (b_min_y <= c_min_y <= b_max_y) | (b_min_y <= c_max_y <= b_max_y)
-    ):
-        return True
+    # intersection as bool
+    rasters_intersect_bool = candidate_map_box.intersects(benchmark_map_box)
+
+    if (not rasters_intersect_bool) & raise_exception:
+        raise RastersDontIntersect
     else:
-        return False
+        return rasters_intersect_bool
 
 
-def align_rasters(
+def _align_rasters(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
-    target_map: Optional[Union[xr.DataArray, xr.Dataset, str]] = None,
-    **kwargs,
-) -> Tuple[xr.DataArray, xr.Dataset]:
+    target_map: Optional[Union[xr.DataArray, xr.Dataset, str]],
+    resampling: Optional[Resampling] = Resampling.nearest,
+) -> Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]:
     """
-    Reprojects raster to match target map and/or override values.
+    Reprojects raster to match a target map.
 
     Parameters
     ----------
@@ -173,64 +154,56 @@ def align_rasters(
         Candidate map.
     benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
-    target_map : Optional[Union[xr.DataArray, xr.Dataset, str]], default = None
-        Target map.
-
+    target_map : Optional[Union[xr.DataArray, xr.Dataset, str]]
+        Target map as string that can have values "candidate" or "benchmark". Otherwise pass an `xr.DataArray` or `xr.Dataset` to align maps to.
+    resampling : rasterio.enums.Resampling
+        See :func:`rasterio.warp.reproject` for more details.
+    **kwargs : dict or keyword arguments
+        Dictionary or keyword arguments to be passed `rio.xarray.reproject_match()`. DEPRECATED: This was found to conflict with rxr.rio.reproject_match().
     Returns
     -------
-    Tuple[xr.DataArray, xr.Dataset]
+    Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]
         Tuple with aligned candidate and benchmark map respectively.
 
     Raises
     ------
     ValueError
-        If target_map is None, must pass kwargs for rasterio.warp.reproject function
-    ValueError
-        target_map argument only accepts xr.DataArray, xr.Dataset, 'candidate', 'benchmark', or None type.
+        target_map argument only accepts xr.DataArray, xr.Dataset, 'candidate', 'benchmark'.
     """
 
     # already matching crs's and indices
-    if matching_crs(candidate_map, benchmark_map) & matching_spatial_indices(
+    if _matching_crs(candidate_map, benchmark_map) & _matching_spatial_indices(
         candidate_map, benchmark_map
     ):
         return candidate_map, benchmark_map
 
     # align benchmark and candidate to target
     elif isinstance(target_map, (xr.DataArray, xr.Dataset)):
-        candidate_map = candidate_map.rio.reproject_match(target_map, **kwargs)
-        benchmark_map = benchmark_map.rio.reproject_match(target_map, **kwargs)
+        candidate_map = candidate_map.rio.reproject_match(target_map, resampling)
+        benchmark_map = benchmark_map.rio.reproject_match(target_map, resampling)
 
     # match candidate to benchmark
     elif target_map == "benchmark":
-        candidate_map = candidate_map.rio.reproject_match(benchmark_map, **kwargs)
+        candidate_map = candidate_map.rio.reproject_match(benchmark_map, resampling)
 
     # match benchmark to candidate
     elif target_map == "candidate":
-        benchmark_map = benchmark_map.rio.reproject_match(candidate_map, **kwargs)
+        benchmark_map = benchmark_map.rio.reproject_match(candidate_map, resampling)
 
-    # no target passed
-    elif target_map is None:
-        # override values to pass to rasterio.warp.reproject
-        if kwargs:
-            candidate_map = candidate_map.rio.reproject(**kwargs)
-            benchmark_map = benchmark_map.rio.reproject_match(candidate_map)
-        else:  # must pass either target_map or kwargs
-            raise ValueError(
-                "If target_map is none, must pass kwargs for rasterio.warp.reproject function"
-            )
     else:
         raise ValueError(
-            "Target_map argument only accepts xr.DataArray, xr.Dataset, 'candidate', 'benchmark', or None type."
+            "Target_map argument only accepts xr.DataArray or xr.Dataset or a string with values of 'candidate' or 'benchmark'."
         )
+
     return candidate_map, benchmark_map
 
 
-def Spatial_alignment(
+def _Spatial_alignment(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
     target_map: Optional[Union[xr.DataArray, xr.Dataset, str]] = "benchmark",
-    **kwargs,
-) -> Union[xr.DataArray, xr.DataArray]:
+    resampling: Optional[Resampling] = Resampling.nearest,
+) -> Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]:
     """
     Reproject :class:`xarray.Dataset` objects
 
@@ -248,17 +221,21 @@ def Spatial_alignment(
         Benchmark map in xarray DataArray format.
     target_map: Optional[Union[xr.DataArray, xr.Dataset, str]], default = "benchmark"
         xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
+    resampling : rasterio.enums.Resampling
+        See :func:`rasterio.warp.reproject` for more details.
     **kwargs: dict, optional
         Additional keyword arguments to pass into :func:`rasterio.warp.reproject`.
-        To override:
-        - src_transform: `rio.write_transform`
-        - src_crs: `rio.write_crs`
-        - src_nodata: `rio.write_nodata`
+        DEPRECATED: This was found to have issues with spatial alignment if certain arguments were passed.
 
     Returns
     --------
-    Tuple[Union[xr.DataArray, xr.Dataset]]
+    Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]
         Tuple with candidate and benchmark map respectively.
+
+    Raises
+    ------
+    RasterDontIntersect
+        Rasters do not intersect.
 
     References
     ----------
@@ -268,22 +245,10 @@ def Spatial_alignment(
 
     """
 
-    # transform bounds
-    if "dst_crs" in kwargs:
-        cam, bem = transform_bounds(candidate_map, benchmark_map, kwargs["dst_crs"])
-    else:
-        target_crs = (
-            target_map.rio.crs
-            if isinstance(target_map, (xr.DataArray, xr.Dataset))
-            else target_map
-        )
-        cam, bem = transform_bounds(candidate_map, benchmark_map, target_crs)
-
     # check if rasters intersect at all
-    if not rasters_intersect(cam, bem):
-        raise RasterMisalignment
+    _rasters_intersect(candidate_map, benchmark_map, raise_exception=True)
 
     # reproject maps to align
-    cam, bem = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
+    cam, bem = _align_rasters(candidate_map, benchmark_map, target_map, resampling)
 
     return cam, bem
