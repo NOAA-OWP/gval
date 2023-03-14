@@ -4,4 +4,4 @@
 
 To use this package:
 
-`pip install 'gval @ git+https://github.com/NOAA-OWP/gval`
+`pip install 'gval @ git+https://github.com/NOAA-OWP/gval'`

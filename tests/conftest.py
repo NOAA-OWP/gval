@@ -87,7 +87,13 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
     return file_path
 
 
-def _load_xarray(file_name: Union[str, os.PathLike]) -> Union[xr.DataArray, xr.Dataset]:
+def _load_xarray(
+    file_name: Union[str, os.PathLike],
+    *args,
+    **kwargs
+    # masked: bool = False,
+    # mask_and_scale: bool = False,
+) -> Union[xr.DataArray, xr.Dataset]:
     """
     Loads xarray given a base file name.
 
@@ -95,6 +101,8 @@ def _load_xarray(file_name: Union[str, os.PathLike]) -> Union[xr.DataArray, xr.D
     ----------
     file_name : Union[str, os.PathLike]
         Base file name of file within local TEST_DATA_DIR or TEST_DATA_S3_NAME.
+    mask_and_scale: bool
+
 
     Returns
     -------
@@ -102,7 +110,7 @@ def _load_xarray(file_name: Union[str, os.PathLike]) -> Union[xr.DataArray, xr.D
         xarray object.
     """
     file_path = _build_map_file_path(file_name)
-    return load_raster_as_xarray(file_path)
+    return load_raster_as_xarray(file_path, *args, **kwargs)
 
 
 def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None:
