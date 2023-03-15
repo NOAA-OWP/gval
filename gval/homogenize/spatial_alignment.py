@@ -198,7 +198,7 @@ def _align_rasters(
     return candidate_map, benchmark_map
 
 
-def _Spatial_alignment(
+def _spatial_alignment(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
     target_map: Optional[Union[xr.DataArray, xr.Dataset, str]] = "benchmark",

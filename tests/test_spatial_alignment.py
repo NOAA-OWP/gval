@@ -14,7 +14,7 @@ from gval.homogenize.spatial_alignment import (
     _matching_spatial_indices,
     _rasters_intersect,
     _align_rasters,
-    _Spatial_alignment,
+    _spatial_alignment,
 )
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
 
@@ -105,7 +105,7 @@ def test_align_rasters_fail(candidate_map, benchmark_map, target_map, kwargs):
 def test_spatial_alignment(candidate_map, benchmark_map, target_map, kwargs):
     """Tests spatial_alignment function"""
 
-    cam, bem = _Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
+    cam, bem = _spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
 
     try:
         # xr.align raises a value error if coordinates don't align
@@ -122,4 +122,4 @@ def test_spatial_alignment_fail(candidate_map, benchmark_map, target_map, kwargs
     """Tests spatial_alignment function"""
 
     with raises(RastersDontIntersect):
-        _, _ = _Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
+        _, _ = _spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
