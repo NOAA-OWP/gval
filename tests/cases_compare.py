@@ -370,8 +370,29 @@ def case_crosstab_3d_DataArrays(candidate_map, benchmark_map, expected_df):
     "candidate_map, benchmark_map, expected_df",
     crosstab_2d_DataArrayss + crosstab_3d_DataArrayss,
 )
-def case_crosstab_DataArrays(candidate_map, benchmark_map, expected_df):
+def case_crosstab_DataArrays_success(candidate_map, benchmark_map, expected_df):
     return candidate_map, benchmark_map, expected_df
+
+
+crosstab_DataArrays_fails = [
+    (
+        _load_xarray(
+            "candidate_categorical_multiband_aligned_0.tif",
+            masked=True,
+            mask_and_scale=True,
+        ).expand_dims({"dummy_dim": 1}),
+        _load_xarray(
+            "benchmark_categorical_multiband_aligned_0.tif",
+            masked=True,
+            mask_and_scale=True,
+        ).expand_dims({"dummy_dim": 1}),
+    )
+]
+
+
+@parametrize("candidate_map, benchmark_map", crosstab_DataArrays_fails)
+def case_crosstab_DataArrays_fail(candidate_map, benchmark_map):
+    return candidate_map, benchmark_map
 
 
 _crosstab_Datasets = crosstab_3d_DataArrayss
@@ -417,77 +438,124 @@ def case_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
     return candidate_map, benchmark_map, expected_df
 
 
-compute_agreement_xarrays = [
+compute_agreement_maps_success = [
     (
         "candidate_map_0_aligned_to_candidate_map_0.tif",
         "benchmark_map_0_aligned_to_candidate_map_0.tif",
-        "agreement_map_00_szudzik_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_szudzik_aligned_to_candidate_map_0.tif"),
         szudzik_pair_signed,
         None,
         None,
+        None,
+        None,
     ),
     (
         "candidate_map_0_aligned_to_candidate_map_0.tif",
         "benchmark_map_0_aligned_to_candidate_map_0.tif",
-        "agreement_map_00_cantor_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_cantor_aligned_to_candidate_map_0.tif"),
         cantor_pair_signed,
         None,
         None,
+        None,
+        None,
     ),
     (
         "candidate_map_0_aligned_to_candidate_map_0.tif",
         "benchmark_map_0_aligned_to_candidate_map_0.tif",
-        "agreement_map_00_pairing_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_pairing_aligned_to_candidate_map_0.tif"),
         "pairing_dict",
         [-9999, 1, 2],
         [0, 2],
+        None,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_szudzik_aligned_to_candidate_map_0_nodata.tif"),
+        szudzik_pair_signed,
+        None,
+        None,
+        399900006,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray(
+            "agreement_map_00_szudzik_aligned_to_candidate_map_0_nodata.tif",
+            masked=True,
+            mask_and_scale=True,
+        ),
+        szudzik_pair_signed,
+        None,
+        None,
+        399900006,
+        True,
     ),
 ]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values",
-    compute_agreement_xarrays,
+    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    compute_agreement_maps_success,
 )
-def case_compute_agreement_xarray(
+def case_compute_agreement_map_success(
     candidate_map,
     benchmark_map,
     agreement_map,
     comparison_function,
     allow_candidate_values,
     allow_benchmark_values,
+    nodata,
+    encode_nodata,
 ):
     return (
         _load_xarray(candidate_map),
         _load_xarray(benchmark_map),
-        _load_xarray(agreement_map),
+        agreement_map,
         comparison_function,
         allow_candidate_values,
         allow_benchmark_values,
+        nodata,
+        encode_nodata,
     )
 
 
-compute_xarray_fail_case = [
+compute_agreement_maps_fail = [
     (
         "candidate_map_0_aligned_to_candidate_map_0.tif",
         "benchmark_map_0_aligned_to_candidate_map_0.tif",
         "pairing_dict",
         None,
         None,
-    )
+        None,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        szudzik_pair_signed,
+        None,
+        None,
+        None,
+        True,
+    ),
 ]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values",
-    compute_xarray_fail_case,
+    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    compute_agreement_maps_fail,
 )
-def case_compute_agreement_xarray_fail(
+def case_compute_agreement_map_fail(
     candidate_map,
     benchmark_map,
     comparison_function,
     allow_candidate_values,
     allow_benchmark_values,
+    nodata,
+    encode_nodata,
 ):
     return (
         _load_xarray(candidate_map),
@@ -495,4 +563,6 @@ def case_compute_agreement_xarray_fail(
         comparison_function,
         allow_candidate_values,
         allow_benchmark_values,
+        nodata,
+        encode_nodata,
     )
