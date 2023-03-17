@@ -20,7 +20,7 @@ from gval.compare import (
     szudzik_pair_signed,
     _make_pairing_dict,
     pairing_dict_fn,
-    compute_agreement_xarray,
+    _compute_agreement_map,
     _convert_crosstab_to_contigency_table,
     _crosstab_2d_DataArrays,
     _crosstab_3d_DataArrays,
@@ -141,12 +141,19 @@ def test_crosstab_3d_DataArrays(candidate_map, benchmark_map, expected_df):
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, expected_df", glob="crosstab_DataArrays"
+    "candidate_map, benchmark_map, expected_df", glob="crosstab_DataArrays_success"
 )
-def test_crosstab_DataArrays(candidate_map, benchmark_map, expected_df):
+def test_crosstab_DataArrays_success(candidate_map, benchmark_map, expected_df):
     """Test crosstabbing candidate and benchmark DataArrays"""
     crosstab_df = _crosstab_DataArrays(candidate_map, benchmark_map)
     pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
+
+
+@parametrize_with_cases("candidate_map, benchmark_map", glob="crosstab_DataArrays_fail")
+def test_crosstab_DataArrays_fail(candidate_map, benchmark_map):
+    """Test crosstabbing candidate and benchmark DataArrays"""
+    with raises(ValueError):
+        _crosstab_DataArrays(candidate_map, benchmark_map)
 
 
 @parametrize_with_cases(
@@ -160,25 +167,29 @@ def test_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values",
-    glob="compute_agreement_xarray",
+    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    glob="compute_agreement_map_success",
 )
-def test_compute_agreement_xarray(
+def test_compute_agreement_map_success(
     candidate_map,
     benchmark_map,
     agreement_map,
     comparison_function,
     allow_candidate_values,
     allow_benchmark_values,
+    nodata,
+    encode_nodata,
 ):
     """Tests computing of agreement xarray from two xarrays"""
 
-    agreement_map_computed = compute_agreement_xarray(
+    agreement_map_computed = _compute_agreement_map(
         candidate_map,
         benchmark_map,
         comparison_function,
         allow_candidate_values=allow_candidate_values,
         allow_benchmark_values=allow_benchmark_values,
+        nodata=nodata,
+        encode_nodata=encode_nodata,
     )
 
     # Use xr.testing.assert_identical() if names and attributes need to be compared too
@@ -186,23 +197,27 @@ def test_compute_agreement_xarray(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values",
-    glob="compute_agreement_xarray_fail",
+    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    glob="compute_agreement_map_fail",
 )
-def test_compute_agreement_xarray_fail(
+def test_compute_agreement_map_fail(
     candidate_map,
     benchmark_map,
     comparison_function,
     allow_candidate_values,
     allow_benchmark_values,
+    nodata,
+    encode_nodata,
 ):
     """Tests fail computing of agreement xarray from two xarrays"""
 
     with raises(ValueError):
-        _ = compute_agreement_xarray(
+        _ = _compute_agreement_map(
             candidate_map,
             benchmark_map,
             comparison_function,
             allow_candidate_values=allow_candidate_values,
             allow_benchmark_values=allow_benchmark_values,
+            nodata=nodata,
+            encode_nodata=encode_nodata,
         )

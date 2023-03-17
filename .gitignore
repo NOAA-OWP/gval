@@ -133,3 +133,6 @@ data/*
 
 # VSCode
 *.code-workspace
+
+# commit message
+.git_message.md

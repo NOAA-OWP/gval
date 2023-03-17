@@ -1,1 +1,1 @@
-from gval.homogenize.spatial_alignment import Spatial_alignment
+from gval.homogenize.spatial_alignment import _spatial_alignment

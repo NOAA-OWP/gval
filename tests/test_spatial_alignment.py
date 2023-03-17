@@ -10,14 +10,13 @@ from pytest_cases import parametrize_with_cases
 import xarray as xr
 
 from gval.homogenize.spatial_alignment import (
-    matching_crs,
-    matching_spatial_indices,
-    transform_bounds,
-    rasters_intersect,
-    align_rasters,
-    Spatial_alignment,
+    _matching_crs,
+    _matching_spatial_indices,
+    _rasters_intersect,
+    _align_rasters,
+    _spatial_alignment,
 )
-from gval.utils.exceptions import RasterMisalignment
+from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
 
 
 @parametrize_with_cases(
@@ -25,42 +24,55 @@ from gval.utils.exceptions import RasterMisalignment
 )
 def test_matching_crs(candidate_map, benchmark_map, expected_match):
     """Tests if two maps have matching CRSs"""
-    matching = matching_crs(candidate_map, benchmark_map)
+    matching = _matching_crs(candidate_map, benchmark_map)
 
     assert matching == expected_match, "CRSs of maps are not matching"
 
 
 @parametrize_with_cases(
     "candidate_map, benchmark_map, expected_spatial_indices_matches",
-    glob="matching_spatial_indices",
+    glob="matching_spatial_indices_success",
 )
-def test_matching_spatial_indices(
+def test_matching_spatial_indices_success(
     candidate_map, benchmark_map, expected_spatial_indices_matches
 ):
     """Tests for matching indices in two xarrays"""
-    matching = matching_spatial_indices(candidate_map, benchmark_map)
+    matching = _matching_spatial_indices(candidate_map, benchmark_map)
     assert matching == expected_spatial_indices_matches, "Indices don't match expected"
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, target_crs", glob="transform_bounds"
+    "candidate_map, benchmark_map, expected_spatial_indices_matches",
+    glob="matching_spatial_indices_fail",
 )
-def test_transform_bounds(candidate_map, benchmark_map, target_crs):
-    """Tests the transformation of bounds given a target crs"""
-    # TODO: This test is not correct. Need to document the correct bounds and compare to those.
-    tb = transform_bounds(candidate_map, benchmark_map, target_crs)
-    assert isinstance(tb, tuple), f"{tb} is not tuple type"
+def test_matching_spatial_indices_fail(
+    candidate_map, benchmark_map, expected_spatial_indices_matches
+):
+    """Tests for matching indices in two xarrays"""
+    with raises(RasterMisalignment):
+        _matching_spatial_indices(candidate_map, benchmark_map, raise_exception=True)
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, expected_intersect", glob="rasters_intersect"
+    "candidate_map, benchmark_map, expected_intersect",
+    glob="rasters_intersect_no_exception",
 )
-def test_rasters_intersect(candidate_map, benchmark_map, expected_intersect):
+def test_rasters_intersect_no_exception(
+    candidate_map, benchmark_map, expected_intersect
+):
     """Tests the intersection of rasters"""
-    intersect = rasters_intersect(
-        candidate_map.rio.bounds(), benchmark_map.rio.bounds()
-    )
+    intersect = _rasters_intersect(candidate_map, benchmark_map)
     assert intersect == expected_intersect
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected_intersect",
+    glob="rasters_intersect_exception",
+)
+def test_rasters_intersect_exception(candidate_map, benchmark_map, expected_intersect):
+    """Tests the intersection of rasters"""
+    with raises(RastersDontIntersect):
+        _rasters_intersect(candidate_map, benchmark_map, raise_exception=True)
 
 
 @parametrize_with_cases(
@@ -69,12 +81,11 @@ def test_rasters_intersect(candidate_map, benchmark_map, expected_intersect):
 def test_align_rasters(candidate_map, benchmark_map, target_map, kwargs):
     """Tests the alignment of rasters"""
 
-    try:
-        cam, bem = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
-        # xr.align raises a value error if coordinates don't align
-        xr.align(cam, bem, join="exact")
-    except ValueError:
-        assert False, "Candidate and benchmark failed to align"
+    # This might raise value errors associated with
+    cam, bem = _align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
+
+    # this tests for matching spatial indices
+    _matching_spatial_indices(cam, bem, raise_exception=True)
 
 
 @parametrize_with_cases(
@@ -84,7 +95,7 @@ def test_align_rasters_fail(candidate_map, benchmark_map, target_map, kwargs):
     """Tests the alignment of rasters"""
 
     with raises(ValueError):
-        _, _ = align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
+        _, _ = _align_rasters(candidate_map, benchmark_map, target_map, **kwargs)
 
 
 @parametrize_with_cases(
@@ -94,7 +105,7 @@ def test_align_rasters_fail(candidate_map, benchmark_map, target_map, kwargs):
 def test_spatial_alignment(candidate_map, benchmark_map, target_map, kwargs):
     """Tests spatial_alignment function"""
 
-    cam, bem = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
+    cam, bem = _spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
 
     try:
         # xr.align raises a value error if coordinates don't align
@@ -110,5 +121,5 @@ def test_spatial_alignment(candidate_map, benchmark_map, target_map, kwargs):
 def test_spatial_alignment_fail(candidate_map, benchmark_map, target_map, kwargs):
     """Tests spatial_alignment function"""
 
-    with raises(RasterMisalignment):
-        _, _ = Spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
+    with raises(RastersDontIntersect):
+        _, _ = _spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
