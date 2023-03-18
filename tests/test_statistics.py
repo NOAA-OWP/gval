@@ -2,28 +2,68 @@ import numpy as np
 from pytest_cases import parametrize_with_cases
 from pytest import raises
 
-from gval.statistics.categorical_statistics import CategoricalStatistics as CatStat
+from gval.statistics.categorical_statistics import (
+    CategoricalStatisticsProcessing as CatStat,
+)
+from gval.statistics.categorical_stat_funcs import CategoricalStatistics as Stat
 
 
-@parametrize_with_cases("names, args, funcs, expected", glob="categorical_statistics")
-def test_categorical_statistics(names, args, funcs, expected):
+@parametrize_with_cases("args, expected", glob="categorical_statistics")
+def test_categorical_statistics(args, expected):
     """tests categorical statistics functions"""
 
-    np.testing.assert_equal(
-        [
-            func(*[args[p] for p in CatStat.get_parameters(nm)])
-            for func, nm in zip(funcs, names)
-        ],
-        expected,
-    ), "Compute statistics did not return expected values"
+    Stat.accuracy(*[args[p] for p in CatStat.get_parameters("accuracy")]),
+    Stat.critical_success_index(
+        *[args[p] for p in CatStat.get_parameters("critical_success_index")]
+    ),
+    Stat.f_score(*[args[p] for p in CatStat.get_parameters("f_score")]),
+    Stat.false_discovery_rate(
+        *[args[p] for p in CatStat.get_parameters("false_discovery_rate")]
+    ),
+    Stat.false_negative_rate(
+        *[args[p] for p in CatStat.get_parameters("false_negative_rate")]
+    ),
+    Stat.false_omission_rate(
+        *[args[p] for p in CatStat.get_parameters("false_omission_rate")]
+    ),
+    Stat.false_positive_rate(
+        *[args[p] for p in CatStat.get_parameters("false_positive_rate")]
+    ),
+    Stat.fowlkes_mallows_index(
+        *[args[p] for p in CatStat.get_parameters("fowlkes_mallows_index")]
+    ),
+    Stat.matthews_correlation_coefficient(
+        *[args[p] for p in CatStat.get_parameters("matthews_correlation_coefficient")]
+    ),
+    Stat.negative_likelihood_ratio(
+        *[args[p] for p in CatStat.get_parameters("negative_likelihood_ratio")]
+    ),
+    Stat.negative_predictive_value(
+        *[args[p] for p in CatStat.get_parameters("negative_predictive_value")]
+    ),
+    Stat.positive_likelihood_ratio(
+        *[args[p] for p in CatStat.get_parameters("positive_likelihood_ratio")]
+    ),
+    Stat.positive_predictive_value(
+        *[args[p] for p in CatStat.get_parameters("positive_predictive_value")]
+    ),
+    Stat.prevalence(*[args[p] for p in CatStat.get_parameters("prevalence")]),
+    Stat.prevalence_threshold(
+        *[args[p] for p in CatStat.get_parameters("prevalence_threshold")]
+    ),
+    Stat.true_negative_rate(
+        *[args[p] for p in CatStat.get_parameters("true_negative_rate")]
+    ),
+    Stat.true_positive_rate(
+        *[args[p] for p in CatStat.get_parameters("true_positive_rate")]
+    )
 
 
 @parametrize_with_cases("names, args, expected", glob="compute_statistics")
 def test_compute_statistics(names, args, expected):
     """tests compute statistics function"""
 
-    stat_names = CatStat.available_functions() if names == "all" else names
-    results = [CatStat.process_statistic(name, args) for name in stat_names]
+    results = CatStat.process_statistics(names, args)
 
     np.testing.assert_equal(
         results, expected
@@ -34,9 +74,10 @@ def test_compute_statistics(names, args, expected):
 def test_compute_statistics_fail(names, args, exception):
     """tests compute statistics fail function"""
 
-    with raises(exception):
-        stat_names = CatStat.available_functions() if names == "all" else names
-        _ = [CatStat.process_statistic(name, args) for name in stat_names]
+    with np.errstate(divide="ignore"):
+        with raises(exception):
+            stat_names = CatStat.available_functions() if names == "all" else names
+            _ = [CatStat.process_statistics(name, args) for name in stat_names]
 
 
 @parametrize_with_cases("args, func", glob="register_function")

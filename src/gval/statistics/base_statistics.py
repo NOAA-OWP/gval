@@ -5,7 +5,7 @@ Base Statistics Class
 from abc import ABC, abstractmethod
 
 
-class BaseStatistics(ABC):  # pragma: no cover
+class BaseStatisticsProcessing(ABC):  # pragma: no cover
     """
     Abstract Class for Running Statistics on Agreement Maps
 

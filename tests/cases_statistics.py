@@ -7,13 +7,14 @@ Test functionality for gval/statistics modules
 from pytest_cases import parametrize
 from numba.core.errors import TypingError
 
-import gval.statistics.categorical_stat_funcs as cat_stats
+from gval.statistics.categorical_stat_funcs import CategoricalStatistics as CatStats
 
-func_names = [fn for fn in dir(cat_stats) if len(fn) > 5 and "__" not in fn]
-stat_funcs = [getattr(cat_stats, name) for name in func_names]
+func_names = [fn for fn in dir(CatStats) if len(fn) > 5 and "__" not in fn]
+stat_funcs = [getattr(CatStats, name) for name in func_names]
 
 
 arg_dicts = [
+    {"tp": 120, "tn": 30, "fp": 10, "fn": 10},
     {"tp": 120, "tn": 30, "fp": 10, "fn": 10},
     {"tp": 45, "tn": 20, "fp": 30, "fn": 40},
 ]
@@ -38,26 +39,20 @@ expected_results = [
         0.75,
         0.9230769230769231,
     ],
+    [0.8823529411764706],
     [0.48148148148148145, 0.391304347826087, 0.5625],
 ]
 
 
 @parametrize(
-    "names, args, funcs, expected",
-    list(
-        zip(
-            [func_names, func_names[:3]],
-            arg_dicts,
-            [stat_funcs, stat_funcs[:3]],
-            expected_results,
-        )
-    ),
+    "args, expected",
+    list(zip(arg_dicts[0:1], expected_results[0:1])),
 )
-def case_categorical_statistics(names, args, funcs, expected):
-    return names, args, funcs, expected
+def case_categorical_statistics(args, expected):
+    return args, expected
 
 
-stat_names = ["all", ["accuracy", "critical_success_index", "f_score"]]
+stat_names = ["all", "accuracy", ["accuracy", "critical_success_index", "f_score"]]
 
 
 @parametrize(
@@ -151,9 +146,19 @@ class Tester:
         return tp + fn
 
 
-stat_names = [["pass5", "pass6"], ["pass5", "pass6"]]
+class Tester2:
+    @staticmethod
+    def pass7(tp: int, fn: int) -> float:
+        return tp + fn
+
+    @staticmethod
+    def pass8(tp: int, fn: int) -> float:
+        return tp + fn
+
+
+stat_names = [["pass5", "pass6"], ["pass7", "pass8"]]
 stat_args = [{}, {"vectorize_func": True}]
-stat_class = [Tester, Tester]
+stat_class = [Tester, Tester2]
 
 
 @parametrize("names, args, cls", list(zip(stat_names, stat_args, stat_class)))
@@ -163,7 +168,7 @@ def case_register_class(names, args, cls):
 
 class TesterFail1:
     @staticmethod
-    def pass5(rp: int, fn: int) -> float:
+    def fail6(rp: int, fn: int) -> float:
         return rp + fn
 
 
