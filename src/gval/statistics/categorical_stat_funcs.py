@@ -10,8 +10,6 @@ def true_positive_rate(tp: Number, fn: Number) -> float:
     """
     Computes true positive rate, AKA sensitivity, recall, hit rate
 
-    https://en.wikipedia.org/wiki/Sensitivity_and_specificity
-
     Parameters
     ----------
     tp: Number
@@ -23,6 +21,9 @@ def true_positive_rate(tp: Number, fn: Number) -> float:
     -------
     True positive rate from 0 to 1
 
+    References
+    ----------
+    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
     """
     return tp / (tp + fn)
 
@@ -30,8 +31,6 @@ def true_positive_rate(tp: Number, fn: Number) -> float:
 def true_negative_rate(tn: Number, fp: Number) -> float:
     """
     Computes true negative rate, AKA specificity, selectivity
-
-    https://en.wikipedia.org/wiki/Sensitivity_and_specificity
 
     Parameters
     ----------
@@ -43,6 +42,10 @@ def true_negative_rate(tn: Number, fp: Number) -> float:
     Returns
     -------
     True negative rate from 0 to 1
+
+    References
+    ----------
+    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
     """
     return tn / (tn + fp)
 
@@ -50,8 +53,6 @@ def true_negative_rate(tn: Number, fp: Number) -> float:
 def positive_predictive_value(tp: Number, fp: Number) -> float:
     """
     Computes positive predictive value AKA precision
-
-    https://en.wikipedia.org/wiki/Sensitivity_and_specificity
 
     Parameters
     ----------
@@ -63,6 +64,10 @@ def positive_predictive_value(tp: Number, fp: Number) -> float:
     Returns
     -------
     Positive predictive value from 0 to 1
+
+    References
+    ----------
+    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
     """
     return tp / (tp + fp)
 
@@ -70,8 +75,6 @@ def positive_predictive_value(tp: Number, fp: Number) -> float:
 def negative_predictive_value(tn: Number, fn: Number) -> float:
     """
     Computes negative predictive value
-
-    https://en.wikipedia.org/wiki/Sensitivity_and_specificity
 
     Parameters
     ----------
@@ -83,6 +86,10 @@ def negative_predictive_value(tn: Number, fn: Number) -> float:
     Returns
     -------
     Negative predictive value from 0 to 1
+
+    References
+    ----------
+    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
     """
     return tn / (tn + fn)
 
@@ -90,8 +97,6 @@ def negative_predictive_value(tn: Number, fn: Number) -> float:
 def false_negative_rate(tp: Number, fn: Number) -> float:
     """
     Computes false negative rate
-
-    https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates
 
     Parameters
     ----------
@@ -103,6 +108,10 @@ def false_negative_rate(tp: Number, fn: Number) -> float:
     Returns
     -------
     False negative rate from 0 to 1
+
+    References
+    ----------
+    .. [1] [Type I and Type II Errors](https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates)
     """
     return fn / (fn + tp)
 
@@ -110,8 +119,6 @@ def false_negative_rate(tp: Number, fn: Number) -> float:
 def false_positive_rate(tn: Number, fp: Number) -> float:
     """
     Computes false positive rate AKA fall-out
-
-    https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates
 
     Parameters
     ----------
@@ -123,6 +130,10 @@ def false_positive_rate(tn: Number, fp: Number) -> float:
     Returns
     -------
     False positive rate from 0 to 1
+
+    References
+    ----------
+    .. [1] [Type I and Type II Errors](https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates)
     """
     return fp / (fp + tn)
 
@@ -130,8 +141,6 @@ def false_positive_rate(tn: Number, fp: Number) -> float:
 def false_discovery_rate(tp: Number, fp: Number) -> float:
     """
     Computes false discovery rate
-
-    https://en.wikipedia.org/wiki/False_discovery_rate
 
     Parameters
     ----------
@@ -143,6 +152,10 @@ def false_discovery_rate(tp: Number, fp: Number) -> float:
     Returns
     -------
     False discovery rate from 0 to 1
+
+    References
+    ----------
+    .. [1] [False Discovery Rate](https://en.wikipedia.org/wiki/False_discovery_rate)
     """
     return fp / (fp + tp)
 
@@ -150,8 +163,6 @@ def false_discovery_rate(tp: Number, fp: Number) -> float:
 def false_omission_rate(tn: Number, fn: Number) -> float:
     """
     Computes false omission rate
-
-    https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values
 
     Parameters
     ----------
@@ -163,6 +174,10 @@ def false_omission_rate(tn: Number, fn: Number) -> float:
     Returns
     -------
     False omission rate from 0 to 1
+
+    References
+    ----------
+    .. [1] [Positive and Negative Predictive Values](https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values)
     """
     return fn / (fn + tn)
 
@@ -170,8 +185,6 @@ def false_omission_rate(tn: Number, fn: Number) -> float:
 def positive_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     """
     Computes positive likelihood ratio
-
-    https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio
 
     Parameters
     ----------
@@ -187,6 +200,10 @@ def positive_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
     Returns
     -------
     Positive likelihood rate from 1 to infinity
+
+    References
+    ----------
+    .. [1] [Likelihood Ratios](https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio)
     """
     return (tp / (tp + fn)) / (fp / (fp + tn))
 
@@ -194,8 +211,6 @@ def positive_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
 def negative_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     """
     Computes negative likelihood ratio
-
-    https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#negative_likelihood_ratio
 
     Parameters
     ----------
@@ -211,6 +226,10 @@ def negative_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
     Returns
     -------
     Negative likelihood from 1 to infinity
+
+    References
+    ----------
+    .. [1] [Likelihood Ratios](https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio)
     """
     return (fn / (fn + tp)) / (tn / (tn + fp))
 
@@ -218,8 +237,6 @@ def negative_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
 def prevalence_threshold(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     """
     Computes prevalence threshold
-
-    https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Prevalence_threshold
 
     Parameters
     ----------
@@ -235,6 +252,10 @@ def prevalence_threshold(tp: Number, tn: Number, fp: Number, fn: Number) -> floa
     Returns
     -------
     Prevalence threshold from 0 to 1
+
+    References
+    ----------
+    .. [1] [Prevalence Threshold](https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Prevalence_threshold)
     """
     return math.sqrt(fp / (fp + tn)) / (
         math.sqrt(tp / (tp + fn)) + math.sqrt(fp / (fp + tn))
@@ -259,6 +280,10 @@ def critical_success_index(tp: Number, fp: Number, fn: Number) -> float:
     Returns
     -------
     Critical success index from 0 to 1
+
+    References
+    ----------
+    .. [1] [Critical Success Index](https://www.weather.gov/media/erh/ta2004-03.pdf)
     """
     return tp / (tp + fn + fp)
 
@@ -266,8 +291,6 @@ def critical_success_index(tp: Number, fp: Number, fn: Number) -> float:
 def prevalence(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     """
     Computes prevalence
-
-    https://en.wikipedia.org/wiki/Prevalence
 
     Parameters
     ----------
@@ -283,6 +306,10 @@ def prevalence(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     Returns
     -------
     Prevalence from 0 to 1
+
+    References
+    ----------
+    .. [1] [Prevalence](https://en.wikipedia.org/wiki/Prevalence)
     """
     return (tp + fp) / (tp + fp + tn + fn)
 
@@ -290,8 +317,6 @@ def prevalence(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 def accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     """
     Computes accuracy
-
-    https://en.wikipedia.org/wiki/Accuracy_and_precision
 
     Parameters
     ----------
@@ -307,6 +332,10 @@ def accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     Returns
     -------
     Accuracy from 0 to 1
+
+    References
+    ----------
+    .. [1] [Accuracy and Precision](https://en.wikipedia.org/wiki/Accuracy_and_precision)
     """
     return (tp + tn) / (tp + fp + tn + fn)
 
@@ -314,8 +343,6 @@ def accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 def f_score(tp: Number, fp: Number, fn: Number) -> float:
     """
     Computes F-score AKA harmonic mean of precision and sensitivity
-
-    https://en.wikipedia.org/wiki/F-score
 
     Parameters
     ----------
@@ -329,6 +356,10 @@ def f_score(tp: Number, fp: Number, fn: Number) -> float:
     Returns
     -------
     F-score from 0 to 1
+
+    References
+    ----------
+    .. [1] [F-score](https://en.wikipedia.org/wiki/F-score)
     """
     return 2 * tp / (2 * tp + fp + fn)
 
@@ -339,8 +370,6 @@ def matthews_correlation_coefficient(
     """
     Computes matthews correlation coefficient, accounting for accuracy and
     precision of both true positives and true negatives AKA Phi Coefficient
-
-    https://en.wikipedia.org/wiki/Phi_coefficient
 
     Parameters
     ----------
@@ -357,6 +386,9 @@ def matthews_correlation_coefficient(
     -------
     Correlation coefficient from -1 to 1
 
+    References
+    ----------
+    .. [1] [Matthews Correlation Coefficient](https://en.wikipedia.org/wiki/Phi_coefficient)
     """
     return (tp * tn - fp * fn) / math.sqrt(
         (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
@@ -366,8 +398,6 @@ def matthews_correlation_coefficient(
 def fowlkes_mallows_index(tp: Number, fp: Number, fn: Number) -> float:
     """
     Computes Fowlkes-Mallows index
-
-    https://en.wikipedia.org/wiki/Fowlkes%E2%80%93Mallows_index
 
     Parameters
     ----------
@@ -382,5 +412,8 @@ def fowlkes_mallows_index(tp: Number, fp: Number, fn: Number) -> float:
     -------
     Correlation coefficient from -1 to 1
 
+    References
+    ----------
+    .. [1] [Fowlkes-Mallows Index](https://en.wikipedia.org/wiki/Fowlkes%E2%80%93Mallows_index)
     """
     return math.sqrt((tp / (tp + fp)) * (tp / (tp + fn)))

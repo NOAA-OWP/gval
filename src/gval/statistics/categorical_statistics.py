@@ -19,8 +19,6 @@ class CategoricalStatistics(BaseStatistics):
 
     Attributes
     ----------
-    stats : object
-        Categorical statistics class to call methods directly
     _func_names : list (private)
         Names of all functions from default categorical statistics class
     _funcs : list (private)
