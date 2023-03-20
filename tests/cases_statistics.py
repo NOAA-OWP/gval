@@ -7,10 +7,12 @@ Test functionality for gval/statistics modules
 from pytest_cases import parametrize
 from numba.core.errors import TypingError
 
-from gval.statistics.categorical_stat_funcs import CategoricalStatistics as CatStats
+import gval.statistics.categorical_stat_funcs as cat_stats
 
-func_names = [fn for fn in dir(CatStats) if len(fn) > 5 and "__" not in fn]
-stat_funcs = [getattr(CatStats, name) for name in func_names]
+func_names = [
+    fn for fn in dir(cat_stats) if len(fn) > 5 and "__" not in fn and "Number" not in fn
+]
+stat_funcs = [getattr(cat_stats, name) for name in func_names]
 
 
 arg_dicts = [
@@ -43,16 +45,15 @@ expected_results = [
     [0.48148148148148145, 0.391304347826087, 0.5625],
 ]
 
+stat_names = ["all", "accuracy", ["accuracy", "critical_success_index", "f_score"]]
+
 
 @parametrize(
-    "args, expected",
-    list(zip(arg_dicts[0:1], expected_results[0:1])),
+    "names, args, funcs, expected",
+    list(zip([func_names], arg_dicts[0:1], [stat_funcs], expected_results[0:1])),
 )
-def case_categorical_statistics(args, expected):
-    return args, expected
-
-
-stat_names = ["all", "accuracy", ["accuracy", "critical_success_index", "f_score"]]
+def case_categorical_statistics(names, args, funcs, expected):
+    return names, args, funcs, expected
 
 
 @parametrize(

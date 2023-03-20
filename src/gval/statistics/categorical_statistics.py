@@ -9,11 +9,11 @@ import inspect
 import numpy as np
 from numba import vectorize
 
-from gval.statistics.base_statistics import BaseStatisticsProcessing
-from gval.statistics.categorical_stat_funcs import CategoricalStatistics as cs
+from gval.statistics.base_statistics import BaseStatistics
+import gval.statistics.categorical_stat_funcs as cs
 
 
-class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
+class CategoricalStatistics(BaseStatistics):
     """
     Static Class for Running Categorical Statistics on Agreement Maps
 
@@ -31,29 +31,31 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
         Available statistical functions with names as keys and parameters as values
     """
 
-    stats = cs
+    def __init__(self):
+        # Automatically populates and numba vectorizes all functions in categorical_stat_funcs.py
+        self._func_names = [
+            fn
+            for fn in dir(cs)
+            if len(fn) > 5 and "__" not in fn and "Number" not in fn
+        ]
+        self._funcs = [getattr(cs, name) for name in self._func_names]
 
-    # Automatically populates and numba vectorizes all functions in categorical_stat_funcs.py
-    _func_names = [fn for fn in dir(cs) if len(fn) > 5 and "__" not in fn]
-    _funcs = [getattr(cs, name) for name in _func_names]
-    _signature_validation = {
-        "names": ["tp", "tn", "fp", "fn"],
-        "param_types": ["int", "float", "Number"],
-        "return_type": [float],
-        "no_of_args": [2, 3, 4],
-    }
+        for name, func in zip(self._func_names, self._funcs):
+            setattr(self, name, vectorize(nopython=True)(func))
 
-    # Make all functions first class methods of stats object
-    for name, func in zip(_func_names, _funcs):
-        setattr(stats, name, vectorize(nopython=True)(func))
+        self._signature_validation = {
+            "names": ["tp", "tn", "fp", "fn"],
+            "param_types": ["int", "float", "Number"],
+            "return_type": [float],
+            "no_of_args": [2, 3, 4],
+        }
 
-    registered_functions = {
-        name: {"params": [param for param in inspect.signature(func).parameters]}
-        for name, func in zip(_func_names, _funcs)
-    }
+        self.registered_functions = {
+            name: {"params": [param for param in inspect.signature(func).parameters]}
+            for name, func in zip(self._func_names, self._funcs)
+        }
 
-    @classmethod
-    def available_functions(cls) -> list:
+    def available_functions(self) -> list:
         """
         Lists all available functions
 
@@ -61,10 +63,9 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
         -------
         List of available functions
         """
-        return list(cls.registered_functions.keys())
+        return list(self.registered_functions.keys())
 
-    @classmethod
-    def get_all_parameters(cls):
+    def get_all_parameters(self):
         """
         Get all the possible arguments
 
@@ -73,10 +74,9 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
         List of all possible arguments for functions
         """
 
-        return cls._signature_validation["names"]
+        return self._signature_validation["names"]
 
-    @classmethod
-    def register_function(cls, name: str, vectorize_func: bool = False):
+    def register_function(self, name: str, vectorize_func: bool = False):
         """
         Register decorator function in statistics class
 
@@ -93,21 +93,21 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
         """
 
         def decorator(func):
-            cls.function_signature_check(func)
+            self.function_signature_check(func)
 
-            if name not in cls.registered_functions:
-                cls.registered_functions[name] = {
+            if name not in self.registered_functions:
+                self.registered_functions[name] = {
                     "params": [
                         param
                         for param in inspect.signature(func).parameters
                         if param != "self"
                     ]
                 }
-                # vectorize funciton if vectorize_func is True
+                # vectorize function if vectorize_func is True
                 r_func = (
                     vectorize(nopython=True)(func) if vectorize_func is True else func
                 )
-                setattr(cls.stats, name, r_func)
+                setattr(self, name, r_func)
             else:
                 raise KeyError("This function name already exists")
 
@@ -121,8 +121,7 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
 
         return decorator
 
-    @classmethod
-    def register_function_class(cls, vectorize_func: bool = False):
+    def register_function_class(self, vectorize_func: bool = False):
         """
         Register decorator function for an entire class
 
@@ -133,20 +132,20 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
 
         """
 
-        def decorator(dec_cls: object):
+        def decorator(dec_self: object):
             """
             Decorator for wrapper
 
             Parameters
             ----------
-            dec_cls: object
+            dec_self: object
                 Class to register stat functions
             """
 
-            for name, func in inspect.getmembers(dec_cls, inspect.isfunction):
-                if name not in cls.registered_functions:
-                    cls.function_signature_check(func)
-                    cls.registered_functions[name] = {
+            for name, func in inspect.getmembers(dec_self, inspect.isfunction):
+                if name not in self.registered_functions:
+                    self.function_signature_check(func)
+                    self.registered_functions[name] = {
                         "params": [
                             param
                             for param in inspect.signature(func).parameters
@@ -159,14 +158,13 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
                         if vectorize_func is True
                         else func
                     )
-                    setattr(cls.stats, name, r_func)
+                    setattr(self, name, r_func)
                 else:
                     raise KeyError("This function name already exists")
 
         return decorator
 
-    @classmethod
-    def function_signature_check(cls, func):
+    def function_signature_check(self, func):
         """
         Validates signature of registered function
 
@@ -176,10 +174,10 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
             Function to check the signature of
         """
         signature = inspect.signature(func)
-        names = cls._signature_validation["names"]
-        param_types = cls._signature_validation["param_types"]
-        return_type = cls._signature_validation["return_type"]
-        no_of_args = cls._signature_validation["no_of_args"]
+        names = self._signature_validation["names"]
+        param_types = self._signature_validation["param_types"]
+        return_type = self._signature_validation["return_type"]
+        no_of_args = self._signature_validation["no_of_args"]
 
         # Checks if param names, type, and return type are in valid list
         # Considered no validation if either are empty
@@ -202,8 +200,7 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
         if signature.return_annotation not in return_type and len(return_type) > 0:
             raise TypeError("Wrong return type \n" f"Valid return Type {return_type}")
 
-    @classmethod
-    def get_parameters(cls, func_name: str) -> list:
+    def get_parameters(self, func_name: str) -> list:
         """
         Get parameters of registered function
 
@@ -217,13 +214,12 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
         List of parameter names for the associated function
         """
 
-        if func_name in cls.registered_functions:
-            return cls.registered_functions[func_name]["params"]
+        if func_name in self.registered_functions:
+            return self.registered_functions[func_name]["params"]
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    @classmethod
-    def process_statistics(cls, func_names: Union[str, list], arg_dict: dict) -> float:
+    def process_statistics(self, func_names: Union[str, list], arg_dict: dict) -> float:
         """
 
         Parameters
@@ -239,15 +235,17 @@ class CategoricalStatisticsProcessing(BaseStatisticsProcessing):
         """
 
         func_names = (
-            list(cls.registered_functions.keys()) if func_names == "all" else func_names
+            list(self.registered_functions.keys())
+            if func_names == "all"
+            else func_names
         )
         func_list = [func_names] if isinstance(func_names, str) else func_names
 
         return_stats = []
         for name in func_list:
-            if name in cls.registered_functions:
-                params = cls.get_parameters(name)
-                func = getattr(cls.stats, name)
+            if name in self.registered_functions:
+                params = self.get_parameters(name)
+                func = getattr(self, name)
 
                 # Necessary for numba functions which cannot accept keyword arguments
                 func_args = []
