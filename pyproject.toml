@@ -26,8 +26,8 @@ version = {file = ["./gval/version.txt"]}
 readme = {file = ["README.MD"]}
 
 
-[tool.setuptools.packages.find]
-where = ["gval"]  # list of folders that contain the packages (["."] by default)
+#[tool.setuptools.packages.find]
+#where = ["gval"]  # list of folders that contain the packages (["."] by default)
 #include = ["gval*"]  # package names should match these glob patterns (["*"] by default)
 #exclude = ["my_package.tests*"]  # exclude packages matching these glob patterns (empty by default)
 
