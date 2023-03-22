@@ -29,7 +29,12 @@ from gval.comparison.tabulation import (
     _crosstab_DataArrays,
     _crosstab_Datasets,
 )
+from gval.comparison.compute_comparison import ComparisonProcessing
+
 from tests.conftest import _assert_pairing_dict_equal
+
+
+compare_proc = ComparisonProcessing()
 
 
 @parametrize_with_cases("number", glob="is_not_natural_number_successes")
@@ -223,3 +228,127 @@ def test_compute_agreement_map_fail(
             nodata=nodata,
             encode_nodata=encode_nodata,
         )
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    glob="comparison_processing_agreement_maps_success",
+)
+def test_comparison_processing_agreement_map_success(
+    candidate_map,
+    benchmark_map,
+    agreement_map,
+    comparison_function,
+    allow_candidate_values,
+    allow_benchmark_values,
+    nodata,
+    encode_nodata,
+):
+    """Tests comparison processing computing of agreement xarray from two xarrays"""
+
+    agreement_map_computed = compare_proc.process_agreement_map(
+        func_name=comparison_function,
+        candidate_map=candidate_map,
+        benchmark_map=benchmark_map,
+        allow_candidate_values=allow_candidate_values,
+        allow_benchmark_values=allow_benchmark_values,
+        nodata=nodata,
+        encode_nodata=encode_nodata,
+    )
+
+    # Use xr.testing.assert_identical() if names and attributes need to be compared too
+    xr.testing.assert_equal(agreement_map_computed, agreement_map)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata, exception",
+    glob="comparison_processing_agreement_maps_fail",
+)
+def test_comparison_processing_agreement_maps_fail(
+    candidate_map,
+    benchmark_map,
+    comparison_function,
+    allow_candidate_values,
+    allow_benchmark_values,
+    nodata,
+    encode_nodata,
+    exception,
+):
+    with raises(exception):
+        _ = compare_proc.process_agreement_map(
+            func_name=comparison_function,
+            candidate_map=candidate_map,
+            benchmark_map=benchmark_map,
+            allow_candidate_values=allow_candidate_values,
+            allow_benchmark_values=allow_benchmark_values,
+            nodata=nodata,
+            encode_nodata=encode_nodata,
+        )
+
+
+def test_comparison_get_all_param():
+    """tests get all params function"""
+
+    try:
+        compare_proc.get_all_parameters()
+    except KeyError:
+        assert False, "Signature dict not present or keys changed"
+
+
+def test_get_available_functions():
+    """tests get all available functions"""
+
+    assert compare_proc.available_functions() == ["pairing_dict", "cantor", "szudzik"]
+
+
+@parametrize_with_cases("args, func", glob="comparison_register_function")
+def test_comparison_register_function(args, func):
+    """tests register func function"""
+
+    compare_proc.register_function(**args)(func)
+
+
+@parametrize_with_cases(
+    "args, func, exception", glob="comparison_register_function_fail"
+)
+def test_comparison_register_function_fail(args, func, exception):
+    """tests register func fail function"""
+
+    with raises(exception):
+        compare_proc.register_function(**args)(func)
+
+
+@parametrize_with_cases("names, args, cls", glob="comparison_register_class")
+def test_register_class(names, args, cls):
+    """tests register class function"""
+
+    compare_proc.register_function_class(**args)(cls)
+
+    if [name in compare_proc.registered_functions for name in names] != [True] * len(
+        names
+    ):
+        assert False, "Unable to register all class functions"
+
+
+@parametrize_with_cases("args, cls, exception", glob="comparison_register_class_fail")
+def test_comparison_register_class_fail(args, cls, exception):
+    """tests register class fail function"""
+
+    with raises(exception):
+        compare_proc.register_function_class(**args)(cls)
+
+
+@parametrize_with_cases("name, params", glob="comparison_get_param")
+def test_comparison_get_param(name, params):
+    """tests get param function"""
+
+    _params = compare_proc.get_parameters(name)
+    assert _params == params
+
+
+@parametrize_with_cases("name", glob="comparison_get_param_fail")
+def test_comparison_get_param_fail(name):
+    """tests get param fail function"""
+
+    with raises(KeyError):
+        _ = compare_proc.get_parameters(name)

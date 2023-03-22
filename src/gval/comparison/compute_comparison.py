@@ -1,12 +1,14 @@
 from typing import Union
 from functools import wraps
 import inspect
+from numbers import Number
 
 from numba import vectorize
 import xarray as xr
 
 from gval.comparison.pairing_functions import (
     _make_pairing_dict,
+    pairing_dict_fn,
     cantor_pair_signed,
     szudzik_pair_signed,
 )
@@ -32,23 +34,23 @@ class ComparisonProcessing:
     def __init__(self):
         # Populates default functions for pairing functions
         self._func_names = ["pairing_dict", "cantor", "szudzik"]
-        self._funcs = [_make_pairing_dict, cantor_pair_signed, szudzik_pair_signed]
+        self._funcs = [pairing_dict_fn, cantor_pair_signed, szudzik_pair_signed]
 
         for name, func in zip(self._func_names, self._funcs):
-            if name != "pairing_dict":
-                func = vectorize(nopython=True)(func)
             setattr(self, name, func)
 
         self._signature_validation = {
             "names": [],
             "param_types": ["int", "float", "Number"],
-            "return_type": [],
+            "return_type": [Number],
             "no_of_args": [2, 3],
         }
 
         self.registered_functions = {
-            name: {"params": [param for param in inspect.signature(func).parameters]}
-            for name, func in zip(self._func_names, self._funcs)
+            name: {"params": func_params}
+            for name, func_params in zip(
+                self._func_names, [["c", "b", "pairing_dict"], ["c", "b"], ["c", "b"]]
+            )
         }
 
     def available_functions(self) -> list:
@@ -252,36 +254,9 @@ class ComparisonProcessing:
                         kwargs.get("allow_benchmark_values"),
                     )
 
-            agreement_parameters = inspect.signature(_compute_agreement_map).parameters
             kwargs["comparison_function"] = getattr(self, func_name)
 
-            # Necessary for numba functions which cannot accept keyword arguments
-            func_args = []
-            for param in agreement_parameters.keys():
-                if param in kwargs:
-                    func_args.append(kwargs[param])
-                elif "Optional" in str(agreement_parameters[param]):
-                    continue
-                else:
-                    raise ValueError("Parameter missing form kwargs")
-
-            return _compute_agreement_map(*func_args)
+            return _compute_agreement_map(**kwargs)
 
         else:
             raise KeyError("Pairing function not found in registered functions")
-
-
-if __name__ == "__main__":
-    a = ComparisonProcessing()
-
-    @a.register_function(name="test")
-    def seb(c: int, b: int):
-        return c + b
-
-    @a.register_function_class()
-    class Test:
-        @staticmethod
-        def test5(c: int, b: int):
-            return c + b
-
-    print(a.available_functions())

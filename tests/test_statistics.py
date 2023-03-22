@@ -4,7 +4,7 @@ from pytest import raises
 
 from gval.statistics.categorical_statistics import CategoricalStatistics
 
-CatStat = CategoricalStatistics()
+cat_stat = CategoricalStatistics()
 
 
 @parametrize_with_cases("names, args, funcs, expected", glob="categorical_statistics")
@@ -13,7 +13,7 @@ def test_categorical_statistics(names, args, funcs, expected):
 
     np.testing.assert_equal(
         [
-            func(*[args[p] for p in CatStat.get_parameters(name)])
+            func(*[args[p] for p in cat_stat.get_parameters(name)])
             for func, name in zip(funcs, names)
         ],
         expected,
@@ -24,10 +24,10 @@ def test_categorical_statistics(names, args, funcs, expected):
 def test_compute_statistics(names, args, expected):
     """tests compute statistics fail function"""
 
-    stat_names = CatStat.available_functions() if names == "all" else names
+    stat_names = cat_stat.available_functions() if names == "all" else names
 
     np.testing.assert_equal(
-        CatStat.process_statistics(stat_names, **args),
+        cat_stat.process_statistics(stat_names, **args),
         expected,
     ), "Compute statistics did not return expected values"
 
@@ -38,15 +38,15 @@ def test_compute_statistics_fail(names, args, exception):
 
     with np.errstate(divide="ignore"):
         with raises(exception):
-            stat_names = CatStat.available_functions() if names == "all" else names
-            _ = CatStat.process_statistics(stat_names, **args)
+            stat_names = cat_stat.available_functions() if names == "all" else names
+            _ = cat_stat.process_statistics(stat_names, **args)
 
 
 @parametrize_with_cases("args, func", glob="register_function")
 def test_register_function(args, func):
     """tests register func function"""
 
-    CatStat.register_function(**args)(func)
+    cat_stat.register_function(**args)(func)
 
 
 @parametrize_with_cases("args, func, exception", glob="register_function_fail")
@@ -54,16 +54,16 @@ def test_register_function_fail(args, func, exception):
     """tests register func fail function"""
 
     with raises(exception):
-        CatStat.register_function(**args)(func)
+        cat_stat.register_function(**args)(func)
 
 
 @parametrize_with_cases("names, args, cls", glob="register_class")
 def test_register_class(names, args, cls):
     """tests register class function"""
 
-    CatStat.register_function_class(**args)(cls)
+    cat_stat.register_function_class(**args)(cls)
 
-    if [name in CatStat.registered_functions for name in names] != [True] * len(names):
+    if [name in cat_stat.registered_functions for name in names] != [True] * len(names):
         assert False, "Unable to register all class functions"
 
 
@@ -72,14 +72,14 @@ def test_register_class_fail(args, cls, exception):
     """tests register class fail function"""
 
     with raises(exception):
-        CatStat.register_function_class(**args)(cls)
+        cat_stat.register_function_class(**args)(cls)
 
 
 @parametrize_with_cases("name, params", glob="get_param")
 def test_get_param(name, params):
     """tests get param function"""
 
-    _params = CatStat.get_parameters(name)
+    _params = cat_stat.get_parameters(name)
     assert _params == params
 
 
@@ -88,13 +88,13 @@ def test_get_param_fail(name):
     """tests get param fail function"""
 
     with raises(KeyError):
-        _ = CatStat.get_parameters(name)
+        _ = cat_stat.get_parameters(name)
 
 
 def test_get_all_param():
     """tests get all params function"""
 
     try:
-        CatStat.get_all_parameters()
+        cat_stat.get_all_parameters()
     except KeyError:
         assert False, "Signature dict not present or keys changed"

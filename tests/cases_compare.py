@@ -4,6 +4,7 @@ Test functionality for gval/compare.py
 
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
+from numbers import Number
 
 import numpy as np
 import pandas as pd
@@ -566,3 +567,278 @@ def case_compute_agreement_map_fail(
         nodata,
         encode_nodata,
     )
+
+
+comparison_processing_agreement_maps_success = [
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_szudzik_aligned_to_candidate_map_0.tif"),
+        "szudzik",
+        None,
+        None,
+        None,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_cantor_aligned_to_candidate_map_0.tif"),
+        "cantor",
+        None,
+        None,
+        None,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_pairing_aligned_to_candidate_map_0.tif"),
+        "pairing_dict",
+        [-9999, 1, 2],
+        [0, 2],
+        None,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_szudzik_aligned_to_candidate_map_0_nodata.tif"),
+        "szudzik",
+        None,
+        None,
+        399900006,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray(
+            "agreement_map_00_szudzik_aligned_to_candidate_map_0_nodata.tif",
+            masked=True,
+            mask_and_scale=True,
+        ),
+        "szudzik",
+        None,
+        None,
+        399900006,
+        True,
+    ),
+]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    comparison_processing_agreement_maps_success,
+)
+def case_comparison_processing_agreement_maps_success(
+    candidate_map,
+    benchmark_map,
+    agreement_map,
+    comparison_function,
+    allow_candidate_values,
+    allow_benchmark_values,
+    nodata,
+    encode_nodata,
+):
+    return (
+        _load_xarray(candidate_map),
+        _load_xarray(benchmark_map),
+        agreement_map,
+        comparison_function,
+        allow_candidate_values,
+        allow_benchmark_values,
+        nodata,
+        encode_nodata,
+    )
+
+
+comparison_processing_agreement_maps_fail = [
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        "pairing_dict",
+        None,
+        None,
+        None,
+        None,
+        ValueError,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        "szudzik",
+        None,
+        None,
+        None,
+        True,
+        ValueError,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        "arb",
+        None,
+        None,
+        None,
+        True,
+        KeyError,
+    ),
+]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata, exception",
+    comparison_processing_agreement_maps_fail,
+)
+def case_comparison_processing_agreement_maps_fail(
+    candidate_map,
+    benchmark_map,
+    comparison_function,
+    allow_candidate_values,
+    allow_benchmark_values,
+    nodata,
+    encode_nodata,
+    exception,
+):
+    return (
+        _load_xarray(candidate_map),
+        _load_xarray(benchmark_map),
+        comparison_function,
+        allow_candidate_values,
+        allow_benchmark_values,
+        nodata,
+        encode_nodata,
+        exception,
+    )
+
+
+comparison_args = [
+    {"name": "test_func"},
+    {"name": "test_func2", "vectorize_func": True},
+]
+
+
+def pass1(c: float, b: int) -> Number:
+    return c + b
+
+
+def pass2(c: float, b: float) -> Number:
+    return c + b
+
+
+comparison_funcs = [pass1, pass2]
+
+
+@parametrize("args, func", list(zip(comparison_args, comparison_funcs)))
+def case_comparison_register_function(args, func):
+    return args, func
+
+
+comparison_args = [
+    {"name": "szudzik"},
+    {"name": "test2"},
+    {"name": "test2"},
+    {"name": "test2"},
+]
+
+
+def fail1(c: float, b: int) -> Number:
+    return c + b
+
+
+def fail2(c: str, b: int) -> Number:
+    return c + b
+
+
+def fail3(c: float) -> Number:
+    return c
+
+
+def fail4(c: float, b: float) -> str:
+    return c + b
+
+
+comparison_fail_funcs = [fail1, fail2, fail3, fail4]
+exceptions = [KeyError, TypeError, TypeError, TypeError]
+
+
+@parametrize(
+    "args, func, exception",
+    list(zip(comparison_args, comparison_fail_funcs, exceptions)),
+)
+def case_comparison_register_function_fail(args, func, exception):
+    return args, func, exception
+
+
+class Tester:
+    @staticmethod
+    def pass5(c: int, b: int) -> Number:
+        return c + b
+
+    @staticmethod
+    def pass6(c: int, b: int) -> Number:
+        return c + b
+
+
+class Tester2:
+    @staticmethod
+    def pass7(c: int, b: int) -> Number:
+        return c + b
+
+    @staticmethod
+    def pass8(c: int, b: int) -> Number:
+        return c + b
+
+
+comparison_names = [["pass5", "pass6"], ["pass7", "pass8"]]
+comparison_args = [{}, {"vectorize_func": True}]
+comparison_class = [Tester, Tester2]
+
+
+@parametrize(
+    "names, args, cls", list(zip(comparison_names, comparison_args, comparison_class))
+)
+def case_comparison_register_class(names, args, cls):
+    return names, args, cls
+
+
+class TesterFail1:
+    @staticmethod
+    def fail6(c: str, b: int) -> Number:
+        return c + b
+
+
+class TesterFail2:
+    @staticmethod
+    def szudzik(c: int, b: int) -> Number:
+        return c + b
+
+
+comparison_args = [{}, {"vectorize_func": True}]
+comparison_class = [TesterFail1, TesterFail2]
+exceptions = [TypeError, KeyError]
+
+
+@parametrize(
+    "args, cls, exception", list(zip(comparison_args, comparison_class, exceptions))
+)
+def case_comparison_register_class_fail(args, cls, exception):
+    return args, cls, exception
+
+
+stat_funcs = ["szudzik", "pairing_dict"]
+stat_params = [["c", "b"], ["c", "b", "pairing_dict"]]
+
+
+@parametrize("name, params", list(zip(stat_funcs, stat_params)))
+def case_comparison_get_param(name, params):
+    return name, params
+
+
+stat_funcs = ["arbitrary"]
+
+
+@parametrize("name", stat_funcs)
+def case_comparison_get_param_fail(name):
+    return name

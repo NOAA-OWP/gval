@@ -129,6 +129,7 @@ def _negative_value_transformation(x: Number) -> Number:  # pragma: no cover
     return 2 * x if x >= 0 else -2 * x - 1
 
 
+@nb.vectorize(nopython=True)
 def cantor_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Output unique natural number for each unique combination of whole numbers using Cantor signed method.
@@ -154,6 +155,7 @@ def cantor_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     return cantor_pair(ct, bt)
 
 
+@nb.vectorize(nopython=True)
 def szudzik_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Output unique natural number for each unique combination of whole numbers using Szudzik signed method._summary_
