@@ -4,11 +4,11 @@ import numpy as np
 from tqdm import tqdm
 import xarray as xr
 
-from gval.homogenize.spatial_alignment import Spatial_alignment
+from gval.homogenize.spatial_alignment import _spatial_alignment
 from gval.utils.loading_datasets import load_raster_as_xarray
 from gval.utils.exceptions import RasterMisalignment
-from gval.compare import (
-    compute_agreement_xarray,
+from gval.comparison.compare import (
+    _compute_agreement_map,
     cantor_pair_signed,
     szudzik_pair_signed,
 )
@@ -67,7 +67,7 @@ def generate_aligned_and_agreement_maps(
                 else map_al
             )
 
-            cam, bem = Spatial_alignment(candidate, benchmark, align_arg)
+            cam, bem = _spatial_alignment(candidate, benchmark, align_arg)
             align_string = f"aligned_to_{names[idx][:-4]}"
 
             cam.rio.to_raster(f"{generate_dir}/{candidate_map[:-4]}_{align_string}.tif")
@@ -77,7 +77,7 @@ def generate_aligned_and_agreement_maps(
                 allow_candidate_values = [-9999, 1, 2] if comp[1] == "pairing" else None
                 allow_benchmark_values = [0, 2] if comp[1] == "pairing" else None
 
-                agreement_map_computed = compute_agreement_xarray(
+                agreement_map_computed = _compute_agreement_map(
                     cam,
                     bem,
                     comp[0],

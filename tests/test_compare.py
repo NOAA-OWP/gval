@@ -12,7 +12,7 @@ from pytest_cases import parametrize_with_cases
 import xarray as xr
 from pytest import raises
 
-from gval.compare import (
+from gval.comparison.pairing_functions import (
     _is_not_natural_number,
     cantor_pair,
     cantor_pair_signed,
@@ -20,7 +20,9 @@ from gval.compare import (
     szudzik_pair_signed,
     _make_pairing_dict,
     pairing_dict_fn,
-    _compute_agreement_map,
+)
+from gval.comparison.agreement import _compute_agreement_map
+from gval.comparison.tabulation import (
     _convert_crosstab_to_contigency_table,
     _crosstab_2d_DataArrays,
     _crosstab_3d_DataArrays,
