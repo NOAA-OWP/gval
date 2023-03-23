@@ -1,21 +1,23 @@
-"""
-Categorical Statistics Class
-"""
-
 from typing import Union
 from functools import wraps
 import inspect
+from numbers import Number
 
-import numpy as np
 from numba import vectorize
+import xarray as xr
 
-from gval.statistics.base_statistics import BaseStatistics
-import gval.statistics.categorical_stat_funcs as cs
+from gval.comparison.pairing_functions import (
+    _make_pairing_dict,
+    pairing_dict_fn,
+    cantor_pair_signed,
+    szudzik_pair_signed,
+)
+from gval.comparison.agreement import _compute_agreement_map
 
 
-class CategoricalStatistics(BaseStatistics):
+class ComparisonProcessing:
     """
-    Class for Running Categorical Statistics on Agreement Maps
+    Class for Processing Agreement Maps and Tabulations
 
     Attributes
     ----------
@@ -30,27 +32,25 @@ class CategoricalStatistics(BaseStatistics):
     """
 
     def __init__(self):
-        # Automatically populates and numba vectorizes all functions in categorical_stat_funcs.py
-        self._func_names = [
-            fn
-            for fn in dir(cs)
-            if len(fn) > 5 and "__" not in fn and "Number" not in fn
-        ]
-        self._funcs = [getattr(cs, name) for name in self._func_names]
+        # Populates default functions for pairing functions
+        self._func_names = ["pairing_dict", "cantor", "szudzik"]
+        self._funcs = [pairing_dict_fn, cantor_pair_signed, szudzik_pair_signed]
 
         for name, func in zip(self._func_names, self._funcs):
-            setattr(self, name, vectorize(nopython=True)(func))
+            setattr(self, name, func)
 
         self._signature_validation = {
-            "names": ["tp", "tn", "fp", "fn"],
+            "names": [],
             "param_types": ["int", "float", "Number"],
-            "return_type": [float],
-            "no_of_args": [2, 3, 4],
+            "return_type": [Number],
+            "no_of_args": [2, 3],
         }
 
         self.registered_functions = {
-            name: {"params": [param for param in inspect.signature(func).parameters]}
-            for name, func in zip(self._func_names, self._funcs)
+            name: {"params": func_params}
+            for name, func_params in zip(
+                self._func_names, [["c", "b", "pairing_dict"], ["c", "b"], ["c", "b"]]
+            )
         }
 
     def available_functions(self) -> list:
@@ -76,12 +76,12 @@ class CategoricalStatistics(BaseStatistics):
 
     def register_function(self, name: str, vectorize_func: bool = False):
         """
-        Register decorator function in statistics class
+        Register decorator function in comparison class
 
         Parameters
         ----------
         name: str
-            Name of function to register in statistics class
+            Name of function to register in comparison class
         vectorize_func: bool
             Whether to vectorize the function
 
@@ -137,7 +137,7 @@ class CategoricalStatistics(BaseStatistics):
             Parameters
             ----------
             dec_self: object
-                Class to register stat functions
+                Class to register pairing functions
             """
 
             for name, func in inspect.getmembers(dec_self, inspect.isfunction):
@@ -217,50 +217,46 @@ class CategoricalStatistics(BaseStatistics):
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    def process_statistics(self, func_names: Union[str, list], **kwargs) -> float:
+    def process_agreement_map(
+        self, func_name: str, **kwargs
+    ) -> Union[xr.DataArray, xr.Dataset]:
         """
 
         Parameters
         ----------
-        func_names: Union[str, list]
+        func_name: str
             Name of registered function to run
-        arg_dict: dict
-            Dictionary of arguments to pass to function
 
         Returns
         -------
-        Metric from chosen function
+        Union[xr.DataArray, xr.Dataset]
+        Agreement map.
         """
 
-        func_names = (
-            list(self.registered_functions.keys())
-            if func_names == "all"
-            else func_names
-        )
-        func_list = [func_names] if isinstance(func_names, str) else func_names
+        if func_name in self.registered_functions:
+            if func_name == "pairing_dict":
+                if (
+                    kwargs.get("pairing_dict") is None
+                ):  # this is used for when pairing_dict is not passed
+                    # user must set arguments to build pairing dict, throws value error
+                    # TODO: consider allow use of unique to acquire all values from candidate and benchmarks
+                    if (kwargs.get("allow_candidate_values") is None) | (
+                        kwargs.get("allow_benchmark_values") is None
+                    ):
+                        raise ValueError(
+                            "When comparison_function argument is set to 'pairing_dict', must pass values for "
+                            "allow_candidate_values and allow_benchmark_values arguments."
+                        )
 
-        return_stats = []
-        for name in func_list:
-            if name in self.registered_functions:
-                params = self.get_parameters(name)
-                func = getattr(self, name)
+                    # this creates the pairing dictionary from the passed allowed values
+                    kwargs["pairing_dict"] = _make_pairing_dict(
+                        kwargs.get("allow_candidate_values"),
+                        kwargs.get("allow_benchmark_values"),
+                    )
 
-                # Necessary for numba functions which cannot accept keyword arguments
-                func_args = []
-                for param in params:
-                    if param in kwargs:
-                        func_args.append(kwargs[param])
-                    else:
-                        raise ValueError("Parameter missing form kwargs")
+            kwargs["comparison_function"] = getattr(self, func_name)
 
-                stat_val = func(*func_args)
+            return _compute_agreement_map(**kwargs)
 
-                if np.isnan(stat_val) or np.isinf(stat_val):
-                    raise ValueError(f"Invalid value calculated for {name}:", stat_val)
-
-                return_stats.append(stat_val)
-
-            else:
-                raise KeyError("Statistic not found in registered functions")
-
-        return return_stats
+        else:
+            raise KeyError("Pairing function not found in registered functions")
