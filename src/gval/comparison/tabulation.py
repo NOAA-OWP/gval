@@ -20,21 +20,28 @@ import numpy as np
 import pandas as pd
 from xrspatial.zonal import crosstab
 import xarray as xr
+import pandera as pa
+from pandera.typing import DataFrame
+
+from gval.utils.schemas import Xrspatial_crosstab_df, Crosstab_2d_df, Crosstab_df
 
 
-def _convert_crosstab_to_contigency_table(crosstab_df: pd.DataFrame) -> pd.DataFrame:
+@pa.check_types
+def _convert_crosstab_to_contigency_table(
+    crosstab_df: DataFrame[Xrspatial_crosstab_df],
+) -> DataFrame[Crosstab_2d_df]:
     """
-    Reorganizes crosstab output to contingency table format.
+    Reorganizes crosstab output to Crosstab 2D DataFrame format.
 
     Parameters
     ----------
-    crosstab_df : pd.DataFrame
+    crosstab_df : DataFrame[Xrspatial_crosstab_df]
         Output DataFrame from :func:`xarray-spatial.zonal.crosstab`.
 
     Returns
     -------
-    pd.DataFrame
-        Contingency DataFrame using candidate and benchmark conventions.
+    DataFrame[Crosstab_2d_df]
+        Crosstab 2D DataFrame using candidate and benchmark conventions.
     """
 
     # TODO: Consider making some of these columns headers part of a schema managed separately.
@@ -57,7 +64,7 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
     Parameters
     ----------
     dimension : Union[int, str]
-        Number of dimensions function will support. Use either 2 or 3.
+        Number of dimensions function will support. Use either 2, 3, or 2/3.
     xarray_obj : str, default = "xr.DataArray"
         Type of xarray object function accepts. xr.DataArray or xr.Dataset.
 
@@ -65,11 +72,28 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
     -------
     Callable
         Decorated crosstab_* function with new docstring.
+
+    Raises
+    ------
+    ValueError
+        "Pass 2, 3, or 2/3 for dimension argument."
     """
 
     def decorator(func):
+        # dedicate output schema
+        if (dimension == 2) | (dimension == "2"):
+            output_schema = "DataFrame[Crosstab_2d_df]"
+        elif dimension == "2/3":
+            output_schema = "Union[DataFrame[Crosstab_2d_df], DataFrame[Crosstab_df]]"
+        elif (dimension == 3) | (dimension == "3"):
+            output_schema = "DataFrame[Crosstab_df]"
+        else:
+            raise ValueError(
+                "Pass 2, 3, or 2/3 for dimension argument."
+            )  # pragma: no cover
+
         docstring = f"""
-            Crosstab {dimension}-dimensional {xarray_obj} to produce Contingency DataFrame.
+            Crosstab {dimension}-dimensional {xarray_obj} to produce Crosstab DataFrame.
 
             Parameters
             ----------
@@ -86,8 +110,8 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
 
             Returns
             -------
-            pd.DataFrame
-                Contingency DataFrame.
+            {output_schema}
+                Crosstab DataFrame.
 
             References
             ----------
@@ -101,6 +125,7 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
     return decorator
 
 
+@pa.check_types
 @_crosstab_docstring(2, "xr.DataArray")
 def _crosstab_2d_DataArrays(
     candidate_map: xr.DataArray,
@@ -108,7 +133,7 @@ def _crosstab_2d_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-) -> pd.DataFrame:
+) -> DataFrame[Crosstab_2d_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
     crosstab_df = crosstab(
@@ -125,6 +150,7 @@ def _crosstab_2d_DataArrays(
     return crosstab_df
 
 
+@pa.check_types
 @_crosstab_docstring(3, "xr.DataArray")
 def _crosstab_3d_DataArrays(
     candidate_map: xr.DataArray,
@@ -132,7 +158,7 @@ def _crosstab_3d_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-) -> pd.DataFrame:
+) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
     # check number of dimensions
@@ -184,7 +210,6 @@ def _crosstab_3d_DataArrays(
             exclude_value=exclude_value,
         )
 
-        # TODO: Consider making this column header part of a schema managed separately.
         # add band column
         crosstab_df.insert(0, band_name_candidate, b)
 
@@ -200,6 +225,7 @@ def _crosstab_3d_DataArrays(
     return crosstab_df
 
 
+@pa.check_types
 @_crosstab_docstring("2/3", "xr.DataArray")
 def _crosstab_DataArrays(
     candidate_map: xr.DataArray,
@@ -207,7 +233,7 @@ def _crosstab_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-) -> pd.DataFrame:
+) -> Union[DataFrame[Crosstab_2d_df], DataFrame[Crosstab_df]]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
     # TODO: these can be predicates and optional exception raising
@@ -231,6 +257,7 @@ def _crosstab_DataArrays(
     )
 
 
+@pa.check_types
 @_crosstab_docstring("3", "xr.Dataset")
 def _crosstab_Datasets(
     candidate_map: xr.Dataset,
@@ -238,7 +265,7 @@ def _crosstab_Datasets(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-) -> pd.DataFrame:
+) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
     # gets variable names
@@ -264,7 +291,6 @@ def _crosstab_Datasets(
             exclude_value=exclude_value,
         )
 
-        # TODO: Consider making this column header part of a schema managed separately.
         # add band column
         crosstab_df.insert(0, "band", b)
 

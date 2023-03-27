@@ -224,12 +224,13 @@ class CategoricalStatistics(BaseStatistics):
         ----------
         func_names: Union[str, list]
             Name of registered function to run
-        arg_dict: dict
-            Dictionary of arguments to pass to function
+        **kwargs: dict or keyword arguments
+            Dictionary or keyword arguments of to pass to metric functions.
 
         Returns
         -------
-        Metric from chosen function
+        Tuple[float, str]
+            Tuple with metric values and metric names.
         """
 
         func_names = (
@@ -263,4 +264,8 @@ class CategoricalStatistics(BaseStatistics):
             else:
                 raise KeyError("Statistic not found in registered functions")
 
-        return return_stats
+        # make a list if not already
+        if not isinstance(func_names, list):
+            func_names = [func_names]
+
+        return return_stats, func_names
