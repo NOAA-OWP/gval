@@ -24,10 +24,13 @@ def test_categorical_statistics(names, args, funcs, expected):
 def test_compute_statistics(names, args, expected):
     """tests compute statistics fail function"""
 
-    stat_names = cat_stat.available_functions() if names == "all" else names
+    # NOTE: Removed bc this should be handled within process_statistics.
+    # stat_names = cat_stat.available_functions() if names == "all" else names
 
     np.testing.assert_equal(
-        cat_stat.process_statistics(stat_names, **args),
+        cat_stat.process_statistics(names, **args)[
+            0
+        ],  # NOTE: Only testing metric value returns.
         expected,
     ), "Compute statistics did not return expected values"
 
@@ -38,8 +41,9 @@ def test_compute_statistics_fail(names, args, exception):
 
     with np.errstate(divide="ignore"):
         with raises(exception):
-            stat_names = cat_stat.available_functions() if names == "all" else names
-            _ = cat_stat.process_statistics(stat_names, **args)
+            # NOTE: Removed bc this should be handled within process_statistics.
+            # stat_names = cat_stat.available_functions() if names == "all" else names
+            cat_stat.process_statistics(names, **args)
 
 
 @parametrize_with_cases("args, func", glob="register_function")

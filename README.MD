@@ -24,14 +24,14 @@ To use this package:
 - [Numpy Style Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
 - [Python Type Hints](https://docs.python.org/3/library/typing.html)
 - [PEP8](https://pep8.org/) Styling (and
-    [this](https://peps.python.org/pep-0008/))
+  [this](https://peps.python.org/pep-0008/))
 
 ## Code Dependencies
 
 - [rioxarray](https://corteva.github.io/rioxarray/html/index.html)
-- [geopandas](https://geopandas.org/en/stable/)
 - [dask](https://www.dask.org)
 - [xarray-spatial](https://xarray-spatial.org)
+- [pandera](https://pandera.readthedocs.io/en/stable/index.html)
 
 # Contributing
 
@@ -89,31 +89,30 @@ If you would like to contribute, please follow the following steps:
 Code Checking with [Flake8](https://github.com/PyCQA/flake8)
 
 - Combines PyFlakes, pycodestyle, and others for linting and style
-    checking.
+  checking.
 - For autoformatting:
-    [flake8-black](https://pypi.org/project/flake8-black/)
-- Testing with
-    [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
-    - For timed tests:
-        [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
-    - For code coverage:
-        [pytest-cov](https://pypi.org/project/pytest-cov/)
+  [flake8-black](https://pypi.org/project/flake8-black/)
+- Testing with [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
+- For timed tests:
+    [pytest-benchmark](https://pypi.org/project/pytest-benchmark/)
+- For code coverage:
+    [pytest-cov](https://pypi.org/project/pytest-cov/)
 - Profiling
 - [yappi](https://github.com/sumerc/yappi/)
-    - For memory profiling: [memray](https://pypi.org/project/memray/)
-    - Dask memory profiling:
-        [dask-memusage](https://github.com/itamarst/dask-memusage)
+- For memory profiling: [memray](https://pypi.org/project/memray/)
+- Dask memory profiling:
+    [dask-memusage](https://github.com/itamarst/dask-memusage)
 - Dependencies and Packaging
-    - [pip](https://packaging.python.org/en/latest/key_projects/#pip)
-    - Docker
+- [pip](https://packaging.python.org/en/latest/key_projects/#pip)
+- Docker
 - Distribution *[PyPI](https://pypi.org/)
-    - DockerHub
-    - GitHub (source, packaging, and images)
+- DockerHub
+- GitHub (source, packaging, and images)
 - Docs
-    - [Sphinx](https://www.sphinx-doc.org/)
-    - [pandoc](https://pypi.org/project/pandoc/)
-    - [ReadTheDocs](https://readthedocs.org/)
-    - [Jupyter](https://pypi.org/project/jupyter/)
+- [Sphinx](https://www.sphinx-doc.org/)
+- [pandoc](https://pypi.org/project/pandoc/)
+- [ReadTheDocs](https://readthedocs.org/)
+- [Jupyter](https://pypi.org/project/jupyter/)
 
 ## Development Installation
 
@@ -124,47 +123,42 @@ choice.)
 
 First setup docker instance and in the root directory of the project:
 
-` [sudo] docker build -t gval-image --target development .  `
+`[sudo] docker build -t gval-image --target development . `
 
 The default user named 'user' with UID 1001 is created. To use the same
 user and permissions you currently have on your machine override with
 build arguments:
 
-`[sudo] docker build -t gval-image --build-arg UID=$(id -u) --target
-development .`
+`[sudo] docker build -t gval-image --build-arg UID=$(id -u) --target development .`
 
 Standard run examples from the command line (standard, or overriding
 user with root):
 
-- `[sudo] docker run -v $(pwd):/home/user/gval --name gval-python
-    gval-image`
-- `[sudo] docker run -v $(pwd):/home/user/gval --user root --name
-    gval-python gval-image`
+- `[sudo] docker run -v $(pwd):/home/user/gval --name gval-python gval-image`
+- `[sudo] docker run -v $(pwd):/home/user/gval --user root --name gval-python gval-image`
 
 If given access keys for retrieving test data you can mount the volume
 as such:
 
-`[sudo] docker run -v ~/.aws:/home/user/.aws -v $(pwd):/home/user/gval
---name gval-python gval-image`
+`[sudo] docker run -v ~/.aws:/home/user/.aws -v $(pwd):/home/user/gval --name gval-python gval-image`
 
 To keep your container running, try adding `tail -f /dev/null` as your
 command ensuring to detach with `-d`:
 
-- `[sudo] docker run -d -v $(pwd):/home/user/gval --name gval-python
-    gval-image tail -f /dev/null`
+- `[sudo] docker run -d -v $(pwd):/home/user/gval --name gval-python gval-image tail -f /dev/null`
 
 You can also set up your IDE to run this docker image directly:
 
 - [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
 - [Visual Studio
-    Code](https://code.visualstudio.com/docs/containers/quickstart-python)
+  Code](https://code.visualstudio.com/docs/containers/quickstart-python)
 
 If the container already exists you can start as follows:
 
 `[sudo] docker start gval-python`
 
-To enter the container interactively: `[sudo] docker exec gval-python
-bash`
+To enter the container interactively:
+`[sudo] docker exec gval-python bash`
 
 ## Packaging
 
@@ -172,20 +166,19 @@ To build the gval package and install locally:
 
 - In the root directory install the gVal package:
 
-    `python -m build && pip install dist/*.whl --force-reinstall`
+  `python -m build && pip install dist/*.whl --force-reinstall`
 
 - Or on Windows replacing version number with current version number:
 
-    `py -m build` then get the name of the wheel in the dist directory,
-    e.g.:
+  `py -m build` then get the name of the wheel in the dist directory,
+  e.g.:
 
-    `pip install dist/gval-0.0.1-py3-none-any.whl --force-reinstall`
+  `pip install dist/gval-0.0.1-py3-none-any.whl --force-reinstall`
 
 The packaging process using docker container would look as follows (on
 linux):
 
-`sudo docker exec -v $(pwd):/home/user/ --user root python -m build &&
-pip install dist/*.whl --force-reinstall`
+`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install dist/*.whl --force-reinstall`
 
 # Citation
 

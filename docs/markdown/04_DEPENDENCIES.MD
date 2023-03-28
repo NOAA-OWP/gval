@@ -8,8 +8,8 @@
 
 ## Code Dependencies
 - [rioxarray](https://corteva.github.io/rioxarray/html/index.html)
-- [geopandas](https://geopandas.org/en/stable/)
 - [dask](https://www.dask.org)
 - [xarray-spatial](https://xarray-spatial.org)
+- [pandera](https://pandera.readthedocs.io/en/stable/index.html)
 
 

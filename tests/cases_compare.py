@@ -11,7 +11,7 @@ import pandas as pd
 from pytest_cases import parametrize
 
 from tests.conftest import _load_xarray
-from gval.compare import szudzik_pair_signed, cantor_pair_signed
+from gval.comparison.pairing_functions import szudzik_pair_signed, cantor_pair_signed
 
 
 numbers_success = [
@@ -298,7 +298,7 @@ crosstab_3d_DataArrayss = [
         ),
         pd.DataFrame(
             {
-                "band": [1, 1, 1, 2, 2, 2],
+                "band": ["1", "1", "1", "2", "2", "2"],
                 "candidate_values": [-10000.0, 1.0, 2.0, -10000.0, 1.0, 2.0],
                 "benchmark_values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
                 "counts": [9489603, 10982559, 544467, 2470284, 4845100, 4845025],
@@ -318,7 +318,24 @@ crosstab_3d_DataArrayss = [
         ),
         pd.DataFrame(
             {
-                "band": [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+                "band": [
+                    "1",
+                    "1",
+                    "1",
+                    "1",
+                    "1",
+                    "1",
+                    "1",
+                    "1",
+                    "2",
+                    "2",
+                    "2",
+                    "2",
+                    "2",
+                    "2",
+                    "2",
+                    "2",
+                ],
                 "candidate_values": [
                     -10000,
                     -9999,

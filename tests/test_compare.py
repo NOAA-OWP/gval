@@ -30,6 +30,7 @@ from gval.comparison.tabulation import (
     _crosstab_Datasets,
 )
 from gval.comparison.compute_comparison import ComparisonProcessing
+from gval.utils.schemas import Crosstab_df
 
 from tests.conftest import _assert_pairing_dict_equal
 
@@ -169,7 +170,9 @@ def test_crosstab_DataArrays_fail(candidate_map, benchmark_map):
 def test_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
     """Test crosstabbing candidate and benchmark datasets"""
     crosstab_df = _crosstab_Datasets(candidate_map, benchmark_map)
-    crosstab_df["band"] = crosstab_df["band"].apply(lambda x: int(x.split("_")[-1]))
+    # takes band_# pattern to just #
+    crosstab_df["band"] = crosstab_df["band"].apply(lambda x: x.split("_")[-1])
+    crosstab_df = Crosstab_df(crosstab_df)
     pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
 
 
