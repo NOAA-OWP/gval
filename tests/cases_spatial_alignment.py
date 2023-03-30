@@ -153,6 +153,28 @@ def case_align_rasters_fail(candidate_map_fn, benchmark_map_fn, target_map, resa
     "candidate_map_fn, benchmark_map_fn, resampling, target_map",
     list(
         zip(
+            candidate_map_fns[[0]],
+            benchmark_map_fns[[1]],
+            [{}],
+            ["candidate"],
+        )
+    ),
+)
+def case_align_rasters_fail_nodata(
+    candidate_map_fn, benchmark_map_fn, target_map, resampling
+):
+    return (
+        _load_xarray(candidate_map_fn).rio.write_nodata(None, inplace=True),
+        _load_xarray(benchmark_map_fn),
+        target_map,
+        resampling,
+    )
+
+
+@parametrize(
+    "candidate_map_fn, benchmark_map_fn, resampling, target_map",
+    list(
+        zip(
             candidate_map_fns,
             benchmark_map_fns,
             [{}, {"resampling": Resampling.nearest}],

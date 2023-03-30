@@ -38,7 +38,7 @@ def _handle_positive_negative_categories(
 
     # input check to make sure the same value isn't repeated in positive and negative categories
     if positive_categories.intersection(negative_categories):
-        raise ValueError("Value is shared in positive and negative ")
+        raise ValueError("Value is shared in positive and negative categories.")
 
     # finds the unique values in the sample's candidate and benchmark values
     unique_values = set(
@@ -49,9 +49,7 @@ def _handle_positive_negative_categories(
     def categories_exist_in_crosstab_df(categories, cat_name):
         for c in categories:
             if c not in unique_values:
-                raise ValueError(
-                    f"{cat_name} category {c} not found in crosstab df."
-                )
+                raise ValueError(f"{cat_name} category {c} not found in crosstab df.")
 
     categories_exist_in_crosstab_df(positive_categories, "positive")
     categories_exist_in_crosstab_df(negative_categories, "negative")
@@ -65,25 +63,32 @@ def _compute_categorical_metrics(
     metrics: Union[str, Iterable[str]] = "all",
     positive_categories: Optional[Union[Number, Iterable[Number]]] = None,
     negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
-    # candidate_categories: Optional[dict[str, Iterable[Number]]] = None,
-    # benchmark_categories: Optional[dict[str, Iterable[Number]]] = None,
 ) -> DataFrame[Metrics_df]:
     """
     Computes categorical metrics from a crosstab df.
 
     Parameters
     ----------
-    crosstab_df: pd.DataFrame
-
-    positive_class: Number
+    crosstab_df : DataFrame[Crosstab_df]
+        Crosstab df with candidate, benchmark, and agreement values as well as the counts for each occurrence.
+    positive_categories : Optional[Union[Number, Iterable[Number]]], default = None
+        Number or list of numbers representing the values to consider as the positive condition.
+    negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+        Number or list of numbers representing the values to consider as the negative condition.
+    metrics : Union[str, Iterable[str]], default = "all"
+        String or list of strings representing metrics to compute.
 
     Returns
     -------
-    pd.DataFrame
-        Metric table.
+    DataFrame[Metrics_df]
+        Metrics DF with computed metrics per sample.
 
     Raises
     ------
+    ValueError
+        Value is shared in positive and negative categories.
+    ValueError
+        Category not found in crosstab df.
 
     References
     ----------
