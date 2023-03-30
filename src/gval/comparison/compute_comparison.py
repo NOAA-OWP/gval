@@ -1,9 +1,10 @@
-from typing import Union
+from typing import Union  # , Callable
 from functools import wraps
 import inspect
 from numbers import Number
 
-from numba import vectorize
+# import numpy as np
+import numba as nb
 import xarray as xr
 
 from gval.comparison.pairing_functions import (
@@ -103,7 +104,9 @@ class ComparisonProcessing:
                 }
                 # vectorize function if vectorize_func is True
                 r_func = (
-                    vectorize(nopython=True)(func) if vectorize_func is True else func
+                    nb.vectorize(nopython=True)(func)
+                    if vectorize_func is True
+                    else func
                 )
                 setattr(self, name, r_func)
             else:
@@ -152,7 +155,7 @@ class ComparisonProcessing:
                     }
                     # vectorize funciton if vectorize_func is True
                     r_func = (
-                        vectorize(nopython=True)(func)
+                        nb.vectorize(nopython=True)(func)
                         if vectorize_func is True
                         else func
                     )
@@ -217,15 +220,12 @@ class ComparisonProcessing:
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    def process_agreement_map(
-        self, func_name: str, **kwargs
-    ) -> Union[xr.DataArray, xr.Dataset]:
+    def process_agreement_map(self, **kwargs) -> Union[xr.DataArray, xr.Dataset]:
         """
 
         Parameters
         ----------
-        func_name: str
-            Name of registered function to run
+        **kwargs
 
         Returns
         -------
@@ -233,8 +233,8 @@ class ComparisonProcessing:
         Agreement map.
         """
 
-        if func_name in self.registered_functions:
-            if func_name == "pairing_dict":
+        if isinstance(kwargs["comparison_function"], str):
+            if kwargs["comparison_function"] == "pairing_dict":
                 if (
                     kwargs.get("pairing_dict") is None
                 ):  # this is used for when pairing_dict is not passed
@@ -254,9 +254,11 @@ class ComparisonProcessing:
                         kwargs.get("allow_benchmark_values"),
                     )
 
-            kwargs["comparison_function"] = getattr(self, func_name)
+            if kwargs["comparison_function"] in self.registered_functions:
+                kwargs["comparison_function"] = getattr(
+                    self, kwargs["comparison_function"]
+                )
+            else:
+                raise KeyError("Pairing function not found in registered functions")
 
-            return _compute_agreement_map(**kwargs)
-
-        else:
-            raise KeyError("Pairing function not found in registered functions")
+        return _compute_agreement_map(**kwargs)

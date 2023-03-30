@@ -49,9 +49,7 @@ def _handle_positive_negative_categories(
     def categories_exist_in_crosstab_df(categories, cat_name):
         for c in categories:
             if c not in unique_values:
-                raise ValueError(
-                    f"{cat_name} category {c} not found in crosstab df."
-                )
+                raise ValueError(f"{cat_name} category {c} not found in crosstab df.")
 
     categories_exist_in_crosstab_df(positive_categories, "positive")
     categories_exist_in_crosstab_df(negative_categories, "negative")
@@ -94,9 +92,10 @@ def _compute_categorical_metrics(
     # input handling
 
     # if (positive_categories is not None):
-    positive_categories, negative_categories = _handle_positive_negative_categories(
-        crosstab_df, positive_categories, negative_categories
-    )
+    if positive_categories and negative_categories:
+        positive_categories, negative_categories = _handle_positive_negative_categories(
+            crosstab_df, positive_categories, negative_categories
+        )
 
     #########################################################################################
 
