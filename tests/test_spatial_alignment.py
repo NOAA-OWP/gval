@@ -99,6 +99,19 @@ def test_align_rasters_fail(candidate_map, benchmark_map, target_map, kwargs):
 
 
 @parametrize_with_cases(
+    "candidate_map, benchmark_map, resampling, target_map",
+    glob="align_rasters_fail_nodata",
+)
+def test_align_rasters_fail_nodata(
+    candidate_map, benchmark_map, resampling, target_map
+):
+    """Tests the alignment of rasters"""
+
+    with raises(ValueError):
+        _, _ = _align_rasters(candidate_map, benchmark_map, target_map, resampling)
+
+
+@parametrize_with_cases(
     "candidate_map, benchmark_map, target_map, kwargs",
     glob="spatial_alignment",
 )

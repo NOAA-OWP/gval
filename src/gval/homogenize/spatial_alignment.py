@@ -151,9 +151,9 @@ def _align_rasters(
     Parameters
     ----------
     candidate_map : Union[xr.DataArray, xr.Dataset]
-        Candidate map.
+        Candidate map. Nodata value should be set.
     benchmark_map : Union[xr.DataArray, xr.Dataset]
-        Benchmark map.
+        Benchmark map. Nodata value should be set.
     target_map : Optional[Union[xr.DataArray, xr.Dataset, str]]
         Target map as string that can have values "candidate" or "benchmark". Otherwise pass an `xr.DataArray` or `xr.Dataset` to align maps to.
     resampling : rasterio.enums.Resampling
@@ -176,6 +176,12 @@ def _align_rasters(
         candidate_map, benchmark_map
     ):
         return candidate_map, benchmark_map
+
+    # ensure nodata values are set in both rasters
+    if (candidate_map.rio.nodata is None) | (benchmark_map.rio.nodata is None):
+        raise ValueError(
+            "Both candidate and benchmark maps need to have nodata values set."
+        )
 
     # align benchmark and candidate to target
     elif isinstance(target_map, (xr.DataArray, xr.Dataset)):
