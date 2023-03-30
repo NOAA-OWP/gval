@@ -117,6 +117,8 @@ class GVALArray:
                     exclude_value=exclude_value,
                 )
 
+                crosstab_df["band"] = 1
+
             case 3:
                 crosstab_df = _crosstab_3d_DataArrays(
                     candidate_map=candidate,
@@ -241,7 +243,7 @@ class GVALArray:
         allow_benchmark_values: Optional[Iterable[Number]] = None,
         exclude_value: Optional[Number] = None,
         dimensions: Optional[int] = 3,
-    ) -> DataFrame:
+    ) -> DataFrame[Crosstab_df]:
         """
         Crosstab 2 or 3-dimensional xarray DataArray to produce Crosstab DataFrame.
 
@@ -266,13 +268,15 @@ class GVALArray:
         if self.aligned and benchmark_map.gval.aligned:
             match dimensions:
                 case 2:
-                    return _crosstab_2d_DataArrays(
+                    crosstab_df = _crosstab_2d_DataArrays(
                         self._obj,
                         benchmark_map,
                         allow_candidate_values,
                         allow_benchmark_values,
                         exclude_value,
                     )
+                    crosstab_df["band"] = 1
+                    return crosstab_df
 
                 case 3:
                     return _crosstab_3d_DataArrays(

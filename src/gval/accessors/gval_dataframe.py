@@ -1,5 +1,5 @@
 from numbers import Number
-from typing import Union, Iterable, Optional
+from typing import Union, Iterable
 
 import pandas as pd
 from pandera.typing import DataFrame
@@ -15,20 +15,21 @@ class GVALDataFrame:
 
     def compute_metrics(
         self,
+        positive_categories: Union[Number, Iterable[Number]],
+        negative_categories: Union[Number, Iterable[Number]],
         metrics: Union[str, Iterable[str]] = "all",
-        positive_categories: Optional[Union[Number, Iterable[Number]]] = None,
-        negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
     ) -> DataFrame[Metrics_df]:
         """
 
         Parameters
         ----------
+        positive_categories: Union[Number, Iterable[Number]]
+            Categories to represent positive entries
+        negative_categories: Union[Number, Iterable[Number]]
+            Categories to represent negative entries
         metrics: Union[str, Iterable[str]], default = "all"
             Statistics to return in metric table
-        positive_categories: Optional[Union[Number, Iterable[Number]]], default = None
-            Categories to represent positive entries
-        negative_categories: Optional[Union[Number, Iterable[Number]]], default = None
-            Categories to represent negative entries
+
 
         Returns
         -------

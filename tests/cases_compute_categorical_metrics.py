@@ -320,19 +320,16 @@ input_dfs = [
 
 negative_categories_input = [None, 4, (2, 3)]
 positive_categories_input = [4, 3, (1, 2)]
+exceptions = [TypeError, ValueError, ValueError]
 
 
 @parametrize(
-    "crosstab_df, positive_categories, negative_categories",
+    "crosstab_df, positive_categories, negative_categories, exception",
     list(
-        zip(
-            input_dfs,
-            positive_categories_input,
-            negative_categories_input,
-        )
+        zip(input_dfs, positive_categories_input, negative_categories_input, exceptions)
     ),
 )
 def case_compute_categorical_metrics_fail(
-    crosstab_df, positive_categories, negative_categories
+    crosstab_df, positive_categories, negative_categories, exception
 ):
-    return crosstab_df, positive_categories, negative_categories
+    return crosstab_df, positive_categories, negative_categories, exception

@@ -33,15 +33,15 @@ def test_compute_categorical_metrics_success(
 
 
 @parametrize_with_cases(
-    "crosstab_df, positive_categories, negative_categories",
+    "crosstab_df, positive_categories, negative_categories, exception",
     glob="compute_categorical_metrics_fail",
 )
 def test_compute_categorical_metrics_fail(
-    crosstab_df, positive_categories, negative_categories
+    crosstab_df, positive_categories, negative_categories, exception
 ):
     """tests categorical metrics functions"""
 
-    with raises(ValueError):
+    with raises(exception):
         # compute categorical metrics
         _compute_categorical_metrics(
             crosstab_df, "all", positive_categories, negative_categories

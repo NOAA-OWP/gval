@@ -9,7 +9,7 @@ from pandera.typing import DataFrame
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
 from gval import Comparison
-from gval.comparison.tabulation import _crosstab_2d_DataArrays, _crosstab_3d_DataArrays
+from gval.comparison.tabulation import _crosstab_Datasets
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
 from gval.utils.exceptions import RasterMisalignment
 from gval.utils.schemas import Crosstab_df, Metrics_df
@@ -26,7 +26,7 @@ class GVALDataset:
         benchmark_map: Union[xr.DataArray, xr.Dataset],
         comparison_function: Union[
             Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
-        ],
+        ] = "szudzik",
         metrics: Union[str, Iterable[str]] = "all",
         target_map: Optional[Union[xr.DataArray, xr.Dataset, str]] = "benchmark",
         resampling: Optional[Resampling] = Resampling.nearest,
@@ -36,7 +36,6 @@ class GVALDataset:
         nodata: Optional[Number] = None,
         encode_nodata: Optional[bool] = False,
         exclude_value: Optional[Number] = None,
-        dimensions: Optional[int] = 2,
         positive_categories: Optional[Union[Number, Iterable[Number]]] = None,
         negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
     ) -> Tuple[
@@ -50,7 +49,7 @@ class GVALDataset:
         ----------
         benchmark_map: Union[xr.DataArray, xr.Dataset]
             Benchmark map in xarray DataArray format.
-        comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]
+        comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
             Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
         metrics: Union[str, Iterable[str]], default = "all"
             Statistics to return in metric table
@@ -74,8 +73,6 @@ class GVALDataset:
             Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
         exclude_value : Optional[Number], default = None
             Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-        dimensions : Optional[int] = 2
-            Number of dimensions in Datarray
         positive_categories: Optional[Union[Number, Iterable[Number]]], default = None
             Categories to represent positive entries
         negative_categories: Optional[Union[Number, Iterable[Number]]], default = None
@@ -106,30 +103,13 @@ class GVALDataset:
             encode_nodata=encode_nodata,
         )
 
-        match dimensions:
-            case 2:
-                crosstab_df = _crosstab_2d_DataArrays(
-                    candidate_map=candidate,
-                    benchmark_map=benchmark_map,
-                    allow_candidate_values=allow_candidate_values,
-                    allow_benchmark_values=allow_benchmark_values,
-                    exclude_value=exclude_value,
-                )
-
-                # Add name of band
-                crosstab_df["band"] = candidate.band.values[0]
-
-            case 3:
-                crosstab_df = _crosstab_3d_DataArrays(
-                    candidate_map=candidate,
-                    benchmark_map=benchmark_map,
-                    allow_candidate_values=allow_candidate_values,
-                    allow_benchmark_values=allow_benchmark_values,
-                    exclude_value=exclude_value,
-                )
-
-            case _:
-                raise ValueError(f"Unsupported number of dimensions {dimensions}")
+        crosstab_df = _crosstab_Datasets(
+            candidate_map=candidate,
+            benchmark_map=benchmark_map,
+            allow_candidate_values=allow_candidate_values,
+            allow_benchmark_values=allow_benchmark_values,
+            exclude_value=exclude_value,
+        )
 
         metrics_df = _compute_categorical_metrics(
             crosstab_df=crosstab_df,
@@ -185,7 +165,7 @@ class GVALDataset:
         benchmark_map: xr.DataArray,
         comparison_function: Union[
             Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
-        ],
+        ] = "szudzik",
         pairing_dict: Optional[dict[Tuple[Number, Number], Number]] = None,
         allow_candidate_values: Optional[Iterable[Union[int, float]]] = None,
         allow_benchmark_values: Optional[Iterable[Union[int, float]]] = None,
@@ -199,7 +179,7 @@ class GVALDataset:
         ----------
         benchmark_map : Union[xr.DataArray, xr.Dataset]
             Benchmark map.
-        comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]
+        comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
             Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
         pairing_dict: Optional[dict[Tuple[Number, Number], Number]], default = None
             When "pairing_dict" is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as `{(c, b) : a}` where `(c, b)` is a tuple of the candidate and benchmark value pairing, respectively, and `a` is the value for the agreement array to be used for this pairing.
@@ -242,7 +222,6 @@ class GVALDataset:
         allow_candidate_values: Optional[Iterable[Number]] = None,
         allow_benchmark_values: Optional[Iterable[Number]] = None,
         exclude_value: Optional[Number] = None,
-        dimensions: Optional[int] = 2,
     ) -> DataFrame:
         """
         Crosstab 2 or 3-dimensional xarray DataArray to produce Crosstab DataFrame.
@@ -257,8 +236,6 @@ class GVALDataset:
             Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
         exclude_value : Optional[Number], default = None
             Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-        dimensions : Optional[int] = 2
-            Number of dimensions in Datarray
 
         Returns
         -------
@@ -266,30 +243,14 @@ class GVALDataset:
         """
 
         if self.aligned and benchmark_map.gval.aligned:
-            match dimensions:
-                case 2:
-                    crosstab_df = _crosstab_2d_DataArrays(
-                        self._obj,
-                        benchmark_map,
-                        allow_candidate_values,
-                        allow_benchmark_values,
-                        exclude_value,
-                    )
+            return _crosstab_Datasets(
+                self._obj,
+                benchmark_map,
+                allow_candidate_values,
+                allow_benchmark_values,
+                exclude_value,
+            )
 
-                    crosstab_df["band"] = self._obj.band.values[0]
-                    return crosstab_df
-
-                case 3:
-                    return _crosstab_3d_DataArrays(
-                        self._obj,
-                        benchmark_map,
-                        allow_candidate_values,
-                        allow_benchmark_values,
-                        exclude_value,
-                    )
-
-                case _:
-                    raise ValueError(f"Unsupported number of dimensions {dimensions}")
         else:
             raise RasterMisalignment
 
