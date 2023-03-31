@@ -1,4 +1,4 @@
-from typing import Union  # , Callable
+from typing import Union
 from functools import wraps
 import inspect
 from numbers import Number
