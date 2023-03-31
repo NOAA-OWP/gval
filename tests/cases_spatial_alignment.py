@@ -149,23 +149,36 @@ def case_align_rasters_fail(candidate_map_fn, benchmark_map_fn, target_map, resa
     )
 
 
+def make_no_data_value_dataset():
+    dataset = _load_xarray("benchmark_map_1.tif", band_as_variable=True)
+    dataset["band_1"] = dataset["band_1"].rio.write_nodata(None)
+    return dataset
+
+
 @parametrize(
-    "candidate_map_fn, benchmark_map_fn, resampling, target_map",
+    "candidate_map, benchmark_map, resampling, target_map",
     list(
         zip(
-            candidate_map_fns[[0]],
-            benchmark_map_fns[[1]],
-            [{}],
-            ["candidate"],
+            [
+                _load_xarray("candidate_map_0.tif").rio.write_nodata(
+                    None, inplace=True
+                ),
+                _load_xarray("candidate_map_0.tif").rio.write_nodata(
+                    -9999, inplace=True
+                ),
+            ],
+            [_load_xarray("benchmark_map_1.tif"), make_no_data_value_dataset()],
+            [{}, {}],
+            ["candidate", "candidate"],
         )
     ),
 )
 def case_align_rasters_fail_nodata(
-    candidate_map_fn, benchmark_map_fn, target_map, resampling
+    candidate_map, benchmark_map, target_map, resampling
 ):
     return (
-        _load_xarray(candidate_map_fn).rio.write_nodata(None, inplace=True),
-        _load_xarray(benchmark_map_fn),
+        candidate_map,
+        benchmark_map,
         target_map,
         resampling,
     )
