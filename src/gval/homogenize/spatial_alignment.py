@@ -171,17 +171,36 @@ def _align_rasters(
         target_map argument only accepts xr.DataArray, xr.Dataset, 'candidate', 'benchmark'.
     """
 
+    def ensure_nodata_value_is_set(dataset_or_dataarray):
+        """
+        Ensure nodata values are set.
+        NOTE: this prevents arbitrary large numbers from being introduced into the aligned map.
+        """
+
+        err_message = (
+            "Both candidate and benchmark maps need to have nodata values set."
+        )
+
+        # dataarray case
+        if isinstance(dataset_or_dataarray, xr.DataArray):
+            if dataset_or_dataarray.rio.nodata is None:
+                raise ValueError(err_message)
+
+        # dataset case
+        elif isinstance(dataset_or_dataarray, xr.Dataset):
+            for var_name in dataset_or_dataarray.data_vars.keys():
+                if dataset_or_dataarray[var_name].rio.nodata is None:
+                    raise ValueError(err_message)
+
+    # ensure both candidate and benchmarks have nodata values set
+    ensure_nodata_value_is_set(candidate_map)
+    ensure_nodata_value_is_set(benchmark_map)
+
     # already matching crs's and indices
     if _matching_crs(candidate_map, benchmark_map) & _matching_spatial_indices(
         candidate_map, benchmark_map
     ):
         return candidate_map, benchmark_map
-
-    # ensure nodata values are set in both rasters
-    if (candidate_map.rio.nodata is None) | (benchmark_map.rio.nodata is None):
-        raise ValueError(
-            "Both candidate and benchmark maps need to have nodata values set."
-        )
 
     # align benchmark and candidate to target
     elif isinstance(target_map, (xr.DataArray, xr.Dataset)):
