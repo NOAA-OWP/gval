@@ -204,9 +204,9 @@ class GVALDataset:
 
         if self.aligned and benchmark_map.gval.aligned:
             return Comparison.process_agreement_map(
-                self._obj,
-                benchmark_map,
-                comparison_function,
+                candidate_map=self._obj,
+                benchmark_map=benchmark_map,
+                comparison_function=comparison_function,
                 pairing_dict=pairing_dict,
                 allow_candidate_values=allow_candidate_values,
                 allow_benchmark_values=allow_benchmark_values,
