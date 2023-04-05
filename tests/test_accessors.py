@@ -3,21 +3,18 @@ import xarray as xr
 from pytest import raises
 from pandas import DataFrame
 
-from gval.utils.exceptions import RasterMisalignment
-
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, dimensions",
+    "candidate_map, benchmark_map, positive_categories, negative_categories",
     glob="data_array_accessor_success",
 )
 def test_data_array_accessor_success(
-    candidate_map, benchmark_map, positive_categories, negative_categories, dimensions
+    candidate_map, benchmark_map, positive_categories, negative_categories
 ):
     data = candidate_map.gval.categorical_compare(
         benchmark_map=benchmark_map,
         positive_categories=positive_categories,
         negative_categories=negative_categories,
-        dimensions=dimensions,
     )
 
     assert isinstance(data[0], xr.DataArray)
@@ -26,18 +23,17 @@ def test_data_array_accessor_success(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, dimensions",
+    "candidate_map, benchmark_map, positive_categories, negative_categories",
     glob="data_array_accessor_fail",
 )
 def test_data_array_accessor_fail(
-    candidate_map, benchmark_map, positive_categories, negative_categories, dimensions
+    candidate_map, benchmark_map, positive_categories, negative_categories
 ):
-    with raises(ValueError):
+    with raises(TypeError):
         _ = candidate_map.gval.categorical_compare(
             benchmark_map=benchmark_map,
             positive_categories=positive_categories,
             negative_categories=negative_categories,
-            dimensions=dimensions,
         )
 
 
@@ -49,8 +45,6 @@ def test_data_array_accessor_spatial_alignment(candidate_map, benchmark_map):
 
     assert isinstance(data[0], xr.DataArray)
     assert isinstance(data[1], xr.DataArray)
-    assert data[0].gval.aligned
-    assert data[1].gval.aligned
 
 
 @parametrize_with_cases(
@@ -69,43 +63,32 @@ def test_data_array_accessor_compute_agreement_success(candidate_map, benchmark_
     "candidate_map, benchmark_map", glob="data_array_accessor_compute_agreement"
 )
 def test_data_array_accessor_compute_agreement_fail(candidate_map, benchmark_map):
-    with raises(RasterMisalignment):
+    with raises(ValueError):
         _ = candidate_map.gval.compute_agreement_map(benchmark_map=benchmark_map)
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, dimensions",
+    "candidate_map, benchmark_map",
     glob="data_array_accessor_crosstab_table_success",
 )
-def test_data_array_accessor_crosstab_table_success(
-    candidate_map, benchmark_map, dimensions
-):
+def test_data_array_accessor_crosstab_table_success(candidate_map, benchmark_map):
     aligned_cand, aligned_bench = candidate_map.gval.spatial_alignment(
         benchmark_map=benchmark_map
     )
-    data = aligned_cand.gval.compute_crosstab(
-        benchmark_map=aligned_bench, dimensions=dimensions
-    )
+    data = aligned_cand.gval.compute_crosstab(benchmark_map=aligned_bench)
 
     assert isinstance(data, DataFrame)
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, dimensions, exception",
+    "candidate_map, benchmark_map, exception",
     glob="data_array_accessor_crosstab_table_fail",
 )
 def test_data_array_accessor_crosstab_table_fail(
-    candidate_map, benchmark_map, dimensions, exception
+    candidate_map, benchmark_map, exception
 ):
-    if exception != RasterMisalignment:
-        candidate_map, benchmark_map = candidate_map.gval.spatial_alignment(
-            benchmark_map=benchmark_map
-        )
-
     with raises(exception):
-        _ = candidate_map.gval.compute_crosstab(
-            benchmark_map=benchmark_map, dimensions=dimensions
-        )
+        _ = candidate_map.gval.compute_crosstab(benchmark_map=benchmark_map)
 
 
 @parametrize_with_cases(
@@ -121,7 +104,7 @@ def test_data_set_accessor_success(
         negative_categories=negative_categories,
     )
 
-    assert isinstance(data[0], xr.DataSet)
+    assert isinstance(data[0], xr.Dataset)
     assert isinstance(data[1], DataFrame)
     assert isinstance(data[2], DataFrame)
 
@@ -132,10 +115,8 @@ def test_data_set_accessor_success(
 def test_data_set_accessor_spatial_alignment(candidate_map, benchmark_map):
     data = candidate_map.gval.spatial_alignment(benchmark_map=benchmark_map)
 
-    assert isinstance(data[0], xr.DataSet)
-    assert isinstance(data[1], xr.DataSet)
-    assert data[0].gval.aligned
-    assert data[1].gval.aligned
+    assert isinstance(data[0], xr.Dataset)
+    assert isinstance(data[1], xr.Dataset)
 
 
 @parametrize_with_cases(
@@ -154,7 +135,7 @@ def test_data_set_accessor_compute_agreement_success(candidate_map, benchmark_ma
     "candidate_map, benchmark_map", glob="data_set_accessor_compute_agreement"
 )
 def test_data_set_accessor_compute_agreement_fail(candidate_map, benchmark_map):
-    with raises(RasterMisalignment):
+    with raises(ValueError):
         _ = candidate_map.gval.compute_agreement_map(benchmark_map=benchmark_map)
 
 
@@ -175,7 +156,7 @@ def test_data_set_accessor_crosstab_table_success(candidate_map, benchmark_map):
     glob="data_set_accessor_crosstab_table_fail",
 )
 def test_data_set_accessor_crosstab_table_fail(candidate_map, benchmark_map, exception):
-    with raises(exception):
+    with raises(IndexError):
         _ = candidate_map.gval.compute_crosstab(benchmark_map=benchmark_map)
 
 

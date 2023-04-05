@@ -105,7 +105,7 @@ Code Checking with [Flake8](https://github.com/PyCQA/flake8)
 - Dependencies and Packaging
 - [pip](https://packaging.python.org/en/latest/key_projects/#pip)
 - Docker
-- Distribution *[PyPI](https://pypi.org/)
+- Distribution [PyPI](https://pypi.org/)
 - DockerHub
 - GitHub (source, packaging, and images)
 - Docs
@@ -123,7 +123,7 @@ choice.)
 
 First setup docker instance and in the root directory of the project:
 
-`[sudo] docker build -t gval-image --target development . `
+`sudo docker build -t gval-image --target development .`
 
 The default user named 'user' with UID 1001 is created. To use the same
 user and permissions you currently have on your machine override with

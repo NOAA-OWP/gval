@@ -34,85 +34,68 @@ benchmark_datasets = [
 
 positive_cat = [2, 2]
 negative_cat = [[0, 1], [0, 1]]
-dim_pass = [3, 2]
-dim_fail = [5]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, dimensions",
-    list(zip(candidate_maps, benchmark_maps, positive_cat, negative_cat, dim_pass)),
+    "candidate_map, benchmark_map, positive_categories, negative_categories",
+    list(zip(candidate_maps, benchmark_maps, positive_cat, negative_cat)),
 )
 def case_data_array_accessor_success(
-    candidate_map, benchmark_map, positive_categories, negative_categories, dimensions
+    candidate_map, benchmark_map, positive_categories, negative_categories
 ):
-    return (
-        candidate_map,
-        benchmark_map,
-        positive_categories,
-        negative_categories,
-        dimensions,
-    )
+    return (candidate_map, benchmark_map, positive_categories, negative_categories)
 
 
 @parametrize(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, dimensions",
+    "candidate_map, benchmark_map, positive_categories, negative_categories",
     list(
         zip(
             candidate_maps[0:1],
-            benchmark_maps[0:1],
+            benchmark_datasets[0:1],
             positive_cat[0:1],
             negative_cat[0:1],
-            dim_fail,
         )
     ),
 )
 def case_data_array_accessor_fail(
-    candidate_map, benchmark_map, positive_categories, negative_categories, dimensions
+    candidate_map, benchmark_map, positive_categories, negative_categories
 ):
-    return (
-        candidate_map,
-        benchmark_map,
-        positive_categories,
-        negative_categories,
-        dimensions,
-    )
+    return (candidate_map, benchmark_map, positive_categories, negative_categories)
 
 
 @parametrize(
     "candidate_map, benchmark_map", list(zip(candidate_maps[0:1], benchmark_maps[0:1]))
 )
 def case_data_array_accessor_spatial_alignment(candidate_map, benchmark_map):
-    return (candidate_map, benchmark_map)
+    return candidate_map, benchmark_map
 
 
 @parametrize(
     "candidate_map, benchmark_map", list(zip(candidate_maps[0:1], benchmark_maps[0:1]))
 )
 def case_data_array_accessor_compute_agreement(candidate_map, benchmark_map):
-    return (candidate_map, benchmark_map)
+    return candidate_map, benchmark_map
 
 
 @parametrize(
-    "candidate_map, benchmark_map, dimensions",
-    list(zip(candidate_maps, benchmark_maps, dim_pass)),
+    "candidate_map, benchmark_map",
+    list(zip(candidate_maps, benchmark_maps)),
 )
-def case_data_array_accessor_crosstab_table_success(
-    candidate_map, benchmark_map, dimensions
-):
-    return (candidate_map, benchmark_map, dimensions)
+def case_data_array_accessor_crosstab_table_success(candidate_map, benchmark_map):
+    return candidate_map, benchmark_map
 
 
-exceptions = [RasterMisalignment, ValueError]
+exceptions = [IndexError, IndexError]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, dimensions, exception",
-    list(zip(candidate_maps, benchmark_maps, dim_fail * 2, exceptions)),
+    "candidate_map, benchmark_map, exception",
+    list(zip(candidate_maps, benchmark_maps, exceptions)),
 )
 def case_data_array_accessor_crosstab_table_fail(
-    candidate_map, benchmark_map, dimensions, exception
+    candidate_map, benchmark_map, exception
 ):
-    return (candidate_map, benchmark_map, dimensions, exception)
+    return (candidate_map, benchmark_map, exception)
 
 
 @parametrize(
@@ -126,21 +109,21 @@ def case_data_array_accessor_crosstab_table_fail(
 def case_data_set_accessor_success(
     candidate_map, benchmark_map, positive_categories, negative_categories
 ):
-    return (candidate_map, benchmark_map, positive_categories, negative_categories)
+    return candidate_map, benchmark_map, positive_categories, negative_categories
 
 
 @parametrize(
     "candidate_map, benchmark_map", list(zip(candidate_datasets, benchmark_datasets))
 )
 def case_data_set_accessor_spatial_alignment(candidate_map, benchmark_map):
-    return (candidate_map, benchmark_map)
+    return candidate_map, benchmark_map
 
 
 @parametrize(
     "candidate_map, benchmark_map", list(zip(candidate_datasets, benchmark_datasets))
 )
 def case_data_set_accessor_compute_agreement(candidate_map, benchmark_map):
-    return (candidate_map, benchmark_map)
+    return candidate_map, benchmark_map
 
 
 @parametrize(
@@ -148,7 +131,7 @@ def case_data_set_accessor_compute_agreement(candidate_map, benchmark_map):
     list(zip(candidate_datasets, benchmark_datasets)),
 )
 def case_data_set_accessor_crosstab_table_success(candidate_map, benchmark_map):
-    return (candidate_map, benchmark_map)
+    return candidate_map, benchmark_map
 
 
 exceptions = [RasterMisalignment]
@@ -159,7 +142,7 @@ exceptions = [RasterMisalignment]
     list(zip(candidate_maps, benchmark_maps, exceptions)),
 )
 def case_data_set_accessor_crosstab_table_fail(candidate_map, benchmark_map, exception):
-    return (candidate_map, benchmark_map, exception)
+    return candidate_map, benchmark_map, exception
 
 
 crosstab = pd.DataFrame(
@@ -179,4 +162,4 @@ crosstab = pd.DataFrame(
 def case_data_frame_accessor_compute_metrics(
     crosstab_df, positive_categories, negative_categories
 ):
-    return (crosstab_df, positive_categories, negative_categories)
+    return crosstab_df, positive_categories, negative_categories

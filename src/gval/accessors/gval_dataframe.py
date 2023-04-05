@@ -10,6 +10,15 @@ from gval.utils.schemas import Metrics_df
 
 @pd.api.extensions.register_dataframe_accessor("gval")
 class GVALDataFrame:
+    """
+    Class for extending pandas DataFrame functionality
+
+    Attributes
+    ----------
+    _obj : pd.DataFrame
+        Object to use off the accessor
+    """
+
     def __init__(self, pandas_obj):
         self._obj = pandas_obj
 

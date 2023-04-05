@@ -184,7 +184,8 @@ class ComparisonProcessing:
         # Considered no validation if either are empty
         for key, val in signature.parameters.items():
             if (key not in names and len(names) > 0) or (
-                not str(val).split(": ")[-1] in param_types and len(param_types) > 0
+                not str(val).split(": ")[-1].split(".")[-1] in param_types
+                and len(param_types) > 0
             ):
                 raise TypeError(
                     "Wrong parameters in function: \n"

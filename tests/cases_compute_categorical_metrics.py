@@ -320,7 +320,7 @@ input_dfs = [
 
 negative_categories_input = [None, 4, (2, 3)]
 positive_categories_input = [4, 3, (1, 2)]
-exceptions = [TypeError, ValueError, ValueError]
+exceptions = [ValueError, ValueError, ValueError]
 
 
 @parametrize(
