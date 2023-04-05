@@ -99,6 +99,7 @@ def _compute_categorical_metrics(
     # input handling
 
     # if (positive_categories is not None):
+
     positive_categories, negative_categories = _handle_positive_negative_categories(
         crosstab_df, positive_categories, negative_categories
     )

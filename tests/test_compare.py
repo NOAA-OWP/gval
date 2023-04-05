@@ -247,7 +247,7 @@ def test_comparison_processing_agreement_map_success(
     """Tests comparison processing computing of agreement xarray from two xarrays"""
 
     agreement_map_computed = compare_proc.process_agreement_map(
-        func_name=comparison_function,
+        comparison_function=comparison_function,
         candidate_map=candidate_map,
         benchmark_map=benchmark_map,
         allow_candidate_values=allow_candidate_values,
@@ -276,7 +276,7 @@ def test_comparison_processing_agreement_maps_fail(
 ):
     with raises(exception):
         _ = compare_proc.process_agreement_map(
-            func_name=comparison_function,
+            comparison_function=comparison_function,
             candidate_map=candidate_map,
             benchmark_map=benchmark_map,
             allow_candidate_values=allow_candidate_values,

@@ -102,3 +102,11 @@ def test_get_all_param():
         cat_stat.get_all_parameters()
     except KeyError:
         assert False, "Signature dict not present or keys changed"
+
+
+def test_available_functions():
+    """tests get available functions"""
+
+    a_funcs = cat_stat.available_functions()
+
+    assert isinstance(a_funcs, list)
