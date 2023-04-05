@@ -20,6 +20,7 @@ from gval.comparison.pairing_functions import (
     szudzik_pair_signed,
     _make_pairing_dict,
     pairing_dict_fn,
+    PairingDict,
 )
 from gval.comparison.agreement import _compute_agreement_map
 from gval.comparison.tabulation import (
@@ -38,15 +39,15 @@ from tests.conftest import _assert_pairing_dict_equal
 compare_proc = ComparisonProcessing()
 
 
-@parametrize_with_cases("number", glob="is_not_natural_number_successes")
-def test_is_not_natural_number_success(number):
-    _is_not_natural_number(number)
+@parametrize_with_cases("number, expected", glob="is_not_natural_number_successes")
+def test_is_not_natural_number_success(number, expected):
+    assert expected == _is_not_natural_number(number, False), "Expected natural number"
 
 
 @parametrize_with_cases("number", glob="is_not_natural_number_failures")
 def test_is_not_natural_number_failures(number):
     with pytest.raises(ValueError):
-        _is_not_natural_number(number)
+        _is_not_natural_number(number, True)
 
 
 @parametrize_with_cases("c, b, a", glob="cantor_pair")
@@ -57,7 +58,6 @@ def test_cantor_pair(c, b, a):
     ), "Cantor function output does not match expected value"
 
 
-@pytest.mark.filterwarnings("ignore:invalid value encountered in")
 @parametrize_with_cases("c, b, a", glob="cantor_pair_signed")
 def test_cantor_pair_signed(c, b, a):
     """
@@ -76,7 +76,6 @@ def test_szudzik_pair(c, b, a):
     ), "szudzik function output does not match expected value"
 
 
-@pytest.mark.filterwarnings("ignore:invalid value encountered in")
 @parametrize_with_cases("c, b, a", glob="szudzik_pair_signed")
 def test_szudzik_pair_signed(c, b, a):
     """
@@ -88,12 +87,9 @@ def test_szudzik_pair_signed(c, b, a):
     ), "Signed szudzik function output does not match expected value"
 
 
-# @parametrize_with_cases("py_dict, numba_dict", glob="convert_dict_to_numba")
-# def test_convert_dict_to_numba(py_dict, numba_dict):
-#     """Tests converting a python dictionary to a numba dictionary"""
-#
-#     nb_dict = _convert_dict_to_numba(py_dict=py_dict)
-#     assert nb_dict == numba_dict
+@parametrize_with_cases("dict_with_nans, expected", glob="replace_nans_in_pairing_dict")
+def test_replace_nans_in_pairing_dict(dict_with_nans, expected):
+    _assert_pairing_dict_equal(PairingDict(dict_with_nans), expected)
 
 
 @parametrize_with_cases(
@@ -106,6 +102,7 @@ def test_make_pairing_dict(
     """Tests creation of a pairing dictionary"""
 
     computed_dict = _make_pairing_dict(unique_candidate_values, unique_benchmark_values)
+    expected_dict = PairingDict(expected_dict)
 
     _assert_pairing_dict_equal(computed_dict, expected_dict)
 
