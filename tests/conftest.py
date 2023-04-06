@@ -141,3 +141,11 @@ def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None
 
     np.testing.assert_equal(list(computed_dict.keys()), list(expected_dict.keys()))
     np.testing.assert_equal(list(computed_dict.values()), list(expected_dict.values()))
+
+    # checks keys to make sure they hash they same way
+    for k, v in computed_dict.items():
+        expected_dict[k]
+
+    # checks keys to make sure they hash they same way
+    for k, v in expected_dict.items():
+        computed_dict[k]

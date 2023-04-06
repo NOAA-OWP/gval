@@ -26,12 +26,32 @@ numbers_success = [
     50.0,
     np.nan,
     np.float64(np.nan),
+    -36.89,
+    1.9080928438e2,
+    5.096279894,
+]
+
+numbers_success_expected = [
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    False,
+    True,
+    True,
+    True,
 ]
 
 
-@parametrize("number", numbers_success)
-def case_is_not_natural_number_successes(number):
-    return number
+@parametrize("number, expected", list(zip(numbers_success, numbers_success_expected)))
+def case_is_not_natural_number_successes(number, expected):
+    return number, expected
 
 
 numbers_fail = [
@@ -85,7 +105,7 @@ def case_szudzik_pair(c, b, a):
 
 
 szudzik_pairs_signed = [
-    (-1, 0, 2),
+    (np.float32(-1), np.float64(0), 2),
     (1, -13, 627),
     (-6, 0, 132),
     (6, -130, 67093),
@@ -98,17 +118,18 @@ def case_szudzik_pair_signed(c, b, a):
     return c, b, a
 
 
-# test_nb_dict = nb.typed.Dict.empty(
-#     key_type=nb.types.containers.UniTuple(nb.float64, 2), value_type=nb.float64
-# )
-# test_nb_dict[(12.0, 11.0)] = 88.0
-# test_nb_dict[(11.0, 34.0)] = 144.0
-# test_py_dict = {(12.0, 11.0): 88.0, (11.0, 34.0): 144.0}
-#
-#
-# @parametrize("py_dict, numba_dict", [(test_py_dict, test_nb_dict)])
-# def case_convert_dict_to_numba(py_dict, numba_dict):
-#     return py_dict, numba_dict
+dict_with_nans_data = [
+    ({(np.nan, 1): 1, (2, np.float32(np.nan)): 2, (np.float64(np.nan), 5): 3})
+]
+
+expected_dict_data = [({("NaN", 1): 1, (2, "NaN"): 2, ("NaN", 5): 3})]
+
+
+@parametrize(
+    "dict_with_nans, expected", list(zip(dict_with_nans_data, expected_dict_data))
+)
+def case_replace_nans_in_pairing_dict(dict_with_nans, expected):
+    return dict_with_nans, expected
 
 
 pairing_dicts = [
@@ -133,39 +154,39 @@ pairing_dicts = [
         },
     ),
     (
-        [np.nan, 2, 3],
-        [2, 3, np.nan],
+        [np.float32(np.nan), 2, 3],
+        [2, 3, np.float64(np.nan)],
         {
-            (np.nan, 2): 0,
+            (float(np.nan), 2): 0,
             (np.nan, 3): 1,
-            (np.nan, np.nan): 2,
+            (np.nan, np.float64(np.nan)): 2,
             (2, 2): 3,
             (2, 3): 4,
-            (2, np.nan): 5,
+            (2, np.float32(np.nan)): 5,
             (3, 2): 6,
             (3, 3): 7,
             (3, np.nan): 8,
         },
     ),
     (
-        np.array([5, 6, np.nan]),
+        np.array([5, 6, np.float64(np.nan)]),
         np.array([8, 9]),
         {
             (5, 8): 0,
             (5, 9): 1,
             (6, 8): 2,
             (6, 9): 3,
-            (np.nan, 8): 4,
+            (np.float64(np.nan), 8): 4,
             (np.nan, 9): 5,
         },
     ),
     (
-        pd.Series([1, 2, np.nan]),
+        pd.Series([1, 2, np.float32(np.nan)]),
         pd.Series([3, 4, np.nan]),
         {
             (1.0, 3.0): 0,
             (1.0, 4.0): 1,
-            (1.0, np.nan): 2,
+            (1.0, np.float64(np.nan)): 2,
             (2.0, 3.0): 3,
             (2.0, 4.0): 4,
             (2.0, np.nan): 5,
