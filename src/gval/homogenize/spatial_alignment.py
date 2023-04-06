@@ -159,7 +159,8 @@ def _align_rasters(
     resampling : rasterio.enums.Resampling
         See :func:`rasterio.warp.reproject` for more details.
     **kwargs : dict or keyword arguments
-        Dictionary or keyword arguments to be passed `rio.xarray.reproject_match()`. DEPRECATED: This was found to conflict with rxr.rio.reproject_match().
+        Dictionary or keyword arguments to be passed `rio.xarray.reproject_match()`. DEPRECATED: This was found to conflict with rxr.rio.reproject_matchrk
+        ().
     Returns
     -------
     Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]

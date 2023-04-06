@@ -21,7 +21,9 @@ import numba as nb
 
 
 @nb.vectorize(nopython=True)
-def _is_not_natural_number(x: Number) -> int:  # pragma: no cover
+def _is_not_natural_number(
+    x: Number, raise_exception: bool
+) -> bool:  # pragma: no cover
     """
     Checks value to see if it is a natural number or two non-negative integer [0, 1, 2, 3, 4, ...)
 
@@ -29,12 +31,13 @@ def _is_not_natural_number(x: Number) -> int:  # pragma: no cover
     ----------
     x : Number
         Number to test.
+    raise_exception : bool
+        Raise exception or return bool.
 
     Returns
     -------
-    int
-        Return -2 by default. Issue with numba usage. Please ignore for now.
-        FIXME: Must return boolean or some other numba type. Having trouble returning none.
+    bool
+        Is natural number or not. np.nan treated as natural.
 
     Raises
     ------
@@ -43,16 +46,20 @@ def _is_not_natural_number(x: Number) -> int:  # pragma: no cover
     """
     # checks to make sure it's not a nan value
     if np.isnan(x):
-        return -2  # dummy return
+        return False  # treated as natural for this use case
+
     # checks for non-negative and whole number
     elif (x < 0) | ((x - nb.int64(x)) != 0):
-        # FIXME: how to print x with message below using numba????
-        raise ValueError(
-            "Non natural number found (non-negative integers, excluding Inf) [0, 1, 2, 3, 4, ...)"
-        )
-    # must return something according to signature
+        if raise_exception:
+            raise ValueError(
+                "Non natural number found (non-negative integers, excluding Inf) [0, 1, 2, 3, 4, ...)"
+            )
+        else:
+            return True
+
+    # is natural
     else:
-        return -2  # dummy return
+        return False
 
 
 @nb.vectorize(nopython=True)
@@ -76,8 +83,8 @@ def cantor_pair(c: Number, b: Number) -> Number:  # pragma: no cover
     ----------
     .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    _is_not_natural_number(c)
-    _is_not_natural_number(b)
+    _is_not_natural_number(c, True)
+    _is_not_natural_number(b, True)
     return 0.5 * (c**2 + c + 2 * c * b + 3 * b + b**2)
 
 
@@ -102,9 +109,13 @@ def szudzik_pair(c: Number, b: Number) -> Number:  # pragma: no cover
     ----------
     .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    _is_not_natural_number(c)
-    _is_not_natural_number(b)
-    return c**2 + c + b if c >= b else b**2 + c
+    _is_not_natural_number(c, True)
+    _is_not_natural_number(b, True)
+
+    if np.isnan(c) or np.isnan(b):
+        return np.nan
+    else:
+        return c**2 + c + b if c >= b else b**2 + c
 
 
 @nb.vectorize(nopython=True)
@@ -126,7 +137,10 @@ def _negative_value_transformation(x: Number) -> Number:  # pragma: no cover
     ----------
     .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
     """
-    return 2 * x if x >= 0 else -2 * x - 1
+    if np.isnan(x):
+        return x
+    else:
+        return 2 * x if x >= 0 else -2 * x - 1
 
 
 @nb.vectorize(nopython=True)
@@ -152,7 +166,11 @@ def cantor_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     ct = _negative_value_transformation(c)
     bt = _negative_value_transformation(b)
-    return cantor_pair(ct, bt)
+
+    if np.isnan(c) or np.isnan(b):
+        return np.nan
+    else:
+        return cantor_pair(ct, bt)
 
 
 @nb.vectorize(nopython=True)
@@ -178,7 +196,66 @@ def szudzik_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     ct = _negative_value_transformation(c)
     bt = _negative_value_transformation(b)
-    return szudzik_pair(ct, bt)
+
+    if np.isnan(c) or np.isnan(b):
+        return np.nan
+    else:
+        return szudzik_pair(ct, bt)
+
+
+class PairingDict(dict):
+    """
+    Pairing dictionary class that enables to replace np.nans with a different value as np.nan != np.nan.
+
+    Parameters
+    ----------
+    dict : dict
+        Parent class.
+
+    Attributes
+    -------
+    replacement_value
+        Value to use instead of np.nan.
+    """
+
+    replacement_value = "NaN"
+
+    def __init__(self, *args, **kwargs):
+        # make a tmp dict with
+        tmp_dict = dict(*args, **kwargs)
+
+        # initialize self
+        super().__init__()
+
+        # set the items
+        for k, v in tmp_dict.items():
+            self.__setitem__(k, v)
+
+    def _replace_nans(self, key):
+        """Replaces NaNs"""
+        new_key = [None] * len(key)
+        for i, k in enumerate(key):
+            if k == self.replacement_value:
+                new_key[i] = k
+            elif np.isnan(k):  # cannot be a string
+                new_key[i] = self.replacement_value
+            else:
+                new_key[i] = k
+
+        return tuple(new_key)
+
+    def __getitem__(self, key):
+        key = self._replace_nans(key)
+        return super().__getitem__(key)
+
+    def __setitem__(self, key, value):
+        key = self._replace_nans(key)
+        super().__setitem__(key, value)
+
+    def __contains__(self, key):
+        # FIXME: Why are these two lines not covered?
+        key = self._replace_nans(key)
+        return super().__contains__(key)
 
 
 def _make_pairing_dict(
@@ -206,15 +283,16 @@ def _make_pairing_dict(
         for v, k in enumerate(product(unique_candidate_values, unique_benchmark_values))
     }
 
-    return pairing_dict
+    # return pairing_dict
+    return PairingDict(pairing_dict)
 
 
 @np.vectorize
 def pairing_dict_fn(
     c: Number,
     b: Number,
-    pairing_dict: dict[Tuple[Number, Number], Number],  # pragma: no cover
-) -> Number:
+    pairing_dict: dict[Tuple[Number, Number], Number],
+) -> Number:  # pragma: no cover
     """
     Produces a pairing dictionary that produces a unique result for every combination ranging from 256 to the number of combinations.
 
