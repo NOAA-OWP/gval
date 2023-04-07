@@ -86,7 +86,11 @@ def cantor_pair(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     _is_not_natural_number(c, True)
     _is_not_natural_number(b, True)
-    return 0.5 * (c**2 + c + 2 * c * b + 3 * b + b**2)
+
+    if np.isnan(c) or np.isnan(b):
+        return np.nan
+    else:
+        return 0.5 * (c**2 + c + 2 * c * b + 3 * b + b**2)
 
 
 @nb.vectorize(nopython=True)
