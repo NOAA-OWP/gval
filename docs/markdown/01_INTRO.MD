@@ -1,7 +1,7 @@
 ![alt text](../images/gval_dark_mode.png#gh-dark-mode-only)
 ![alt text](../images/gval_light_mode.png#gh-light-mode-only)
 
-GVAL (pronounced "g-val") is a high-level Python framework to evaluate the skill of geospatial datasets by comparing candidate maps to benchmark maps producing agreement maps and metrics.
+GVAL (pronounced "g-val") is a high-level Python framework to evaluate the skill of geospatial datasets by comparing candidates to benchmark maps producing agreement maps and metrics.
 
 GVAL is intended to work on raster and vector files as xarray and geopandas objects, respectively. Abilities to prepare or homogenize maps for comparison are included. The comparisons are based on scoring philosophies for three statistical data types including categorical, continuous, and probabilistic.
 
