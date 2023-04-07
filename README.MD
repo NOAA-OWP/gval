@@ -42,7 +42,7 @@ To use this package:
 # Using GVAL
 
 An example of running the entire process with one command using minimal
-arguments is deomnstrated below.
+arguments is demonstrated below:
 
 ``` python
 import gval
