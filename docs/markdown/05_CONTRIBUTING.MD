@@ -1,3 +1,3 @@
 # Contributing
 
-Guidelines for contributing to this repository can be found at [Contributing](CONTRIBUTING.MD).
+Guidelines for contributing to this repository can be found at [CONTRIBUTING](CONTRIBUTING.MD).
