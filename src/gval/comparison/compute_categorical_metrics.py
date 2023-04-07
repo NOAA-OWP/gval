@@ -74,10 +74,11 @@ def _compute_categorical_metrics(
         Crosstab df with candidate, benchmark, and agreement values as well as the counts for each occurrence.
     positive_categories : Optional[Union[Number, Iterable[Number]]]
         Number or list of numbers representing the values to consider as the positive condition.
-    negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
-        Number or list of numbers representing the values to consider as the negative condition.
     metrics : Union[str, Iterable[str]], default = "all"
         String or list of strings representing metrics to compute.
+    negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+        Number or list of numbers representing the values to consider as the negative condition.
+
 
     Returns
     -------
