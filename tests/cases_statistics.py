@@ -19,6 +19,7 @@ arg_dicts = [
     {"tp": 120, "tn": 30, "fp": 10, "fn": 10},
     {"tp": 120, "tn": 30, "fp": 10, "fn": 10},
     {"tp": 45, "tn": 20, "fp": 30, "fn": 40},
+    {"tp": 45, "fp": 30, "fn": 10},
 ]
 
 expected_results = [
@@ -43,9 +44,23 @@ expected_results = [
     ],
     [0.8823529411764706],
     [0.48148148148148145, 0.391304347826087, 0.5625],
+    [
+        0.5294117647058824,
+        0.6923076923076923,
+        0.4,
+        0.18181818181818182,
+        0.7006490497453707,
+        0.6,
+        0.8181818181818182,
+    ],
 ]
 
-stat_names = ["all", "accuracy", ["accuracy", "critical_success_index", "f_score"]]
+stat_names = [
+    "all",
+    "accuracy",
+    ["accuracy", "critical_success_index", "f_score"],
+    "all",
+]
 
 
 @parametrize(

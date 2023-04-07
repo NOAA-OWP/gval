@@ -15,6 +15,7 @@ __author__ = "Fernando Aristizabal"
 
 from typing import Iterable, Tuple
 from numbers import Number
+from functools import partial
 
 import numpy as np
 import numba as nb
@@ -218,6 +219,7 @@ class PairingDict(dict):
         Value to use instead of np.nan.
     """
 
+    # TODO: Perhaps this could be np.finfo(float).max
     replacement_value = "NaN"
 
     def __init__(self, *args, **kwargs):
@@ -246,7 +248,7 @@ class PairingDict(dict):
 
     def __getitem__(self, key):
         key = self._replace_nans(key)
-        return super().__getitem__(key)
+        return super().get(key, np.nan)
 
     def __setitem__(self, key, value):
         key = self._replace_nans(key)
@@ -287,7 +289,10 @@ def _make_pairing_dict(
     return PairingDict(pairing_dict)
 
 
-@np.vectorize
+vectorize_partial = partial(np.vectorize, otypes=[float])
+
+
+@vectorize_partial
 def pairing_dict_fn(
     c: Number,
     b: Number,
@@ -310,4 +315,5 @@ def pairing_dict_fn(
     Number
         Agreement map value.
     """
+
     return pairing_dict[(c, b)]

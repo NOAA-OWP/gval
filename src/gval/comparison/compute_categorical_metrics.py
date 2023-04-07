@@ -112,11 +112,17 @@ def _compute_categorical_metrics(
         if row["candidate_values"] in positive_categories:
             if row["benchmark_values"] in positive_categories:
                 return "tp"
-            elif row["benchmark_values"] in negative_categories:
+            elif (
+                row["benchmark_values"] in negative_categories
+                or len(negative_categories) == 0
+            ):
                 return "fp"
 
         # predicted negative
-        elif row["candidate_values"] in negative_categories:
+        elif (
+            row["candidate_values"] in negative_categories
+            or len(negative_categories) == 0
+        ):
             if row["benchmark_values"] in positive_categories:
                 return "fn"
             elif row["benchmark_values"] in negative_categories:
