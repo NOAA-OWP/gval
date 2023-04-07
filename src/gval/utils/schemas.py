@@ -49,7 +49,7 @@ class Sample_identifiers(pa.DataFrameModel):  # pragma: no cover
         return list(super().to_schema().columns.keys())
 
 
-class Crosstab_2d_df(pa.DataFrameModel):  # pragma: no cover
+class Crosstab_df(Sample_identifiers):  # pragma: no cover
     """Crosstab DF schema"""
 
     candidate_values: Series[float]
@@ -59,17 +59,6 @@ class Crosstab_2d_df(pa.DataFrameModel):  # pragma: no cover
     class Config:
         coerce = True
         strict = True
-
-
-class Crosstab_df(Sample_identifiers, Crosstab_2d_df):  # pragma: no cover
-    """Crosstab DF schema"""
-
-    candidate_values: Series[float]
-    benchmark_values: Series[float]
-    counts: Series[float]
-
-    class Config:
-        coerce = True
 
 
 class Conditions_df(Sample_identifiers):  # pragma: no cover

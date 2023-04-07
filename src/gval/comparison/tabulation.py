@@ -23,13 +23,15 @@ import xarray as xr
 import pandera as pa
 from pandera.typing import DataFrame
 
-from gval.utils.schemas import Xrspatial_crosstab_df, Crosstab_2d_df, Crosstab_df
+from gval.utils.schemas import Xrspatial_crosstab_df, Crosstab_df
 
 
 @pa.check_types
 def _convert_crosstab_to_contigency_table(
     crosstab_df: DataFrame[Xrspatial_crosstab_df],
-) -> DataFrame[Crosstab_2d_df]:
+    band_name: str,
+    band_value: Union[str, Number],
+) -> DataFrame[Crosstab_df]:
     """
     Reorganizes crosstab output to Crosstab 2D DataFrame format.
 
@@ -40,11 +42,9 @@ def _convert_crosstab_to_contigency_table(
 
     Returns
     -------
-    DataFrame[Crosstab_2d_df]
-        Crosstab 2D DataFrame using candidate and benchmark conventions.
+    DataFrame[Crosstab_df]
+        Crosstab DataFrame using candidate and benchmark conventions.
     """
-
-    # TODO: Consider making some of these columns headers part of a schema managed separately.
 
     # renames zone, renames column index, melts dataframe, then resets the index.
     crosstab_df = (
@@ -53,6 +53,9 @@ def _convert_crosstab_to_contigency_table(
         .melt(id_vars="candidate_values", value_name="counts", ignore_index=False)
         .reset_index(drop=True)
     )
+
+    # add band column
+    crosstab_df.insert(0, band_name, band_value)
 
     return crosstab_df
 
@@ -80,18 +83,6 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
     """
 
     def decorator(func):
-        # dedicate output schema
-        if (dimension == 2) | (dimension == "2"):
-            output_schema = "DataFrame[Crosstab_2d_df]"
-        elif dimension == "2/3":
-            output_schema = "Union[DataFrame[Crosstab_2d_df], DataFrame[Crosstab_df]]"
-        elif (dimension == 3) | (dimension == "3"):
-            output_schema = "DataFrame[Crosstab_df]"
-        else:
-            raise ValueError(
-                "Pass 2, 3, or 2/3 for dimension argument."
-            )  # pragma: no cover
-
         docstring = f"""
             Crosstab {dimension}-dimensional {xarray_obj} to produce Crosstab DataFrame.
 
@@ -110,7 +101,7 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
 
             Returns
             -------
-            {output_schema}
+            DataFrame[Crosstab_df]
                 Crosstab DataFrame.
 
             References
@@ -130,10 +121,12 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
 def _crosstab_2d_DataArrays(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
+    band_name: str = "band",
+    band_value: Union[str, Number] = 1,
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-) -> DataFrame[Crosstab_2d_df]:
+) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
     crosstab_df = crosstab(
@@ -145,7 +138,9 @@ def _crosstab_2d_DataArrays(
     )
 
     # reorganize df to follow contingency table schema instead of xarray-spatial conventions
-    crosstab_df = _convert_crosstab_to_contigency_table(crosstab_df)
+    crosstab_df = _convert_crosstab_to_contigency_table(
+        crosstab_df, band_name, band_value
+    )
 
     return crosstab_df
 
@@ -205,13 +200,12 @@ def _crosstab_3d_DataArrays(
         crosstab_df = _crosstab_2d_DataArrays(
             candidate_map=candidate_map.sel({band_name_candidate: b}),
             benchmark_map=benchmark_map.sel({band_name_benchmark: b}),
+            band_name=band_name_candidate,
+            band_value=b,
             allow_candidate_values=allow_candidate_values,
             allow_benchmark_values=allow_benchmark_values,
             exclude_value=exclude_value,
         )
-
-        # add band column
-        crosstab_df.insert(0, band_name_candidate, b)
 
         # concats crosstab_dfs across bands
         if i > 0:
@@ -233,7 +227,7 @@ def _crosstab_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-) -> Union[DataFrame[Crosstab_2d_df], DataFrame[Crosstab_df]]:
+) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
     # TODO: these can be predicates and optional exception raising
@@ -286,13 +280,11 @@ def _crosstab_Datasets(
         crosstab_df = _crosstab_2d_DataArrays(
             candidate_map=candidate_map[b],
             benchmark_map=benchmark_map[b],
+            band_value=b,
             allow_candidate_values=allow_candidate_values,
             allow_benchmark_values=allow_benchmark_values,
             exclude_value=exclude_value,
         )
-
-        # add band column
-        crosstab_df.insert(0, "band", b)
 
         # concats crosstab_dfs across bands
         if i > 0:
