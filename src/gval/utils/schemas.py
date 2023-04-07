@@ -5,7 +5,7 @@ DataFrame Schemas with Pandera.
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import List, Optional
+from typing import List
 
 import pandera as pa
 from pandera.typing import Series, Index, Int64
@@ -63,7 +63,7 @@ class Crosstab_df(Sample_identifiers):  # pragma: no cover
 
 class Conditions_df(Sample_identifiers):  # pragma: no cover
     tp: Series[float]
-    tn: Optional[Series[float]]
+    tn: Series[float] = pa.Field(nullable=True)
     fp: Series[float]
     fn: Series[float]
 
