@@ -5,6 +5,7 @@ Test functionality for computing_categorical_metrics.py
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
+import numpy as np
 from pytest_cases import parametrize
 import pandas as pd
 
@@ -106,6 +107,22 @@ expected_dfs = [
                 1: 0.44029443838604143,
             },
             "f_score": {0: 0.43023863438425364, 1: 0.6113950406965739},
+        }
+    ),
+    pd.DataFrame(
+        {
+            "band": {0: "1", 1: "2"},
+            "fn": {0: 1098.0, 1: 3689.0},
+            "fp": {0: 5444.0, 1: 2470.0},
+            "tn": {0: np.nan, 1: np.nan},
+            "tp": {0: 2470.0, 1: 4845.0},
+            "critical_success_index": {0: 0.274079, 1: 0.440294},
+            "f_score": {0: 0.430239, 1: 0.611395},
+            "false_discovery_rate": {0: 0.687895, 1: 0.337662},
+            "false_negative_rate": {0: 0.307735, 1: 0.432271},
+            "fowlkes_mallows_index": {0: 0.464822, 1: 0.613212},
+            "positive_predictive_value": {0: 0.312105, 1: 0.662338},
+            "true_positive_rate": {0: 0.692265, 1: 0.567729},
         }
     ),
 ]
@@ -237,6 +254,32 @@ input_dfs = [
             },
         }
     ),
+    pd.DataFrame(
+        {
+            "band": {
+                0: "1",
+                1: "1",
+                2: "1",
+                3: "1",
+                4: "2",
+                5: "2",
+                6: "2",
+                7: "2",
+            },
+            "candidate_values": {0: 1, 1: 1, 2: 2, 3: 2, 4: 1, 5: 1, 6: 2, 7: 2},
+            "benchmark_values": {0: 1, 1: 2, 2: 1, 3: 2, 4: 1, 5: 2, 6: 1, 7: 2},
+            "counts": {
+                0: 9489,
+                1: 1098,
+                2: 5444,
+                3: 2470,
+                4: 5200,
+                5: 3689,
+                6: 2470,
+                7: 4845,
+            },
+        }
+    ),
 ]
 
 metrics_input = [
@@ -244,9 +287,10 @@ metrics_input = [
     "all",
     "accuracy",
     ["accuracy", "critical_success_index", "f_score"],
+    "all",
 ]
-positive_categories_input = [(1, 3), 2, 2, 2]
-negative_categories_input = [2, 1, 1, 1, 1]
+positive_categories_input = [(1, 3), 2, 2, 2, 2]
+negative_categories_input = [2, 1, 1, 1, None]
 
 
 @parametrize(

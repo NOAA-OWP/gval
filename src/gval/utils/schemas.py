@@ -63,7 +63,7 @@ class Crosstab_df(Sample_identifiers):  # pragma: no cover
 
 class Conditions_df(Sample_identifiers):  # pragma: no cover
     tp: Series[float]
-    tn: Series[float]
+    tn: Series[float] = pa.Field(nullable=True)
     fp: Series[float]
     fn: Series[float]
 

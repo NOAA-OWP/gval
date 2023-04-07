@@ -24,7 +24,10 @@ def test_compute_categorical_metrics_success(
 
     # compute categorical metrics
     metrics_df = _compute_categorical_metrics(
-        crosstab_df, metrics, positive_categories, negative_categories
+        crosstab_df=crosstab_df,
+        positive_categories=positive_categories,
+        metrics=metrics,
+        negative_categories=negative_categories,
     )
 
     pd.testing.assert_frame_equal(

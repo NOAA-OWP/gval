@@ -8,6 +8,7 @@ __author__ = "Fernando Aristizabal"
 from typing import Iterable, Optional, Union
 from numbers import Number
 
+import numpy as np
 import pandas as pd
 import pandera as pa
 from pandera.typing import DataFrame
@@ -60,8 +61,8 @@ def _handle_positive_negative_categories(
 @pa.check_types
 def _compute_categorical_metrics(
     crosstab_df: DataFrame[Crosstab_df],
+    positive_categories: Optional[Union[Number, Iterable[Number]]],
     metrics: Union[str, Iterable[str]] = "all",
-    positive_categories: Optional[Union[Number, Iterable[Number]]] = None,
     negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
 ) -> DataFrame[Metrics_df]:
     """
@@ -71,12 +72,13 @@ def _compute_categorical_metrics(
     ----------
     crosstab_df : DataFrame[Crosstab_df]
         Crosstab df with candidate, benchmark, and agreement values as well as the counts for each occurrence.
-    positive_categories : Optional[Union[Number, Iterable[Number]]], default = None
+    positive_categories : Optional[Union[Number, Iterable[Number]]]
         Number or list of numbers representing the values to consider as the positive condition.
-    negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
-        Number or list of numbers representing the values to consider as the negative condition.
     metrics : Union[str, Iterable[str]], default = "all"
         String or list of strings representing metrics to compute.
+    negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+        Number or list of numbers representing the values to consider as the negative condition.
+
 
     Returns
     -------
@@ -112,11 +114,17 @@ def _compute_categorical_metrics(
         if row["candidate_values"] in positive_categories:
             if row["benchmark_values"] in positive_categories:
                 return "tp"
-            elif row["benchmark_values"] in negative_categories:
+            elif (
+                row["benchmark_values"] in negative_categories
+                or len(negative_categories) == 0
+            ):
                 return "fp"
 
         # predicted negative
-        elif row["candidate_values"] in negative_categories:
+        elif (
+            row["candidate_values"] in negative_categories
+            or len(negative_categories) == 0
+        ):
             if row["benchmark_values"] in positive_categories:
                 return "fn"
             elif row["benchmark_values"] in negative_categories:
@@ -148,8 +156,13 @@ def _compute_categorical_metrics(
         return pd.concat([conditions_series, metrics_series])
 
     # groupby sample identifiers then compute metrics
-    return (
+    metric_df = (
         crosstab_df.groupby(Sample_identifiers.columns())
         .apply(compute_metrics_per_sample)
         .reset_index()
     )
+
+    if "tn" not in metric_df.columns:
+        metric_df.insert(loc=metric_df.columns.get_loc("tp"), column="tn", value=np.nan)
+
+    return metric_df

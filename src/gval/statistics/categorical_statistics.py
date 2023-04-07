@@ -2,7 +2,7 @@
 Categorical Statistics Class
 """
 
-from typing import Union
+from typing import Union, Tuple
 from functools import wraps
 import inspect
 
@@ -31,6 +31,10 @@ class CategoricalStatistics(BaseStatistics):
 
     def __init__(self):
         # Automatically populates and numba vectorizes all functions in categorical_stat_funcs.py
+
+        self.required_param = 1
+        self.optional_param = 0
+
         self._func_names = [
             fn
             for fn in dir(cs)
@@ -42,7 +46,18 @@ class CategoricalStatistics(BaseStatistics):
             setattr(self, name, vectorize(nopython=True)(func))
 
         self._signature_validation = {
-            "names": ["tp", "tn", "fp", "fn"],
+            "names": {
+                "tp": self.required_param,
+                "tn": self.optional_param,
+                "fp": self.required_param,
+                "fn": self.required_param,
+            },
+            "required": [
+                self.required_param,
+                self.optional_param,
+                self.required_param,
+                self.optional_param,
+            ],
             "param_types": ["int", "float", "Number"],
             "return_type": [float],
             "no_of_args": [2, 3, 4],
@@ -72,7 +87,7 @@ class CategoricalStatistics(BaseStatistics):
         List of all possible arguments for functions
         """
 
-        return self._signature_validation["names"]
+        return list(self._signature_validation["names"].keys())
 
     def register_function(self, name: str, vectorize_func: bool = False):
         """
@@ -218,7 +233,9 @@ class CategoricalStatistics(BaseStatistics):
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    def process_statistics(self, func_names: Union[str, list], **kwargs) -> float:
+    def process_statistics(
+        self, func_names: Union[str, list], **kwargs
+    ) -> Tuple[float, str]:
         """
 
         Parameters
@@ -241,19 +258,27 @@ class CategoricalStatistics(BaseStatistics):
         )
         func_list = [func_names] if isinstance(func_names, str) else func_names
 
-        return_stats = []
+        return_stats, return_funcs = [], []
         for name in func_list:
             if name in self.registered_functions:
                 params = self.get_parameters(name)
+                required = self._signature_validation["required"]
+
                 func = getattr(self, name)
 
                 # Necessary for numba functions which cannot accept keyword arguments
-                func_args = []
-                for param in params:
+                func_args, skip_function = [], False
+                for param, req in zip(params, required):
                     if param in kwargs:
                         func_args.append(kwargs[param])
+                    elif not self._signature_validation["names"][param]:
+                        skip_function = True
+                        break
                     else:
                         raise ValueError("Parameter missing form kwargs")
+
+                if skip_function:
+                    continue
 
                 stat_val = func(*func_args)
 
@@ -261,12 +286,9 @@ class CategoricalStatistics(BaseStatistics):
                     raise ValueError(f"Invalid value calculated for {name}:", stat_val)
 
                 return_stats.append(stat_val)
+                return_funcs.append(name)
 
             else:
                 raise KeyError("Statistic not found in registered functions")
 
-        # make a list if not already
-        if not isinstance(func_names, list):
-            func_names = [func_names]
-
-        return return_stats, func_names
+        return return_stats, return_funcs
