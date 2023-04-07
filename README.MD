@@ -53,7 +53,7 @@ benchmark = rxr.open_rasterio('benchmark_map_two_class_categorical.tif', mask_an
 
 agreement_map, crosstab_table, metric_table = candidate.gval.categorical_compare(benchmark,
                                                                                  positive_categories=[2],
-                                                                                 negative_categories=None)
+                                                                                 negative_categories=[0, 1])
 ```
 
 ### Outputs
