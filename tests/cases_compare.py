@@ -12,6 +12,7 @@ from pytest_cases import parametrize
 
 from tests.conftest import _load_xarray
 from gval.comparison.pairing_functions import szudzik_pair_signed, cantor_pair_signed
+from gval.utils.schemas import Crosstab_df
 
 
 numbers_success = [
@@ -222,20 +223,27 @@ def case_pairing_dict_fn(c, b, pairing_dict, expected_value):
 crosstab_dfs = [
     (
         pd.DataFrame({"zone": [0, 1, 2], 0: [10, 100, 200], 1: [50, 25, 100]}),
-        pd.DataFrame(
-            {
-                "candidate_values": [0, 1, 2, 0, 1, 2],
-                "benchmark_values": [0, 0, 0, 1, 1, 1],
-                "counts": [10, 100, 200, 50, 25, 100],
-            }
+        "band",
+        1,
+        Crosstab_df.validate(
+            pd.DataFrame(
+                {
+                    "band": [1, 1, 1, 1, 1, 1],
+                    "candidate_values": [0, 1, 2, 0, 1, 2],
+                    "benchmark_values": [0, 0, 0, 1, 1, 1],
+                    "counts": [10, 100, 200, 50, 25, 100],
+                }
+            )
         ),
     )
 ]
 
 
-@parametrize("crosstab_df, expected_df", crosstab_dfs)
-def case_convert_crosstab_to_contigency_table(crosstab_df, expected_df):
-    return (crosstab_df, expected_df)
+@parametrize("crosstab_df, band_name, band_value, expected_df", crosstab_dfs)
+def case_convert_crosstab_to_contigency_table(
+    crosstab_df, band_name, band_value, expected_df
+):
+    return (crosstab_df, band_name, band_value, expected_df)
 
 
 crosstab_2d_DataArrayss = [
@@ -250,12 +258,15 @@ crosstab_2d_DataArrayss = [
             masked=True,
             mask_and_scale=True,
         ).sel(band=1, drop=True),
-        pd.DataFrame(
-            {
-                "candidate_values": [1.0, 2.0],
-                "benchmark_values": [0.0, 0.0],
-                "counts": [10982559, 544467],
-            }
+        Crosstab_df.validate(
+            pd.DataFrame(
+                {
+                    "band": [1, 1],
+                    "candidate_values": [1.0, 2.0],
+                    "benchmark_values": [0.0, 0.0],
+                    "counts": [10982559, 544467],
+                }
+            )
         ),
     ),
     (
@@ -269,32 +280,35 @@ crosstab_2d_DataArrayss = [
             masked=False,
             mask_and_scale=False,
         ).sel(band=1, drop=True),
-        pd.DataFrame(
-            {
-                "candidate_values": [
-                    -9999.0,
-                    1.0,
-                    2.0,
-                    -9999.0,
-                    1.0,
-                    2.0,
-                    -9999.0,
-                    1.0,
-                    2.0,
-                ],
-                "benchmark_values": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
-                "counts": [
-                    963789,
-                    856376,
-                    4664,
-                    113119,
-                    199644,
-                    231918,
-                    1086601,
-                    377453,
-                    80368,
-                ],
-            }
+        Crosstab_df.validate(
+            pd.DataFrame(
+                {
+                    "band": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "candidate_values": [
+                        -9999.0,
+                        1.0,
+                        2.0,
+                        -9999.0,
+                        1.0,
+                        2.0,
+                        -9999.0,
+                        1.0,
+                        2.0,
+                    ],
+                    "benchmark_values": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
+                    "counts": [
+                        963789,
+                        856376,
+                        4664,
+                        113119,
+                        199644,
+                        231918,
+                        1086601,
+                        377453,
+                        80368,
+                    ],
+                }
+            )
         ),
     ),
 ]
@@ -317,13 +331,15 @@ crosstab_3d_DataArrayss = [
             masked=True,
             mask_and_scale=True,
         ),
-        pd.DataFrame(
-            {
-                "band": ["1", "1", "1", "2", "2", "2"],
-                "candidate_values": [-10000.0, 1.0, 2.0, -10000.0, 1.0, 2.0],
-                "benchmark_values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                "counts": [9489603, 10982559, 544467, 2470284, 4845100, 4845025],
-            }
+        Crosstab_df.validate(
+            pd.DataFrame(
+                {
+                    "band": ["1", "1", "1", "2", "2", "2"],
+                    "candidate_values": [-10000.0, 1.0, 2.0, -10000.0, 1.0, 2.0],
+                    "benchmark_values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    "counts": [9489603, 10982559, 544467, 2470284, 4845100, 4845025],
+                }
+            )
         ),
     ),
     (
@@ -337,64 +353,83 @@ crosstab_3d_DataArrayss = [
             masked=False,
             mask_and_scale=False,
         ),
-        pd.DataFrame(
-            {
-                "band": [
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                ],
-                "candidate_values": [
-                    -10000,
-                    -9999,
-                    1,
-                    2,
-                    -10000,
-                    -9999,
-                    1,
-                    2,
-                    -10000,
-                    -9999,
-                    1,
-                    2,
-                    -10000,
-                    -9999,
-                    1,
-                    2,
-                ],
-                "benchmark_values": [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2],
-                "counts": [
-                    9489603,
-                    4740048,
-                    10982559,
-                    544467,
-                    4415,
-                    2050,
-                    679166,
-                    2624332,
-                    2470284,
-                    2370734,
-                    4845100,
-                    4845025,
-                    2472075,
-                    2371364,
-                    4844092,
-                    4847966,
-                ],
-            }
+        Crosstab_df.validate(
+            pd.DataFrame(
+                {
+                    "band": [
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "1",
+                        "2",
+                        "2",
+                        "2",
+                        "2",
+                        "2",
+                        "2",
+                        "2",
+                        "2",
+                    ],
+                    "candidate_values": [
+                        -10000,
+                        -9999,
+                        1,
+                        2,
+                        -10000,
+                        -9999,
+                        1,
+                        2,
+                        -10000,
+                        -9999,
+                        1,
+                        2,
+                        -10000,
+                        -9999,
+                        1,
+                        2,
+                    ],
+                    "benchmark_values": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        2,
+                        2,
+                        2,
+                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        2,
+                        2,
+                        2,
+                        2,
+                    ],
+                    "counts": [
+                        9489603,
+                        4740048,
+                        10982559,
+                        544467,
+                        4415,
+                        2050,
+                        679166,
+                        2624332,
+                        2470284,
+                        2370734,
+                        4845100,
+                        4845025,
+                        2472075,
+                        2371364,
+                        4844092,
+                        4847966,
+                    ],
+                }
+            )
         ),
     ),
 ]

@@ -120,10 +120,15 @@ def test_pairing_dict_fn(c, b, pairing_dict, expected_value):
 
 
 @parametrize_with_cases(
-    "crosstab_df, expected_df", glob="convert_crosstab_to_contigency_table"
+    "crosstab_df, band_name, band_value, expected_df",
+    glob="convert_crosstab_to_contigency_table",
 )
-def test_convert_crosstab_to_contigency_table(crosstab_df, expected_df):
-    computed_df = _convert_crosstab_to_contigency_table(crosstab_df)
+def test_convert_crosstab_to_contigency_table(
+    crosstab_df, band_name, band_value, expected_df
+):
+    computed_df = _convert_crosstab_to_contigency_table(
+        crosstab_df, band_name, band_value
+    )
     pd.testing.assert_frame_equal(computed_df, expected_df, check_dtype=False)
 
 
