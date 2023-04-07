@@ -2,11 +2,34 @@
 text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/gval_light_mode.png#gh-light-mode-only)
 
 GVAL (pronounced "g-val") is a high-level Python framework to evaluate
-the geospatial skill of candidate maps to benchmarks producing agreement
-maps and metrics.
+the skill of geospatial datasets by comparing candidates to benchmark
+maps producing agreement maps and metrics.
 
-NOTE: THIS PACKAGE IS UNDER ACTIVE DEVELOPMENT AND NOT CURRENTLY
-FUNCTIONING. BREAKING CHANGES ARE OFTEN INTRODUCED.
+GVAL is intended to work on raster and vector files as xarray and
+geopandas objects, respectively. Abilities to prepare or homogenize maps
+for comparison are included. The comparisons are based on scoring
+philosophies for three statistical data types including categorical,
+continuous, and probabilistic.
+
+Possible enhancements include the ability to trace attributes from the
+candidate and benchmark maps to the outputs for analysis purposes.
+Additionally, we plan to enable comparisons across a hierarchy of
+samples beyond the current map level samples. These sample levels
+include catalogs (possibly using [STAC](https://stacspec.org/en)) and
+sub-samples (zonal level metrics within maps).
+
+Completed functionality:
+
+- Homogenize candidate and benchmark rasters for comparisons.
+- Two-class categorical case for 2 or 3-dimensional rasters.
+
+In-progress:
+
+- Documentation, Github actions, and multi-class categorical raster
+  comparisons.
+
+WARNING: Our current public API and output formats are likely to change
+in the future.
 
 # Installation
 
@@ -105,7 +128,7 @@ Code Checking with [Flake8](https://github.com/PyCQA/flake8)
 - Dependencies and Packaging
 - [pip](https://packaging.python.org/en/latest/key_projects/#pip)
 - Docker
-- Distribution [PyPI](https://pypi.org/)
+- Distribution *[PyPI](https://pypi.org/)
 - DockerHub
 - GitHub (source, packaging, and images)
 - Docs
@@ -123,7 +146,7 @@ choice.)
 
 First setup docker instance and in the root directory of the project:
 
-`sudo docker build -t gval-image --target development .`
+`[sudo] docker build -t gval-image --target development . `
 
 The default user named 'user' with UID 1001 is created. To use the same
 user and permissions you currently have on your machine override with
