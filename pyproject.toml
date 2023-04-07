@@ -23,7 +23,7 @@ description = "Flexible, portable, and efficient geospatial evaluations for a va
 
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["./requirements/base.txt"]}
+dependencies = {file = ["./requirements/base.txt", "./requirements/test.txt"]}
 #optional-dependencies = {file = ["./requirements/test.txt"]}
 version = {file = ["./gval/version.txt"]}
 readme = {file = ["README.MD"], content-type = "text/markdown"}
