@@ -20,7 +20,7 @@ agreement_map, crosstab_table, metric_table = candidate.gval.categorical_compare
 
 ![alt text](../images/agreement_map.png)
 
-`cross_table`
+`crosstab_table`
 
 ![alt text](../images/cross_table.png)
 
