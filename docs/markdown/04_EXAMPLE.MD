@@ -1,6 +1,6 @@
 # Using GVAL
 
-An example of running the entire process with one command using minimal arguments is demonstrated below:
+An example of running the entire process for two-class categorical rasters with one function using minimal arguments is demonstrated below:
 
 ```python
 import gval
