@@ -22,7 +22,11 @@ import xarray as xr
 import numba as nb
 
 
-from gval.comparison.pairing_functions import pairing_dict_fn, _make_pairing_dict
+from gval.comparison.pairing_functions import (
+    pairing_dict_fn,
+    _make_pairing_dict,
+    PairingDict,
+)
 
 
 def _compute_agreement_map(
@@ -196,7 +200,9 @@ def _compute_agreement_map(
     comparison processing module where pairing_dict_fn will be passed in as a function
     """
     if pairing_dict is not None:
+        pairing_dict = PairingDict(pairing_dict)
         ufunc_args.append([pairing_dict])
+        comparison_function = pairing_dict_fn
 
     """
     NOTE:
