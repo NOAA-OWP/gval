@@ -102,6 +102,9 @@ def _compute_categorical_metrics(
 
     # if (positive_categories is not None):
 
+    # make copy to avoid modifying original
+    crosstab_df = crosstab_df.copy()
+
     positive_categories, negative_categories = _handle_positive_negative_categories(
         crosstab_df, positive_categories, negative_categories
     )

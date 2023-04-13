@@ -522,6 +522,7 @@ compute_agreement_maps_success = [
         None,
         None,
         None,
+        None,
     ),
     (
         "candidate_map_0_aligned_to_candidate_map_0.tif",
@@ -532,12 +533,14 @@ compute_agreement_maps_success = [
         None,
         None,
         None,
+        None,
     ),
     (
         "candidate_map_0_aligned_to_candidate_map_0.tif",
         "benchmark_map_0_aligned_to_candidate_map_0.tif",
         _load_xarray("agreement_map_00_pairing_aligned_to_candidate_map_0.tif"),
         "pairing_dict",
+        None,
         [-9999, 1, 2],
         [0, 2],
         None,
@@ -546,8 +549,20 @@ compute_agreement_maps_success = [
     (
         "candidate_map_0_aligned_to_candidate_map_0.tif",
         "benchmark_map_0_aligned_to_candidate_map_0.tif",
+        _load_xarray("agreement_map_00_pairing_aligned_to_candidate_map_0.tif"),
+        "pairing_dict",
+        {(-9999, 0): 0, (-9999, 2): 1, (1, 0): 2, (1, 2): 3, (2, 0): 4, (2, 2): 5},
+        None,
+        None,
+        None,
+        None,
+    ),
+    (
+        "candidate_map_0_aligned_to_candidate_map_0.tif",
+        "benchmark_map_0_aligned_to_candidate_map_0.tif",
         _load_xarray("agreement_map_00_szudzik_aligned_to_candidate_map_0_nodata.tif"),
         szudzik_pair_signed,
+        None,
         None,
         None,
         399900006,
@@ -564,6 +579,7 @@ compute_agreement_maps_success = [
         szudzik_pair_signed,
         None,
         None,
+        None,
         399900006,
         True,
     ),
@@ -571,7 +587,7 @@ compute_agreement_maps_success = [
 
 
 @parametrize(
-    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    "candidate_map, benchmark_map, agreement_map, comparison_function, pairing_dict, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
     compute_agreement_maps_success,
 )
 def case_compute_agreement_map_success(
@@ -579,6 +595,7 @@ def case_compute_agreement_map_success(
     benchmark_map,
     agreement_map,
     comparison_function,
+    pairing_dict,
     allow_candidate_values,
     allow_benchmark_values,
     nodata,
@@ -589,6 +606,7 @@ def case_compute_agreement_map_success(
         _load_xarray(benchmark_map),
         agreement_map,
         comparison_function,
+        pairing_dict,
         allow_candidate_values,
         allow_benchmark_values,
         nodata,
