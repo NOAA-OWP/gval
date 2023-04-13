@@ -41,8 +41,8 @@ To use this package:
 
 # Using GVAL
 
-An example of running the entire process with one command using minimal
-arguments is demonstrated below:
+An example of running the entire process for two-class categorical
+rasters with one function using minimal arguments is demonstrated below:
 
 ``` python
 import gval
@@ -62,7 +62,7 @@ agreement_map, crosstab_table, metric_table = candidate.gval.categorical_compare
 
 ![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/agreement_map.png)
 
-`cross_table`
+`crosstab_table`
 
 ![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/cross_table.png)
 

@@ -179,7 +179,7 @@ def test_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, agreement_map, comparison_function, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
+    "candidate_map, benchmark_map, agreement_map, comparison_function, pairing_dict, allow_candidate_values, allow_benchmark_values, nodata, encode_nodata",
     glob="compute_agreement_map_success",
 )
 def test_compute_agreement_map_success(
@@ -187,6 +187,7 @@ def test_compute_agreement_map_success(
     benchmark_map,
     agreement_map,
     comparison_function,
+    pairing_dict,
     allow_candidate_values,
     allow_benchmark_values,
     nodata,
@@ -198,6 +199,7 @@ def test_compute_agreement_map_success(
         candidate_map,
         benchmark_map,
         comparison_function,
+        pairing_dict,
         allow_candidate_values=allow_candidate_values,
         allow_benchmark_values=allow_benchmark_values,
         nodata=nodata,

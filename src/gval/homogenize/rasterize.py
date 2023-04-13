@@ -38,18 +38,14 @@ def _rasterize_data(
     """
 
     if isinstance(benchmark_map, gpd.GeoDataFrame):
-        try:
-            rasterized_data = make_geocube(
-                vector_data=benchmark_map,
-                measurements=rasterize_attributes,
-                like=candidate_map,
-            )
+        rasterized_data = make_geocube(
+            vector_data=benchmark_map,
+            measurements=rasterize_attributes,
+            like=candidate_map,
+        )
 
-            if len(rasterized_data.data_vars) < 1:
-                raise KeyError("Rasterize attribute needs to be of numeric type")
-
-        except KeyError:
-            raise "Attribute does not exist in GeoDataFrame"
+        if len(rasterized_data.data_vars) < 1:
+            raise KeyError("Rasterize attribute needs to be of numeric type")
 
         # Set nodata to value of candidate map
         if isinstance(candidate_map, xr.DataArray):
@@ -60,13 +56,17 @@ def _rasterize_data(
                 candidate_map.rio.encoded_nodata, encoded=True, inplace=True
             )
 
-            # Deal with tabulation coords check (for single and multi-band examples)
-            rasterized_data = rasterized_data.rename({"variable": "band"})
-            rast_values = rasterized_data.values
-            rasterized_data = rasterized_data.reindex(
-                {"band": np.arange(rasterized_data.shape[0]) + 1}
-            )
-            rasterized_data.values = rast_values
+            if "band" in candidate_map.coords:
+                # Deal with tabulation coords check (for single and multi-band examples)
+                rasterized_data = rasterized_data.rename({"variable": "band"})
+                rast_values = rasterized_data.values
+                rasterized_data = rasterized_data.reindex(
+                    {"band": np.arange(rasterized_data.shape[0]) + 1}
+                )
+                rasterized_data.values = rast_values
+
+            else:
+                rasterized_data = rasterized_data.squeeze()
 
         else:
             # make sure variable names are the same as would be loaded from rioxarray band_as_variable=True
@@ -84,10 +84,10 @@ def _rasterize_data(
             )
             for var_name in rasterized_data.data_vars.keys():
                 # Resolve nodata issues
-                if rasterized_data[var_name].rio.nodata is None:
-                    rasterized_data[var_name] = rasterized_data[
-                        var_name
-                    ].rio.set_nodata(np.nan)
+
+                rasterized_data[var_name] = rasterized_data[var_name].rio.set_nodata(
+                    np.nan
+                )
 
                 if rasterized_data[var_name].rio.encoded_nodata is None:
                     rasterized_data[var_name] = rasterized_data[

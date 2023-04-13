@@ -11,7 +11,7 @@ import numpy as np
 from pytest_cases import parametrize
 from rasterio.enums import Resampling
 
-from tests.conftest import _load_xarray
+from tests.conftest import _load_xarray, _load_gpkg
 
 candidate_map_fns = np.array(["candidate_map_0.tif", "candidate_map_1.tif"])
 benchmark_map_fns = np.array(["benchmark_map_0.tif", "benchmark_map_1.tif"])
@@ -224,3 +224,44 @@ def case_spatial_alignment_fail(
         target_map,
         resampling,
     )
+
+
+candidate_map_rasters = [
+    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
+    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True).sel(
+        band=1, drop=True
+    ),
+    _load_xarray(
+        "candidate_map_0_accessor.tif", mask_and_scale=True, band_as_variable=True
+    ),
+]
+
+
+benchmark_map_vectors = [
+    _load_gpkg("polygons_two_class_categorical.gpkg"),
+    _load_gpkg("hwm_points_texas_hurricane_harvey.gpkg"),
+    _load_gpkg("hwm_points_texas_hurricane_harvey.gpkg"),
+]
+
+rasterize_attrs = [["category"], ["positive_cat"], ["positive_cat"]]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, rasterize_attributes",
+    list(zip(candidate_map_rasters, benchmark_map_vectors, rasterize_attrs)),
+)
+def case_rasterize_vector_success(candidate_map, benchmark_map, rasterize_attributes):
+    return (candidate_map, benchmark_map, rasterize_attributes)
+
+
+rasterize_attrs_fail = [["fail"], ["hwmTypeName"]]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, rasterize_attributes",
+    list(
+        zip(candidate_map_rasters[:2], benchmark_map_vectors[:2], rasterize_attrs_fail)
+    ),
+)
+def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attributes):
+    return (candidate_map, benchmark_map, rasterize_attributes)

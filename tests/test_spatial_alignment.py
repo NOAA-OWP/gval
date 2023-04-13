@@ -16,6 +16,7 @@ from gval.homogenize.spatial_alignment import (
     _align_rasters,
     _spatial_alignment,
 )
+from gval.homogenize.rasterize import _rasterize_data
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
 
 
@@ -136,3 +137,37 @@ def test_spatial_alignment_fail(candidate_map, benchmark_map, target_map, kwargs
 
     with raises(RastersDontIntersect):
         _, _ = _spatial_alignment(candidate_map, benchmark_map, target_map, **kwargs)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, rasterize_attributes",
+    glob="rasterize_vector_success",
+)
+def test_rasterize_vector_success(candidate_map, benchmark_map, rasterize_attributes):
+    """Test rasterize vector success"""
+
+    benchmark_raster = _rasterize_data(
+        candidate_map=candidate_map,
+        benchmark_map=benchmark_map,
+        rasterize_attributes=rasterize_attributes,
+    )
+
+    if isinstance(benchmark_raster, xr.Dataset):
+        assert benchmark_raster.band_1.shape == candidate_map.band_1.shape
+    else:
+        assert benchmark_raster.shape == candidate_map.shape
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, rasterize_attributes",
+    glob="rasterize_vector_fail",
+)
+def test_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attributes):
+    """Tests rasterize vector fail"""
+
+    with raises(KeyError):
+        _, _ = _rasterize_data(
+            candidate_map=candidate_map,
+            benchmark_map=benchmark_map,
+            rasterize_attributes=rasterize_attributes,
+        )

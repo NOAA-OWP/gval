@@ -11,6 +11,7 @@ import os
 
 import numpy as np
 import xarray as xr
+import geopandas as gpd
 
 # import boto3
 
@@ -85,6 +86,30 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
     file_path = os.path.join(TEST_DATA_DIR, file_name)
     # _check_file(file_path)
     return file_path
+
+
+def _load_gpkg(
+    file_name: Union[str, os.PathLike],
+    *args,
+    **kwargs
+    # masked: bool = False,
+    # mask_and_scale: bool = False,
+) -> gpd.GeoDataFrame:
+    """
+    Loads geopackage given a base file name.
+
+    Parameters
+    ----------
+    file_name : Union[str, os.PathLike]
+        Base file name of file within local TEST_DATA_DIR or TEST_DATA_S3_NAME.
+
+    Returns
+    -------
+    gpd.GeoDataFrame
+        geopandas GeoDataFrame.
+    """
+    file_path = _build_map_file_path(file_name)
+    return gpd.read_file(file_path, *args, **kwargs)
 
 
 def _load_xarray(
