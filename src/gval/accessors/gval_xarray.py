@@ -134,7 +134,7 @@ class GVALXarray:
         if isinstance(self._obj, xr.Dataset):
             crosstab_df = _crosstab_Datasets(
                 candidate_map=candidate,
-                benchmark_map=benchmark_map,
+                benchmark_map=benchmark,
                 allow_candidate_values=allow_candidate_values,
                 allow_benchmark_values=allow_benchmark_values,
                 exclude_value=exclude_value,
@@ -143,7 +143,7 @@ class GVALXarray:
         else:
             crosstab_df = _crosstab_DataArrays(
                 candidate_map=candidate,
-                benchmark_map=benchmark_map,
+                benchmark_map=benchmark,
                 allow_candidate_values=allow_candidate_values,
                 allow_benchmark_values=allow_benchmark_values,
                 exclude_value=exclude_value,
