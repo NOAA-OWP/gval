@@ -5,7 +5,7 @@ Test cases for test_accessors.py
 import pandas as pd
 from pytest_cases import parametrize
 
-from tests.conftest import _load_xarray
+from tests.conftest import _load_xarray, _load_gpkg
 from gval.utils.exceptions import RasterMisalignment
 
 
@@ -163,3 +163,26 @@ def case_data_frame_accessor_compute_metrics(
     crosstab_df, positive_categories, negative_categories
 ):
     return crosstab_df, positive_categories, negative_categories
+
+
+gdf = _load_gpkg("polygons_two_class_categorical.gpkg")
+
+
+@parametrize(
+    "candidate_map, benchmark_map, rasterize_attributes",
+    [(candidate_maps[0], gdf, ["category"])],
+)
+def case_data_frame_rasterize_vector_success(
+    candidate_map, benchmark_map, rasterize_attributes
+):
+    return candidate_map, benchmark_map, rasterize_attributes
+
+
+@parametrize(
+    "candidate_map, benchmark_map, rasterize_attributes",
+    [(candidate_maps[0], crosstab, ["category"])],
+)
+def case_data_frame_rasterize_vector_fail(
+    candidate_map, benchmark_map, rasterize_attributes
+):
+    return candidate_map, benchmark_map, rasterize_attributes

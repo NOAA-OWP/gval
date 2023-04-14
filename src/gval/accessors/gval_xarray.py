@@ -9,7 +9,6 @@ from pandera.typing import DataFrame
 import geopandas as gpd
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
-from gval.homogenize.rasterize import _rasterize_data
 from gval import Comparison
 from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
@@ -66,7 +65,6 @@ class GVALXarray:
         exclude_value: Optional[Number] = None,
         positive_categories: Optional[Union[Number, Iterable[Number]]] = None,
         negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
-        rasterize_attributes: Optional[list] = None,
     ) -> Tuple[
         Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
     ]:
@@ -106,19 +104,12 @@ class GVALXarray:
             Categories to represent positive entries
         negative_categories: Optional[Union[Number, Iterable[Number]]], default = None
             Categories to represent negative entries
-        rasterize_attributes: Optional[list], default = None
-            Attributes to rasterize from vector dataset
 
         Returns
         -------
         Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
             Tuple with agreement map, cross-tabulation table, and metric table
         """
-        benchmark_map = _rasterize_data(
-            candidate_map=self._obj,
-            benchmark_map=benchmark_map,
-            rasterize_attributes=rasterize_attributes,
-        )
 
         self.check_same_type(benchmark_map)
 
@@ -191,21 +182,12 @@ class GVALXarray:
             xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
         resampling: rasterio.enums.Resampling
             See :func:`rasterio.warp.reproject` for more details.
-        rasterize_attributes: Optional[list], default = None
-            Attributes to rasterize from vector dataset
-
 
         Returns
         --------
         Union[xr.Dataset, xr.DataArray]
             Tuple with candidate and benchmark map respectively.
         """
-        benchmark_map = _rasterize_data(
-            candidate_map=self._obj,
-            benchmark_map=benchmark_map,
-            rasterize_attributes=rasterize_attributes,
-        )
-
         self.check_same_type(benchmark_map)
 
         candidate, benchmark = _spatial_alignment(

@@ -244,14 +244,27 @@ benchmark_map_vectors = [
 ]
 
 rasterize_attrs = [["category"], ["positive_cat"], ["positive_cat"]]
+expected_res = [
+    _load_xarray("expected_rasterized_1.tif", mask_and_scale=True),
+    _load_xarray("expected_rasterized_2.tif", mask_and_scale=True).sel(
+        band=1, drop=True
+    ),
+    _load_xarray(
+        "expected_rasterized_3.tif", mask_and_scale=True, band_as_variable=True
+    ),
+]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, rasterize_attributes",
-    list(zip(candidate_map_rasters, benchmark_map_vectors, rasterize_attrs)),
+    "candidate_map, benchmark_map, rasterize_attributes, expected",
+    list(
+        zip(candidate_map_rasters, benchmark_map_vectors, rasterize_attrs, expected_res)
+    ),
 )
-def case_rasterize_vector_success(candidate_map, benchmark_map, rasterize_attributes):
-    return (candidate_map, benchmark_map, rasterize_attributes)
+def case_rasterize_vector_success(
+    candidate_map, benchmark_map, rasterize_attributes, expected
+):
+    return candidate_map, benchmark_map, rasterize_attributes, expected
 
 
 rasterize_attrs_fail = [["fail"], ["hwmTypeName"]]
@@ -264,4 +277,4 @@ rasterize_attrs_fail = [["fail"], ["hwmTypeName"]]
     ),
 )
 def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attributes):
-    return (candidate_map, benchmark_map, rasterize_attributes)
+    return candidate_map, benchmark_map, rasterize_attributes

@@ -140,10 +140,12 @@ def test_spatial_alignment_fail(candidate_map, benchmark_map, target_map, kwargs
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, rasterize_attributes",
+    "candidate_map, benchmark_map, rasterize_attributes, expected",
     glob="rasterize_vector_success",
 )
-def test_rasterize_vector_success(candidate_map, benchmark_map, rasterize_attributes):
+def test_rasterize_vector_success(
+    candidate_map, benchmark_map, rasterize_attributes, expected
+):
     """Test rasterize vector success"""
 
     benchmark_raster = _rasterize_data(
@@ -156,6 +158,8 @@ def test_rasterize_vector_success(candidate_map, benchmark_map, rasterize_attrib
         assert benchmark_raster.band_1.shape == candidate_map.band_1.shape
     else:
         assert benchmark_raster.shape == candidate_map.shape
+
+    xr.testing.assert_equal(benchmark_raster, expected)
 
 
 @parametrize_with_cases(
