@@ -13,7 +13,7 @@ TODO:
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Optional, Union
+from typing import Iterable, Optional, Union, Callable
 from numbers import Number
 
 import numpy as np
@@ -60,6 +60,39 @@ def _convert_crosstab_to_contigency_table(
     return crosstab_df
 
 
+@pa.check_types
+def _compute_agreement_values(
+    crosstab_df: DataFrame[Crosstab_df], comparison_function: Callable
+) -> DataFrame[Crosstab_df]:
+    """
+    Computes agreement values from Crosstab DataFrame.
+
+    Parameters
+    ----------
+    crosstab_df : DataFrame[Crosstab_df]
+        Crosstab DataFrame.
+    comparison_function : Callable
+        Function to compute agreement values.
+
+    Returns
+    -------
+    DataFrame[Crosstab_df]
+        Crosstab DataFrame with agreement values.
+    """
+
+    # copy crosstab_df
+    crosstab_df = crosstab_df.copy()
+
+    def apply_pairing_function(row):
+        return comparison_function(row["candidate_values"], row["benchmark_values"])
+
+    agreement_values = crosstab_df.apply(apply_pairing_function, axis=1)
+
+    crosstab_df.insert(3, "agreement_values", agreement_values)
+
+    return crosstab_df
+
+
 def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataArray"):
     """
     Docstring decorator for crosstab functions.
@@ -98,6 +131,8 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
                 Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
             exclude_value : Optional[Number], default = None
                 Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
+            comparison_function : Callable, default = None
+                Function to compute agreement values. If None, then no agreement values are computed.
 
             Returns
             -------
@@ -126,6 +161,7 @@ def _crosstab_2d_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
+    comparison_function: Optional[Callable] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -142,6 +178,10 @@ def _crosstab_2d_DataArrays(
         crosstab_df, band_name, band_value
     )
 
+    # insert agreement values
+    if comparison_function is not None:
+        crosstab_df = _compute_agreement_values(crosstab_df, comparison_function)
+
     return crosstab_df
 
 
@@ -153,6 +193,7 @@ def _crosstab_3d_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
+    comparison_function: Optional[Callable] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -205,6 +246,7 @@ def _crosstab_3d_DataArrays(
             allow_candidate_values=allow_candidate_values,
             allow_benchmark_values=allow_benchmark_values,
             exclude_value=exclude_value,
+            comparison_function=comparison_function,
         )
 
         # concats crosstab_dfs across bands
@@ -227,6 +269,7 @@ def _crosstab_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
+    comparison_function: Optional[Callable] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -248,6 +291,7 @@ def _crosstab_DataArrays(
         allow_candidate_values=allow_candidate_values,
         allow_benchmark_values=allow_benchmark_values,
         exclude_value=exclude_value,
+        comparison_function=comparison_function,
     )
 
 
@@ -259,6 +303,7 @@ def _crosstab_Datasets(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
+    comparison_function: Optional[Callable] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -284,6 +329,7 @@ def _crosstab_Datasets(
             allow_candidate_values=allow_candidate_values,
             allow_benchmark_values=allow_benchmark_values,
             exclude_value=exclude_value,
+            comparison_function=comparison_function,
         )
 
         # concats crosstab_dfs across bands

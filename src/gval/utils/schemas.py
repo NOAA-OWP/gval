@@ -5,7 +5,7 @@ DataFrame Schemas with Pandera.
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import List
+from typing import List, Optional
 
 import pandera as pa
 from pandera.typing import Series, Index, Int64
@@ -54,6 +54,7 @@ class Crosstab_df(Sample_identifiers):  # pragma: no cover
 
     candidate_values: Series[float]
     benchmark_values: Series[float]
+    agreement_values: Optional[Series[float]]
     counts: Series[float]
 
     class Config:

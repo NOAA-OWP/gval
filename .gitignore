@@ -136,3 +136,7 @@ data/*
 
 # commit message
 .git_message.md
+
+# notebook files
+notebooks/agreement_map.tif
+notebooks/metric_file.csv
