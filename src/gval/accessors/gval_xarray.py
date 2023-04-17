@@ -131,23 +131,13 @@ class GVALXarray:
             encode_nodata=encode_nodata,
         )
 
-        if isinstance(self._obj, xr.Dataset):
-            crosstab_df = _crosstab_Datasets(
-                candidate_map=candidate,
-                benchmark_map=benchmark,
-                allow_candidate_values=allow_candidate_values,
-                allow_benchmark_values=allow_benchmark_values,
-                exclude_value=exclude_value,
-            )
-
-        else:
-            crosstab_df = _crosstab_DataArrays(
-                candidate_map=candidate,
-                benchmark_map=benchmark,
-                allow_candidate_values=allow_candidate_values,
-                allow_benchmark_values=allow_benchmark_values,
-                exclude_value=exclude_value,
-            )
+        crosstab_df = candidate.gval.compute_crosstab(
+            benchmark_map=benchmark,
+            allow_candidate_values=allow_candidate_values,
+            allow_benchmark_values=allow_benchmark_values,
+            exclude_value=exclude_value,
+            comparison_function=comparison_function,
+        )
 
         metrics_df = _compute_categorical_metrics(
             crosstab_df=crosstab_df,
@@ -259,7 +249,10 @@ class GVALXarray:
         allow_candidate_values: Optional[Iterable[Number]] = None,
         allow_benchmark_values: Optional[Iterable[Number]] = None,
         exclude_value: Optional[Number] = None,
-    ) -> DataFrame:
+        comparison_function: Optional[
+            Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]
+        ] = "szudzik",
+    ) -> DataFrame[Crosstab_df]:
         """
         Crosstab 2 or 3-dimensional xarray DataArray to produce Crosstab DataFrame.
 
@@ -273,12 +266,19 @@ class GVALXarray:
             Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
         exclude_value : Optional[Number], default = None
             Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
+        comparison_function : Optional[Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]], default = "szudzik"
+                Function to compute agreement values. If None, then no agreement values are computed.
 
         Returns
         -------
-        Crosstab DataFrame
+        DataFrame[Crosstab_df]
+            Crosstab DataFrame
         """
         self.check_same_type(benchmark_map)
+
+        # NOTE: Temporary fix until better solution is found
+        if isinstance(comparison_function, str):
+            comparison_function = getattr(Comparison, comparison_function)
 
         if isinstance(self._obj, xr.Dataset):
             return _crosstab_Datasets(
@@ -287,6 +287,7 @@ class GVALXarray:
                 allow_candidate_values,
                 allow_benchmark_values,
                 exclude_value,
+                comparison_function,
             )
         else:
             return _crosstab_DataArrays(
@@ -295,4 +296,5 @@ class GVALXarray:
                 allow_candidate_values,
                 allow_benchmark_values,
                 exclude_value,
+                comparison_function,
             )

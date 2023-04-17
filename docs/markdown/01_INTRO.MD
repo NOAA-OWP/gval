@@ -14,4 +14,6 @@ Completed functionality:
 In-progress:
 - Documentation, Github actions, and multi-class categorical raster comparisons.
 
-WARNING: Our current public API and output formats are likely to change in the future.
+WARNING:
+- Our current public API and output formats are likely to change in the future.
+- Software is provided "AS-IS" without any guarentees. Please QA/QC your metrics carefully until this project matures.
