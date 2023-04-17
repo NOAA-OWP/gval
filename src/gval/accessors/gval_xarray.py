@@ -6,6 +6,7 @@ import numba as nb
 import xarray as xr
 from rasterio.enums import Resampling
 from pandera.typing import DataFrame
+import geopandas as gpd
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
 from gval import Comparison
@@ -49,7 +50,7 @@ class GVALXarray:
 
     def categorical_compare(
         self,
-        benchmark_map: Union[xr.Dataset, xr.DataArray],
+        benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
         comparison_function: Union[
             Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
         ] = "szudzik",
@@ -73,7 +74,7 @@ class GVALXarray:
 
         Parameters
         ----------
-        benchmark_map: xr.Dataset
+        benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray]
             Benchmark map in xarray DataSet format.
         comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
             Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
@@ -109,6 +110,7 @@ class GVALXarray:
         Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
             Tuple with agreement map, cross-tabulation table, and metric table
         """
+
         self.check_same_type(benchmark_map)
 
         candidate, benchmark = _spatial_alignment(
@@ -132,7 +134,7 @@ class GVALXarray:
         if isinstance(self._obj, xr.Dataset):
             crosstab_df = _crosstab_Datasets(
                 candidate_map=candidate,
-                benchmark_map=benchmark_map,
+                benchmark_map=benchmark,
                 allow_candidate_values=allow_candidate_values,
                 allow_benchmark_values=allow_benchmark_values,
                 exclude_value=exclude_value,
@@ -141,7 +143,7 @@ class GVALXarray:
         else:
             crosstab_df = _crosstab_DataArrays(
                 candidate_map=candidate,
-                benchmark_map=benchmark_map,
+                benchmark_map=benchmark,
                 allow_candidate_values=allow_candidate_values,
                 allow_benchmark_values=allow_benchmark_values,
                 exclude_value=exclude_value,
@@ -158,9 +160,10 @@ class GVALXarray:
 
     def spatial_alignment(
         self,
-        benchmark_map: Union[xr.Dataset, xr.DataArray],
+        benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
         target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
         resampling: Optional[Resampling] = Resampling.nearest,
+        rasterize_attributes: Optional[list] = None,
     ) -> Union[xr.Dataset, xr.DataArray]:
         """
         Reproject :class:`xarray.Dataset` objects
@@ -173,11 +176,11 @@ class GVALXarray:
 
         Parameters
         ----------
-        benchmark_map: Union[xr.Dataset, xr.DataArray]
+        benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray]
             Benchmark map in xarray DataArray format.
         target_map: Optional[Union[xr.DataArray, xr.Dataset, str]], default = "benchmark"
             xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
-        resampling : rasterio.enums.Resampling
+        resampling: rasterio.enums.Resampling
             See :func:`rasterio.warp.reproject` for more details.
 
         Returns

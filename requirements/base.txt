@@ -3,6 +3,7 @@ dask==2023.1.1
 xarray-spatial==0.3.5
 pandera==0.14.5
 shapely==2.0.1
+geocube==0.4.0
 
 ###################################
 # Potential future packages
