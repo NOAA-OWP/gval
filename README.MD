@@ -41,7 +41,7 @@ WARNING:
 
 To use this package:
 
-`pip install 'gval @ git+https://github.com/NOAA-OWP/gval'`
+`pip install 'git+https://github.com/NOAA-OWP/gval'`
 
 # Using GVAL
 
