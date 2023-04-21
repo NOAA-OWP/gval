@@ -38,10 +38,10 @@ def test_data_array_accessor_fail(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map", glob="data_array_accessor_spatial_alignment"
+    "candidate_map, benchmark_map", glob="data_array_accessor_homogenize"
 )
-def test_data_array_accessor_spatial_alignment(candidate_map, benchmark_map):
-    data = candidate_map.gval.spatial_alignment(benchmark_map=benchmark_map)
+def test_data_array_accessor_homogenize(candidate_map, benchmark_map):
+    data = candidate_map.gval.homogenize(benchmark_map=benchmark_map)
 
     assert isinstance(data[0], xr.DataArray)
     assert isinstance(data[1], xr.DataArray)
@@ -51,7 +51,7 @@ def test_data_array_accessor_spatial_alignment(candidate_map, benchmark_map):
     "candidate_map, benchmark_map", glob="data_array_accessor_compute_agreement"
 )
 def test_data_array_accessor_compute_agreement_success(candidate_map, benchmark_map):
-    aligned_cand, aligned_bench = candidate_map.gval.spatial_alignment(
+    aligned_cand, aligned_bench = candidate_map.gval.homogenize(
         benchmark_map=benchmark_map
     )
     data = aligned_cand.gval.compute_agreement_map(benchmark_map=aligned_bench)
@@ -72,7 +72,7 @@ def test_data_array_accessor_compute_agreement_fail(candidate_map, benchmark_map
     glob="data_array_accessor_crosstab_table_success",
 )
 def test_data_array_accessor_crosstab_table_success(candidate_map, benchmark_map):
-    aligned_cand, aligned_bench = candidate_map.gval.spatial_alignment(
+    aligned_cand, aligned_bench = candidate_map.gval.homogenize(
         benchmark_map=benchmark_map
     )
     data = aligned_cand.gval.compute_crosstab(benchmark_map=aligned_bench)
@@ -110,10 +110,10 @@ def test_data_set_accessor_success(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map", glob="data_set_accessor_spatial_alignment"
+    "candidate_map, benchmark_map", glob="data_set_accessor_homogenize"
 )
-def test_data_set_accessor_spatial_alignment(candidate_map, benchmark_map):
-    data = candidate_map.gval.spatial_alignment(benchmark_map=benchmark_map)
+def test_data_set_accessor_homogenize(candidate_map, benchmark_map):
+    data = candidate_map.gval.homogenize(benchmark_map=benchmark_map)
 
     assert isinstance(data[0], xr.Dataset)
     assert isinstance(data[1], xr.Dataset)
@@ -123,7 +123,7 @@ def test_data_set_accessor_spatial_alignment(candidate_map, benchmark_map):
     "candidate_map, benchmark_map", glob="data_set_accessor_compute_agreement"
 )
 def test_data_set_accessor_compute_agreement_success(candidate_map, benchmark_map):
-    aligned_cand, aligned_bench = candidate_map.gval.spatial_alignment(
+    aligned_cand, aligned_bench = candidate_map.gval.homogenize(
         benchmark_map=benchmark_map
     )
     data = aligned_cand.gval.compute_agreement_map(benchmark_map=aligned_bench)
@@ -143,7 +143,7 @@ def test_data_set_accessor_compute_agreement_fail(candidate_map, benchmark_map):
     "candidate_map, benchmark_map", glob="data_set_accessor_crosstab_table_success"
 )
 def test_data_set_accessor_crosstab_table_success(candidate_map, benchmark_map):
-    aligned_cand, aligned_bench = candidate_map.gval.spatial_alignment(
+    aligned_cand, aligned_bench = candidate_map.gval.homogenize(
         benchmark_map=benchmark_map
     )
     data = aligned_cand.gval.compute_crosstab(benchmark_map=aligned_bench)

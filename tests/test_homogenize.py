@@ -8,6 +8,7 @@ __author__ = "Fernando Aristizabal"
 from pytest import raises
 from pytest_cases import parametrize_with_cases
 import xarray as xr
+import numpy as np
 
 from gval.homogenize.spatial_alignment import (
     _matching_crs,
@@ -16,6 +17,7 @@ from gval.homogenize.spatial_alignment import (
     _align_rasters,
     _spatial_alignment,
 )
+from gval.homogenize.numeric_alignment import _align_numeric_data_type
 from gval.homogenize.rasterize import _rasterize_data
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
 
@@ -174,4 +176,72 @@ def test_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attribute
             candidate_map=candidate_map,
             benchmark_map=benchmark_map,
             rasterize_attributes=rasterize_attributes,
+        )
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected", glob="numeric_align_dataarrays"
+)
+def test_numeric_align_dataarrays(candidate_map, benchmark_map, expected):
+    """Tests numeric alignment"""
+
+    c, b = _align_numeric_data_type(candidate_map, benchmark_map)
+
+    assert c.data.dtype == expected
+    assert b.data.dtype == expected
+
+    assert np.isclose(
+        float(
+            np.mean(
+                xr.where(candidate_map == candidate_map.rio.nodata, 0, candidate_map)
+            )
+        ),
+        float(np.mean(xr.where(c == c.rio.nodata, 0, c))),
+    )
+    assert np.isclose(
+        float(
+            np.mean(
+                xr.where(benchmark_map == benchmark_map.rio.nodata, 0, benchmark_map)
+            )
+        ),
+        float(np.mean(xr.where(b == b.rio.nodata, 0, b))),
+    )
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, expected", glob="numeric_align_datasets"
+)
+def test_numeric_align_datasets(candidate_map, benchmark_map, expected):
+    """Tests numeric alignment for datasets"""
+
+    c, b = _align_numeric_data_type(candidate_map, benchmark_map)
+
+    for c_var, cand_var in zip(c.data_vars, candidate_map.data_vars):
+        assert c[c_var].data.dtype == expected
+        assert np.isclose(
+            float(
+                np.mean(
+                    xr.where(
+                        candidate_map[cand_var] == candidate_map[cand_var].rio.nodata,
+                        0,
+                        candidate_map[cand_var],
+                    )
+                )
+            ),
+            float(np.mean(xr.where(c[c_var] == c[c_var].rio.nodata, 0, c[c_var]))),
+        )
+
+    for b_var, bench_var in zip(b.data_vars, benchmark_map.data_vars):
+        assert b[b_var].data.dtype == expected
+        assert np.isclose(
+            float(
+                np.mean(
+                    xr.where(
+                        benchmark_map[bench_var] == benchmark_map[bench_var].rio.nodata,
+                        0,
+                        benchmark_map[bench_var],
+                    )
+                )
+            ),
+            float(np.mean(xr.where(b[b_var] == b[b_var].rio.nodata, 0, b[b_var]))),
         )

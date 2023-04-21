@@ -9,6 +9,7 @@ from pandera.typing import DataFrame
 import geopandas as gpd
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
+from gval.homogenize.numeric_alignment import _align_numeric_data_type
 from gval import Comparison
 from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
@@ -113,9 +114,13 @@ class GVALXarray:
 
         self.check_same_type(benchmark_map)
 
+        candidate, benchmark = _align_numeric_data_type(
+            candidate_map=self._obj, benchmark_map=benchmark_map
+        )
+
         candidate, benchmark = _spatial_alignment(
-            candidate_map=self._obj,
-            benchmark_map=benchmark_map,
+            candidate_map=candidate,
+            benchmark_map=benchmark,
             target_map=target_map,
             resampling=resampling,
         )
@@ -148,12 +153,11 @@ class GVALXarray:
 
         return agreement_map, crosstab_df, metrics_df
 
-    def spatial_alignment(
+    def homogenize(
         self,
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
         target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
         resampling: Optional[Resampling] = Resampling.nearest,
-        rasterize_attributes: Optional[list] = None,
     ) -> Union[xr.Dataset, xr.DataArray]:
         """
         Reproject :class:`xarray.Dataset` objects
@@ -180,9 +184,13 @@ class GVALXarray:
         """
         self.check_same_type(benchmark_map)
 
+        candidate, benchmark = _align_numeric_data_type(
+            candidate_map=self._obj, benchmark_map=benchmark_map
+        )
+
         candidate, benchmark = _spatial_alignment(
-            candidate_map=self._obj,
-            benchmark_map=benchmark_map,
+            candidate_map=candidate,
+            benchmark_map=benchmark,
             target_map=target_map,
             resampling=resampling,
         )

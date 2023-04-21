@@ -1,5 +1,5 @@
 """
-Test cases for test_spatial_alignment.py
+Test cases for test_homogenize.py
 """
 
 # __all__ = ['*']
@@ -278,3 +278,62 @@ rasterize_attrs_fail = [["fail"], ["hwmTypeName"]]
 )
 def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attributes):
     return candidate_map, benchmark_map, rasterize_attributes
+
+
+candidate_int32 = _load_xarray("candidate_map_0.tif")
+candidate_float64 = _load_xarray("candidate_map_1.tif")
+benchmark_map_uint8 = _load_xarray("benchmark_map_0.tif")
+benchmark_map_float32 = _load_xarray("benchmark_map_1.tif")
+
+expected_type = [np.int32, np.float32, float, float]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, expected",
+    list(
+        zip(
+            [candidate_int32, candidate_int32, candidate_float64, candidate_float64],
+            [
+                benchmark_map_uint8,
+                benchmark_map_float32,
+                benchmark_map_uint8,
+                benchmark_map_float32,
+            ],
+            expected_type,
+        )
+    ),
+)
+def case_numeric_align_dataarrays(candidate_map, benchmark_map, expected):
+    return candidate_map, benchmark_map, expected
+
+
+candidate_int32ds = _load_xarray("candidate_map_0.tif", band_as_variable=True)
+candidate_float64ds = _load_xarray("candidate_map_1.tif", band_as_variable=True)
+benchmark_map_uint8ds = _load_xarray("benchmark_map_0.tif", band_as_variable=True)
+benchmark_map_float32ds = _load_xarray("benchmark_map_1.tif", band_as_variable=True)
+
+expected_type = [np.int32, np.float32, float, float]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, expected",
+    list(
+        zip(
+            [
+                candidate_int32ds,
+                candidate_int32ds,
+                candidate_float64ds,
+                candidate_float64ds,
+            ],
+            [
+                benchmark_map_uint8ds,
+                benchmark_map_float32ds,
+                benchmark_map_uint8ds,
+                benchmark_map_float32ds,
+            ],
+            expected_type,
+        )
+    ),
+)
+def case_numeric_align_datasets(candidate_map, benchmark_map, expected):
+    return candidate_map, benchmark_map, expected

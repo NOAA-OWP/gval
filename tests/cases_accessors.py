@@ -66,7 +66,7 @@ def case_data_array_accessor_fail(
 @parametrize(
     "candidate_map, benchmark_map", list(zip(candidate_maps[0:1], benchmark_maps[0:1]))
 )
-def case_data_array_accessor_spatial_alignment(candidate_map, benchmark_map):
+def case_data_array_accessor_homogenize(candidate_map, benchmark_map):
     return candidate_map, benchmark_map
 
 
@@ -115,7 +115,7 @@ def case_data_set_accessor_success(
 @parametrize(
     "candidate_map, benchmark_map", list(zip(candidate_datasets, benchmark_datasets))
 )
-def case_data_set_accessor_spatial_alignment(candidate_map, benchmark_map):
+def case_data_set_accessor_homogenize(candidate_map, benchmark_map):
     return candidate_map, benchmark_map
 
 
