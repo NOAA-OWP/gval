@@ -5,16 +5,21 @@ from pandas import DataFrame
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, positive_categories, negative_categories",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes",
     glob="data_array_accessor_success",
 )
 def test_data_array_accessor_success(
-    candidate_map, benchmark_map, positive_categories, negative_categories
+    candidate_map,
+    benchmark_map,
+    positive_categories,
+    negative_categories,
+    rasterize_attributes,
 ):
     data = candidate_map.gval.categorical_compare(
         benchmark_map=benchmark_map,
         positive_categories=positive_categories,
         negative_categories=negative_categories,
+        rasterize_attributes=rasterize_attributes,
     )
 
     assert isinstance(data[0], xr.DataArray)
@@ -38,10 +43,15 @@ def test_data_array_accessor_fail(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map", glob="data_array_accessor_homogenize"
+    "candidate_map, benchmark_map, rasterize_attributes",
+    glob="data_array_accessor_homogenize",
 )
-def test_data_array_accessor_homogenize(candidate_map, benchmark_map):
-    data = candidate_map.gval.homogenize(benchmark_map=benchmark_map)
+def test_data_array_accessor_homogenize(
+    candidate_map, benchmark_map, rasterize_attributes
+):
+    data = candidate_map.gval.homogenize(
+        benchmark_map=benchmark_map, rasterize_attributes=rasterize_attributes
+    )
 
     assert isinstance(data[0], xr.DataArray)
     assert isinstance(data[1], xr.DataArray)
@@ -92,16 +102,21 @@ def test_data_array_accessor_crosstab_table_fail(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, positive_categories, negative_categories",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes",
     glob="data_set_accessor_success",
 )
 def test_data_set_accessor_success(
-    candidate_map, benchmark_map, positive_categories, negative_categories
+    candidate_map,
+    benchmark_map,
+    positive_categories,
+    negative_categories,
+    rasterize_attributes,
 ):
     data = candidate_map.gval.categorical_compare(
         benchmark_map=benchmark_map,
         positive_categories=positive_categories,
         negative_categories=negative_categories,
+        rasterize_attributes=rasterize_attributes,
     )
 
     assert isinstance(data[0], xr.Dataset)
@@ -110,10 +125,15 @@ def test_data_set_accessor_success(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map", glob="data_set_accessor_homogenize"
+    "candidate_map, benchmark_map, rasterize_attributes",
+    glob="data_set_accessor_homogenize",
 )
-def test_data_set_accessor_homogenize(candidate_map, benchmark_map):
-    data = candidate_map.gval.homogenize(benchmark_map=benchmark_map)
+def test_data_set_accessor_homogenize(
+    candidate_map, benchmark_map, rasterize_attributes
+):
+    data = candidate_map.gval.homogenize(
+        benchmark_map=benchmark_map, rasterize_attributes=rasterize_attributes
+    )
 
     assert isinstance(data[0], xr.Dataset)
     assert isinstance(data[1], xr.Dataset)
@@ -152,10 +172,10 @@ def test_data_set_accessor_crosstab_table_success(candidate_map, benchmark_map):
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, exception",
+    "candidate_map, benchmark_map",
     glob="data_set_accessor_crosstab_table_fail",
 )
-def test_data_set_accessor_crosstab_table_fail(candidate_map, benchmark_map, exception):
+def test_data_set_accessor_crosstab_table_fail(candidate_map, benchmark_map):
     with raises(IndexError):
         _ = candidate_map.gval.compute_crosstab(benchmark_map=benchmark_map)
 
@@ -172,34 +192,3 @@ def test_data_frame_accessor_compute_metrics(
     )
 
     assert isinstance(data, DataFrame)
-
-
-@parametrize_with_cases(
-    "candidate_map, benchmark_map, rasterize_attributes",
-    glob="data_frame_rasterize_vector_success",
-)
-def test_data_frame_rasterize_vector_success(
-    candidate_map, benchmark_map, rasterize_attributes
-):
-    """Tests rasterize vector fail"""
-
-    b = benchmark_map.gval.rasterize_data(
-        target_map=candidate_map, rasterize_attributes=rasterize_attributes
-    )
-
-    assert isinstance(b, xr.DataArray)
-
-
-@parametrize_with_cases(
-    "candidate_map, benchmark_map, rasterize_attributes",
-    glob="data_frame_rasterize_vector_fail",
-)
-def test_data_frame_rasterize_vector_fail(
-    candidate_map, benchmark_map, rasterize_attributes
-):
-    """Tests rasterize vector fail"""
-
-    with raises(TypeError):
-        _ = benchmark_map.gval.rasterize_data(
-            target_map=candidate_map, rasterize_attributes=rasterize_attributes
-        )

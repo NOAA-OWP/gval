@@ -216,8 +216,12 @@ def test_numeric_align_datasets(candidate_map, benchmark_map, expected):
 
     c, b = _align_numeric_data_type(candidate_map, benchmark_map)
 
-    for c_var, cand_var in zip(c.data_vars, candidate_map.data_vars):
+    for c_var, cand_var, b_var, bench_var in zip(
+        c.data_vars, candidate_map.data_vars, b.data_vars, benchmark_map.data_vars
+    ):
         assert c[c_var].data.dtype == expected
+        assert b[b_var].data.dtype == expected
+
         assert np.isclose(
             float(
                 np.mean(
@@ -231,8 +235,6 @@ def test_numeric_align_datasets(candidate_map, benchmark_map, expected):
             float(np.mean(xr.where(c[c_var] == c[c_var].rio.nodata, 0, c[c_var]))),
         )
 
-    for b_var, bench_var in zip(b.data_vars, benchmark_map.data_vars):
-        assert b[b_var].data.dtype == expected
         assert np.isclose(
             float(
                 np.mean(

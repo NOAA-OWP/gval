@@ -44,12 +44,16 @@ def _align_numeric_dtype(
         adjusted_map = original_map.copy(
             data=xr.where(
                 original_map == original_map.rio.nodata,
-                original_map.rio.nodata,
+                target_map.data.dtype.type(original_map.rio.nodata),
                 original_map_data,
             )
         )
-        adjusted_map = adjusted_map.rio.set_nodata(original_map.rio.nodata)
-        adjusted_map.rio.write_nodata(original_map.rio.nodata, encoded=True)
+        adjusted_map = adjusted_map.rio.set_nodata(
+            target_map.data.dtype.type(original_map.rio.nodata)
+        )
+        adjusted_map.rio.write_nodata(
+            target_map.data.dtype.type(original_map.rio.nodata), encoded=True
+        )
 
         return adjusted_map
 
@@ -85,13 +89,15 @@ def _align_datasets_dtype(
     Tuple[xr.Dataset, xr.Dataset]
 
     """
+    candidate = candidate_map.copy(deep=True)
+    benchmark = benchmark_map.copy(deep=True)
 
-    for c_var, b_var in zip(candidate_map.data_vars, benchmark_map.data_vars):
-        candidate_map[c_var], benchmark_map[b_var] = _align_numeric_dtype(
-            candidate_map[c_var], benchmark_map[b_var]
+    for c_var, b_var in zip(candidate.data_vars, benchmark.data_vars):
+        candidate[c_var], benchmark[b_var] = _align_numeric_dtype(
+            candidate[c_var], benchmark[b_var]
         )
 
-    return candidate_map, benchmark_map
+    return candidate, benchmark
 
 
 def _align_numeric_data_type(

@@ -9,6 +9,7 @@ from pandera.typing import DataFrame
 import geopandas as gpd
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
+from gval.homogenize.rasterize import _rasterize_data
 from gval.homogenize.numeric_alignment import _align_numeric_data_type
 from gval import Comparison
 from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
@@ -66,6 +67,7 @@ class GVALXarray:
         exclude_value: Optional[Number] = None,
         positive_categories: Optional[Union[Number, Iterable[Number]]] = None,
         negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
+        rasterize_attributes: Optional[list] = None,
     ) -> Tuple[
         Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
     ]:
@@ -105,12 +107,21 @@ class GVALXarray:
             Categories to represent positive entries
         negative_categories: Optional[Union[Number, Iterable[Number]]], default = None
             Categories to represent negative entries
+        rasterize_attributes: Optional[list], default = None
+            Numerical attributes of a GeoDataFrame to rasterize
 
         Returns
         -------
         Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
             Tuple with agreement map, cross-tabulation table, and metric table
         """
+
+        if isinstance(benchmark_map, gpd.GeoDataFrame):
+            benchmark_map = _rasterize_data(
+                candidate_map=self._obj,
+                benchmark_map=benchmark_map,
+                rasterize_attributes=rasterize_attributes,
+            )
 
         self.check_same_type(benchmark_map)
 
@@ -151,6 +162,8 @@ class GVALXarray:
             negative_categories=negative_categories,
         )
 
+        del candidate, benchmark
+
         return agreement_map, crosstab_df, metrics_df
 
     def homogenize(
@@ -158,6 +171,7 @@ class GVALXarray:
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
         target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
         resampling: Optional[Resampling] = Resampling.nearest,
+        rasterize_attributes: Optional[list] = None,
     ) -> Union[xr.Dataset, xr.DataArray]:
         """
         Reproject :class:`xarray.Dataset` objects
@@ -176,12 +190,22 @@ class GVALXarray:
             xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
         resampling: rasterio.enums.Resampling
             See :func:`rasterio.warp.reproject` for more details.
+        rasterize_attributes: Optional[list], default = None
+            Numerical attributes of a GeoDataFrame to rasterize
 
         Returns
         --------
         Union[xr.Dataset, xr.DataArray]
             Tuple with candidate and benchmark map respectively.
         """
+
+        if isinstance(benchmark_map, gpd.GeoDataFrame):
+            benchmark_map = _rasterize_data(
+                candidate_map=self._obj,
+                benchmark_map=benchmark_map,
+                rasterize_attributes=rasterize_attributes,
+            )
+
         self.check_same_type(benchmark_map)
 
         candidate, benchmark = _align_numeric_data_type(
