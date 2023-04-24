@@ -1,5 +1,5 @@
 """
-Test cases for test_spatial_alignment.py
+Test cases for test_homogenize.py
 """
 
 # __all__ = ['*']
@@ -278,3 +278,54 @@ rasterize_attrs_fail = [["fail"], ["hwmTypeName"]]
 )
 def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attributes):
     return candidate_map, benchmark_map, rasterize_attributes
+
+
+expected_type = [np.int32, np.float32, float, float]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, expected",
+    list(
+        zip(
+            [
+                _load_xarray("candidate_map_0.tif"),
+                _load_xarray("candidate_map_0.tif"),
+                _load_xarray("candidate_map_1.tif"),
+                _load_xarray("candidate_map_1.tif"),
+            ],
+            [
+                _load_xarray("benchmark_map_0.tif"),
+                _load_xarray("benchmark_map_1.tif"),
+                _load_xarray("benchmark_map_0.tif"),
+                _load_xarray("benchmark_map_1.tif"),
+            ],
+            expected_type,
+        )
+    ),
+)
+def case_numeric_align_dataarrays(candidate_map, benchmark_map, expected):
+    return candidate_map, benchmark_map, expected
+
+
+@parametrize(
+    "candidate_map, benchmark_map, expected",
+    list(
+        zip(
+            [
+                _load_xarray("candidate_map_0.tif", band_as_variable=True),
+                _load_xarray("candidate_map_0.tif", band_as_variable=True),
+                _load_xarray("candidate_map_1.tif", band_as_variable=True),
+                _load_xarray("candidate_map_1.tif", band_as_variable=True),
+            ],
+            [
+                _load_xarray("benchmark_map_0.tif", band_as_variable=True),
+                _load_xarray("benchmark_map_1.tif", band_as_variable=True),
+                _load_xarray("benchmark_map_0.tif", band_as_variable=True),
+                _load_xarray("benchmark_map_1.tif", band_as_variable=True),
+            ],
+            expected_type,
+        )
+    ),
+)
+def case_numeric_align_datasets(candidate_map, benchmark_map, expected):
+    return candidate_map, benchmark_map, expected
