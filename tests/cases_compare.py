@@ -123,7 +123,15 @@ dict_with_nans_data = [
     ({(np.nan, 1): 1, (2, np.float32(np.nan)): 2, (np.float64(np.nan), 5): 3})
 ]
 
-expected_dict_data = [({("NaN", 1): 1, (2, "NaN"): 2, ("NaN", 5): 3})]
+expected_dict_data = [
+    (
+        {
+            (np.finfo(float).max, 1): 1,
+            (2, np.finfo(float).max): 2,
+            (np.finfo(float).max, 5): 3,
+        }
+    )
+]
 
 
 @parametrize(
@@ -919,7 +927,7 @@ def case_comparison_register_class_fail(args, cls, exception):
 
 
 stat_funcs = ["szudzik", "pairing_dict"]
-stat_params = [["c", "b"], ["c", "b", "pairing_dict"]]
+stat_params = [["c", "b"], ["c", "b"]]
 
 
 @parametrize("name, params", list(zip(stat_funcs, stat_params)))
