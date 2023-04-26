@@ -8,8 +8,6 @@ import numba as nb
 import xarray as xr
 
 from gval.comparison.pairing_functions import (
-    _make_pairing_dict,
-    pairing_dict_fn,
     cantor_pair_signed,
     szudzik_pair_signed,
 )
@@ -35,7 +33,7 @@ class ComparisonProcessing:
     def __init__(self):
         # Populates default functions for pairing functions
         self._func_names = ["pairing_dict", "cantor", "szudzik"]
-        self._funcs = [pairing_dict_fn, cantor_pair_signed, szudzik_pair_signed]
+        self._funcs = ["pairing_dict", cantor_pair_signed, szudzik_pair_signed]
 
         for name, func in zip(self._func_names, self._funcs):
             setattr(self, name, func)
@@ -50,7 +48,7 @@ class ComparisonProcessing:
         self.registered_functions = {
             name: {"params": func_params}
             for name, func_params in zip(
-                self._func_names, [["c", "b", "pairing_dict"], ["c", "b"], ["c", "b"]]
+                self._func_names, [["c", "b"], ["c", "b"], ["c", "b"]]
             )
         }
 
@@ -235,26 +233,6 @@ class ComparisonProcessing:
         """
 
         if isinstance(kwargs["comparison_function"], str):
-            if kwargs["comparison_function"] == "pairing_dict":
-                if (
-                    kwargs.get("pairing_dict") is None
-                ):  # this is used for when pairing_dict is not passed
-                    # user must set arguments to build pairing dict, throws value error
-                    # TODO: consider allow use of unique to acquire all values from candidate and benchmarks
-                    if (kwargs.get("allow_candidate_values") is None) | (
-                        kwargs.get("allow_benchmark_values") is None
-                    ):
-                        raise ValueError(
-                            "When comparison_function argument is set to 'pairing_dict', must pass values for "
-                            "allow_candidate_values and allow_benchmark_values arguments."
-                        )
-
-                    # this creates the pairing dictionary from the passed allowed values
-                    kwargs["pairing_dict"] = _make_pairing_dict(
-                        kwargs.get("allow_candidate_values"),
-                        kwargs.get("allow_benchmark_values"),
-                    )
-
             if kwargs["comparison_function"] in self.registered_functions:
                 kwargs["comparison_function"] = getattr(
                     self, kwargs["comparison_function"]

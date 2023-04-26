@@ -19,7 +19,7 @@ from gval.comparison.pairing_functions import (
     szudzik_pair,
     szudzik_pair_signed,
     _make_pairing_dict,
-    pairing_dict_fn,
+    _make_pairing_dict_fn,
     PairingDict,
 )
 from gval.comparison.agreement import _compute_agreement_map
@@ -111,7 +111,8 @@ def test_make_pairing_dict(
 def test_pairing_dict_fn(c, b, pairing_dict, expected_value):
     """Tests pairing dictionary function"""
 
-    computed_value = pairing_dict_fn(c, b, pairing_dict)
+    pairing_dict_fn = _make_pairing_dict_fn(pairing_dict)
+    computed_value = pairing_dict_fn(c, b)
 
     np.testing.assert_equal(computed_value, expected_value)
 
