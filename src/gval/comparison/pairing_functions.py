@@ -366,18 +366,24 @@ def _make_pairing_dict_fn(
             Value combination found not accounted for in pairing dictionary
         """
 
+        nans = 0
         if np.isnan(c):
             c = replacement_value
+            nans = 1
 
         if np.isnan(b):
             b = replacement_value
+            nans = 1
 
         for key1, key2, value in zip(keys1, keys2, values):
             if c == key1 and b == key2:
                 return value
 
-        raise KeyError(
-            "Value combination found not accounted for in pairing dictionary"
-        )
+        if nans == 1:
+            return np.nan
+        else:
+            raise KeyError(
+                "Value combination found not accounted for in pairing dictionary"
+            )
 
     return nb.vectorize(nopython=True)(pairing_dict_fn)

@@ -137,7 +137,7 @@ def _compute_agreement_map(
         - If names are not to be tested, consider using `tests.conftest._assert_pairing_dict_equal()` for attribute testing.
     """
 
-    def _manage_information_loss(agreement_map, nodata, encode_nodata):
+    def _manage_information_loss(agreement_map, crs, nodata, encode_nodata, dtype):
         """
         Manages the information loss due to `xr.apply_ufunc`
 
@@ -145,19 +145,22 @@ def _compute_agreement_map(
         """
 
         # sets CRS that is lost with `xr.apply_ufunc`
-        agreement_map.rio.set_crs(candidate_map.rio.crs, inplace=True)
+        agreement_map.rio.set_crs(crs, inplace=True)
 
         # setting agreement map nodata and encoded nodata
         if nodata is not None:
             # this masks the desired nodata value within agreement
             if encode_nodata:
-                # TODO: While currently using float, more management and testing for various input dtype combinations vs output dtypes is required.
-                agreement_map = agreement_map.astype(float).where(
+                agreement_map = agreement_map.astype(dtype).where(
                     agreement_map != nodata
                 )
 
-            # writes no data and encoded no data if set
-            agreement_map.rio.write_nodata(nodata, encoded=encode_nodata, inplace=True)
+                # writes no data and encoded no data if set
+                agreement_map.rio.write_nodata(
+                    nodata, encoded=encode_nodata, inplace=True
+                )
+            else:
+                agreement_map.rio.set_nodata(nodata, inplace=True)
 
         return agreement_map
 
@@ -192,10 +195,22 @@ def _compute_agreement_map(
         comparison_function, *ufunc_args, **apply_ufunc_kwargs
     )
 
-    agreement_map = _manage_information_loss(
-        agreement_map=agreement_map,
-        nodata=nodata,
-        encode_nodata=encode_nodata,
-    )
+    if isinstance(candidate_map, xr.DataArray):
+        agreement_map = _manage_information_loss(
+            agreement_map=agreement_map,
+            crs=candidate_map.rio.crs,
+            nodata=nodata,
+            encode_nodata=encode_nodata,
+            dtype=candidate_map.dtype,
+        )
+    else:
+        for c_var, a_var in zip(candidate_map.data_vars, agreement_map.data_vars):
+            agreement_map[a_var] = _manage_information_loss(
+                agreement_map=agreement_map[a_var],
+                crs=candidate_map[c_var].rio.crs,
+                nodata=nodata,
+                encode_nodata=encode_nodata,
+                dtype=candidate_map[c_var].dtype,
+            )
 
     return agreement_map
