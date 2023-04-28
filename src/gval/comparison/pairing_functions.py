@@ -13,9 +13,8 @@ TODO:
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Tuple
+from typing import Iterable, Tuple, Optional
 from numbers import Number
-from functools import partial
 
 import numpy as np
 import numba as nb
@@ -223,12 +222,15 @@ class PairingDict(dict):
         Value to use instead of np.nan.
     """
 
-    # TODO: Perhaps this could be np.finfo(float).max
-    replacement_value = "NaN"
-
     def __init__(self, *args, **kwargs):
         # make a tmp dict with
         tmp_dict = dict(*args, **kwargs)
+        dtype = type(np.array(list(tmp_dict.keys()))[0][0])
+
+        if issubclass(dtype, np.integer):
+            self.replacement_value = np.iinfo(dtype).max
+        else:
+            self.replacement_value = np.finfo(dtype).max
 
         # initialize self
         super().__init__()
@@ -280,13 +282,19 @@ def _make_pairing_dict(
         Unique values in candidate map to create pairing dict with.
     unique_benchmark_values : Iterable
         Unique values in benchmark map to create pairing dict with.
-
     Returns
     -------
     dict[Tuple[Number, Number], Number]
         Dictionary with keys consisting of unique pairings of candidate and benchmark values with value of agreement map for given pairing.
     """
     from itertools import product
+
+    # TODO: consider allow use of unique to acquire all values from candidate and benchmarks
+    if (unique_candidate_values is None) | (unique_benchmark_values is None):
+        raise ValueError(
+            "When comparison_function argument is set to 'pairing_dict', must pass values for "
+            "allow_candidate_values and allow_benchmark_values arguments."
+        )
 
     pairing_dict = {
         k: v
@@ -297,32 +305,85 @@ def _make_pairing_dict(
     return PairingDict(pairing_dict)
 
 
-vectorize_partial = partial(np.vectorize, otypes=[float])
-
-
-# REVALUATE Performance
-@vectorize_partial
-def pairing_dict_fn(
-    c: Number,
-    b: Number,
-    pairing_dict: dict[Tuple[Number, Number], Number],
-) -> Number:  # pragma: no cover
+def _make_pairing_dict_fn(
+    pairing_dict: Optional[dict] = None,
+    unique_candidate_values: Optional[Iterable] = None,
+    unique_benchmark_values: Optional[Iterable] = None,
+) -> dict[Tuple[Number, Number], Number]:
     """
-    Produces a pairing dictionary that produces a unique result for every combination ranging from 256 to the number of combinations.
+    Creates a unique value in candidate and benchmark arrays.
 
     Parameters
     ----------
-    c : Number
-        Candidate map value.
-    b : Number
-        Benchmark map value.
-    pairing_dict : dict[Tuple[Number, Number], Number]
-        Dictionary with keys of tuple with (c,b) and value to map agreement value to.
+    pairing_dict : Optional[dict], default = None
+        User provided dictionary of unique encodings
+    unique_candidate_values : Optional[Iterable], default = None
+        Unique values in candidate map to create pairing dict with.
+    unique_benchmark_values : Optional[Iterable], default = None
+        Unique values in benchmark map to create pairing dict with.
 
     Returns
     -------
-    Number
-        Agreement map value.
+    dict[Tuple[Number, Number], Number]
+        Dictionary with keys consisting of unique pairings of candidate and benchmark values with value of agreement
+        map for given pairing.
     """
 
-    return pairing_dict[(c, b)]
+    pairing_dict = (
+        _make_pairing_dict(unique_candidate_values, unique_benchmark_values)
+        if pairing_dict is None
+        else PairingDict(pairing_dict)
+    )
+
+    # Populate
+    replacement_value = pairing_dict.replacement_value
+    keys = np.array(list(pairing_dict.keys()))
+    keys1, keys2 = keys[:, 0], keys[:, 1]
+    values = np.array(list(pairing_dict.values()))
+
+    def pairing_dict_fn(
+        c: Number,
+        b: Number,
+    ) -> Number:  # pragma: no cover
+        """
+        Produces a pairing dictionary that produces a unique result for every combination ranging from 256 to the number of combinations.
+
+        Parameters
+        ----------
+        c : Number
+            Candidate map value.
+        b : Number
+            Benchmark map value.
+
+        Returns
+        -------
+        Number
+            Agreement map value.
+
+        Raises
+        ------
+        KeyError
+            Value combination found not accounted for in pairing dictionary
+        """
+
+        nans = 0
+        if np.isnan(c):
+            c = replacement_value
+            nans = 1
+
+        if np.isnan(b):
+            b = replacement_value
+            nans = 1
+
+        for key1, key2, value in zip(keys1, keys2, values):
+            if c == key1 and b == key2:
+                return value
+
+        if nans == 1:
+            return np.nan
+        else:
+            raise KeyError(
+                "Value combination found not accounted for in pairing dictionary"
+            )
+
+    return nb.vectorize(nopython=True)(pairing_dict_fn)
