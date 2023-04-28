@@ -1,4 +1,4 @@
-from typing import Iterable, Optional, Tuple, Union, Callable
+from typing import Iterable, Optional, Tuple, Union, Callable, Dict
 from numbers import Number
 
 import numpy as np
@@ -59,7 +59,7 @@ class GVALXarray:
         metrics: Union[str, Iterable[str]] = "all",
         target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
         resampling: Optional[Resampling] = Resampling.nearest,
-        pairing_dict: Optional[dict[Tuple[Number, Number], Number]] = None,
+        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]] = None,
         allow_candidate_values: Optional[Iterable[Union[int, float]]] = None,
         allow_benchmark_values: Optional[Iterable[Union[int, float]]] = None,
         nodata: Optional[Number] = None,
@@ -87,7 +87,7 @@ class GVALXarray:
             xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
         resampling : rasterio.enums.Resampling
             See :func:`rasterio.warp.reproject` for more details.
-        pairing_dict: Optional[dict[Tuple[Number, Number], Number]], default = None
+        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]], default = None
             When "pairing_dict" is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as `{(c, b) : a}` where `(c, b)` is a tuple of the candidate and benchmark value pairing, respectively, and `a` is the value for the agreement array to be used for this pairing.
 
             If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.
@@ -227,7 +227,7 @@ class GVALXarray:
         comparison_function: Union[
             Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
         ] = "szudzik",
-        pairing_dict: Optional[dict[Tuple[Number, Number], Number]] = None,
+        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]] = None,
         allow_candidate_values: Optional[Iterable[Union[int, float]]] = None,
         allow_benchmark_values: Optional[Iterable[Union[int, float]]] = None,
         nodata: Optional[Number] = None,
@@ -242,7 +242,7 @@ class GVALXarray:
             Benchmark map.
         comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
             Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
-        pairing_dict: Optional[dict[Tuple[Number, Number], Number]], default = None
+        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]], default = None
             When "pairing_dict" is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as `{(c, b) : a}` where `(c, b)` is a tuple of the candidate and benchmark value pairing, respectively, and `a` is the value for the agreement array to be used for this pairing.
 
             If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.
