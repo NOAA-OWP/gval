@@ -7,6 +7,7 @@ __author__ = "Fernando Aristizabal"
 
 from typing import List, Optional
 
+import pandas as pd
 import pandera as pa
 from pandera.typing import Series, Index, Int64
 
@@ -62,11 +63,27 @@ class Crosstab_df(Sample_identifiers):  # pragma: no cover
         strict = True
 
 
+class Pivoted_crosstab_df(pa.DataFrameModel):  # pragma: no cover
+    """Pivoted Crosstab DF schema"""
+
+    row_idx: Index[Int64] = pa.Index(name="candidate_values")
+    col_idx: Series[str]
+
+    class Config:
+        coerce = True
+        strict = True
+
+    @pa.dataframe_check
+    def column_index_name(cls, df: pd.DataFrame) -> Series[bool]:
+        """Checks that column index name is 'benchmark_values'"""
+        return df.columns.name == "benchmark_values"
+
+
 class Conditions_df(Sample_identifiers):  # pragma: no cover
-    tp: Series[float]
-    tn: Series[float] = pa.Field(nullable=True)
-    fp: Series[float]
-    fn: Series[float]
+    tp: Optional[Series[float]]
+    tn: Optional[Series[float]] = pa.Field(nullable=True)
+    fp: Optional[Series[float]]
+    fn: Optional[Series[float]]
 
     class Config:
         coerce = True

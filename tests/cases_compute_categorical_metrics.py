@@ -8,6 +8,7 @@ __author__ = "Fernando Aristizabal"
 import numpy as np
 from pytest_cases import parametrize
 import pandas as pd
+from gval.utils.schemas import Metrics_df
 
 
 expected_dfs = [
@@ -377,3 +378,212 @@ def case_compute_categorical_metrics_fail(
     crosstab_df, positive_categories, negative_categories, exception
 ):
     return crosstab_df, positive_categories, negative_categories, exception
+
+
+multi_class_input_df = [
+    pd.DataFrame(
+        {
+            "band": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "candidate_values": [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4],
+            "benchmark_values": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
+            "counts": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        }
+    )
+] * 4 + [
+    pd.DataFrame(
+        {
+            "band": [1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+            "candidate_values": [1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 1, 2, 2, 2, 3, 3, 3],
+            "benchmark_values": [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
+            "counts": [1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        }
+    )
+]
+
+metrics = [
+    "critical_success_index",
+    ["critical_success_index", "f_score"],
+    ["critical_success_index", "f_score", "accuracy", "positive_predictive_value"],
+    ["f_score", "false_omission_rate", "false_discovery_rate"],
+    ["prevalence", "true_negative_rate", "true_positive_rate"],
+]
+
+positive_categories_input = [(1, 2), (1, 2, 3, 4), (1, 2, 3), 1, (1, 2, 3)]
+
+negative_categories_input = [(3, 4), None, None, None, None]
+
+averages_all = ["micro", "macro", "weighted", None, None]
+
+weights_all = [None, None, (1, 2, 3), None, None]
+
+expected_dfs = [
+    Metrics_df.validate(
+        pd.DataFrame(
+            {
+                "band": [1],
+                "fn": 19,
+                "fp": 7,
+                "tn": 38,
+                "tp": 14,
+                "critical_success_index": 0.35,
+            }
+        )
+    ),
+    Metrics_df.validate(
+        pd.DataFrame(
+            {"band": [1], "critical_success_index": 0.180775, "f_score": 0.29776}
+        )
+    ),
+    Metrics_df.validate(
+        pd.DataFrame(
+            {
+                "band": [1],
+                "critical_success_index": 0.34639,
+                "f_score": 0.49563,
+                "accuracy": 0.651515,
+                "positive_predictive_value": 0.428346,
+            }
+        )
+    ),
+    Metrics_df.validate(
+        pd.DataFrame(
+            {
+                "band": [1],
+                "positive_categories": 1,
+                "fn": 14,
+                "fp": 5,
+                "tn": np.nan,
+                "tp": 1,
+                "f_score": 0.095238,
+                "false_discovery_rate": 0.833333,
+            }
+        )
+    ),
+    Metrics_df.validate(
+        pd.DataFrame(
+            {
+                "band": [1, 2, 1, 2, 1, 2],
+                "positive_categories": [1, 1, 2, 2, 3, 3],
+                "fn": [11, 11, 10, 10, 9, 9],
+                "fp": [5, 5, 10, 10, 15, 15],
+                "tn": [28, 28, 20, 20, 12, 12],
+                "tp": [1, 1, 5, 5, 9, 9],
+                "prevalence": [
+                    0.133333,
+                    0.133333,
+                    0.333333,
+                    0.333333,
+                    0.533333,
+                    0.533333,
+                ],
+                "true_negative_rate": [
+                    0.848485,
+                    0.848485,
+                    0.666667,
+                    0.666667,
+                    0.444444,
+                    0.444444,
+                ],
+                "true_positive_rate": [
+                    0.083333,
+                    0.083333,
+                    0.333333,
+                    0.333333,
+                    0.5,
+                    0.5,
+                ],
+            }
+        )
+    ),
+]
+
+
+@parametrize(
+    "crosstab_df, metrics, positive_categories, negative_categories, average, weights, expected_df",
+    list(
+        zip(
+            multi_class_input_df,
+            metrics,
+            positive_categories_input,
+            negative_categories_input,
+            averages_all,
+            weights_all,
+            expected_dfs,
+        )
+    ),
+)
+def case_compute_multi_categorical_metrics_success(
+    crosstab_df,
+    metrics,
+    positive_categories,
+    negative_categories,
+    average,
+    weights,
+    expected_df,
+):
+    return (
+        crosstab_df,
+        metrics,
+        positive_categories,
+        negative_categories,
+        average,
+        weights,
+        expected_df,
+    )
+
+
+multi_class_input_df_fails = [
+    pd.DataFrame(
+        {
+            "band": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "candidate_values": [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4],
+            "benchmark_values": [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
+            "counts": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        }
+    )
+] * 4
+
+metrics = ["all", "all", "all", "all"]
+
+positive_categories_input = [1, 2, [1, 2], [1, 2]]
+negative_categories_input = [2, 1, 1, [3, 4]]
+
+averages_all_fails = ["macro", "weighted", "weighted", "macro"]
+
+weights_all_fails = [None, [2], [2], None]
+
+exceptions = [ValueError] * 4
+
+
+@parametrize(
+    "crosstab_df, metrics, positive_categories, negative_categories, average, weights, exception",
+    list(
+        zip(
+            multi_class_input_df_fails,
+            metrics,
+            positive_categories_input,
+            negative_categories_input,
+            averages_all_fails,
+            weights_all_fails,
+            exceptions,
+        )
+    ),
+)
+def case_compute_multi_categorical_metrics_fail(
+    crosstab_df,
+    metrics,
+    positive_categories,
+    negative_categories,
+    average,
+    weights,
+    exception,
+):
+    return (
+        crosstab_df,
+        metrics,
+        positive_categories,
+        negative_categories,
+        average,
+        weights,
+        exception,
+    )
