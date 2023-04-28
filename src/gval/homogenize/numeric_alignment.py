@@ -48,11 +48,16 @@ def _align_numeric_dtype(
                 original_map_data,
             )
         )
-        adjusted_map = adjusted_map.rio.set_nodata(
-            target_map.data.dtype.type(original_map.rio.nodata)
+
+        write_nodata = (
+            original_map.rio.encoded_nodata
+            if original_map.rio.encoded_nodata
+            else original_map.rio.nodata
         )
         adjusted_map.rio.write_nodata(
-            target_map.data.dtype.type(original_map.rio.nodata), encoded=True
+            target_map.data.dtype.type(write_nodata),
+            encoded=bool(original_map.rio.encoded_nodata),
+            inplace=True,
         )
 
         return adjusted_map
