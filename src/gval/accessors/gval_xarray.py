@@ -53,6 +53,7 @@ class GVALXarray:
     def categorical_compare(
         self,
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
+        positive_categories: Optional[Union[Number, Iterable[Number]]],
         comparison_function: Union[
             Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
         ] = "szudzik",
@@ -65,8 +66,9 @@ class GVALXarray:
         nodata: Optional[Number] = None,
         encode_nodata: Optional[bool] = False,
         exclude_value: Optional[Number] = None,
-        positive_categories: Optional[Union[Number, Iterable[Number]]] = None,
         negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
+        average: str = "micro",
+        weights: Optional[Iterable[Number]] = None,
         rasterize_attributes: Optional[list] = None,
     ) -> Tuple[
         Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
@@ -79,12 +81,14 @@ class GVALXarray:
         ----------
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray]
             Benchmark map in xarray DataSet format.
+        positive_categories : Optional[Union[Number, Iterable[Number]]]
+            Number or list of numbers representing the values to consider as the positive condition. For average types "macro" and "weighted", this represents the categories to compute metrics for.
         comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
             Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
         metrics: Union[str, Iterable[str]], default = "all"
-            Statistics to return in metric table
+            Statistics to return in metric table.
         target_map: Optional[Union[xr.Dataset, str]], default = "benchmark"
-            xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
+            xarray object to match the CRS's and coordinates of candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
         resampling : rasterio.enums.Resampling
             See :func:`rasterio.warp.reproject` for more details.
         pairing_dict: Optional[dict[Tuple[Number, Number], Number]], default = None
@@ -103,10 +107,19 @@ class GVALXarray:
             Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
         exclude_value : Optional[Number], default = None
             Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-        positive_categories: Optional[Union[Number, Iterable[Number]]], default = None
-            Categories to represent positive entries
-        negative_categories: Optional[Union[Number, Iterable[Number]]], default = None
-            Categories to represent negative entries
+        negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+            Number or list of numbers representing the values to consider as the negative condition. This should be set to None when no negative categories are used or when the average type is "macro" or "weighted".
+        average : str, default = "micro"
+            Type of average to use when computing metrics. Options are "micro", "macro", and "weighted".
+            Micro weighing computes the conditions, tp, tn, fp, and fn, for each category and then sums them.
+            Macro weighing computes the metrics for each category then averages them.
+            Weighted average computes the metrics for each category then averages them weighted by the number of weights argument in each category.
+        weights : Optional[Iterable[Number]], default = None
+            Weights to use when computing weighted average. Elements correspond to positive categories in order.
+
+            Example:
+
+            `positive_categories = [1, 2]; weights = [0.25, 0.75]`
         rasterize_attributes: Optional[list], default = None
             Numerical attributes of a GeoDataFrame to rasterize
 
@@ -160,6 +173,8 @@ class GVALXarray:
             metrics=metrics,
             positive_categories=positive_categories,
             negative_categories=negative_categories,
+            average=average,
+            weights=weights,
         )
 
         del candidate, benchmark
