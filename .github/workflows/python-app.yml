@@ -57,5 +57,4 @@ jobs:
         with:
           commit_message: 'Add coverage badge'
           push_options: '--force'
-          skip_checkout: true
           file_pattern: '*.svg'
