@@ -13,7 +13,7 @@ TODO:
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Tuple, Optional
+from typing import Iterable, Tuple, Optional, Dict
 from numbers import Number
 
 import numpy as np
@@ -272,7 +272,7 @@ class PairingDict(dict):
 
 def _make_pairing_dict(
     unique_candidate_values: Iterable, unique_benchmark_values: Iterable
-) -> dict[Tuple[Number, Number], Number]:
+) -> Dict[Tuple[Number, Number], Number]:
     """
     Creates a dict pairing each unique value in candidate and benchmark arrays.
 
@@ -284,7 +284,7 @@ def _make_pairing_dict(
         Unique values in benchmark map to create pairing dict with.
     Returns
     -------
-    dict[Tuple[Number, Number], Number]
+    Dict[Tuple[Number, Number], Number]
         Dictionary with keys consisting of unique pairings of candidate and benchmark values with value of agreement map for given pairing.
     """
     from itertools import product
@@ -309,7 +309,7 @@ def _make_pairing_dict_fn(
     pairing_dict: Optional[dict] = None,
     unique_candidate_values: Optional[Iterable] = None,
     unique_benchmark_values: Optional[Iterable] = None,
-) -> dict[Tuple[Number, Number], Number]:
+) -> Dict[Tuple[Number, Number], Number]:
     """
     Creates a unique value in candidate and benchmark arrays.
 
@@ -324,7 +324,7 @@ def _make_pairing_dict_fn(
 
     Returns
     -------
-    dict[Tuple[Number, Number], Number]
+    Dict[Tuple[Number, Number], Number]
         Dictionary with keys consisting of unique pairings of candidate and benchmark values with value of agreement
         map for given pairing.
     """
