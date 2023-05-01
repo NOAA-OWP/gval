@@ -21,18 +21,18 @@ sub-samples (zonal level metrics within maps).
 Completed functionality:
 
 - Homogenize candidate and benchmark rasters for comparisons.
-- Two-class categorical case for 2 or 3-dimensional rasters.
+- Two-class and multi-class categorical comparison case for 2 or
+    3-dimensional rasters.
 
 In-progress:
 
-- Documentation, Github actions, and multi-class categorical raster
-    comparisons.
+- Documentation, Github actions, and continuous statistic types.
 
 WARNING:
 
 - Our current public API and output formats are likely to change in
     the future.
-- Software is provided "AS-IS" without any guarentees. Please QA/QC
+- Software is provided "AS-IS" without any guarantees. Please QA/QC
     your metrics carefully until this project matures.
 
 # Installation
