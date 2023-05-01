@@ -53,6 +53,9 @@ jobs:
         uses: tj-actions/coverage-badge-py@v2
         with:
           output: docs/images/coverage.svg
+          commit_message: 'Add coverage badge'
+          push_options: '--force'
+          skip_checkout: true
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           file_pattern: '*.svg'
