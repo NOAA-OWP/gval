@@ -51,5 +51,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
       - name: Coverage Badge
         uses: tj-actions/coverage-badge-py@v2
-        with:
-          output: docs/images/coverage.svg
