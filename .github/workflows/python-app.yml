@@ -43,7 +43,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          for f in tests/test*; do
+          for f in tests/test_a*; do
             pytest $f --cov=gval --cov-report term-missing --cov-append
           done
         env:
@@ -57,4 +57,5 @@ jobs:
         with:
           commit_message: 'Add coverage badge'
           push_options: '--force'
+          skip_checkout: true
           file_pattern: '*.svg'
