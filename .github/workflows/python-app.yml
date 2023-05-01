@@ -49,5 +49,15 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      - name: Creating coverage folder
+        run: |
+          mkdir -p coverage
       - name: Coverage Badge
         uses: tj-actions/coverage-badge-py@v2
+        with:
+          output: coverage/coverage.svg
+      - name: Publish coverage report to coverage-badge branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: coverage-badge
+          folder: coverage
