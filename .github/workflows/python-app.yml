@@ -43,7 +43,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          for f in tests/test_a*; do
+          for f in tests/test*; do
             pytest $f --cov=gval --cov-report term-missing --cov-append
           done
         env:
