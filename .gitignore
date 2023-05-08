@@ -140,3 +140,7 @@ data/*
 # notebook files
 notebooks/agreement_map.tif
 notebooks/metric_file.csv
+
+#IDE
+.idea
+.idea.*
