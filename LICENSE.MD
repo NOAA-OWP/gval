@@ -5,7 +5,3 @@ than the United States for Software authored in its entirety by the Department
 of Commerce. To this end, the Department of Commerce hereby grants to Recipient
 a royalty-free, nonexclusive license to use, copy, and create derivative works
 of the Software outside of the United States.”
-
-
-
-![code coverage](https://raw.githubusercontent.com/NOAA-OWP/gval/coverage-badge/coverage.svg?raw=true)
