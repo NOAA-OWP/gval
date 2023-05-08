@@ -234,13 +234,13 @@ class CategoricalStatistics(BaseStatistics):
             raise KeyError("Statistic not found in registered functions")
 
     def process_statistics(
-        self, func_names: Union[str, list[str]], **kwargs
+        self, func_names: Union[str, list], **kwargs
     ) -> Tuple[float, str]:
         """
 
         Parameters
         ----------
-        func_names: Union[str, list[str]]
+        func_names: Union[str, list]
             Name of registered function to run
         **kwargs: dict or keyword arguments
             Dictionary or keyword arguments of to pass to metric functions.
