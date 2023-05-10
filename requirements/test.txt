@@ -8,7 +8,6 @@ allure-pytest
 jupyter
 sphinx
 yappi
-memray
 dask-memusage
 sphinx-rtd-theme
 py
