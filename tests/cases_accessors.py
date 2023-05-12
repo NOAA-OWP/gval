@@ -219,3 +219,39 @@ def case_data_frame_accessor_compute_metrics(
 
 
 gdf = _load_gpkg("polygons_two_class_categorical.gpkg")
+
+
+@parametrize(
+    "candidate_map, crs",
+    list(
+        zip(
+            [candidate_maps[0]] * 2,
+            [
+                "EPSG:5070",
+                """PROJCS["NAD27 / California zone II",
+                                       GEOGCS["GCS_North_American_1927",DATUM["D_North_American_1927",
+                                       SPHEROID["Clarke_1866",6378206.4,294.9786982138982]],
+                                       PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],
+                                       PROJECTION["Lambert_Conformal_Conic_2SP"],
+                                       PARAMETER["standard_parallel_1",39.83333333333334],
+                                       PARAMETER["standard_parallel_2",38.33333333333334],
+                                       PARAMETER["latitude_of_origin",37.66666666666666],
+                                       PARAMETER["central_meridian",-122],
+                                       PARAMETER["false_easting",2000000],
+                                       PARAMETER["false_northing",0],UNIT["Foot_US",0.30480060960121924]]""",
+            ],
+        )
+    ),
+)
+def case_data_array_accessor_categorical_plot_success(candidate_map, crs):
+    return candidate_map, crs
+
+
+@parametrize(
+    "candidate_map, legend_labels, num_classes",
+    list(zip([candidate_maps[0]] * 2, [None, ["a", "b", "c"]], [30, 2])),
+)
+def case_data_array_accessor_categorical_plot_fail(
+    candidate_map, legend_labels, num_classes
+):
+    return candidate_map, legend_labels, num_classes
