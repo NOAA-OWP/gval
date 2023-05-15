@@ -40,6 +40,10 @@ def categorical_plot(
     ValueError
         Too many values present in dataset for categorical plot.
 
+    References
+    ----------
+    .. [1] [Matplotlib figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html)
+    .. [2] [Matplotlib legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html)
     """
 
     with warnings.catch_warnings():
