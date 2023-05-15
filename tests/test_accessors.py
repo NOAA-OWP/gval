@@ -1,3 +1,4 @@
+import numpy as np
 from pytest_cases import parametrize_with_cases
 import xarray as xr
 from pytest import raises
@@ -192,3 +193,25 @@ def test_data_frame_accessor_compute_metrics(
     )
 
     assert isinstance(data, DataFrame)
+
+
+@parametrize_with_cases(
+    "candidate_map, crs",
+    glob="data_array_accessor_categorical_plot_success",
+)
+def test_data_array_accessor_categorical_plot_success(candidate_map, crs):
+    candidate_map.rio.set_crs(crs)
+    viz_object = candidate_map.gval.cat_plot()
+    assert len(viz_object.axes.get_legend().texts) == 2
+
+
+@parametrize_with_cases(
+    "candidate_map, legend_labels, num_classes",
+    glob="data_array_accessor_categorical_plot_fail",
+)
+def test_data_array_accessor_categorical_plot_fail(
+    candidate_map, legend_labels, num_classes
+):
+    candidate_map.data = np.random.choice(np.arange(num_classes), candidate_map.shape)
+    with raises(ValueError):
+        _ = candidate_map.gval.cat_plot(legend_labels=legend_labels)
