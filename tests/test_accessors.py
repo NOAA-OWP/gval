@@ -23,7 +23,10 @@ def test_data_array_accessor_success(
         rasterize_attributes=rasterize_attributes,
     )
 
-    assert isinstance(data[0], xr.DataArray)
+    if rasterize_attributes is None:
+        assert isinstance(data[0], xr.DataArray)
+    else:
+        assert isinstance(data[0], DataFrame)
     assert isinstance(data[1], DataFrame)
     assert isinstance(data[2], DataFrame)
 
@@ -59,15 +62,25 @@ def test_data_array_accessor_homogenize(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map", glob="data_array_accessor_compute_agreement"
+    "candidate_map, benchmark_map, vectorized",
+    glob="data_array_accessor_compute_agreement",
 )
-def test_data_array_accessor_compute_agreement_success(candidate_map, benchmark_map):
+def test_data_array_accessor_compute_agreement_success(
+    candidate_map, benchmark_map, vectorized
+):
     aligned_cand, aligned_bench = candidate_map.gval.homogenize(
         benchmark_map=benchmark_map
     )
+
+    if vectorized:
+        aligned_cand.gval.benchmark_format = "vector"
+
     data = aligned_cand.gval.compute_agreement_map(benchmark_map=aligned_bench)
 
-    assert isinstance(data, xr.DataArray)
+    if vectorized:
+        assert isinstance(data, DataFrame)
+    else:
+        assert isinstance(data, xr.DataArray)
 
 
 @parametrize_with_cases(
@@ -120,7 +133,10 @@ def test_data_set_accessor_success(
         rasterize_attributes=rasterize_attributes,
     )
 
-    assert isinstance(data[0], xr.Dataset)
+    if rasterize_attributes is None:
+        assert isinstance(data[0], xr.Dataset)
+    else:
+        assert isinstance(data[0], DataFrame)
     assert isinstance(data[1], DataFrame)
     assert isinstance(data[2], DataFrame)
 

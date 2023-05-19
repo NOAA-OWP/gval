@@ -100,10 +100,19 @@ def case_data_array_accessor_homogenize(
 
 
 @parametrize(
-    "candidate_map, benchmark_map", list(zip(candidate_maps[0:1], benchmark_maps[0:1]))
+    "candidate_map, benchmark_map, vectorized",
+    list(
+        zip(
+            [candidate_maps[0], candidate_maps[0]],
+            [benchmark_maps[0], benchmark_maps[0]],
+            [False, True],
+        )
+    ),
 )
-def case_data_array_accessor_compute_agreement(candidate_map, benchmark_map):
-    return candidate_map, benchmark_map
+def case_data_array_accessor_compute_agreement(
+    candidate_map, benchmark_map, vectorized
+):
+    return candidate_map, benchmark_map, vectorized
 
 
 @parametrize(

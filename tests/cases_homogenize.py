@@ -255,6 +255,23 @@ expected_res = [
 ]
 
 
+vectorize_rasters = [
+    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
+    _load_xarray("candidate_map_0_accessor.tif").astype(np.int64),
+    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True).sel(
+        band=1, drop=True
+    ),
+    _load_xarray(
+        "candidate_map_0_accessor.tif", mask_and_scale=True, band_as_variable=True
+    ),
+    _load_xarray("polygons.tif", mask_and_scale=True),
+]
+expected_vectors = [
+    _load_gpkg("expected_df.gpkg"),
+    _load_gpkg("expected_polygons_df.gpkg"),
+]
+
+
 @parametrize(
     "candidate_map, benchmark_map, rasterize_attributes, expected",
     list(
@@ -280,29 +297,31 @@ def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attribute
     return candidate_map, benchmark_map, rasterize_attributes
 
 
-# @parametrize(
-#     "candidate_map, benchmark_map, rasterize_attributes, expected",
-#     list(
-#         zip(candidate_map_rasters, benchmark_map_vectors, rasterize_attrs, expected_res)
-#     ),
-# )
-# def case_vectorize_raster_success(
-#     candidate_map, benchmark_map, rasterize_attributes, expected
-# ):
-#     return candidate_map, benchmark_map, rasterize_attributes, expected
-#
-#
-# rasterize_attrs_fail = [["fail"], ["hwmTypeName"]]
-#
-#
-# @parametrize(
-#     "candidate_map, benchmark_map, rasterize_attributes",
-#     list(
-#         zip(candidate_map_rasters[:2], benchmark_map_vectors[:2], rasterize_attrs_fail)
-#     ),
-# )
-# def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attributes):
-#     return candidate_map, benchmark_map, rasterize_attributes
+@parametrize(
+    "raster_map, expected",
+    list(
+        zip(
+            vectorize_rasters,
+            [
+                expected_vectors[0],
+                expected_vectors[0],
+                expected_vectors[0],
+                expected_vectors[0],
+                expected_vectors[1],
+            ],
+        )
+    ),
+)
+def case_vectorize_raster_success(raster_map, expected):
+    return raster_map, expected
+
+
+@parametrize(
+    "raster_map",
+    list(zip(expected_vectors)),
+)
+def case_vectorize_raster_fail(raster_map):
+    return raster_map
 
 
 expected_type = [np.int32, np.float32, float, float]
