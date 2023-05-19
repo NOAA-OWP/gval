@@ -280,6 +280,31 @@ def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attribute
     return candidate_map, benchmark_map, rasterize_attributes
 
 
+# @parametrize(
+#     "candidate_map, benchmark_map, rasterize_attributes, expected",
+#     list(
+#         zip(candidate_map_rasters, benchmark_map_vectors, rasterize_attrs, expected_res)
+#     ),
+# )
+# def case_vectorize_raster_success(
+#     candidate_map, benchmark_map, rasterize_attributes, expected
+# ):
+#     return candidate_map, benchmark_map, rasterize_attributes, expected
+#
+#
+# rasterize_attrs_fail = [["fail"], ["hwmTypeName"]]
+#
+#
+# @parametrize(
+#     "candidate_map, benchmark_map, rasterize_attributes",
+#     list(
+#         zip(candidate_map_rasters[:2], benchmark_map_vectors[:2], rasterize_attrs_fail)
+#     ),
+# )
+# def case_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attributes):
+#     return candidate_map, benchmark_map, rasterize_attributes
+
+
 expected_type = [np.int32, np.float32, float, float]
 
 
