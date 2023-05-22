@@ -33,7 +33,7 @@ class GVALXarray:
     def __init__(self, xarray_obj):
         self._obj = xarray_obj
         self.data_type = type(xarray_obj)
-        self.benchmark_format = "raster"
+        self.agreement_map_format = "raster"
 
     def check_same_type(self, benchmark_map: Union[xr.Dataset, xr.DataArray]):
         """
@@ -137,7 +137,7 @@ class GVALXarray:
                 benchmark_map=benchmark_map,
                 rasterize_attributes=rasterize_attributes,
             )
-            self.benchmark_format = "vector"
+            self.agreement_map_format = "vector"
 
         self.check_same_type(benchmark_map)
 
@@ -163,7 +163,7 @@ class GVALXarray:
             encode_nodata=encode_nodata,
         )
 
-        if self.benchmark_format == "vector":
+        if self.agreement_map_format == "vector":
             agreement_map = _vectorize_data(agreement_map)
 
         crosstab_df = candidate.gval.compute_crosstab(
@@ -226,7 +226,7 @@ class GVALXarray:
                 benchmark_map=benchmark_map,
                 rasterize_attributes=rasterize_attributes,
             )
-            self.benchmark_format = "vector"
+            self.agreement_map_format = "vector"
 
         self.check_same_type(benchmark_map)
 
@@ -297,7 +297,7 @@ class GVALXarray:
             encode_nodata=encode_nodata,
         )
 
-        if self.benchmark_format == "vector":
+        if self.agreement_map_format == "vector":
             agreement_map = _vectorize_data(agreement_map)
 
         return agreement_map

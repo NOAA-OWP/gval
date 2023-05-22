@@ -73,7 +73,7 @@ def test_data_array_accessor_compute_agreement_success(
     )
 
     if vectorized:
-        aligned_cand.gval.benchmark_format = "vector"
+        aligned_cand.gval.agreement_map_format = "vector"
 
     data = aligned_cand.gval.compute_agreement_map(benchmark_map=aligned_bench)
 
