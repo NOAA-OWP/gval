@@ -10,6 +10,7 @@ import geopandas as gpd
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
 from gval.homogenize.rasterize import _rasterize_data
+from gval.homogenize.vectorize import _vectorize_data
 from gval.homogenize.numeric_alignment import _align_numeric_data_type
 from gval import Comparison
 from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
@@ -32,6 +33,7 @@ class GVALXarray:
     def __init__(self, xarray_obj):
         self._obj = xarray_obj
         self.data_type = type(xarray_obj)
+        self.agreement_map_format = "raster"
 
     def check_same_type(self, benchmark_map: Union[xr.Dataset, xr.DataArray]):
         """
@@ -135,6 +137,7 @@ class GVALXarray:
                 benchmark_map=benchmark_map,
                 rasterize_attributes=rasterize_attributes,
             )
+            self.agreement_map_format = "vector"
 
         self.check_same_type(benchmark_map)
 
@@ -159,6 +162,9 @@ class GVALXarray:
             nodata=nodata,
             encode_nodata=encode_nodata,
         )
+
+        if self.agreement_map_format == "vector":
+            agreement_map = _vectorize_data(agreement_map)
 
         crosstab_df = candidate.gval.compute_crosstab(
             benchmark_map=benchmark,
@@ -220,6 +226,7 @@ class GVALXarray:
                 benchmark_map=benchmark_map,
                 rasterize_attributes=rasterize_attributes,
             )
+            self.agreement_map_format = "vector"
 
         self.check_same_type(benchmark_map)
 
@@ -238,7 +245,7 @@ class GVALXarray:
 
     def compute_agreement_map(
         self,
-        benchmark_map: xr.Dataset,
+        benchmark_map: Union[xr.Dataset, xr.DataArray],
         comparison_function: Union[
             Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
         ] = "szudzik",
@@ -279,7 +286,7 @@ class GVALXarray:
         """
         self.check_same_type(benchmark_map)
 
-        return Comparison.process_agreement_map(
+        agreement_map = Comparison.process_agreement_map(
             candidate_map=self._obj,
             benchmark_map=benchmark_map,
             comparison_function=comparison_function,
@@ -289,6 +296,11 @@ class GVALXarray:
             nodata=nodata,
             encode_nodata=encode_nodata,
         )
+
+        if self.agreement_map_format == "vector":
+            agreement_map = _vectorize_data(agreement_map)
+
+        return agreement_map
 
     def compute_crosstab(
         self,

@@ -9,6 +9,7 @@ from pytest import raises
 from pytest_cases import parametrize_with_cases
 import xarray as xr
 import numpy as np
+import geopandas as gpd
 
 from gval.homogenize.spatial_alignment import (
     _matching_crs,
@@ -19,6 +20,7 @@ from gval.homogenize.spatial_alignment import (
 )
 from gval.homogenize.numeric_alignment import _align_numeric_data_type
 from gval.homogenize.rasterize import _rasterize_data
+from gval.homogenize.vectorize import _vectorize_data
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
 
 
@@ -177,6 +179,30 @@ def test_rasterize_vector_fail(candidate_map, benchmark_map, rasterize_attribute
             benchmark_map=benchmark_map,
             rasterize_attributes=rasterize_attributes,
         )
+
+
+@parametrize_with_cases(
+    "raster_map, expected",
+    glob="vectorize_raster_success",
+)
+def test_vectorize_raster_success(raster_map, expected):
+    """Test vectorize raster success"""
+
+    vector_df = _vectorize_data(raster_data=raster_map)
+
+    assert isinstance(vector_df, gpd.GeoDataFrame)
+    assert vector_df.equals(expected)
+
+
+@parametrize_with_cases(
+    "raster_map",
+    glob="vectorize_raster_fail",
+)
+def test_vectorize_raster_fail(raster_map):
+    """Tests vectorize raster fail"""
+
+    with raises(AttributeError):
+        _ = _vectorize_data(raster_map)
 
 
 @parametrize_with_cases(
