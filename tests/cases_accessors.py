@@ -16,6 +16,7 @@ candidate_maps = [
         band=1, drop=True
     ),
     _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
+    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True, chunks="auto"),
 ]
 benchmark_maps = [
     _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
@@ -23,6 +24,7 @@ benchmark_maps = [
         band=1, drop=True
     ),
     _load_gpkg("polygons_two_class_categorical.gpkg"),
+    _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True, chunks="auto"),
 ]
 candidate_datasets = [
     _load_xarray(
@@ -31,17 +33,29 @@ candidate_datasets = [
     _load_xarray(
         "candidate_map_0_accessor.tif", mask_and_scale=True, band_as_variable=True
     ),
+    _load_xarray(
+        "candidate_map_0_accessor.tif",
+        mask_and_scale=True,
+        band_as_variable=True,
+        chunks="auto",
+    ),
 ]
 benchmark_datasets = [
     _load_xarray(
         "benchmark_map_0_accessor.tif", mask_and_scale=True, band_as_variable=True
     ),
     _load_gpkg("polygons_two_class_categorical.gpkg"),
+    _load_xarray(
+        "benchmark_map_0_accessor.tif",
+        mask_and_scale=True,
+        band_as_variable=True,
+        chunks="auto",
+    ),
 ]
 
-positive_cat = np.array([2, 2, 2])
-negative_cat = np.array([[0, 1], [0, 1], [0, 1]])
-rasterize_attrs = [None, None, ["category"]]
+positive_cat = np.array([2, 2, 2, 2])
+negative_cat = np.array([[0, 1], [0, 1], [0, 1], [0, 1]])
+rasterize_attrs = [None, None, ["category"], None]
 
 
 @parametrize(
@@ -142,9 +156,9 @@ def case_data_array_accessor_crosstab_table_fail(
         zip(
             candidate_datasets,
             benchmark_datasets,
-            positive_cat[0:2],
-            negative_cat[0:2],
-            [rasterize_attrs[0], rasterize_attrs[2]],
+            positive_cat[0:3],
+            negative_cat[0:3],
+            [rasterize_attrs[0], rasterize_attrs[2], rasterize_attrs[0]],
         )
     ),
 )

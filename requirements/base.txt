@@ -5,6 +5,7 @@ pandera==0.14.5
 shapely==2.0.1
 geocube>=0.3.3
 pandas==1.5.3
+odc-geo @ git+https://github.com/opendatacube/odc-geo.git
 
 ###################################
 # Potential future packages

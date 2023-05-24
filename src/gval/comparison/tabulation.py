@@ -22,8 +22,10 @@ from xrspatial.zonal import crosstab
 import xarray as xr
 import pandera as pa
 from pandera.typing import DataFrame
+import dask
 
 from gval.utils.schemas import Xrspatial_crosstab_df, Crosstab_df
+from gval.homogenize.spatial_alignment import _check_dask_array
 
 
 @pa.check_types
@@ -45,6 +47,8 @@ def _convert_crosstab_to_contigency_table(
     DataFrame[Crosstab_df]
         Crosstab DataFrame using candidate and benchmark conventions.
     """
+    if isinstance(crosstab_df, dask.dataframe.core.DataFrame):
+        crosstab_df = crosstab_df.compute()
 
     # renames zone, renames column index, melts dataframe, then resets the index.
     crosstab_df = (
@@ -81,11 +85,11 @@ def _compute_agreement_values(
         Crosstab DataFrame with agreement values.
     """
 
-    # copy crosstab_df
-    crosstab_df = crosstab_df.copy()
-
     def apply_pairing_function(row):
         return comparison_function(row["candidate_values"], row["benchmark_values"])
+
+    # copy crosstab_df
+    crosstab_df = crosstab_df.copy()
 
     agreement_values = crosstab_df.apply(apply_pairing_function, axis=1)
 
@@ -165,6 +169,10 @@ def _crosstab_2d_DataArrays(
     comparison_function: Optional[Callable[[float, float], float]] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
+
+    if _check_dask_array(candidate_map):
+        candidate_map = candidate_map.drop("spatial_ref")
+        benchmark_map = benchmark_map.drop("spatial_ref")
 
     crosstab_df = crosstab(
         zones=candidate_map,
@@ -307,6 +315,12 @@ def _crosstab_Datasets(
     comparison_function: Optional[Callable[[float, float], float]] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
+
+    if _check_dask_array(candidate_map):
+        # TODO:  Currently there is an issue open on xarray spatial regarding dask dataset useage in crosstab
+        # https://github.com/makepath/xarray-spatial/issues/777
+        candidate_map = candidate_map.compute()
+        benchmark_map = benchmark_map.compute()
 
     # gets variable names
     candidate_variable_names = list(candidate_map.data_vars)

@@ -95,6 +95,7 @@ def load_raster_as_xarray(
         default_name=default_name,
         band_as_variable=band_as_variable,
         masked=masked,
+        chunks=chunks,
         mask_and_scale=mask_and_scale,
         **open_kwargs,
     )

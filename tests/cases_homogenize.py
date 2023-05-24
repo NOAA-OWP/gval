@@ -104,26 +104,32 @@ def case_rasters_intersect_exception(
 
 
 @parametrize(
-    "candidate_map_fn, benchmark_map_fn, resampling, target_map",
+    "candidate_map_fn, benchmark_map_fn, resampling, target_map, dataset, chunks",
     list(
         zip(
-            candidate_map_fns[[0, 1, 1, 1, 1]],
-            benchmark_map_fns[[0, 1, 1, 1, 1]],
-            [{}, {}, {}, {}, {"resampling": Resampling.bilinear}],
+            candidate_map_fns[[0, 1, 1, 1, 1, 1, 1]],
+            benchmark_map_fns[[0, 1, 1, 1, 1, 1, 1]],
+            [{}, {}, {}, {}, {"resampling": Resampling.bilinear}, {}, {}],
             [
                 "candidate",
                 "benchmark",
                 _load_xarray("target_map_0.tif"),
                 "candidate",
                 "candidate",
+                "candidate",
+                "candidate",
             ],
+            [False, False, False, False, False, False, True],
+            [None, None, None, None, None, "auto", "auto"],
         )
     ),
 )
-def case_align_rasters(candidate_map_fn, benchmark_map_fn, target_map, resampling):
+def case_align_rasters(
+    candidate_map_fn, benchmark_map_fn, target_map, resampling, dataset, chunks
+):
     return (
-        _load_xarray(candidate_map_fn),
-        _load_xarray(benchmark_map_fn),
+        _load_xarray(candidate_map_fn, chunks=chunks, band_as_variable=dataset),
+        _load_xarray(benchmark_map_fn, chunks=chunks, band_as_variable=dataset),
         target_map,
         resampling,
     )
