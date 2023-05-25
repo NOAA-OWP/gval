@@ -16,6 +16,7 @@ from shapely.geometry import box
 from rasterio.enums import Resampling
 
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
+from gval.homogenize.numeric_alignment import _check_dask_array
 from odc.geo.xr import ODCExtensionDa
 
 ODCExtensionDa
@@ -136,29 +137,6 @@ def _rasters_intersect(
         raise RastersDontIntersect
     else:
         return rasters_intersect_bool
-
-
-def _check_dask_array(original_map: Union[xr.DataArray, xr.Dataset]) -> bool:
-    """
-    Check whether map to be reprojected has dask data or not
-
-    Parameters
-    ----------
-    reproject_map: Union[xr.DataArray, xr.Dataset]
-        Map to be reprojected
-
-    Returns
-    -------
-    bool
-        Whether the data is a dask array
-    """
-
-    chunks = (
-        original_map["band_1"].chunks
-        if isinstance(original_map, xr.Dataset)
-        else original_map.chunks
-    )
-    return chunks is not None
 
 
 def _reproject_map(

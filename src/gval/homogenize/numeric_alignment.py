@@ -129,3 +129,26 @@ def _align_numeric_data_type(
         return _align_numeric_dtype(candidate_map, benchmark_map)
     else:
         return _align_datasets_dtype(candidate_map, benchmark_map)
+
+
+def _check_dask_array(original_map: Union[xr.DataArray, xr.Dataset]) -> bool:
+    """
+    Check whether map to be reprojected has dask data or not
+
+    Parameters
+    ----------
+    original_map: Union[xr.DataArray, xr.Dataset]
+        Map to be reprojected
+
+    Returns
+    -------
+    bool
+        Whether the data is a dask array
+    """
+
+    chunks = (
+        original_map["band_1"].chunks
+        if isinstance(original_map, xr.Dataset)
+        else original_map.chunks
+    )
+    return chunks is not None
