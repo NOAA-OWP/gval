@@ -67,7 +67,7 @@ def _convert_crosstab_to_contigency_table(
 @pa.check_types
 def _compute_agreement_values(
     crosstab_df: DataFrame[Crosstab_df],
-    comparison_function: Callable[[float, float], float],
+    comparison_function: Callable[..., float],
 ) -> DataFrame[Crosstab_df]:
     """
     Computes agreement values from Crosstab DataFrame.
@@ -166,7 +166,7 @@ def _crosstab_2d_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[[float, float], float]] = None,
+    comparison_function: Optional[Callable[..., float]] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -202,7 +202,7 @@ def _crosstab_3d_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[[float, float], float]] = None,
+    comparison_function: Optional[Callable[..., float]] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -278,7 +278,7 @@ def _crosstab_DataArrays(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[[float, float], float]] = None,
+    comparison_function: Optional[Callable[..., float]] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -312,7 +312,7 @@ def _crosstab_Datasets(
     allow_candidate_values: Optional[Iterable[Number]] = None,
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[[float, float], float]] = None,
+    comparison_function: Optional[Callable[..., float]] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
