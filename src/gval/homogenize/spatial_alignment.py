@@ -9,17 +9,17 @@ Functions to check for and ensure spatial alignment of two xarray DataArrays
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import (
-    Optional,
-    Tuple,
-    Union,
-)
+from typing import Optional, Tuple, Union
 
 import xarray as xr
 from shapely.geometry import box
 from rasterio.enums import Resampling
 
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
+from gval.homogenize.numeric_alignment import _check_dask_array
+from odc.geo.xr import ODCExtensionDa
+
+ODCExtensionDa
 
 
 def _matching_crs(
@@ -139,6 +139,51 @@ def _rasters_intersect(
         return rasters_intersect_bool
 
 
+def _reproject_map(
+    original_map: Union[xr.DataArray, xr.Dataset],
+    target_map: Union[xr.DataArray, xr.Dataset],
+    resampling: str,
+) -> Union[xr.DataArray, xr.Dataset]:
+    """
+
+    Parameters
+    ----------
+    original_map: Union[xr.DataArray, xr.Dataset]
+        Map to be reprojected
+    target_map: Union[xr.DataArray, xr.Dataset]
+        Map to use for extent, resolution, and spatial reference
+    resampling: str
+        Method to resample changing resolutions
+
+    Returns
+    -------
+    Union[xr.DataArray, xr.Dataset]
+        Reprojected map
+    """
+
+    is_dst, is_dask = isinstance(original_map, xr.Dataset), _check_dask_array(
+        original_map
+    )
+
+    if not is_dask:
+        return original_map.rio.reproject_match(target_map, resampling)
+    else:
+        nodata = target_map["band_1"].rio.nodata if is_dst else target_map.rio.nodata
+        reproj = original_map.odc.reproject(
+            target_map.odc.geobox, tight=True, dst_nodata=nodata
+        )
+
+        # Coordinates need to be aligned
+        reproj_coords = reproj.rename({"longitude": "x", "latitude": "y"})
+        del reproj
+        #  Coordinates are virtually the same but 1e-8 or so is rounded differently
+        final_reproj = reproj_coords.assign_coords(
+            {"x": target_map.coords["x"], "y": target_map.coords["y"]}
+        )
+        del reproj_coords
+        return final_reproj
+
+
 def _align_rasters(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
@@ -205,16 +250,16 @@ def _align_rasters(
 
     # align benchmark and candidate to target
     elif isinstance(target_map, (xr.DataArray, xr.Dataset)):
-        candidate_map = candidate_map.rio.reproject_match(target_map, resampling)
-        benchmark_map = benchmark_map.rio.reproject_match(target_map, resampling)
+        candidate_map = _reproject_map(candidate_map, target_map, resampling)
+        benchmark_map = _reproject_map(benchmark_map, target_map, resampling)
 
     # match candidate to benchmark
     elif target_map == "benchmark":
-        candidate_map = candidate_map.rio.reproject_match(benchmark_map, resampling)
+        candidate_map = _reproject_map(candidate_map, benchmark_map, resampling)
 
     # match benchmark to candidate
     elif target_map == "candidate":
-        benchmark_map = benchmark_map.rio.reproject_match(candidate_map, resampling)
+        benchmark_map = _reproject_map(benchmark_map, candidate_map, resampling)
 
     else:
         raise ValueError(
