@@ -15,3 +15,5 @@ pre-commit
 boto3
 rio-cogeo
 matplotlib
+myst_parser
+nbsphinx
