@@ -41,9 +41,9 @@ jobs:
           tar -xf $GITHUB_WORKSPACE/pandoc/pandoc-3.1-linux-amd64.tar.gz --directory $GITHUB_WORKSPACE/pandoc
           echo "$GITHUB_WORKSPACE/pandoc/pandoc-3.1/bin" >> $GITHUB_PATH
           echo "First"
-          echo ls $GITHUB_PATH
+          echo | ls $GITHUB_PATH
           echo "Second"
-          echo ls $GITHUB_WORKSPACE/pandoc/pandoc-3.1/bin
+          echo | ls $GITHUB_WORKSPACE/pandoc/pandoc-3.1/bin
           pandoc --help
           sphinx-build docs/sphinx docs/sphinx/_build
       - name: Deploy
