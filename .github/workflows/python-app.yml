@@ -40,7 +40,9 @@ jobs:
           wget -P $GITHUB_WORKSPACE/pandoc https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
           tar -xf $GITHUB_WORKSPACE/pandoc/pandoc-3.1-linux-amd64.tar.gz --directory $GITHUB_WORKSPACE/pandoc
           echo "$GITHUB_WORKSPACE/pandoc/pandoc-3.1/bin" >> $GITHUB_PATH
+          echo "First"
           echo $GITHUB_PATH
+          echo "Second"
           echo $GITHUB_WORKSPACE/pandoc/pandoc-3.1/bin
           pandoc --help
           sphinx-build docs/sphinx docs/sphinx/_build
