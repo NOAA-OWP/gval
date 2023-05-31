@@ -66,7 +66,7 @@ jobs:
       - name: Pandoc Dep
         uses: docker://pandoc/core:2.9
       - name: Sphinx build
-      - run: |
+        run: |
           sphinx-build docs/sphinx docs/sphinx/_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
