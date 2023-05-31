@@ -1,4 +1,4 @@
-![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_dark_mode.png#gh-dark-mode-only) ![alt
+ ![alt
 text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png#gh-light-mode-only)
 
 ![Build and
@@ -52,15 +52,15 @@ benchmark = rxr.open_rasterio('benchmark_map_two_class_categorical.tif', mask_an
 
 `agreement_map`
 
-![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/agreement_map.png)
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/agreement_map.png" width="500" height="180" />
 
 `crosstab_table`
 
-![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/cross_table.png)
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/cross_table.png" width="450" height="120" />
 
 `metric_table`
 
-![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/metric_table.png)
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/metric_table.png" width="700" height="180" />
 
 For more details on how to use this software, check out this [notebook
 tutorial](https://github.com/NOAA-OWP/gval/blob/main/notebooks/Tutorial.ipynb).
