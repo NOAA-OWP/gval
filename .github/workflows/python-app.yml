@@ -59,13 +59,12 @@ jobs:
           push_options: '--force'
           skip_checkout: true
           file_pattern: '*.svg'
-      - name: Download Pandoc
+      - name: Sphinx build
         run: |
           wget -P $GITHUB_WORKSPACE/pandoc https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
           tar -xf $GITHUB_WORKSPACE/pandoc/pandoc-3.1-linux-amd64.tar.gz --directory $GITHUB_WORKSPACE/pandoc
-          echo "$GITHUB_WORKSPACE/pandoc" >> $GITHUB_PATH
-      - name: Sphinx build
-        run: |
+          echo "$GITHUB_WORKSPACE/pandoc/pandoc3.1/bin" >> $GITHUB_PATH
+          pandoc --help
           sphinx-build docs/sphinx docs/sphinx/_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
