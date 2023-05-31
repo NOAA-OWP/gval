@@ -59,8 +59,11 @@ jobs:
           push_options: '--force'
           skip_checkout: true
           file_pattern: '*.svg'
-      - name: Pandoc Dep
-        uses: docker://pandoc/core:2.9
+      - name: Download Pandoc
+        run: |
+          wget -P $GITHUB_WORKSPACE/pandoc https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
+          tar -xf $GITHUB_WORKSPACE/pandoc/pandoc-3.1-linux-amd64.tar.gz --directory $GITHUB_WORKSPACE/pandoc
+          echo "$GITHUB_WORKSPACE/pandoc" >> $GITHUB_PATH
       - name: Sphinx build
         run: |
           sphinx-build docs/sphinx docs/sphinx/_build
