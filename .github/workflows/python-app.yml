@@ -59,10 +59,6 @@ jobs:
           push_options: '--force'
           skip_checkout: true
           file_pattern: '*.svg'
-      - name: install pandoc
-        run: |
-          wget -P /usr/bin/local https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
-          tar -xf /udr/bin/local/pandoc-3.1-linux-amd64.tar.gz --directory /usr/bin/local
       - name: Pandoc Dep
         uses: docker://pandoc/core:2.9
       - name: Sphinx build
