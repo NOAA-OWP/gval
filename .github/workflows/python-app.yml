@@ -64,7 +64,7 @@ jobs:
           wget -P /usr/bin/local https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
           tar -xf /udr/bin/local/pandoc-3.1-linux-amd64.tar.gz --directory /usr/bin/local
       - name: Pandoc Dep
-      - uses: docker://pandoc/core:2.9
+        uses: docker://pandoc/core:2.9
       - name: Sphinx build
       - run: |
           sphinx-build docs/sphinx docs/sphinx/_build
