@@ -4,7 +4,8 @@
 > All contributions to this project will be released to the public domain.
 > By submitting a pull request or filing a bug, issue, or
 > feature request, you are agreeing to comply with this waiver of copyright interest.
-> Details can be found in our [TERMS](TERMS.MD) and [LICENSE](LICENSE.MD).
+> Details can be found in our [TERMS](https://github.com/NOAA-OWP/gval/blob/main/TERMS.MD)
+> and [LICENSE](https://github.com/NOAA-OWP/gval/blob/main/LICENSE.MD).
 
 
 There are two primary ways to help:
@@ -32,7 +33,7 @@ Additionally, the code should follow any stylistic and architectural guidelines
 prescribed by the project. In the absence of such guidelines, mimic the styles
 and patterns in the existing code-base.
 
-![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/ContributionGraphic.png)
+![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/ContributionGraphic.png)
 
 ### Guidelines
 
@@ -50,7 +51,7 @@ the code. Make sure all of these checks pass, if not make changes and re-commit.
 
 
 ## Standards
-- Python 3.10 or higher
+- Python 3.8 or higher
 - [Numpy&nbsp;Style&nbsp;Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
 - [Python&nbsp;Type&nbsp;Hints](https://docs.python.org/3/library/typing.html)
 - [PEP8](https://pep8.org/) Styling (and [this](https://peps.python.org/pep-0008/))
@@ -65,7 +66,6 @@ Code Checking with [Flake8](https://github.com/PyCQA/flake8)
     * For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
 - Profiling
 - [yappi](https://github.com/sumerc/yappi/)
-    * For memory profiling: [memray](https://pypi.org/project/memray/)
     * Dask memory profiling: [dask-memusage](https://github.com/itamarst/dask-memusage)
 - Dependencies and Packaging
     * [pip](https://packaging.python.org/en/latest/key_projects/#pip)

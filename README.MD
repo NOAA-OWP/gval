@@ -1,7 +1,8 @@
-![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/gval_dark_mode.png#gh-dark-mode-only) ![alt
-text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/gval_light_mode.png#gh-light-mode-only)
+![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_dark_mode.png#gh-dark-mode-only) ![alt
+text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png#gh-light-mode-only)
 
-![Build and Test](https://github.com/NOAA-OWP/gval/actions/workflows/python-app.yml/badge.svg)![Coverage](https://github.com/NOAA-OWP/gval/blob/main/docs/images/coverage.svg)
+![Build and
+Test](https://github.com/NOAA-OWP/gval/actions/workflows/python-app.yml/badge.svg)![Coverage](https://github.com/NOAA-OWP/gval/raw/main/docs/images/coverage.svg)
 
 GVAL (pronounced "g-val") is a high-level Python framework to evaluate
 the skill of geospatial datasets by comparing candidates to benchmark
@@ -12,23 +13,6 @@ geopandas objects, respectively. Abilities to prepare or homogenize maps
 for comparison are included. The comparisons are based on scoring
 philosophies for three statistical data types including categorical,
 continuous, and probabilistic.
-
-Possible enhancements include the ability to trace attributes from the
-candidate and benchmark maps to the outputs for analysis purposes.
-Additionally, we plan to enable comparisons across a hierarchy of
-samples beyond the current map level samples. These sample levels
-include catalogs (possibly using [STAC](https://stacspec.org/en)) and
-sub-samples (zonal level metrics within maps).
-
-Completed functionality:
-
-- Homogenize candidate and benchmark rasters for comparisons.
-- Two-class and multi-class categorical comparison case for 2 or
-    3-dimensional rasters.
-
-In-progress:
-
-- Documentation, Github actions, and continuous statistic types.
 
 WARNING:
 
@@ -57,24 +41,26 @@ import rioxarray as rxr
 candidate = rxr.open_rasterio('candidate_map_two_class_categorical.tif', mask_and_scale=True)
 benchmark = rxr.open_rasterio('benchmark_map_two_class_categorical.tif', mask_and_scale=True)
 
-agreement_map, crosstab_table, metric_table = candidate.gval.categorical_compare(benchmark,
-                                                                                 positive_categories=[2],
-                                                                                 negative_categories=[0, 1])
+(agreement_map,
+ crosstab_table,
+ metric_table) = candidate.gval.categorical_compare(benchmark,
+                                                   positive_categories=[2],
+                                                   negative_categories=[0, 1])
 ```
 
 ### Outputs
 
 `agreement_map`
 
-![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/agreement_map.png)
+![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/agreement_map.png)
 
 `crosstab_table`
 
-![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/cross_table.png)
+![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/cross_table.png)
 
 `metric_table`
 
-![alt text](https://github.com/NOAA-OWP/gval/blob/main/docs/images/metric_table.png)
+![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/metric_table.png)
 
 For more details on how to use this software, check out this [notebook
 tutorial](https://github.com/NOAA-OWP/gval/blob/main/notebooks/Tutorial.ipynb).
@@ -82,10 +68,11 @@ tutorial](https://github.com/NOAA-OWP/gval/blob/main/notebooks/Tutorial.ipynb).
 # Contributing
 
 Guidelines for contributing to this repository can be found at
-[CONTRIBUTING](CONTRIBUTING.MD).
+[CONTRIBUTING](https://github.com/NOAA-OWP/gval/blob/main/CONTRIBUTING.MD).
 
 # Citation
 
 Please cite our work if using this package. See 'cite this repository'
 in the about section on [GitHub](https://github.com/NOAA-OWP/gval/) or
-refer to [CITATION.cff](CITATION.cff)
+refer to
+[CITATION.cff](https://github.com/NOAA-OWP/gval/blob/main/CITATION.cff)
