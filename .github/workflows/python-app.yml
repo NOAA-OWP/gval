@@ -52,6 +52,6 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         with:
           publish_branch: gh-pages
-          github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/sphinx/_build/
           force_orphan: true
