@@ -91,6 +91,11 @@ def compile_readme():
         f"{abs_path}/sphinx/SphinxTutorial.ipynb",
     )
 
+    shutil.copy(
+        f"{abs_path}/../CONTRIBUTING.MD",
+        f"{abs_path}/sphinx/SPHINX_CONTRIBUTING.MD",
+    )
+
 
 if __name__ == "__main__":
     compile_readme()

@@ -18,6 +18,7 @@ ___________________________________
 
    SphinxTutorial
    api
+   contributing
 
 
 Indices and tables
