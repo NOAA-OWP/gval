@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "GVAL"
-copyright = "2023, Fernando Aristizabal, Gregory Petrochenkov"
+copyright = "2023, NOAA-OWP"
 author = "Fernando Aristizabal, Gregory Petrochenkov"
 
 # -- General configuration ---------------------------------------------------
