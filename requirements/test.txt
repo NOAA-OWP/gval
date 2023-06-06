@@ -7,8 +7,8 @@ flake8-black
 allure-pytest
 jupyter
 sphinx
-yappi
-dask-memusage
+pytest-memray
+pytest-monitor
 sphinx-rtd-theme
 py
 pre-commit
