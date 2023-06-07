@@ -58,7 +58,13 @@ jobs:
           commit_message: ${{ github.event.head_commit.message }}
           push_options: '--force'
           skip_checkout: true
-          file_pattern: '*.svg *.db'
+          file_pattern: '*.svg'
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ github.event.head_commit.message }}
+          push_options: '--force'
+          skip_checkout: true
+          file_pattern: '*.db'
       - name: Sphinx build
         run: |
           sudo chown -R runner:runner /usr/local/bin
