@@ -51,16 +51,15 @@ jobs:
         uses: tj-actions/coverage-badge-py@v2
         with:
           output: docs/images/coverage.svg
-      - name: Find .pymon
+      - name: Adding .pymon
         run: |
-          echo "Finding pymon"
-          echo | find ./ -name ".pymon"
+          git add ./.pymon
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ github.event.head_commit.message }}
           push_options: '--force'
           skip_checkout: true
-          file_pattern: '*.svg *.pymon'
+          file_pattern: '*.svg ./.pymon'
       - name: Sphinx build
         run: |
           sudo chown -R runner:runner /usr/local/bin
