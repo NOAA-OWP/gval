@@ -58,7 +58,7 @@ jobs:
           commit_message: ${{ github.event.head_commit.message }}
           push_options: '--force'
           skip_checkout: true
-          file_pattern: '*.svg tests/*.db'
+          file_pattern: '*.svg *.db'
       - name: Sphinx build
         run: |
           sudo chown -R runner:runner /usr/local/bin
