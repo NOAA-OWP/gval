@@ -44,7 +44,7 @@ jobs:
       - name: Test with pytest
         run: |
           for f in tests/test*; do
-            pytest $f --memray --cov=gval --cov-report term-missing --cov-append
+            pytest $f --memray --cov=gval --cov-report term-missing --cov-append --db /tests/test_benchmark.db
           done
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
