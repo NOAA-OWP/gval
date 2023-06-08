@@ -57,7 +57,7 @@ jobs:
       - name: Adding .pymon
         if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
         run: |
-          git pull --ff-only
+          git pull --ff-only ${{ github.head_ref }}
           git add -f ./.pymon 
           git commit -am "Add pymon"
           git push origin HEAD:${{ github.head_ref }}
