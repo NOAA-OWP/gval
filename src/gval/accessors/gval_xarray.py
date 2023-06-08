@@ -15,7 +15,9 @@ from gval.homogenize.numeric_alignment import _align_numeric_data_type
 from gval import Comparison
 from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
+from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
 from gval.utils.schemas import Crosstab_df, Metrics_df
+from gval.comparison.pairing_functions import difference
 
 
 class GVALXarray:
@@ -76,13 +78,20 @@ class GVALXarray:
         Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
     ]:
         """
-        Processes alignment operation, computing agreement map, and cross tab dataframe
+        Computes comparison between two categorical value xarray's.
 
+        Conducts the following steps:
+            - homogenize: aligns data types, spatial alignment, and rasterizes data
+            - compute_agreement: computes agreement map
+            - compute_crosstab: computes crosstabulation
+            - compute_metrics: computes metrics
+
+        Spatially aligning the xarray's produces copies of the original candidate and benchmark maps. To reduce memory usage, consider using the `homogenize()` accessor method to overwrite the original maps in memory or saving them on disk.
 
         Parameters
         ----------
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray]
-            Benchmark map in xarray DataSet format.
+            Benchmark map.
         positive_categories : Optional[Union[Number, Iterable[Number]]]
             Number or list of numbers representing the values to consider as the positive condition. For average types "macro" and "weighted", this represents the categories to compute metrics for.
         comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
@@ -131,25 +140,9 @@ class GVALXarray:
             Tuple with agreement map, cross-tabulation table, and metric table
         """
 
-        if isinstance(benchmark_map, gpd.GeoDataFrame):
-            benchmark_map = _rasterize_data(
-                candidate_map=self._obj,
-                benchmark_map=benchmark_map,
-                rasterize_attributes=rasterize_attributes,
-            )
-            self.agreement_map_format = "vector"
-
-        self.check_same_type(benchmark_map)
-
-        candidate, benchmark = _align_numeric_data_type(
-            candidate_map=self._obj, benchmark_map=benchmark_map
-        )
-
-        candidate, benchmark = _spatial_alignment(
-            candidate_map=candidate,
-            benchmark_map=benchmark,
-            target_map=target_map,
-            resampling=resampling,
+        # using homogenize accessor to avoid code reuse
+        candidate, benchmark = self._obj.gval.homogenize(
+            benchmark_map, target_map, resampling, rasterize_attributes
         )
 
         agreement_map = Comparison.process_agreement_map(
@@ -174,6 +167,9 @@ class GVALXarray:
             comparison_function=comparison_function,
         )
 
+        # clear memory
+        del candidate, benchmark
+
         metrics_df = _compute_categorical_metrics(
             crosstab_df=crosstab_df,
             metrics=metrics,
@@ -183,9 +179,75 @@ class GVALXarray:
             weights=weights,
         )
 
-        del candidate, benchmark
-
         return agreement_map, crosstab_df, metrics_df
+
+    def continuous_compare(
+        self,
+        benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
+        metrics: Union[str, Iterable[str]] = "all",
+        target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
+        resampling: Optional[Resampling] = Resampling.nearest,
+        nodata: Optional[Number] = None,
+        encode_nodata: Optional[bool] = False,
+        rasterize_attributes: Optional[list] = None,
+    ) -> Tuple[
+        Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
+    ]:
+        """
+        Computes comparison between two continuous value xarray's.
+
+        Conducts the following steps:
+            - homogenize: aligns data types, spatial alignment, and rasterizes data
+            - compute_agreement: computes agreement map which is error or candidate minus benchmark
+            - compute_metrics: computes metrics
+
+        Spatially aligning the xarray's produces copies of the original candidate and benchmark maps. To reduce memory usage, consider using the `homogenize()` accessor method to overwrite the original maps in memory or saving them on disk.
+
+        Parameters
+        ----------
+        benchmark_map : Union[xr.DataArray, xr.Dataset]
+            Benchmark map.
+        metrics: Union[str, Iterable[str]], default = "all"
+            Statistics to return in metric table.
+        target_map: Optional[Union[xr.Dataset, str]], default = "benchmark"
+            xarray object to match the CRS's and coordinates of candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
+        resampling : rasterio.enums.Resampling
+            See :func:`rasterio.warp.reproject` for more details.
+        nodata : Optional[Number], default = None
+            No data value to write to agreement map output. This will use `rxr.rio.write_nodata(nodata)`.
+        encode_nodata : Optional[bool], default = False
+            Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
+        rasterize_attributes: Optional[list], default = None
+            Numerical attributes of a GeoDataFrame to rasterize.
+
+        Returns
+        -------
+        Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]
+            Tuple with agreement map and metric table.
+        """
+
+        # using homogenize accessor to avoid code reuse
+        candidate, benchmark = self._obj.gval.homogenize(
+            benchmark_map, target_map, resampling, rasterize_attributes
+        )
+
+        # compute agreement map
+        agreement_map = Comparison.process_agreement_map(
+            candidate_map=candidate,
+            benchmark_map=benchmark,
+            comparison_function=difference,
+            nodata=nodata,
+            encode_nodata=encode_nodata,
+        )
+
+        metrics_df = _compute_continuous_metrics(
+            candidate_map=candidate, benchmark_map=benchmark, metrics=metrics
+        )
+
+        if self.agreement_map_format == "vector":
+            agreement_map = _vectorize_data(agreement_map)
+
+        return agreement_map, metrics_df
 
     def homogenize(
         self,
@@ -195,18 +257,17 @@ class GVALXarray:
         rasterize_attributes: Optional[list] = None,
     ) -> Union[xr.Dataset, xr.DataArray]:
         """
-        Reproject :class:`xarray.Dataset` objects
+        Homogenize candidate and benchmark maps to prepare for comparison.
 
-        .. note:: Only 2D/3D arrays with dimensions 'x'/'y' are currently supported.
-            Others are appended as is.
-            Requires either a grid mapping variable with 'spatial_ref' or
-            a 'crs' attribute to be set containing a valid CRS.
-            If using a WKT (e.g. from spatialreference.org), make sure it is an OGC WKT.
+        Currently supported operations include:
+            - Matching projections and coordinates (spatial alignment)
+            - Homogenize file formats (xarray/rasters)
+            - Homogenize numerical data types (int, float, etc.).
 
         Parameters
         ----------
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray]
-            Benchmark map in xarray DataArray format.
+            Benchmark map.
         target_map: Optional[Union[xr.DataArray, xr.Dataset, str]], default = "benchmark"
             xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
         resampling: rasterio.enums.Resampling

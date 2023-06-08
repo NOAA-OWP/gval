@@ -228,6 +228,19 @@ def case_pairing_dict_fn(c, b, pairing_dict, expected_value):
     return c, b, pairing_dict, expected_value
 
 
+difference_inputs = [
+    (1, 3, -2),
+    (10.0, 4.0, 6.0),
+    (np.nan, 10, np.nan),
+    (np.nan, np.nan, np.nan),
+]
+
+
+@parametrize("c, b, expected_value", difference_inputs)
+def case_difference(c, b, expected_value):
+    return c, b, expected_value
+
+
 crosstab_dfs = [
     (
         pd.DataFrame({"zone": [0, 1, 2], 0: [10, 100, 200], 1: [50, 25, 100]}),

@@ -7,10 +7,7 @@ from numbers import Number
 import numba as nb
 import xarray as xr
 
-from gval.comparison.pairing_functions import (
-    cantor_pair_signed,
-    szudzik_pair_signed,
-)
+from gval.comparison.pairing_functions import cantor_pair_signed, szudzik_pair_signed
 from gval.comparison.agreement import _compute_agreement_map
 
 
