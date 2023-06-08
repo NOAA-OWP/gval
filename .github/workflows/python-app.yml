@@ -54,18 +54,14 @@ jobs:
       - name: Adding .pymon
         run: |
           git add -f ./.pymon 
+          git commit -am "Add pymon"
+          git push -u --force origin
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ github.event.head_commit.message }}
           push_options: '--force'
           skip_checkout: true
           file_pattern: '*.svg'
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: ${{ github.event.head_commit.message }}
-          push_options: '--force'
-          skip_checkout: true
-          file_pattern: '*.pymon'
       - name: Sphinx build
         run: |
           sudo chown -R runner:runner /usr/local/bin
