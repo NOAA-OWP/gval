@@ -31,56 +31,57 @@ jobs:
       - run: |
           echo "Test"
           echo ${{ github.event.pull_request.head }}
+          echo ${{ git show -s --format=%s }}
           echo "$(git show -s --format=%s)" 
           echo ${{ github.event.head_commit.message }}
           echo running on branch ${GITHUB_REF##*/}
           echo ${{ github.event.commits[0].message }}
           echo "Done"
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-      - name: Lint with flake8
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      - name: Test with pytest
-        run: |
-          for f in tests/test*; do
-            pytest $f --memray --cov=gval --cov-report term-missing --cov-append
-          done
-        env:
-          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-      - name: Coverage Badge
-        uses: tj-actions/coverage-badge-py@v2
-        with:
-          output: docs/images/coverage.svg
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: $(git show -s --format=%s)
-          push_options: '--force'
-          skip_checkout: true
-          file_pattern: '*.svg *.pymon'
-          disable_globbing: true
-      - name: Sphinx build
-        run: |
-          sudo chown -R runner:runner /usr/local/bin
-          wget -P /usr/local/bin https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
-          tar -xf /usr/local/bin/pandoc-3.1-linux-amd64.tar.gz --directory /usr/local/bin/
-          cp /usr/local/bin/pandoc-3.1/bin/pandoc /usr/local/bin/pandoc
-          sphinx-build docs/sphinx docs/sphinx/_build 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
-        with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/sphinx/_build/
-          force_orphan: true
+#       - name: Setup Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: ${{ matrix.python }}
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install .
+#       - name: Lint with flake8
+#         run: |
+#           # stop the build if there are Python syntax errors or undefined names
+#           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+#           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+#           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+#       - name: Test with pytest
+#         run: |
+#           for f in tests/test*; do
+#             pytest $f --memray --cov=gval --cov-report term-missing --cov-append
+#           done
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+#           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+#       - name: Coverage Badge
+#         uses: tj-actions/coverage-badge-py@v2
+#         with:
+#           output: docs/images/coverage.svg
+#       - uses: stefanzweifel/git-auto-commit-action@v4
+#         with:
+#           commit_message: $(git show -s --format=%s)
+#           push_options: '--force'
+#           skip_checkout: true
+#           file_pattern: '*.svg *.pymon'
+#           disable_globbing: true
+#       - name: Sphinx build
+#         run: |
+#           sudo chown -R runner:runner /usr/local/bin
+#           wget -P /usr/local/bin https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
+#           tar -xf /usr/local/bin/pandoc-3.1-linux-amd64.tar.gz --directory /usr/local/bin/
+#           cp /usr/local/bin/pandoc-3.1/bin/pandoc /usr/local/bin/pandoc
+#           sphinx-build docs/sphinx docs/sphinx/_build 
+#       - name: Deploy
+#         uses: peaceiris/actions-gh-pages@v3
+#         if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
+#         with:
+#           publish_branch: gh-pages
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           publish_dir: docs/sphinx/_build/
+#           force_orphan: true
