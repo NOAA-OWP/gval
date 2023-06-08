@@ -57,10 +57,7 @@ jobs:
       - name: Adding .pymon
         if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
         run: |
-          git pull --ff-only ${{ github.head_ref }}
-          git add -f ./.pymon 
-          git commit -am "Add pymon"
-          git push origin HEAD:${{ github.head_ref }}
+          git add -f ./.pymon
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ github.event.head_commit.message }}
@@ -74,6 +71,7 @@ jobs:
           push_options: '--force'
           skip_checkout: true
           file_pattern: '*.pymon'
+          disable_globbing: true
       - name: Sphinx build
         run: |
           sudo chown -R runner:runner /usr/local/bin
