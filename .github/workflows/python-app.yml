@@ -29,6 +29,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with: 
+          token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -52,15 +55,19 @@ jobs:
         with:
           output: docs/images/coverage.svg
       - name: Adding .pymon
+        if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
-          git config pull.rebase true
-          git pull origin ${{ github.head_ref }}
           git add -f ./.pymon 
           git commit -am "Add pymon"
           git push origin HEAD:${{ github.head_ref }}
       - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ github.event.head_commit.message }}
+          push_options: '--force'
+          skip_checkout: true
+          file_pattern: '*.svg'
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
         with:
           commit_message: ${{ github.event.head_commit.message }}
           push_options: '--force'
