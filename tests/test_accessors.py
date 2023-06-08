@@ -231,3 +231,32 @@ def test_data_array_accessor_categorical_plot_fail(
     candidate_map.data = np.random.choice(np.arange(num_classes), candidate_map.shape)
     with raises(ValueError):
         _ = candidate_map.gval.cat_plot(legend_labels=legend_labels)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map",
+    glob="data_array_accessor_continuous",
+)
+def test_data_array_accessor_continuous(candidate_map, benchmark_map):
+    agreement_map, metrics_df = candidate_map.gval.continuous_compare(
+        benchmark_map=benchmark_map, metrics="all"
+    )
+
+    assert isinstance(agreement_map, xr.DataArray)
+    assert isinstance(metrics_df, DataFrame)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map",
+    glob="data_set_accessor_continuous",
+)
+def test_data_set_accessor_continuous(
+    candidate_map,
+    benchmark_map,
+):
+    agreement_map, metrics_df = candidate_map.gval.continuous_compare(
+        benchmark_map=benchmark_map, metrics="all"
+    )
+
+    assert isinstance(agreement_map, xr.Dataset)
+    assert isinstance(metrics_df, DataFrame)

@@ -387,3 +387,23 @@ def _make_pairing_dict_fn(
             )
 
     return nb.vectorize(nopython=True)(pairing_dict_fn)
+
+
+@nb.vectorize(nopython=True)
+def difference(c: Number, b: Number) -> Number:  # pragma: no cover
+    """
+    Calculates the difference between candidate and benchmark.
+
+    Parameters
+    ----------
+    c : Number
+        Candidate map value.
+    b : Number
+        Benchmark map value.
+
+    Returns
+    -------
+    Number
+        Difference between candidate and benchmark map values.
+    """
+    return c - b
