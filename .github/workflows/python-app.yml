@@ -67,7 +67,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
         with:
-          commit_message: ${{ github.event.head_commit.message }}
+          commit_message: 'arb'
           push_options: '--force'
           skip_checkout: true
           file_pattern: '*.pymon'
