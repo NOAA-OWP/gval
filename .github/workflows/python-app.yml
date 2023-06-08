@@ -55,6 +55,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+          git config pull.rebase true
           git pull origin ${{ github.head_ref }}
           git add -f ./.pymon 
           git commit -am "Add pymon"
