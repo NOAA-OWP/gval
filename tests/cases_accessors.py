@@ -278,3 +278,26 @@ def case_data_array_accessor_categorical_plot_fail(
     candidate_map, legend_labels, num_classes
 ):
     return candidate_map, legend_labels, num_classes
+
+
+candidate_maps = ["candidate_continuous_0.tif", "candidate_continuous_1.tif"]
+benchmark_maps = ["benchmark_continuous_0.tif", "benchmark_continuous_1.tif"]
+
+
+@parametrize(
+    "candidate_map, benchmark_map",
+    list(zip(candidate_maps, benchmark_maps)),
+)
+def case_data_array_accessor_continuous(candidate_map, benchmark_map):
+    return _load_xarray(candidate_map), _load_xarray(benchmark_map)
+
+
+@parametrize(
+    "candidate_map, benchmark_map",
+    list(zip(candidate_maps, benchmark_maps)),
+)
+def case_data_set_accessor_continuous(candidate_map, benchmark_map):
+    return (
+        _load_xarray(candidate_map, band_as_variable=True),
+        _load_xarray(benchmark_map, band_as_variable=True),
+    )

@@ -21,6 +21,7 @@ from gval.comparison.pairing_functions import (
     _make_pairing_dict,
     _make_pairing_dict_fn,
     PairingDict,
+    difference,
 )
 from gval.comparison.agreement import _compute_agreement_map
 from gval.comparison.tabulation import (
@@ -115,6 +116,13 @@ def test_pairing_dict_fn(c, b, pairing_dict, expected_value):
     computed_value = pairing_dict_fn(c, b)
 
     np.testing.assert_equal(computed_value, expected_value)
+
+
+@parametrize_with_cases("c, b, expected_value", glob="difference")
+def test_difference(c, b, expected_value):
+    """Tests difference comparison function"""
+
+    np.testing.assert_equal(difference(c, b), expected_value)
 
 
 #################################################################################

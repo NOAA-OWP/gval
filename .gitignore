@@ -144,3 +144,6 @@ notebooks/metric_file.csv
 #IDE
 .idea
 .idea.*
+
+# docs
+docs/sphinx/_build/

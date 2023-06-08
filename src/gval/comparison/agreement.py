@@ -120,23 +120,6 @@ def _compute_agreement_map(
 
     ############################################################################################
 
-    """
-    TODO: xr.apply_ufunc seems to suffer from information loss
-    - The rio accessor is still there.
-    - It appears as if spatial_dims and transforms are being preserved.
-    - Currently, CRS is identified as lost and is being reset.
-    - NoData and encoded NoData are also not being managed for agreement map.
-        - [See this for more information](https://corteva.github.io/rioxarray/stable/getting_started/nodata_management.html).
-    - attrs are not being copied from both candidate and benchmark, just candidate.
-    - How about encodings?
-    - Dtypes?
-    - Anything else?
-    - For more information, please see pages on [information loss](https://corteva.github.io/rioxarray/stable/getting_started/manage_information_loss.html) and [`xr.apply_ufunc`](https://docs.xarray.dev/en/stable/generated/xarray.apply_ufunc.html).
-    - These changes need to be researched and tested properly.
-        - Consider switching test to `xr.testing.assert_identical()` to consider names and attributes.
-        - If names are not to be tested, consider using `tests.conftest._assert_pairing_dict_equal()` for attribute testing.
-    """
-
     def _manage_information_loss(agreement_map, crs, nodata, encode_nodata, dtype):
         """
         Manages the information loss due to `xr.apply_ufunc`
