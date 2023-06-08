@@ -26,9 +26,12 @@ jobs:
     steps:
     
       - uses: actions/checkout@v3
+#         with:
+#            ref: my-branch
       - run: |
           echo "Test"
           echo ${{ github.event.head_commit.message }}
+          echo running on branch ${GITHUB_REF##*/}
           echo ${{ github.event.commits[0].message }}
           echo "Done"
 #       - name: Setup Python
