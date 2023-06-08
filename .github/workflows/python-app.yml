@@ -53,7 +53,7 @@ jobs:
           output: docs/images/coverage.svg
       - name: Adding .pymon
         run: |
-          git add ./.pymon
+          git add -f ./.pymon 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ github.event.head_commit.message }}
