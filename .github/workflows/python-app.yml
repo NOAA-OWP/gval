@@ -53,6 +53,8 @@ jobs:
           output: docs/images/coverage.svg
       - name: Adding .pymon
         run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
           git add -f ./.pymon 
           git commit -am "Add pymon"
           git push -u --force origin
