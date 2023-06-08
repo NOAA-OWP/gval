@@ -26,8 +26,8 @@ jobs:
     steps:
     
       - uses: actions/checkout@v3
-#         with:
-#            ref: my-branch
+        with:
+           ref: ${{ github.event.pull_request.head.sha }}
       - run: |
           echo "Test"
           echo ${{ github.event.head_commit.message }}
