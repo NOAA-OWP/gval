@@ -61,7 +61,7 @@ jobs:
           skip_checkout: true
           file_pattern: '*.svg *monitordb'
           disable_globbing: true
-          branch: testing
+          branch: HEAD:refs/heads/testing
           create_branch: true
       - name: Sphinx build
         run: |
