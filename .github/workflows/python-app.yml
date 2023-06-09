@@ -22,15 +22,16 @@ jobs:
       fail-fast: false
       matrix:
         python: ["3.8", "3.9", "3.10", "3.11"]
-
-    
+        
     steps:
       - uses: actions/checkout@v3
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
-  
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -44,8 +45,8 @@ jobs:
       - name: Test with pytest
         run: |
           for f in tests/test*; do
-            pytest $f --cov=gval --cov-report term-missing --cov-append
-          done
+            pytest $f --memray --cov=gval --cov-report term-missing --cov-append --db ./monitordb --memray-bin-path ./ --memray-bin-prefix memray_bin_
+          python ./tests/remote_benchmark.py
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
@@ -54,19 +55,21 @@ jobs:
         with:
           output: docs/images/coverage.svg
       - uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
         with:
-          commit_message: ${{ github.event.head_commit.message }}
+          commit_message:  "Testing and performance monitoring"
           push_options: '--force'
           skip_checkout: true
-          file_pattern: '*.svg'
+          file_pattern: '*.svg *monitordb *memray_bin_* *remote_performance_report.csv'
+          disable_globbing: true
+          branch: testing
+          create_branch: true
       - name: Sphinx build
         run: |
           sudo chown -R runner:runner /usr/local/bin
           wget -P /usr/local/bin https://github.com/jgm/pandoc/releases/download/3.1/pandoc-3.1-linux-amd64.tar.gz
           tar -xf /usr/local/bin/pandoc-3.1-linux-amd64.tar.gz --directory /usr/local/bin/
           cp /usr/local/bin/pandoc-3.1/bin/pandoc /usr/local/bin/pandoc
-          echo | ls /usr/local/bin
-          pandoc --help
           sphinx-build docs/sphinx docs/sphinx/_build 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
