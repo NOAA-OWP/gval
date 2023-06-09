@@ -9,9 +9,11 @@ import rioxarray as rxr
 candidate = rxr.open_rasterio('candidate_map_two_class_categorical.tif', mask_and_scale=True)
 benchmark = rxr.open_rasterio('benchmark_map_two_class_categorical.tif', mask_and_scale=True)
 
-agreement_map, crosstab_table, metric_table = candidate.gval.categorical_compare(benchmark,
-                                                                                 positive_categories=[2],
-                                                                                 negative_categories=[0, 1])
+(agreement_map,
+ crosstab_table,
+ metric_table) = candidate.gval.categorical_compare(benchmark,
+                                                   positive_categories=[2],
+                                                   negative_categories=[0, 1])
 ```
 
 ### Outputs

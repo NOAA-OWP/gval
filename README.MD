@@ -2,7 +2,7 @@
 text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png#gh-light-mode-only)
 
 ![Build and
-Test](https://github.com/NOAA-OWP/gval/actions/workflows/python-app.yml/badge.svg)![Coverage](https://github.com/NOAA-OWP/gval/raw/main/docs/images/coverage.svg)
+Test](https://github.com/NOAA-OWP/gval/actions/workflows/python-app.yml/badge.svg)![Coverage](https://github.com/NOAA-OWP/gval/raw/testing/docs/images/coverage.svg)
 
 GVAL (pronounced "g-val") is a high-level Python framework to evaluate
 the skill of geospatial datasets by comparing candidates to benchmark
@@ -13,6 +13,8 @@ geopandas objects, respectively. Abilities to prepare or homogenize maps
 for comparison are included. The comparisons are based on scoring
 philosophies for three statistical data types including categorical,
 continuous, and probabilistic.
+
+See the full documentation [here](noaa-owp.github.io/gval/).
 
 WARNING:
 

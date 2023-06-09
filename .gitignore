@@ -145,5 +145,10 @@ notebooks/metric_file.csv
 .idea
 .idea.*
 
+#pytest-monitor
+.pymon
+
 # docs
 docs/sphinx/_build/
+
+# Local Performance Report

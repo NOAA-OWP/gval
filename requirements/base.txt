@@ -1,10 +1,10 @@
 rioxarray>=0.13.4
-dask==2023.1.1
+dask==2023.5.0
 xarray-spatial==0.3.5
-pandera==0.14.5
+pandera==0.15.1
 shapely==2.0.1
 geocube>=0.3.3
-pandas==1.5.3
+pandas==2.0.2
 odc-geo @ git+https://github.com/opendatacube/odc-geo.git
 
 ###################################
