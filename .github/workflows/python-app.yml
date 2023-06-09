@@ -45,7 +45,7 @@ jobs:
       - name: Test with pytest
         run: |
           for f in tests/test*; do
-            pytest $f --memray --cov=gval --cov-report term-missing --cov-append --db ./monitordb --memray-bin-path ./ --memray-bin-prefix memray_bin_
+            pytest $f --memray --cov=gval --cov-report term-missing --cov-append --db ./monitordb
           done
           python ./tests/remote_benchmark.py
         env:
