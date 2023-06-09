@@ -61,7 +61,7 @@ jobs:
           commit_message:  "Testing and performance monitoring"
           push_options: '--force'
           skip_checkout: true
-          file_pattern: '*.svg *monitordb *memray_bin_* *remote_performance_report.csv'
+          file_pattern: '*.svg *monitordb *remote_performance_report.csv'
           disable_globbing: true
           branch: testing
           create_branch: true
