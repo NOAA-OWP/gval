@@ -45,7 +45,7 @@ If you would like to contribute, please follow the following steps:
 4. Install the code via `pip install .`
 5. Set up pre-commit hooks via `pre-commit install`.  Afterwards when a commit is made it will run
 [flake8](https://github.com/PyCQA/flake8) for code and style linting as well as
-[flae8-black](https://pypi.org/project/flake8-black/) to autoformat the code.  In many cases issues will be rectified
+[flake8-black](https://pypi.org/project/flake8-black/) to autoformat the code.  In many cases issues will be rectified
 automatically with flake8-black but in some cases manual changes will be necessary.
 6. Code Standards: Make sure unit tests pass `pytest` and there is no significant reduction
 in code coverage and increase in memory.  Also run local_benchmark_test to make sure there is no significant
