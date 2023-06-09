@@ -46,6 +46,7 @@ jobs:
         run: |
           for f in tests/test*; do
             pytest $f --memray --cov=gval --cov-report term-missing --cov-append --db ./monitordb --memray-bin-path ./ --memray-bin-prefix memray_bin_
+          done
           python ./tests/remote_benchmark.py
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
