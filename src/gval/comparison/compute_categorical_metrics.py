@@ -280,7 +280,9 @@ def _compute_categorical_metrics(
         metric_df = (
             metric_df.groupby(Sample_identifiers.columns())
             .mean(numeric_only=True)
-            .drop(columns=["fn", "fp", "tn", "tp", "positive_categories"])
+            .drop(
+                columns=["fn", "fp", "tn", "tp", "positive_categories"], errors="ignore"
+            )
             .reset_index()
         )
 
@@ -322,7 +324,10 @@ def _compute_categorical_metrics(
         metric_df = (
             metric_df.groupby(Sample_identifiers.columns())
             .sum(numeric_only=True)
-            .drop(columns=["fn", "fp", "tn", "tp", "weights", "positive_categories"])
+            .drop(
+                columns=["fn", "fp", "tn", "tp", "weights", "positive_categories"],
+                errors="ignore",
+            )
             .divide(metric_df.loc[:, "weights"].sum())
             .reset_index()
         )
