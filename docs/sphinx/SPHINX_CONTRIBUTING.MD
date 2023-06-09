@@ -43,16 +43,20 @@ If you would like to contribute, please follow the following steps:
 2. Clone your fork: `git clone <your_username>/gval`
 3. Create a feature branch: `git checkout -b <your_feature>`
 4. Install the code via `pip install .`
-5. Set up pre-commit hooks via `pre-commit install`
+5. Set up pre-commit hooks via `pre-commit install`.  Afterwards when a commit is made it will run
+[flake8](https://github.com/PyCQA/flake8) for code and style linting as well as
+[flae8-black](https://pypi.org/project/flake8-black/) to autoformat the code.  In many cases issues will be rectified
+automatically with flake8-black but in some cases manual changes will be necessary.
 6. Code Standards: Make sure unit tests pass `pytest` and there is no significant reduction
 in code coverage and increase in memory.  Also run local_benchmark_test to make sure there is no significant
 cpu time performance loss.  To run everything (in root project directory):
 `pytest --memray --cov=gval --cov-report term-missing && python ./tests/local_benchmark.py`.
-7. If any changes were made to the documentation, make sure to run `python docs/compile_readme.py`.
-To build documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
-The html will be created in the _build/html folder, double click index.html to preview docs.
-8. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks that will lint
-the code. Make sure all of these checks pass, if not make changes and re-commit.
+7. If any changes were made to the documentation, make sure to run `python docs/compile_readme.py`.  (The README is made
+up of other docs located in Markdown.  Edit those directly if need be before running the preceding command.)
+To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
+The html will be created in the _build/html folder.  Open index.html in a browser to preview docs.
+8. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks mentioned on step 5
+that will lint the code. Make sure all of these checks pass, if not make changes and re-commit.
 9. Push to the branch: `git push origin <your_username> <your_feature>`
 10. Open a pull request (review checklist in PR template before requesting a review)
 
@@ -65,9 +69,6 @@ the code. Make sure all of these checks pass, if not make changes and re-commit.
 
 
 ## Tooling Dependencies
-Code Checking with [Flake8](https://github.com/PyCQA/flake8)
-- Combines PyFlakes, pycodestyle, and others for linting and style checking.
-- For autoformatting: [flake8-black](https://pypi.org/project/flake8-black/)
 - Testing with [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
     * For timed tests: [pytest-monitor](https://github.com/CFMTech/pytest-monitor/)
     * For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
@@ -128,13 +129,8 @@ To build the gval package and install locally:
 
 - In the root directory install the gVal package:
 
-  `python -m build && pip install dist/*.whl --force-reinstall`
-- Or on Windows replacing version number with current version number:
-
-  `py -m build` then get the name of the wheel in the dist directory, e.g.:
-
-  `pip install dist/gval-0.0.1-py3-none-any.whl --force-reinstall`
+  `pip install .`
 
 The packaging process using docker container would look as follows (on linux):
 
-`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install dist/*.whl --force-reinstall`
+`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install .`

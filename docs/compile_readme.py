@@ -81,6 +81,10 @@ def compile_readme():
         'width="700" height="180" />',
     )
 
+    sphinx_contents = sphinx_contents.replace(
+        "\nSee the full documentation [here](noaa-owp.github.io/gval/).\n", ""
+    )
+
     with open(f"{abs_path}/sphinx/SPHINX_README.MD", "w") as file:
         file.write(sphinx_contents)
 
