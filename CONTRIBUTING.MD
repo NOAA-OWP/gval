@@ -48,10 +48,13 @@ If you would like to contribute, please follow the following steps:
 in code coverage and increase in memory.  Also run local_benchmark_test to make sure there is no significant
 cpu time performance loss.  To run everything (in root project directory):
 `pytest --memray --cov=gval --cov-report term-missing && python ./tests/local_benchmark.py`.
-7.  Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks that will lint
+7. If any changes were made to the documentation, make sure to run `python docs/compile_readme.py`.
+To build documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
+The html will be created in the _build/html folder, double click index.html to preview docs.
+8. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks that will lint
 the code. Make sure all of these checks pass, if not make changes and re-commit.
-8. Push to the branch: `git push origin <your_username> <your_feature>`
-9. Open a pull request (review checklist in PR template before requesting a review)
+9. Push to the branch: `git push origin <your_username> <your_feature>`
+10. Open a pull request (review checklist in PR template before requesting a review)
 
 
 ## Standards

@@ -22,13 +22,8 @@ if __name__ == "__main__":
     local_con = db.connect(path)
 
     df_metrics_local = pd.read_sql_query("select * from TEST_METRICS", local_con)
-    df_sessions = pd.read_sql_query(
-        "select * from TEST_SESSIONS ORDER BY RUN_DATE desc", local_con
-    )
-    session = df_sessions.iloc[0]["SESSION_H"]
-    filtered_local = df_metrics_local.loc[df_metrics_local["SESSION_H"] == session]
 
-    merged_df = filtered_local.merge(
+    merged_df = df_metrics_local.merge(
         df_metrics_remote,
         on="ITEM_VARIANT",
         how="outer",
