@@ -173,19 +173,17 @@ def handle_xarray_memory(
         dst_profile = cog_profiles.get("lzw")
         delete_file = not cache
 
-        with (
-            NamedTemporaryFile(delete=True, suffix=".tif") as in_file,
-            NamedTemporaryFile(delete=delete_file, suffix=".tif") as out_file,
-        ):
-            data_obj.rio.to_raster(in_file.name, tiled=True, windowed=True)
-            del data_obj
-            cog_translate(in_file.name, out_file.name, dst_profile, in_memory=True)
-            return rxr.open_rasterio(
-                out_file.name,
-                mask_and_scale=True,
-                band_as_variable=band_as_var,
-                cache=cache,
-            )
+        with NamedTemporaryFile(delete=True, suffix=".tif") as in_file:
+            with NamedTemporaryFile(delete=delete_file, suffix=".tif") as out_file:
+                data_obj.rio.to_raster(in_file.name, tiled=True, windowed=True)
+                del data_obj
+                cog_translate(in_file.name, out_file.name, dst_profile, in_memory=True)
+                return rxr.open_rasterio(
+                    out_file.name,
+                    mask_and_scale=True,
+                    band_as_variable=band_as_var,
+                    cache=cache,
+                )
 
 
 def _check_dask_array(original_map: Union[xr.DataArray, xr.Dataset]) -> bool:
