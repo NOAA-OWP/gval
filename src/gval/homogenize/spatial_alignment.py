@@ -14,10 +14,11 @@ from typing import Optional, Tuple, Union
 import xarray as xr
 from shapely.geometry import box
 from rasterio.enums import Resampling
-
-from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
-from gval.homogenize.numeric_alignment import _check_dask_array
 from odc.geo.xr import ODCExtensionDa
+
+from gval.utils.loading_datasets import handle_xarray_memory
+from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
+from gval.utils.loading_datasets import _check_dask_array
 
 ODCExtensionDa
 
@@ -322,4 +323,6 @@ def _spatial_alignment(
     # reproject maps to align
     cam, bem = _align_rasters(candidate_map, benchmark_map, target_map, resampling)
 
-    return cam, bem
+    return handle_xarray_memory(cam, make_temp=True), handle_xarray_memory(
+        bem, make_temp=True
+    )

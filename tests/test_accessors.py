@@ -4,9 +4,11 @@ import xarray as xr
 from pytest import raises
 from pandas import DataFrame
 
+from gval.utils.loading_datasets import adjust_memory_strategy, handle_xarray_memory
+
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes, memory_strategies",
     glob="data_array_accessor_success",
 )
 def test_data_array_accessor_success(
@@ -15,7 +17,12 @@ def test_data_array_accessor_success(
     positive_categories,
     negative_categories,
     rasterize_attributes,
+    memory_strategies,
 ):
+    adjust_memory_strategy(memory_strategies)
+
+    candidate_map = handle_xarray_memory(candidate_map)
+
     data = candidate_map.gval.categorical_compare(
         benchmark_map=benchmark_map,
         positive_categories=positive_categories,
@@ -32,13 +39,24 @@ def test_data_array_accessor_success(
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, positive_categories, negative_categories",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, memory_strategies, exception",
     glob="data_array_accessor_fail",
 )
 def test_data_array_accessor_fail(
-    candidate_map, benchmark_map, positive_categories, negative_categories
+    candidate_map,
+    benchmark_map,
+    positive_categories,
+    negative_categories,
+    memory_strategies,
+    exception,
 ):
-    with raises(TypeError):
+    with raises(exception):
+        adjust_memory_strategy(memory_strategies)
+
+        if exception == OSError:
+            candidate_map.encoding["source"] = "arb"
+            handle_xarray_memory(candidate_map)
+
         _ = candidate_map.gval.categorical_compare(
             benchmark_map=benchmark_map,
             positive_categories=positive_categories,

@@ -17,6 +17,8 @@ candidate_maps = [
     ),
     _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
     _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True, chunks="auto"),
+    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
+    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
 ]
 benchmark_maps = [
     _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
@@ -25,6 +27,8 @@ benchmark_maps = [
     ),
     _load_gpkg("polygons_two_class_categorical.gpkg"),
     _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True, chunks="auto"),
+    _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
+    _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
 ]
 candidate_datasets = [
     _load_xarray(
@@ -53,15 +57,24 @@ benchmark_datasets = [
     ),
 ]
 
-positive_cat = np.array([2, 2, 2, 2])
-negative_cat = np.array([[0, 1], [0, 1], [0, 1], [0, 1]])
-rasterize_attrs = [None, None, ["category"], None]
+positive_cat = np.array([2, 2, 2, 2, 2, 2])
+negative_cat = np.array([[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]])
+rasterize_attrs = [None, None, ["category"], None, None, None]
+memory_strategy = ["normal", "normal", "normal", "normal", "moderate", "aggressive"]
+exception_list = [OSError, ValueError, TypeError]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes, memory_strategies",
     list(
-        zip(candidate_maps, benchmark_maps, positive_cat, negative_cat, rasterize_attrs)
+        zip(
+            candidate_maps,
+            benchmark_maps,
+            positive_cat,
+            negative_cat,
+            rasterize_attrs,
+            memory_strategy,
+        )
     ),
 )
 def case_data_array_accessor_success(
@@ -70,6 +83,7 @@ def case_data_array_accessor_success(
     positive_categories,
     negative_categories,
     rasterize_attributes,
+    memory_strategies,
 ):
     return (
         candidate_map,
@@ -77,24 +91,39 @@ def case_data_array_accessor_success(
         positive_categories,
         negative_categories,
         rasterize_attributes,
+        memory_strategies,
     )
 
 
 @parametrize(
-    "candidate_map, benchmark_map, positive_categories, negative_categories",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, memory_strategies, exception",
     list(
         zip(
-            candidate_maps[0:1],
-            benchmark_datasets[0:1],
-            positive_cat[0:1],
-            negative_cat[0:1],
+            [candidate_maps[0], candidate_maps[1], candidate_maps[0]],
+            [benchmark_maps[0], benchmark_maps[1], benchmark_datasets[0]],
+            positive_cat[0:3],
+            negative_cat[0:3],
+            ["moderate", "arb_error", "normal"],
+            exception_list,
         )
     ),
 )
 def case_data_array_accessor_fail(
-    candidate_map, benchmark_map, positive_categories, negative_categories
+    candidate_map,
+    benchmark_map,
+    positive_categories,
+    negative_categories,
+    memory_strategies,
+    exception,
 ):
-    return candidate_map, benchmark_map, positive_categories, negative_categories
+    return (
+        candidate_map,
+        benchmark_map,
+        positive_categories,
+        negative_categories,
+        memory_strategies,
+        exception,
+    )
 
 
 @parametrize(

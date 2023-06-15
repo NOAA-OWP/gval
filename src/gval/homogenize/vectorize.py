@@ -87,4 +87,6 @@ def _vectorize_data(
     gdf_vec = gpd.GeoDataFrame({"band": bands, "values": values, "geometry": geometry})
     gdf_vec.crs = raster_data[idx].rio.crs
 
+    del raster_data
+
     return gdf_vec

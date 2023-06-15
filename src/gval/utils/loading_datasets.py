@@ -11,6 +11,9 @@ import os
 import rioxarray as rxr
 import xarray as xr
 import rasterio
+from tempfile import NamedTemporaryFile
+from rio_cogeo.cogeo import cog_translate
+from rio_cogeo.profiles import cog_profiles
 
 
 def load_raster_as_xarray(
@@ -99,3 +102,110 @@ def load_raster_as_xarray(
         mask_and_scale=mask_and_scale,
         **open_kwargs,
     )
+
+
+MEMORY_STRATEGY = "normal"
+
+
+def adjust_memory_strategy(strategy: str):
+    """
+    Tells GVAL how to address memory
+
+    Parameters
+    ----------
+    strategy : str, {'normal', 'moderate', 'aggressive'}
+        Method to conserve memory
+
+    Raises
+    ------
+    ValueError
+
+    """
+
+    if strategy in {"normal", "moderate", "aggressive"}:
+        global MEMORY_STRATEGY
+        MEMORY_STRATEGY = strategy
+
+    else:
+        raise ValueError(
+            "Please select one of the following options for a memory strategy "
+            "'normal', 'moderate', 'aggressive'"
+        )
+
+
+def handle_xarray_memory(
+    data_obj: Union[xr.Dataset, xr.DataArray], make_temp: bool = False
+) -> Union[xr.Dataset, xr.DataArray]:
+    """
+    Executes memory strategy plan
+
+    Parameters
+    ----------
+    data_obj : Union[xr.Dataset, xr.DataArray]
+        Xarray object to handle_memory
+    make_temp: bool
+        Store data in a temporary file if in memory
+
+    Returns
+    -------
+    Union[xr.Dataset, xr.DataArray]
+        Memory handled xarray object
+    """
+
+    band_as_var = True if isinstance(data_obj, xr.Dataset) else False
+    cache = True if MEMORY_STRATEGY != "aggressive" else False
+
+    if MEMORY_STRATEGY == "normal" or _check_dask_array(data_obj):
+        return data_obj
+    elif make_temp is False:
+        file_name = (
+            data_obj["band_1"].encoding["source"]
+            if band_as_var
+            else data_obj.encoding["source"]
+        )
+        new_obj = rxr.open_rasterio(
+            file_name, mask_and_scale=True, band_as_variable=band_as_var, cache=cache
+        )
+        del data_obj
+        return new_obj
+
+    else:
+        dst_profile = cog_profiles.get("lzw")
+        delete_file = not cache
+
+        with (
+            NamedTemporaryFile(delete=True, suffix=".tif") as in_file,
+            NamedTemporaryFile(delete=delete_file, suffix=".tif") as out_file,
+        ):
+            data_obj.rio.to_raster(in_file.name, tiled=True, windowed=True)
+            del data_obj
+            cog_translate(in_file.name, out_file.name, dst_profile, in_memory=True)
+            return rxr.open_rasterio(
+                out_file.name,
+                mask_and_scale=True,
+                band_as_variable=band_as_var,
+                cache=cache,
+            )
+
+
+def _check_dask_array(original_map: Union[xr.DataArray, xr.Dataset]) -> bool:
+    """
+    Check whether map to be reprojected has dask data or not
+
+    Parameters
+    ----------
+    original_map: Union[xr.DataArray, xr.Dataset]
+        Map to be reprojected
+
+    Returns
+    -------
+    bool
+        Whether the data is a dask array
+    """
+
+    chunks = (
+        original_map["band_1"].chunks
+        if isinstance(original_map, xr.Dataset)
+        else original_map.chunks
+    )
+    return chunks is not None
