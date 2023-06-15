@@ -16,7 +16,7 @@ from shapely.geometry import box
 from rasterio.enums import Resampling
 from odc.geo.xr import ODCExtensionDa
 
-from gval.utils.loading_datasets import handle_xarray_memory
+from gval.utils.loading_datasets import _handle_xarray_memory
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
 from gval.utils.loading_datasets import _check_dask_array
 
@@ -323,6 +323,4 @@ def _spatial_alignment(
     # reproject maps to align
     cam, bem = _align_rasters(candidate_map, benchmark_map, target_map, resampling)
 
-    return handle_xarray_memory(cam, make_temp=True), handle_xarray_memory(
-        bem, make_temp=True
-    )
+    return tuple(map(lambda x: _handle_xarray_memory(x, make_temp=True), [cam, bem]))

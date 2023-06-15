@@ -25,7 +25,7 @@ import numba as nb
 from gval.comparison.pairing_functions import (
     _make_pairing_dict_fn,
 )
-from gval.utils.loading_datasets import handle_xarray_memory
+from gval.utils.loading_datasets import _handle_xarray_memory
 
 
 def _compute_agreement_map(
@@ -197,4 +197,4 @@ def _compute_agreement_map(
                 dtype=candidate_map[c_var].dtype,
             )
 
-    return handle_xarray_memory(agreement_map, make_temp=True)
+    return _handle_xarray_memory(agreement_map, make_temp=True)

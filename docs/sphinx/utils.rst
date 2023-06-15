@@ -7,6 +7,7 @@ Utilities
    :maxdepth: 1
    :caption: Table of Contents
 
+   loading_datasets
    exceptions
    schemas
    visualize

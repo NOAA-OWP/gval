@@ -4,7 +4,11 @@ import xarray as xr
 from pytest import raises
 from pandas import DataFrame
 
-from gval.utils.loading_datasets import adjust_memory_strategy, handle_xarray_memory
+from gval.utils.loading_datasets import (
+    adjust_memory_strategy,
+    get_current_memory_strategy,
+    _handle_xarray_memory,
+)
 
 
 @parametrize_with_cases(
@@ -21,7 +25,9 @@ def test_data_array_accessor_success(
 ):
     adjust_memory_strategy(memory_strategies)
 
-    candidate_map = handle_xarray_memory(candidate_map)
+    assert get_current_memory_strategy() == memory_strategies
+
+    candidate_map = _handle_xarray_memory(candidate_map)
 
     data = candidate_map.gval.categorical_compare(
         benchmark_map=benchmark_map,
@@ -55,7 +61,7 @@ def test_data_array_accessor_fail(
 
         if exception == OSError:
             candidate_map.encoding["source"] = "arb"
-            handle_xarray_memory(candidate_map)
+            _handle_xarray_memory(candidate_map)
 
         _ = candidate_map.gval.categorical_compare(
             benchmark_map=benchmark_map,

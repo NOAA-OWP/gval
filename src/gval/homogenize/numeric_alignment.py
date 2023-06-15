@@ -9,7 +9,7 @@ from typing import Union, Tuple
 import numpy as np
 import xarray as xr
 
-from gval.utils.loading_datasets import handle_xarray_memory
+from gval.utils.loading_datasets import _handle_xarray_memory
 
 
 def _align_numeric_dtype(
@@ -106,7 +106,7 @@ def _align_datasets_dtype(
             candidate[c_var], benchmark[b_var]
         )
 
-    return handle_xarray_memory(candidate, make_temp=True), handle_xarray_memory(
+    return _handle_xarray_memory(candidate, make_temp=True), _handle_xarray_memory(
         benchmark, make_temp=True
     )
 
@@ -134,14 +134,14 @@ def _align_numeric_data_type(
     if isinstance(candidate_map, xr.DataArray):
         return tuple(
             map(
-                lambda x: handle_xarray_memory(x, make_temp=True),
+                lambda x: _handle_xarray_memory(x, make_temp=True),
                 _align_numeric_dtype(candidate_map, benchmark_map),
             )
         )
     else:
         return tuple(
             map(
-                lambda x: handle_xarray_memory(x, make_temp=True),
+                lambda x: _handle_xarray_memory(x, make_temp=True),
                 _align_datasets_dtype(candidate_map, benchmark_map),
             )
         )

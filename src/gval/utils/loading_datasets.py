@@ -33,6 +33,9 @@ def load_raster_as_xarray(
     """
     Wraps around :obj:`rioxarray.open_rasterio` providing control over some arguments.
 
+    .. deprecated:: 0.0.2
+        `load_raster_as_xarray` will be removed in gval 0.0.2.  Use `rioxarray.open_rasterio` instead
+
     Parameters
     ----------
     filename : Union[ str, os.PathLike, rasterio.io.DatasetReader, rasterio.vrt.WarpedVRT ]
@@ -104,12 +107,19 @@ def load_raster_as_xarray(
     )
 
 
-MEMORY_STRATEGY = "normal"
+_MEMORY_STRATEGY = "normal"
 
 
 def adjust_memory_strategy(strategy: str):
     """
-    Tells GVAL how to address memory
+    Tells GVAL how to address handling memory.  There are three modes currently available:
+
+    normal:  Keeps all of xarray files in memory as usual
+    moderate:  Either creates cloud optimized geotiffs and stores as temporary files and reloads or reloads file
+    to be in lazily loaded stated
+    aggressive: Does the same as moderate except loads with no cache so everything is read from disk
+
+    There are tradeoffs with performance for choosing a strategy that conserves memory, adjust only as needed.
 
     Parameters
     ----------
@@ -123,8 +133,8 @@ def adjust_memory_strategy(strategy: str):
     """
 
     if strategy in {"normal", "moderate", "aggressive"}:
-        global MEMORY_STRATEGY
-        MEMORY_STRATEGY = strategy
+        global _MEMORY_STRATEGY
+        _MEMORY_STRATEGY = strategy
 
     else:
         raise ValueError(
@@ -133,11 +143,27 @@ def adjust_memory_strategy(strategy: str):
         )
 
 
-def handle_xarray_memory(
+def get_current_memory_strategy() -> str:
+    """
+    Gets the current memory_strategy
+
+    Returns
+    -------
+    str
+        Memory optimization strategy
+    """
+    return _MEMORY_STRATEGY
+
+
+def _handle_xarray_memory(
     data_obj: Union[xr.Dataset, xr.DataArray], make_temp: bool = False
 ) -> Union[xr.Dataset, xr.DataArray]:
     """
-    Executes memory strategy plan
+    Executes memory strategy plan depending on the set memory strategy.
+
+    Nothing happens in this method when the plan is normal, only if the strategy is moderate or aggressive does
+    any memory optimization occur.  If the parameter make_temp is true a temporary file with a lzw compressed
+    cloud optimized geotiff will be made, otherwise the original file will be loaded.
 
     Parameters
     ----------
@@ -152,12 +178,15 @@ def handle_xarray_memory(
         Memory handled xarray object
     """
 
+    # Check to see if it is already dask and what memory strategy is in place
     band_as_var = True if isinstance(data_obj, xr.Dataset) else False
-    cache = True if MEMORY_STRATEGY != "aggressive" else False
+    cache = True if _MEMORY_STRATEGY != "aggressive" else False
 
-    if MEMORY_STRATEGY == "normal" or _check_dask_array(data_obj):
+    if _MEMORY_STRATEGY == "normal" or _check_dask_array(data_obj):  # do nothing
         return data_obj
-    elif make_temp is False:
+    elif (
+        make_temp is False
+    ):  # reload the file with cache on or off depending on strategy
         file_name = (
             data_obj["band_1"].encoding["source"]
             if band_as_var
@@ -169,7 +198,7 @@ def handle_xarray_memory(
         del data_obj
         return new_obj
 
-    else:
+    else:  # make temporary file from lzw compressed COG and load with cache on or off depending on strategy
         dst_profile = cog_profiles.get("lzw")
         delete_file = not cache
 
