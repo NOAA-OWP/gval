@@ -25,7 +25,7 @@ from pandera.typing import DataFrame
 import dask
 
 from gval.utils.schemas import Xrspatial_crosstab_df, Crosstab_df
-from gval.homogenize.spatial_alignment import _check_dask_array
+from gval.utils.loading_datasets import _check_dask_array
 
 
 @pa.check_types

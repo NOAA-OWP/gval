@@ -10,6 +10,8 @@ import xarray as xr
 import geopandas as gpd
 from geocube.api.core import make_geocube
 
+from gval.utils.loading_datasets import _handle_xarray_memory
+
 
 def _rasterize_data(
     candidate_map: Union[xr.Dataset, xr.DataArray],
@@ -95,4 +97,4 @@ def _rasterize_data(
                     inplace=True,
                 )
 
-    return rasterized_data
+    return _handle_xarray_memory(rasterized_data, make_temp=True)

@@ -145,8 +145,7 @@ class GVALXarray:
             benchmark_map, target_map, resampling, rasterize_attributes
         )
 
-        agreement_map = Comparison.process_agreement_map(
-            candidate_map=candidate,
+        agreement_map = candidate.gval.compute_agreement_map(
             benchmark_map=benchmark,
             comparison_function=comparison_function,
             pairing_dict=pairing_dict,
@@ -155,9 +154,6 @@ class GVALXarray:
             nodata=nodata,
             encode_nodata=encode_nodata,
         )
-
-        if self.agreement_map_format == "vector":
-            agreement_map = _vectorize_data(agreement_map)
 
         crosstab_df = candidate.gval.compute_crosstab(
             benchmark_map=benchmark,
@@ -205,7 +201,7 @@ class GVALXarray:
 
         Parameters
         ----------
-        benchmark_map : Union[xr.DataArray, xr.Dataset]
+        benchmark_map : Union[gpd.GeoDataFrame, xr.DataArray, xr.Dataset]
             Benchmark map.
         metrics: Union[str, Iterable[str]], default = "all"
             Statistics to return in metric table.
@@ -231,9 +227,7 @@ class GVALXarray:
             benchmark_map, target_map, resampling, rasterize_attributes
         )
 
-        # compute agreement map
-        agreement_map = Comparison.process_agreement_map(
-            candidate_map=candidate,
+        agreement_map = candidate.gval.compute_agreement_map(
             benchmark_map=benchmark,
             comparison_function=difference,
             nodata=nodata,
@@ -244,8 +238,7 @@ class GVALXarray:
             candidate_map=candidate, benchmark_map=benchmark, metrics=metrics
         )
 
-        if self.agreement_map_format == "vector":
-            agreement_map = _vectorize_data(agreement_map)
+        del candidate, benchmark
 
         return agreement_map, metrics_df
 
@@ -302,6 +295,9 @@ class GVALXarray:
             resampling=resampling,
         )
 
+        # For future operations
+        candidate.gval.agreement_map_format = self.agreement_map_format
+
         return candidate, benchmark
 
     def compute_agreement_map(
@@ -315,7 +311,7 @@ class GVALXarray:
         allow_benchmark_values: Optional[Iterable[Union[int, float]]] = None,
         nodata: Optional[Number] = None,
         encode_nodata: Optional[bool] = False,
-    ) -> xr.Dataset:
+    ) -> Union[xr.Dataset, xr.DataArray]:
         """
         Computes agreement map as xarray from candidate and benchmark xarray's.
 

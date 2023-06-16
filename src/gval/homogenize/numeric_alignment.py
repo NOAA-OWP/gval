@@ -9,6 +9,8 @@ from typing import Union, Tuple
 import numpy as np
 import xarray as xr
 
+from gval.utils.loading_datasets import _handle_xarray_memory
+
 
 def _align_numeric_dtype(
     candidate_map: xr.DataArray, benchmark_map: xr.DataArray
@@ -48,6 +50,8 @@ def _align_numeric_dtype(
                 original_map_data,
             )
         )
+
+        del original_map_data
 
         write_nodata = (
             original_map.rio.encoded_nodata
@@ -102,7 +106,9 @@ def _align_datasets_dtype(
             candidate[c_var], benchmark[b_var]
         )
 
-    return candidate, benchmark
+    return _handle_xarray_memory(candidate, make_temp=True), _handle_xarray_memory(
+        benchmark, make_temp=True
+    )
 
 
 def _align_numeric_data_type(
@@ -126,29 +132,16 @@ def _align_numeric_data_type(
     """
 
     if isinstance(candidate_map, xr.DataArray):
-        return _align_numeric_dtype(candidate_map, benchmark_map)
+        return tuple(
+            map(
+                lambda x: _handle_xarray_memory(x, make_temp=True),
+                _align_numeric_dtype(candidate_map, benchmark_map),
+            )
+        )
     else:
-        return _align_datasets_dtype(candidate_map, benchmark_map)
-
-
-def _check_dask_array(original_map: Union[xr.DataArray, xr.Dataset]) -> bool:
-    """
-    Check whether map to be reprojected has dask data or not
-
-    Parameters
-    ----------
-    original_map: Union[xr.DataArray, xr.Dataset]
-        Map to be reprojected
-
-    Returns
-    -------
-    bool
-        Whether the data is a dask array
-    """
-
-    chunks = (
-        original_map["band_1"].chunks
-        if isinstance(original_map, xr.Dataset)
-        else original_map.chunks
-    )
-    return chunks is not None
+        return tuple(
+            map(
+                lambda x: _handle_xarray_memory(x, make_temp=True),
+                _align_datasets_dtype(candidate_map, benchmark_map),
+            )
+        )

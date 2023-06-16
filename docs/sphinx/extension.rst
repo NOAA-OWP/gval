@@ -1,5 +1,5 @@
-Extensions
-##########
+Core Operations
+###############
 
 :doc:`Return to Homepage <../index>`
 
