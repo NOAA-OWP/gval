@@ -1,47 +1,71 @@
-from typing import Union
+"""
+Continuous Statistics Class
+"""
+
+from numbers import Number
+from typing import Union, Tuple
 from functools import wraps
 import inspect
-from numbers import Number
 
-# import numpy as np
-import numba as nb
-import xarray as xr
+import numpy as np
 
-from gval.comparison.pairing_functions import cantor_pair_signed, szudzik_pair_signed
-from gval.comparison.agreement import _compute_agreement_map
+from gval.statistics.base_statistics import BaseStatistics
+import gval.statistics.continuous_stat_funcs as cs
 
 
-class ComparisonProcessing:
+class ContinuousStatistics(BaseStatistics):
     """
-    Class for Processing Agreement Maps and Tabulations
+    Class for Running Continuous Statistics on Agreement Maps
 
     Attributes
     ----------
-
     registered_functions : dict
         Available statistical functions with names as keys and parameters as values
     """
 
     def __init__(self):
-        # Populates default functions for pairing functions
-        self._func_names = ["pairing_dict", "cantor", "szudzik"]
-        self._funcs = ["pairing_dict", cantor_pair_signed, szudzik_pair_signed]
+        # Automatically populates and numba vectorizes all functions in categorical_stat_funcs.py
+
+        self.required_param = 1
+        self.optional_param = 0
+
+        self._func_names = [
+            fn
+            for fn in dir(cs)
+            if len(fn) > 5
+            and "__" not in fn
+            and "Number" not in fn
+            and "convert_output" not in fn
+        ]
+        self._funcs = [getattr(cs, name) for name in self._func_names]
 
         for name, func in zip(self._func_names, self._funcs):
             setattr(self, name, func)
 
         self._signature_validation = {
-            "names": [],
-            "param_types": ["int", "float", "Number"],
+            "names": {
+                "error": self.required_param,
+                "candidate_map": self.optional_param,
+                "benchmark_map": self.optional_param,
+            },
+            "required": [
+                self.optional_param,
+                self.optional_param,
+                self.optional_param,
+            ],
+            "param_types": [
+                "xarray.core.dataset.Dataset",
+                "xarray.core.dataarray.DataArray",
+                "Union[xarray.core.dataarray.DataArray, xarray.core.dataset.Dataset]",
+                "Union[xarray.core.dataset.Dataset, xarray.core.dataarray.DataArray]",
+            ],
             "return_type": [Number],
-            "no_of_args": [2, 3],
+            "no_of_args": [1, 2, 3],
         }
 
         self.registered_functions = {
-            name: {"params": func_params}
-            for name, func_params in zip(
-                self._func_names, [["c", "b"], ["c", "b"], ["c", "b"]]
-            )
+            name: {"params": [param for param in inspect.signature(func).parameters]}
+            for name, func in zip(self._func_names, self._funcs)
         }
 
     def available_functions(self) -> list:
@@ -63,18 +87,16 @@ class ComparisonProcessing:
         List of all possible arguments for functions
         """
 
-        return self._signature_validation["names"]
+        return list(self._signature_validation["names"].keys())
 
-    def register_function(self, name: str, vectorize_func: bool = False):
+    def register_function(self, name: str):
         """
-        Register decorator function in comparison class
+        Register decorator function in statistics class
 
         Parameters
         ----------
         name: str
-            Name of function to register in comparison class
-        vectorize_func: bool
-            Whether to vectorize the function
+            Name of function to register in statistics class
 
         Returns
         -------
@@ -92,13 +114,8 @@ class ComparisonProcessing:
                         if param != "self"
                     ]
                 }
-                # vectorize function if vectorize_func is True
-                r_func = (
-                    nb.vectorize(nopython=True)(func)
-                    if vectorize_func is True
-                    else func
-                )
-                setattr(self, name, r_func)
+
+                setattr(self, name, func)
             else:
                 raise KeyError("This function name already exists")
 
@@ -112,7 +129,7 @@ class ComparisonProcessing:
 
         return decorator
 
-    def register_function_class(self, vectorize_func: bool = False):
+    def register_function_class(self):
         """
         Register decorator function for an entire class
 
@@ -130,7 +147,7 @@ class ComparisonProcessing:
             Parameters
             ----------
             dec_self: object
-                Class to register pairing functions
+                Class to register stat functions
             """
 
             for name, func in inspect.getmembers(dec_self, inspect.isfunction):
@@ -143,13 +160,8 @@ class ComparisonProcessing:
                             if param != "self"
                         ]
                     }
-                    # vectorize funciton if vectorize_func is True
-                    r_func = (
-                        nb.vectorize(nopython=True)(func)
-                        if vectorize_func is True
-                        else func
-                    )
-                    setattr(self, name, r_func)
+
+                    setattr(self, name, func)
                 else:
                     raise KeyError("This function name already exists")
 
@@ -174,8 +186,7 @@ class ComparisonProcessing:
         # Considered no validation if either are empty
         for key, val in signature.parameters.items():
             if (key not in names and len(names) > 0) or (
-                not str(val).split(": ")[-1].split(".")[-1] in param_types
-                and len(param_types) > 0
+                not str(val).split(": ")[-1] in param_types and len(param_types) > 0
             ):
                 raise TypeError(
                     "Wrong parameters in function: \n"
@@ -211,25 +222,71 @@ class ComparisonProcessing:
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    def process_agreement_map(self, **kwargs) -> Union[xr.DataArray, xr.Dataset]:
+    def process_statistics(
+        self, func_names: Union[str, list], **kwargs
+    ) -> Tuple[float, str]:
         """
 
         Parameters
         ----------
-        **kwargs
+        func_names: Union[str, list]
+            Name of registered function to run
+        **kwargs: dict or keyword arguments
+            Dictionary or keyword arguments of to pass to metric functions.
 
         Returns
         -------
-        Union[xr.DataArray, xr.Dataset]
-        Agreement map.
+        Tuple[float, str]
+            Tuple with metric values and metric names.
         """
 
-        if isinstance(kwargs["comparison_function"], str):
-            if kwargs["comparison_function"] in self.registered_functions:
-                kwargs["comparison_function"] = getattr(
-                    self, kwargs["comparison_function"]
-                )
-            else:
-                raise KeyError("Pairing function not found in registered functions")
+        func_names = (
+            list(self.registered_functions.keys())
+            if func_names == "all"
+            else func_names
+        )
+        func_list = [func_names] if isinstance(func_names, str) else func_names
 
-        return _compute_agreement_map(**kwargs)
+        return_stats, return_funcs = [], []
+        for name in func_list:
+            if name in self.registered_functions:
+                params = self.get_parameters(name)
+                required = self._signature_validation["required"]
+
+                func = getattr(self, name)
+
+                # Necessary for numba functions which cannot accept keyword arguments
+                func_args, skip_function = [], False
+                for param, req in zip(params, required):
+                    if param in kwargs and kwargs[param] is not None:
+                        func_args.append(kwargs[param])
+                    elif not self._signature_validation["names"][param]:
+                        skip_function = True
+                        break
+                    else:
+                        raise ValueError("Parameter missing form kwargs")
+
+                if skip_function:
+                    continue
+
+                stat_val = func(*func_args)
+
+                def check_value(stat_name: str, stat: Number):
+                    if np.isnan(stat) or np.isinf(stat):
+                        raise ValueError(
+                            f"Invalid value calculated for {stat_name}:", stat
+                        )
+
+                if isinstance(stat_val, dict):
+                    for st_name, val in stat_val.items():
+                        check_value(st_name, val)
+                else:
+                    check_value(name, stat_val)
+
+                return_stats.append(stat_val)
+                return_funcs.append(name)
+
+            else:
+                raise KeyError(f"Statistic, {name}, not found in registered functions")
+
+        return return_stats, return_funcs

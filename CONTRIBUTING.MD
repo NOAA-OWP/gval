@@ -55,10 +55,11 @@ cpu time performance loss.  To run everything (in root project directory):
 up of other docs located in Markdown.  Edit those directly if need be before running the preceding command.)
 To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
 The html will be created in the _build/html folder.  Open index.html in a browser to preview docs.
-8. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks mentioned on step 5
+9. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks mentioned on step 5
 that will lint the code. Make sure all of these checks pass, if not make changes and re-commit.
-9. Push to the branch: `git push origin <your_username> <your_feature>`
-10. Open a pull request (review checklist in PR template before requesting a review)
+10. Push to the branch: `git push -u origin`, or if the branch is not pushed up yet:
+`git push --set-upstream origin <your branch>`
+11. Open a pull request (review checklist in PR template before requesting a review)
 
 
 ## Standards

@@ -19,12 +19,6 @@ class CategoricalStatistics(BaseStatistics):
 
     Attributes
     ----------
-    _func_names : list (private)
-        Names of all functions from default categorical statistics class
-    _funcs : list (private)
-        List of all functions from default categorical statistics class
-    _signature_validation : dict (private)
-        Dictionary to validate all registered functions
     registered_functions : dict
         Available statistical functions with names as keys and parameters as values
     """

@@ -3,21 +3,16 @@ Continuous Statistics Functions From Error Based Agreement Maps.
 """
 
 from numbers import Number
-from typing import Union, Optional
+from typing import Union
 
 import xarray as xr
 import numpy as np
 
-from gval.statistics.continuous_stat_utils import convert_output, compute_error_if_none
+from gval.statistics.continuous_stat_utils import convert_output
 
 
-@compute_error_if_none
 @convert_output
-def mean_absolute_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-) -> Number:
+def mean_absolute_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
     """
     Compute mean absolute error (MAE).
 
@@ -25,12 +20,8 @@ def mean_absolute_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Benchmark map.
 
     Returns
     -------
@@ -44,13 +35,8 @@ def mean_absolute_error(
     return np.abs(error).mean()
 
 
-@compute_error_if_none
 @convert_output
-def mean_squared_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-) -> Number:
+def mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
     """
     Compute mean squared error (MSE).
 
@@ -58,12 +44,8 @@ def mean_squared_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Benchmark map.
 
     Returns
     -------
@@ -78,13 +60,8 @@ def mean_squared_error(
     return (error**2).mean()
 
 
-@compute_error_if_none
 @convert_output
-def root_mean_squared_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-) -> Number:
+def root_mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
     """
     Compute root mean squared error (RMSE).
 
@@ -92,12 +69,8 @@ def root_mean_squared_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Benchmark map.
 
     Returns
     -------
@@ -112,13 +85,8 @@ def root_mean_squared_error(
     return np.sqrt((error**2).mean())
 
 
-@compute_error_if_none
 @convert_output
-def mean_signed_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-) -> Number:
+def mean_signed_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
     """
     Compute mean signed error (MSiE).
 
@@ -126,12 +94,8 @@ def mean_signed_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Benchmark map.
 
     Returns
     -------
@@ -146,12 +110,10 @@ def mean_signed_error(
     return error.mean()
 
 
-@compute_error_if_none
 @convert_output
 def mean_percentage_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute mean percentage error (MPE).
@@ -160,11 +122,9 @@ def mean_percentage_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
@@ -179,12 +139,10 @@ def mean_percentage_error(
     return (error / benchmark_map.mean()).mean()
 
 
-@compute_error_if_none
 @convert_output
 def mean_absolute_percentage_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute mean absolute percentage error (MAPE).
@@ -193,11 +151,9 @@ def mean_absolute_percentage_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
@@ -213,12 +169,10 @@ def mean_absolute_percentage_error(
     return np.abs(error / benchmark_map).mean()
 
 
-@compute_error_if_none
 @convert_output
 def mean_normalized_root_mean_squared_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute mean normalized root mean squared error (NRMSE).
@@ -227,11 +181,9 @@ def mean_normalized_root_mean_squared_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
@@ -247,12 +199,10 @@ def mean_normalized_root_mean_squared_error(
     return np.sqrt((error**2).mean()) / benchmark_map.mean()
 
 
-@compute_error_if_none
 @convert_output
 def range_normalized_root_mean_squared_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute range normalized root mean squared error (RNRMSE).
@@ -261,11 +211,9 @@ def range_normalized_root_mean_squared_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
@@ -280,12 +228,10 @@ def range_normalized_root_mean_squared_error(
     return np.sqrt((error**2).mean()) / (benchmark_map.max() - benchmark_map.min())
 
 
-@compute_error_if_none
 @convert_output
 def mean_normalized_mean_absolute_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute mean normalized mean absolute error (NMAE).
@@ -294,11 +240,9 @@ def mean_normalized_mean_absolute_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
@@ -313,12 +257,10 @@ def mean_normalized_mean_absolute_error(
     return np.abs(error).mean() / benchmark_map.mean()
 
 
-@compute_error_if_none
 @convert_output
 def range_normalized_mean_absolute_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute range normalized mean absolute error (RNMAE).
@@ -327,11 +269,9 @@ def range_normalized_mean_absolute_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
@@ -346,12 +286,10 @@ def range_normalized_mean_absolute_error(
     return np.abs(error).mean() / (benchmark_map.max() - benchmark_map.min())
 
 
-@compute_error_if_none
 @convert_output
 def coefficient_of_determination(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute coefficient of determination (R2).
@@ -360,11 +298,9 @@ def coefficient_of_determination(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
-        Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
@@ -380,12 +316,11 @@ def coefficient_of_determination(
     return 1 - (error**2).sum() / ((benchmark_map - benchmark_map.mean()) ** 2).sum()
 
 
-@compute_error_if_none
 @convert_output
 def symmetric_mean_absolute_percentage_error(
-    error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+    error: Union[xr.DataArray, xr.Dataset],
+    candidate_map: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
     Compute symmetric mean absolute percentage error (sMAPE).
@@ -394,11 +329,11 @@ def symmetric_mean_absolute_percentage_error(
 
     Parameters
     ----------
-    error : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    error : Union[xr.DataArray, xr.Dataset]
         Candidate minus benchmark error.
-    candidate_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    candidate_map : Union[xr.DataArray, xr.Dataset]
         Candidate map.
-    benchmark_map : Optional[Union[xr.DataArray, xr.Dataset]], default = None
+    benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
 
     Returns
