@@ -57,23 +57,15 @@ benchmark_datasets = [
     ),
 ]
 plot_maps = [
-    _load_xarray("categorical_multiband_4.tif", mask_and_scale=True).rio.reproject(
-        dst_crs="EPSG:5070", resolution=50
-    ),
-    _load_xarray("categorical_multiband_6.tif", mask_and_scale=True).rio.reproject(
-        dst_crs="EPSG:5070", resolution=50
-    ),
+    _load_xarray("categorical_multiband_4.tif", mask_and_scale=True),
+    _load_xarray("categorical_multiband_6.tif", mask_and_scale=True),
     _load_xarray(
         "categorical_multiband_8.tif", mask_and_scale=True, band_as_variable=True
-    )
-    .drop_vars("band_8")
-    .rio.reproject(dst_crs="EPSG:5070", resolution=10),
-    _load_xarray("categorical_multiband_10.tif", mask_and_scale=True).rio.reproject(
-        dst_crs="EPSG:5070", resolution=50
+    ).drop_vars("band_8"),
+    _load_xarray("categorical_multiband_10.tif", mask_and_scale=True),
+    _load_xarray("categorical_multiband_4.tif", mask_and_scale=True).sel(
+        {"band": [1, 2, 3]}
     ),
-    _load_xarray("categorical_multiband_4.tif", mask_and_scale=True)
-    .sel({"band": [1, 2, 3]})
-    .rio.reproject(dst_crs="EPSG:5070", resolution=50),
     _load_xarray("categorical_multiband_4.tif", mask_and_scale=True).sel(
         {"band": 1, "x": -169463.7041}
     ),
