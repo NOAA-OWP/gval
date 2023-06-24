@@ -67,7 +67,7 @@ plot_maps = [
         {"band": [1, 2, 3]}
     ),
     _load_xarray("categorical_multiband_4.tif", mask_and_scale=True).sel(
-        {"band": 1, "x": -169463.7041}
+        {"band": 1, "x": -169443.7041}, method="nearest"
     ),
 ]
 
