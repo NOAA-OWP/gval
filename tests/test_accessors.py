@@ -228,7 +228,7 @@ def test_data_set_accessor_crosstab_table_fail(candidate_map, benchmark_map):
 def test_data_frame_accessor_compute_metrics(
     crosstab_df, positive_categories, negative_categories
 ):
-    data = crosstab_df.gval.compute_metrics(
+    data = crosstab_df.gval.compute_categorical_metrics(
         positive_categories=positive_categories, negative_categories=negative_categories
     )
 
@@ -236,25 +236,41 @@ def test_data_frame_accessor_compute_metrics(
 
 
 @parametrize_with_cases(
-    "candidate_map, crs",
-    glob="data_array_accessor_categorical_plot_success",
+    "candidate_map, crs, entries",
+    glob="categorical_plot_success",
 )
-def test_data_array_accessor_categorical_plot_success(candidate_map, crs):
+def test_categorical_plot_success(candidate_map, crs, entries):
     candidate_map.rio.set_crs(crs)
     viz_object = candidate_map.gval.cat_plot()
-    assert len(viz_object.axes.get_legend().texts) == 2
+    assert len(viz_object.axes.get_legend().texts) == entries
 
 
 @parametrize_with_cases(
     "candidate_map, legend_labels, num_classes",
-    glob="data_array_accessor_categorical_plot_fail",
+    glob="categorical_plot_fail",
 )
-def test_data_array_accessor_categorical_plot_fail(
-    candidate_map, legend_labels, num_classes
-):
+def test_categorical_plot_fail(candidate_map, legend_labels, num_classes):
     candidate_map.data = np.random.choice(np.arange(num_classes), candidate_map.shape)
     with raises(ValueError):
         _ = candidate_map.gval.cat_plot(legend_labels=legend_labels)
+
+
+@parametrize_with_cases(
+    "candidate_map, axes",
+    glob="continuous_plot_success",
+)
+def test_continuous_plot_success(candidate_map, axes):
+    viz_object = candidate_map.gval.cont_plot()
+    assert len(viz_object.figure.axes) == axes
+
+
+@parametrize_with_cases(
+    "candidate_map",
+    glob="continuous_plot_fail",
+)
+def test_continuous_plot_fail(candidate_map):
+    with raises(ValueError):
+        _ = candidate_map.gval.cont_plot()
 
 
 @parametrize_with_cases(

@@ -51,14 +51,15 @@ automatically with flake8-black but in some cases manual changes will be necessa
 in code coverage and increase in memory.  Also run local_benchmark_test to make sure there is no significant
 cpu time performance loss.  To run everything (in root project directory):
 `pytest --memray --cov=gval --cov-report term-missing && python ./tests/local_benchmark.py`.
-7. If any changes were made to the documentation, make sure to run `python docs/compile_readme.py`.  (The README is made
-up of other docs located in Markdown.  Edit those directly if need be before running the preceding command.)
-To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
+7. The README is made up of other docs located in /docs/markdown.  To make changes to the README edit them directly
+then run the following script: `python docs/compile_readme_and_arrange_docs.py`.
+8. To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
 The html will be created in the _build/html folder.  Open index.html in a browser to preview docs.
-8. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks mentioned on step 5
+9. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks mentioned on step 5
 that will lint the code. Make sure all of these checks pass, if not make changes and re-commit.
-9. Push to the branch: `git push origin <your_username> <your_feature>`
-10. Open a pull request (review checklist in PR template before requesting a review)
+10. Push to the branch: `git push -u origin`, or if the branch is not pushed up yet:
+`git push --set-upstream origin <your branch>`
+11. Open a pull request (review checklist in PR template before requesting a review)
 
 
 ## Standards
@@ -85,7 +86,7 @@ that will lint the code. Make sure all of these checks pass, if not make changes
     * [Jupyter](https://pypi.org/project/jupyter/)
 
 
-## Development Installation
+## Docker Use
 
 (In this case, the image name, "gval-image", and container name, "gval-python" can be changed
 to whatever name is more suitable.  Script, "test.py", does not exist and is an arbitrary placeholder for

@@ -266,7 +266,7 @@ def prevalence_threshold(tp: Number, tn: Number, fp: Number, fn: Number) -> floa
 
     References
     ----------
-    .. [1] [Prevalence Threshold](https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Prevalence_threshold)
+    .. [1] [Prevalence Threshold](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7540853/)
     """
     return math.sqrt(fp / (fp + tn)) / (
         math.sqrt(tp / (tp + fn)) + math.sqrt(fp / (fp + tn))
@@ -295,7 +295,7 @@ def critical_success_index(tp: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Critical Success Index](https://www.weather.gov/media/erh/ta2004-03.pdf)
+    .. [1] [Critical Success Index](https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf#page=4)
     """
     return tp / (tp + fn + fp)
 

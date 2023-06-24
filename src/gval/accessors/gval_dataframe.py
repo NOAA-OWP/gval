@@ -22,7 +22,7 @@ class GVALDataFrame:
     def __init__(self, pandas_obj):
         self._obj = pandas_obj
 
-    def compute_metrics(
+    def compute_categorical_metrics(
         self,
         positive_categories: Union[Number, Iterable[Number]],
         negative_categories: Union[Number, Iterable[Number]],
