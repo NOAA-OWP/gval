@@ -17,6 +17,7 @@ from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
 from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
 from gval.utils.schemas import Crosstab_df, Metrics_df
+from gval.utils.visualize import _map_plot
 from gval.comparison.pairing_functions import difference
 
 
@@ -93,11 +94,12 @@ class GVALXarray:
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray]
             Benchmark map.
         positive_categories : Optional[Union[Number, Iterable[Number]]]
-            Number or list of numbers representing the values to consider as the positive condition. For average types "macro" and "weighted", this represents the categories to compute metrics for.
+            Number or list of numbers representing the values to consider as the positive condition. When the average argument is either "macro" or "weighted", this represents the categories to compute metrics for.
         comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
             Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
+            All available comparison functions can be found with gval.Comparison.available_functions().
         metrics: Union[str, Iterable[str]], default = "all"
-            Statistics to return in metric table.
+            Statistics to return in metric table.  All returns every default and registered metric.  This can be seen with gval.CatStats.available_functions().
         target_map: Optional[Union[xr.Dataset, str]], default = "benchmark"
             xarray object to match the CRS's and coordinates of candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
         resampling : rasterio.enums.Resampling
@@ -109,9 +111,9 @@ class GVALXarray:
 
             A pairing dictionary can be used by the user to note which values to allow and which to ignore for comparisons. It can also be used to decide how nans are handled for cases where either the candidate and benchmark maps have nans or both.
         allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
-            List of values in candidate to include in computation of agreement map. Remaining values are excluded. If "pairing_dict" is set selected for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.
+            List of values in candidate to include in computation of agreement map. Remaining values are excluded. If "pairing_dict" is provided for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.
         allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
-            List of values in benchmark to include in computation of agreement map. Remaining values are excluded. If "pairing_dict" is set selected for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.
+            List of values in benchmark to include in computation of agreement map. Remaining values are excluded. If "pairing_dict" is provided for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.
         nodata : Optional[Number], default = None
             No data value to write to agreement map output. This will use `rxr.rio.write_nodata(nodata)`.
         encode_nodata : Optional[bool], default = False
@@ -126,13 +128,14 @@ class GVALXarray:
             Macro weighing computes the metrics for each category then averages them.
             Weighted average computes the metrics for each category then averages them weighted by the number of weights argument in each category.
         weights : Optional[Iterable[Number]], default = None
-            Weights to use when computing weighted average. Elements correspond to positive categories in order.
+            Weights to use when computing weighted average, specifically when the average argument is "weighted". Elements correspond to positive categories in order.
 
             Example:
 
             `positive_categories = [1, 2]; weights = [0.25, 0.75]`
         rasterize_attributes: Optional[list], default = None
-            Numerical attributes of a GeoDataFrame to rasterize
+            Numerical attributes of a Benchmark Map GeoDataFrame to rasterize.  Only applicable if benchmark map is a vector file.
+            This cannot be none if the benchmark map is a vector file.
 
         Returns
         -------
@@ -204,7 +207,7 @@ class GVALXarray:
         benchmark_map : Union[gpd.GeoDataFrame, xr.DataArray, xr.Dataset]
             Benchmark map.
         metrics: Union[str, Iterable[str]], default = "all"
-            Statistics to return in metric table.
+            Statistics to return in metric table.  This can be seen with gval.ContStats.available_functions().
         target_map: Optional[Union[xr.Dataset, str]], default = "benchmark"
             xarray object to match the CRS's and coordinates of candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
         resampling : rasterio.enums.Resampling
@@ -235,7 +238,10 @@ class GVALXarray:
         )
 
         metrics_df = _compute_continuous_metrics(
-            candidate_map=candidate, benchmark_map=benchmark, metrics=metrics
+            agreement_map=agreement_map,
+            candidate_map=candidate,
+            benchmark_map=benchmark,
+            metrics=metrics,
         )
 
         del candidate, benchmark
@@ -414,3 +420,79 @@ class GVALXarray:
                 exclude_value,
                 comparison_function,
             )
+
+    def cat_plot(
+        self,
+        title: str = "Categorical Map",
+        colormap: str = "viridis",
+        figsize: Tuple[int, int] = None,
+        legend_labels: list = None,
+        plot_bands: Union[str, list] = "all",
+    ):
+        """
+        Plots categorical Map for xarray object
+
+        Parameters
+        __________
+        title : str
+            Title of map, default = "Categorical Map"
+        colormap : str, default = "viridis"
+            Colormap of data
+        figsize : tuple[int, int], default=None
+            Size of the plot
+        legend_labels : list, default = None
+            Override labels in legend
+        plot_bands: Union[str, list], default='all'
+            What bands to plot
+
+        References
+        ----------
+        .. [1] [Matplotlib figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html)
+        .. [2] [Matplotlib legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html)
+        """
+
+        return _map_plot(
+            self._obj,
+            title=title,
+            colormap=colormap,
+            figsize=figsize,
+            legend_labels=legend_labels,
+            plot_type="categorical",
+            plot_bands=plot_bands,
+        )
+
+    def cont_plot(
+        self,
+        title: str = "Continuous Map",
+        colormap: str = "viridis",
+        figsize: Tuple[int, int] = None,
+        plot_bands: Union[str, list] = "all",
+    ):
+        """
+        Plots categorical Map for xarray object
+
+        Parameters
+        __________
+        title : str
+            Title of map, default = "Categorical Map"
+        colormap : str, default = "viridis"
+            Colormap of data
+        figsize : tuple[int, int], default=None
+            Size of the plot
+        plot_bands: Union[str, list], default='all'
+            What bands to plot
+
+        References
+        ----------
+        .. [1] [Matplotlib figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html)
+        .. [2] [Matplotlib legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html)
+        """
+
+        return _map_plot(
+            self._obj,
+            title=title,
+            colormap=colormap,
+            figsize=figsize,
+            plot_type="continuous",
+            plot_bands=plot_bands,
+        )

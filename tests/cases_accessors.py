@@ -56,6 +56,21 @@ benchmark_datasets = [
         chunks="auto",
     ),
 ]
+plot_maps = [
+    _load_xarray("categorical_multiband_4.tif", mask_and_scale=True),
+    _load_xarray("categorical_multiband_6.tif", mask_and_scale=True),
+    _load_xarray(
+        "categorical_multiband_8.tif", mask_and_scale=True, band_as_variable=True
+    ).drop_vars("band_8"),
+    _load_xarray("categorical_multiband_10.tif", mask_and_scale=True),
+    _load_xarray("categorical_multiband_4.tif", mask_and_scale=True).sel(
+        {"band": [1, 2, 3]}
+    ),
+    _load_xarray("categorical_multiband_4.tif", mask_and_scale=True).sel(
+        {"band": 1, "x": -169443.7041}, method="nearest"
+    ),
+]
+
 
 positive_cat = np.array([2, 2, 2, 2, 2, 2])
 negative_cat = np.array([[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]])
@@ -274,10 +289,16 @@ gdf = _load_gpkg("polygons_two_class_categorical.gpkg")
 
 
 @parametrize(
-    "candidate_map, crs",
+    "candidate_map, crs, entries",
     list(
         zip(
-            [candidate_maps[0]] * 2,
+            [
+                candidate_maps[0],
+                candidate_maps[1],
+                plot_maps[0],
+                plot_maps[1],
+                plot_maps[2],
+            ],
             [
                 "EPSG:5070",
                 """PROJCS["NAD27 / California zone II",
@@ -291,22 +312,46 @@ gdf = _load_gpkg("polygons_two_class_categorical.gpkg")
                                        PARAMETER["central_meridian",-122],
                                        PARAMETER["false_easting",2000000],
                                        PARAMETER["false_northing",0],UNIT["Foot_US",0.30480060960121924]]""",
+                "EPSG:5070",
+                "EPSG:5070",
+                "EPSG:5070",
             ],
+            [2, 2, 3, 3, 4],
         )
     ),
 )
-def case_data_array_accessor_categorical_plot_success(candidate_map, crs):
-    return candidate_map, crs
+def case_categorical_plot_success(candidate_map, crs, entries):
+    return candidate_map, crs, entries
 
 
 @parametrize(
     "candidate_map, legend_labels, num_classes",
-    list(zip([candidate_maps[0]] * 2, [None, ["a", "b", "c"]], [30, 2])),
+    list(
+        zip(
+            [candidate_maps[0], candidate_maps[0], plot_maps[3]],
+            [None, ["a", "b", "c"], ["a", "b"]],
+            [30, 2, 2],
+        )
+    ),
 )
-def case_data_array_accessor_categorical_plot_fail(
-    candidate_map, legend_labels, num_classes
-):
+def case_categorical_plot_fail(candidate_map, legend_labels, num_classes):
     return candidate_map, legend_labels, num_classes
+
+
+@parametrize(
+    "candidate_map, axes",
+    list(zip([candidate_maps[0], plot_maps[4]], [2, 6])),
+)
+def case_continuous_plot_success(candidate_map, axes):
+    return candidate_map, axes
+
+
+@parametrize(
+    "candidate_map",
+    [plot_maps[3], plot_maps[5]],
+)
+def case_continuous_plot_fail(candidate_map):
+    return candidate_map
 
 
 candidate_maps = ["candidate_continuous_0.tif", "candidate_continuous_1.tif"]

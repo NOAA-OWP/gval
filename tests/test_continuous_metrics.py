@@ -34,7 +34,7 @@ def assert_logic_decorator(test_function):
 )
 @assert_logic_decorator
 def test_mean_absolute_error(candidate_map, benchmark_map, expected_value):
-    return continuous_stat_funcs.mean_absolute_error(None, candidate_map, benchmark_map)
+    return continuous_stat_funcs.mean_absolute_error(candidate_map - benchmark_map)
 
 
 @parametrize_with_cases(
@@ -43,7 +43,7 @@ def test_mean_absolute_error(candidate_map, benchmark_map, expected_value):
 )
 @assert_logic_decorator
 def test_mean_squared_error(candidate_map, benchmark_map, expected_value):
-    return continuous_stat_funcs.mean_squared_error(None, candidate_map, benchmark_map)
+    return continuous_stat_funcs.mean_squared_error(candidate_map - benchmark_map)
 
 
 @parametrize_with_cases(
@@ -52,9 +52,7 @@ def test_mean_squared_error(candidate_map, benchmark_map, expected_value):
 )
 @assert_logic_decorator
 def test_root_mean_squared_error(candidate_map, benchmark_map, expected_value):
-    return continuous_stat_funcs.root_mean_squared_error(
-        None, candidate_map, benchmark_map
-    )
+    return continuous_stat_funcs.root_mean_squared_error(candidate_map - benchmark_map)
 
 
 @parametrize_with_cases(
@@ -63,7 +61,7 @@ def test_root_mean_squared_error(candidate_map, benchmark_map, expected_value):
 )
 @assert_logic_decorator
 def test_mean_signed_error(candidate_map, benchmark_map, expected_value):
-    return continuous_stat_funcs.mean_signed_error(None, candidate_map, benchmark_map)
+    return continuous_stat_funcs.mean_signed_error(candidate_map - benchmark_map)
 
 
 @parametrize_with_cases(
@@ -73,7 +71,7 @@ def test_mean_signed_error(candidate_map, benchmark_map, expected_value):
 @assert_logic_decorator
 def test_mean_percentage_error(candidate_map, benchmark_map, expected_value):
     return continuous_stat_funcs.mean_percentage_error(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, benchmark_map
     )
 
 
@@ -84,7 +82,7 @@ def test_mean_percentage_error(candidate_map, benchmark_map, expected_value):
 @assert_logic_decorator
 def test_mean_absolute_percentage_error(candidate_map, benchmark_map, expected_value):
     return continuous_stat_funcs.mean_absolute_percentage_error(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, benchmark_map
     )
 
 
@@ -97,7 +95,7 @@ def test_mean_normalized_root_mean_squared_error(
     candidate_map, benchmark_map, expected_value
 ):
     return continuous_stat_funcs.mean_normalized_root_mean_squared_error(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, benchmark_map
     )
 
 
@@ -110,7 +108,7 @@ def test_range_normalized_root_mean_squared_error(
     candidate_map, benchmark_map, expected_value
 ):
     return continuous_stat_funcs.range_normalized_root_mean_squared_error(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, benchmark_map
     )
 
 
@@ -123,7 +121,7 @@ def test_mean_normalized_mean_absolute_error(
     candidate_map, benchmark_map, expected_value
 ):
     return continuous_stat_funcs.mean_normalized_mean_absolute_error(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, benchmark_map
     )
 
 
@@ -136,7 +134,7 @@ def test_range_normalized_mean_absolute_error(
     candidate_map, benchmark_map, expected_value
 ):
     return continuous_stat_funcs.range_normalized_mean_absolute_error(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, benchmark_map
     )
 
 
@@ -147,7 +145,7 @@ def test_range_normalized_mean_absolute_error(
 @assert_logic_decorator
 def test_coefficient_of_determination(candidate_map, benchmark_map, expected_value):
     return continuous_stat_funcs.coefficient_of_determination(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, benchmark_map
     )
 
 
@@ -160,5 +158,5 @@ def test_symmetric_mean_absolute_percentage_error(
     candidate_map, benchmark_map, expected_value
 ):
     return continuous_stat_funcs.symmetric_mean_absolute_percentage_error(
-        None, candidate_map, benchmark_map
+        candidate_map - benchmark_map, candidate_map, benchmark_map
     )

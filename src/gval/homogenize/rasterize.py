@@ -41,8 +41,14 @@ def _rasterize_data(
     """
 
     for attr in rasterize_attributes:
-        if not issubclass(type(benchmark_map[attr][0]), Number):
-            raise KeyError("Rasterize attribute needs to be of numeric type")
+        if (
+            not issubclass(type(benchmark_map[attr][0]), Number)
+            or rasterize_attributes is None
+            or len(rasterize_attributes) == 0
+        ):
+            raise KeyError(
+                "Rasterize attribute needs to be not null and of numeric type"
+            )
 
     rasterized_data = make_geocube(
         vector_data=benchmark_map,

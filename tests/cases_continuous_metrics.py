@@ -81,8 +81,8 @@ def case_root_mean_squared_error(
 
 
 ev_mean_signed_error = [
-    0.02950434572994709,
-    {"band_1": -0.3584839105606079, "band_2": 0.3584839105606079},
+    -0.02950434572994709,
+    {"band_1": 0.3584839105606079, "band_2": -0.3584839105606079},
 ]
 
 
@@ -99,8 +99,8 @@ def case_mean_signed_error(candidate_map, benchmark_map, load_options, expected_
 
 
 ev_mean_percentage_error = [
-    0.015025136061012745,
-    {"band_1": -0.1585608273744583, "band_2": 0.1368602067232132},
+    -0.015025136061012745,
+    {"band_1": 0.1585608273744583, "band_2": -0.1368602067232132},
 ]
 
 

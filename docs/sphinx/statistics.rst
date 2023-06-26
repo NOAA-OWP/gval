@@ -9,3 +9,5 @@ Statistics
 
    categorical_stat_funcs
    categorical_statistics
+   continuous_stat_funcs
+   continuous_statistics

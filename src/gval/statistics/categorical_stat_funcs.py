@@ -19,7 +19,8 @@ def true_positive_rate(tp: Number, fn: Number) -> float:
 
     Returns
     -------
-    True positive rate from 0 to 1
+    float
+        True positive rate from 0 to 1
 
     References
     ----------
@@ -41,7 +42,8 @@ def true_negative_rate(tn: Number, fp: Number) -> float:
 
     Returns
     -------
-    True negative rate from 0 to 1
+    float
+        True negative rate from 0 to 1
 
     References
     ----------
@@ -63,7 +65,8 @@ def positive_predictive_value(tp: Number, fp: Number) -> float:
 
     Returns
     -------
-    Positive predictive value from 0 to 1
+    float
+        Positive predictive value from 0 to 1
 
     References
     ----------
@@ -85,7 +88,8 @@ def negative_predictive_value(tn: Number, fn: Number) -> float:
 
     Returns
     -------
-    Negative predictive value from 0 to 1
+    float
+        Negative predictive value from 0 to 1
 
     References
     ----------
@@ -107,7 +111,8 @@ def false_negative_rate(tp: Number, fn: Number) -> float:
 
     Returns
     -------
-    False negative rate from 0 to 1
+    float
+        False negative rate from 0 to 1
 
     References
     ----------
@@ -129,7 +134,8 @@ def false_positive_rate(tn: Number, fp: Number) -> float:
 
     Returns
     -------
-    False positive rate from 0 to 1
+    float
+        False positive rate from 0 to 1
 
     References
     ----------
@@ -151,7 +157,8 @@ def false_discovery_rate(tp: Number, fp: Number) -> float:
 
     Returns
     -------
-    False discovery rate from 0 to 1
+    float
+        False discovery rate from 0 to 1
 
     References
     ----------
@@ -173,7 +180,8 @@ def false_omission_rate(tn: Number, fn: Number) -> float:
 
     Returns
     -------
-    False omission rate from 0 to 1
+    float
+        False omission rate from 0 to 1
 
     References
     ----------
@@ -199,7 +207,8 @@ def positive_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
 
     Returns
     -------
-    Positive likelihood rate from 1 to infinity
+    float
+        Positive likelihood rate from 1 to infinity
 
     References
     ----------
@@ -225,7 +234,8 @@ def negative_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
 
     Returns
     -------
-    Negative likelihood from 1 to infinity
+    float
+        Negative likelihood from 1 to infinity
 
     References
     ----------
@@ -251,11 +261,12 @@ def prevalence_threshold(tp: Number, tn: Number, fp: Number, fn: Number) -> floa
 
     Returns
     -------
-    Prevalence threshold from 0 to 1
+    float
+        Prevalence threshold from 0 to 1
 
     References
     ----------
-    .. [1] [Prevalence Threshold](https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Prevalence_threshold)
+    .. [1] [Prevalence Threshold](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7540853/)
     """
     return math.sqrt(fp / (fp + tn)) / (
         math.sqrt(tp / (tp + fn)) + math.sqrt(fp / (fp + tn))
@@ -279,11 +290,12 @@ def critical_success_index(tp: Number, fp: Number, fn: Number) -> float:
 
     Returns
     -------
-    Critical success index from 0 to 1
+    float
+        Critical success index from 0 to 1
 
     References
     ----------
-    .. [1] [Critical Success Index](https://www.weather.gov/media/erh/ta2004-03.pdf)
+    .. [1] [Critical Success Index](https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf#page=4)
     """
     return tp / (tp + fn + fp)
 
@@ -305,7 +317,8 @@ def prevalence(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 
     Returns
     -------
-    Prevalence from 0 to 1
+    float
+        Prevalence from 0 to 1
 
     References
     ----------
@@ -331,7 +344,8 @@ def accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 
     Returns
     -------
-    Accuracy from 0 to 1
+    float
+        Accuracy from 0 to 1
 
     References
     ----------
@@ -355,7 +369,8 @@ def f_score(tp: Number, fp: Number, fn: Number) -> float:
 
     Returns
     -------
-    F-score from 0 to 1
+    float
+        F-score from 0 to 1
 
     References
     ----------
@@ -384,7 +399,8 @@ def matthews_correlation_coefficient(
 
     Returns
     -------
-    Correlation coefficient from -1 to 1
+    float
+        Correlation coefficient from -1 to 1
 
     References
     ----------
@@ -410,7 +426,8 @@ def fowlkes_mallows_index(tp: Number, fp: Number, fn: Number) -> float:
 
     Returns
     -------
-    Correlation coefficient from -1 to 1
+    float
+        Correlation coefficient from -1 to 1
 
     References
     ----------
