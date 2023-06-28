@@ -51,7 +51,10 @@ class Sample_identifiers(pa.DataFrameModel):  # pragma: no cover
 
 
 class Crosstab_df(Sample_identifiers):  # pragma: no cover
-    """Crosstab DF schema"""
+    """Crosstab DF schema
+
+    Inherits columns from `Sample_identifiers`
+    """
 
     candidate_values: Series[float]
     benchmark_values: Series[float]
@@ -80,6 +83,11 @@ class Pivoted_crosstab_df(pa.DataFrameModel):  # pragma: no cover
 
 
 class Conditions_df(Sample_identifiers):  # pragma: no cover
+    """Cateogrical conditions df
+
+    Inherits columns from `Sample_identifiers`
+    """
+
     tp: Optional[Series[float]]
     tn: Optional[Series[float]] = pa.Field(nullable=True)
     fp: Optional[Series[float]]
@@ -91,7 +99,10 @@ class Conditions_df(Sample_identifiers):  # pragma: no cover
 
 
 class Metrics_df(Conditions_df):  # pragma: no cover
-    """Metrics DF schema"""
+    """Metrics DF schema
+
+    Inherits columns from `Conditions_df`
+    """
 
     class Config:
         coerce = True
