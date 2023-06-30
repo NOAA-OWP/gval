@@ -13,6 +13,7 @@ sphinx-rtd-theme
 py
 pre-commit
 boto3
+pydantic==1.10.10
 rio-cogeo
 matplotlib
 myst_parser
