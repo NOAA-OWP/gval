@@ -314,7 +314,12 @@ def test_comparison_get_all_param():
 def test_get_available_functions():
     """tests get all available functions"""
 
-    assert compare_proc.available_functions() == ["pairing_dict", "cantor", "szudzik"]
+    assert compare_proc.available_functions() == [
+        "pairing_dict",
+        "cantor",
+        "szudzik",
+        "difference",
+    ]
 
 
 @parametrize_with_cases("args, func", glob="comparison_register_function")

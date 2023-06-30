@@ -7,7 +7,11 @@ from numbers import Number
 import numba as nb
 import xarray as xr
 
-from gval.comparison.pairing_functions import cantor_pair_signed, szudzik_pair_signed
+from gval.comparison.pairing_functions import (
+    cantor_pair_signed,
+    szudzik_pair_signed,
+    difference,
+)
 from gval.comparison.agreement import _compute_agreement_map
 
 
@@ -24,8 +28,13 @@ class ComparisonProcessing:
 
     def __init__(self):
         # Populates default functions for pairing functions
-        self._func_names = ["pairing_dict", "cantor", "szudzik"]
-        self._funcs = ["pairing_dict", cantor_pair_signed, szudzik_pair_signed]
+        self._func_names = ["pairing_dict", "cantor", "szudzik", "difference"]
+        self._funcs = [
+            "pairing_dict",
+            cantor_pair_signed,
+            szudzik_pair_signed,
+            difference,
+        ]
 
         for name, func in zip(self._func_names, self._funcs):
             setattr(self, name, func)
@@ -40,7 +49,7 @@ class ComparisonProcessing:
         self.registered_functions = {
             name: {"params": func_params}
             for name, func_params in zip(
-                self._func_names, [["c", "b"], ["c", "b"], ["c", "b"]]
+                self._func_names, [["c", "b"]] * len(self._func_names)
             )
         }
 

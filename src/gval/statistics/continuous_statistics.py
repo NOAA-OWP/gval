@@ -59,7 +59,7 @@ class ContinuousStatistics(BaseStatistics):
                 "Union[xarray.core.dataarray.DataArray, xarray.core.dataset.Dataset]",
                 "Union[xarray.core.dataset.Dataset, xarray.core.dataarray.DataArray]",
             ],
-            "return_type": [Number],
+            "return_type": [float, Number],
             "no_of_args": [1, 2, 3],
         }
 

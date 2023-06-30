@@ -94,6 +94,11 @@ def compile_readme():
     )
 
     shutil.copy(
+        f"{abs_path}/../notebooks/Continuous Comparison Tutorial.ipynb",
+        f"{abs_path}/sphinx/SphinxContinuousTutorial.ipynb",
+    )
+
+    shutil.copy(
         f"{abs_path}/../CONTRIBUTING.MD",
         f"{abs_path}/sphinx/SPHINX_CONTRIBUTING.MD",
     )
