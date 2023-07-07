@@ -260,8 +260,7 @@ def test_categorical_plot_fail(candidate_map, legend_labels, num_classes):
     glob="continuous_plot_success",
 )
 def test_continuous_plot_success(candidate_map, axes):
-    args = {} if axes == 2 else {"basemap": None}
-    viz_object = candidate_map.gval.cont_plot(**args)
+    viz_object = candidate_map.gval.cont_plot(basemap=None)
     assert len(viz_object.figure.axes) == axes
 
 

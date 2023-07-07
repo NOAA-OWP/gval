@@ -124,7 +124,7 @@ def _map_plot(
             ax.set_xlabel("Longitude")
             ax.set_ylabel("Latitude")
 
-            if basemap:
+            if basemap:  # pragma: no cover
                 cx.add_basemap(ax, crs=ds_c.rio.crs, source=basemap)
 
             if categorical:
