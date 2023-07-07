@@ -1,11 +1,14 @@
 import warnings
 from typing import Tuple, Union
+from itertools import zip_longest
 
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import xarray as xr
+import contextily as cx
+import xyzservices
 
 
 def _map_plot(
@@ -16,6 +19,8 @@ def _map_plot(
     legend_labels: list = None,
     plot_bands: Union[str, list] = "all",
     plot_type: str = "categorical",
+    colorbar_label: Union[str, list] = "",
+    basemap: xyzservices.lib.TileProvider = cx.providers.Stamen.Terrain,
 ):
     """
     Plots categorical or continuous Map for xarray object
@@ -36,6 +41,10 @@ def _map_plot(
         Which bands to plot if multiple. Default is all bands.
     plot_type : str, default = 'categorical', options
         Whether to plot the map as a categorical map
+    color_bar_label : Union[str, list], default =""
+        Label or labels for colorbar in the case of continuous plots
+    basemap : Union[bool, xyzservices.lib.TileProvider], default = cx.providers.Stamen.Terrain
+        Add basemap to the plot
 
     Returns
     -------
@@ -115,6 +124,9 @@ def _map_plot(
             ax.set_xlabel("Longitude")
             ax.set_ylabel("Latitude")
 
+            if basemap:
+                cx.add_basemap(ax, crs=ds_c.rio.crs, source=basemap)
+
             if categorical:
                 # Get colormap values for each unique value
                 cmap = matplotlib.colormaps[colormap]
@@ -166,9 +178,18 @@ def _map_plot(
             # Erase color bar and autoformat x labels to not overlap
             while len(fig.axes) > len(ds_list):
                 fig.delaxes(fig.axes[len(ds_list)])
-        # Erase extra axis if present
-        elif len(ds_list) % 2 == 1 and len(ds_list) > 1:
-            fig.delaxes(fig.axes[len(ds_list)])
+        else:
+            # Erase extra axis if present
+            if len(ds_list) % 2 == 1 and len(ds_list) > 1:
+                fig.delaxes(fig.axes[len(ds_list)])
+
+            use_label = None
+            for idx, label in zip_longest(
+                range(len(ds_list) // 2, len(ds_list)), colorbar_label
+            ):
+                # If less labels are provided than graphs apply last label to the remaining graphs
+                use_label = use_label if label is None else label
+                fig.axes[idx].set_ylabel(label)
 
         fig.autofmt_xdate()
 

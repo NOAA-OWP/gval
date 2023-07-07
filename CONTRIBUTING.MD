@@ -42,7 +42,7 @@ If you would like to contribute, please follow the following steps:
 1. Fork the project.
 2. Clone your fork: `git clone <your_username>/gval`
 3. Create a feature branch: `git checkout -b <your_feature>`
-4. Install the code via `pip install .`
+4. Install the code via `pip install . .[dev]`
 5. Set up pre-commit hooks via `pre-commit install`.  Afterwards when a commit is made it will run
 [flake8](https://github.com/PyCQA/flake8) for code and style linting as well as
 [flake8-black](https://pypi.org/project/flake8-black/) to autoformat the code.  In many cases issues will be rectified
@@ -128,10 +128,10 @@ To enter the container interactively:
 
 To build the gval package and install locally:
 
-- In the root directory install the gVal package:
+- In the root directory install the gval package:
 
-  `pip install .`
+  `pip install . .[dev]`
 
 The packaging process using docker container would look as follows (on linux):
 
-`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install .`
+`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install . .[dev]`

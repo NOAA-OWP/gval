@@ -7,6 +7,8 @@ import xarray as xr
 from rasterio.enums import Resampling
 from pandera.typing import DataFrame
 import geopandas as gpd
+import contextily as cx
+import xyzservices
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
 from gval.homogenize.rasterize import _rasterize_data
@@ -428,6 +430,8 @@ class GVALXarray:
         figsize: Tuple[int, int] = None,
         legend_labels: list = None,
         plot_bands: Union[str, list] = "all",
+        colorbar_label: Union[str, list] = "",
+        basemap: xyzservices.lib.TileProvider = cx.providers.Stamen.Terrain,
     ):
         """
         Plots categorical Map for xarray object
@@ -444,6 +448,10 @@ class GVALXarray:
             Override labels in legend
         plot_bands: Union[str, list], default='all'
             What bands to plot
+        color_bar_label : Union[str, list], default =""
+            Label or labels for colorbar in the case of continuous plots
+        basemap : Union[bool, xyzservices.lib.TileProvider], default = cx.providers.Stamen.Terrain
+            Add basemap to the plot
 
         References
         ----------
@@ -459,6 +467,8 @@ class GVALXarray:
             legend_labels=legend_labels,
             plot_type="categorical",
             plot_bands=plot_bands,
+            basemap=basemap,
+            colorbar_label=colorbar_label,
         )
 
     def cont_plot(
@@ -467,6 +477,8 @@ class GVALXarray:
         colormap: str = "viridis",
         figsize: Tuple[int, int] = None,
         plot_bands: Union[str, list] = "all",
+        colorbar_label: Union[str, list] = "",
+        basemap: xyzservices.lib.TileProvider = cx.providers.Stamen.Terrain,
     ):
         """
         Plots categorical Map for xarray object
@@ -481,6 +493,10 @@ class GVALXarray:
             Size of the plot
         plot_bands: Union[str, list], default='all'
             What bands to plot
+        colorbar_label : Union[str, list], default =""
+            Label or labels for colorbar in the case of continuous plots
+        basemap : Union[bool, xyzservices.lib.TileProvider], default = cx.providers.Stamen.Terrain
+            Add basemap to the plot
 
         References
         ----------
@@ -495,4 +511,6 @@ class GVALXarray:
             figsize=figsize,
             plot_type="continuous",
             plot_bands=plot_bands,
+            basemap=basemap,
+            colorbar_label=colorbar_label,
         )

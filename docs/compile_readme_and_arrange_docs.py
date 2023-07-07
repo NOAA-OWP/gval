@@ -49,6 +49,9 @@ def compile_readme():
         "",
     )
 
+    with open(f"{abs_path}/sphinx/PYPI_README.MD", "w") as file:
+        file.write(sphinx_contents)
+
     sphinx_contents = sphinx_contents.replace(
         "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
         "gval_light_mode.png#gh-light-mode-only)",
