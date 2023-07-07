@@ -42,7 +42,7 @@ If you would like to contribute, please follow the following steps:
 1. Fork the project.
 2. Clone your fork: `git clone <your_username>/gval`
 3. Create a feature branch: `git checkout -b <your_feature>`
-4. Install the code via `pip install .`
+4. Install the code via `pip install . .[dev]`
 5. Set up pre-commit hooks via `pre-commit install`.  Afterwards when a commit is made it will run
 [flake8](https://github.com/PyCQA/flake8) for code and style linting as well as
 [flake8-black](https://pypi.org/project/flake8-black/) to autoformat the code.  In many cases issues will be rectified
@@ -86,6 +86,15 @@ that will lint the code. Make sure all of these checks pass, if not make changes
     * [Jupyter](https://pypi.org/project/jupyter/)
 
 
+## Versioning
+
+The repository will adhere to the following set of general guidelines to update versions.
+Given the arbitrary version 1.2.3:
+
+- x.x.3  Refers to accumulation of updates that do not introduce significantly new functionality or change core dependencies.
+- x.2.x  This accumulation of updates introduces significantly new functionality and possibly the need to deprecate previous functionality and changing core dependencies.
+- 1.x.x  Such a change introduces not only a significant accumulation of updates but changes to core functions necessitating major updates to documentation and core dependencies.
+
 ## Docker Use
 
 (In this case, the image name, "gval-image", and container name, "gval-python" can be changed
@@ -128,10 +137,10 @@ To enter the container interactively:
 
 To build the gval package and install locally:
 
-- In the root directory install the gVal package:
+- In the root directory install the gval package:
 
-  `pip install .`
+  `pip install . .[dev]`
 
 The packaging process using docker container would look as follows (on linux):
 
-`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install .`
+`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install . .[dev]`

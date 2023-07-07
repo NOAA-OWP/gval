@@ -1,4 +1,4 @@
-![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_dark_mode.png#gh-dark-mode-only) ![alt
+ ![alt
 text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png#gh-light-mode-only)
 
 ![Build and
