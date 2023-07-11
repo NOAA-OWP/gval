@@ -88,12 +88,7 @@ that will lint the code. Make sure all of these checks pass, if not make changes
 
 ## Versioning
 
-The repository will adhere to the following set of general guidelines to update versions.
-Given the arbitrary version 1.2.3:
-
-- x.x.3  Refers to accumulation of updates that do not introduce significantly new functionality or change core dependencies.
-- x.2.x  This accumulation of updates introduces significantly new functionality and possibly the need to deprecate previous functionality and changing core dependencies.
-- 1.x.x  Such a change introduces not only a significant accumulation of updates but changes to core functions necessitating major updates to documentation and core dependencies.
+The repository will adhere to the [Semantic Versioning 2.0.0.](https://semver.org/)
 
 ## Docker Use
 

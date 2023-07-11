@@ -10,4 +10,3 @@ Utilities
    loading_datasets
    exceptions
    schemas
-   visualize
