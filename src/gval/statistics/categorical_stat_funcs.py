@@ -434,3 +434,61 @@ def fowlkes_mallows_index(tp: Number, fp: Number, fn: Number) -> float:
     .. [1] [Fowlkes-Mallows Index](https://en.wikipedia.org/wiki/Fowlkes%E2%80%93Mallows_index)
     """
     return math.sqrt((tp / (tp + fp)) * (tp / (tp + fn)))
+
+
+def equitable_threat_score(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
+    """
+    Computes Equitable Threat Score (Gilbert Score)
+
+    Parameters
+    ----------
+    tp: Number
+        Count reflecting true positive
+    tn: Number
+        Count reflecting true negative
+    fp: Number
+        Count reflecting false positive
+    fn: Number
+        Count reflecting false negative
+
+    Returns
+    -------
+    float
+        Equitable threat score from -1/3 to 1
+
+    References
+    ----------
+    .. [1] [Equitable Threat Score](https://resources.eumetrain.org/data/4/451/english/msg/ver_categ_forec/uos2/uos2_ko4.htm)
+
+    """
+    total_population = tp + tn + fp + fn
+    a_ref = ((tp + fp) * (tp + fn)) / total_population
+    return (tp - a_ref) / (tp - a_ref + fp + fn)
+
+
+def balanced_accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
+    """
+    Computes Balanced Accuracy
+
+    Parameters
+    ----------
+    tp: Number
+        Count reflecting true positive
+    tn: Number
+        Count reflecting true negative
+    fp: Number
+        Count reflecting false positive
+    fn: Number
+        Count reflecting false negative
+
+    Returns
+    -------
+    float
+        Balanced Accuracy from 0 to 1
+
+    References
+    ----------
+    .. [1] [Balanced Accuracy](https://neptune.ai/blog/balanced-accuracy#Balanced%20Accuracy)
+    """
+
+    return ((tp / (tp + fn)) + (tn / (tn + fp))) / 2
