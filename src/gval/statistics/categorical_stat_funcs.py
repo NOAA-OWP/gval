@@ -492,3 +492,30 @@ def balanced_accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     """
 
     return ((tp / (tp + fn)) + (tn / (tn + fp))) / 2
+
+
+def overall_bias(tp: Number, fp: Number, fn: Number) -> float:
+    """
+    Computes 6he degree of correspondence between the mean forecast and the mean observation.
+
+    Parameters
+    ----------
+    tp: Number
+        Count reflecting true positive
+    fp: Number
+        Count reflecting false positive
+    fn: Number
+        Count reflecting false negative
+
+    Returns
+    -------
+    float
+        Overall Bias
+
+    References
+    ----------
+    .. [1] [Forecast Verification Glossary](https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf)
+
+    """
+
+    return (tp + fp) / (tp + fn)
