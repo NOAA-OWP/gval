@@ -32,7 +32,16 @@ class Xrspatial_crosstab_df(pa.DataFrameModel):  # pragma: no cover
         strict = False
 
 
-class Sample_identifiers(pa.DataFrameModel):  # pragma: no cover
+class columns_method(pa.DataFrameModel):  # pragma: no cover
+    """Defines base data frame model with columns method"""
+
+    @classmethod
+    def columns(cls) -> List[str]:
+        """Gives access to columns from DataFrameModel"""
+        return list(super().to_schema().columns.keys())
+
+
+class Sample_identifiers(columns_method):  # pragma: no cover
     """Crosstab DF schema"""
 
     band: Series[str]
@@ -43,12 +52,6 @@ class Sample_identifiers(pa.DataFrameModel):  # pragma: no cover
     class Config:
         coerce = True
         strict = True
-
-    @classmethod
-    def columns(cls) -> List[str]:
-        """Gives access to columns from DataFrameModel"""
-        return list(super().to_schema().columns.keys())
-
 
 class Crosstab_df(Sample_identifiers):  # pragma: no cover
     """Crosstab DF schema
@@ -107,3 +110,31 @@ class Metrics_df(Conditions_df):  # pragma: no cover
     class Config:
         coerce = True
         strict = False  # set to False, bc columns could include any number of metrics
+
+
+class AttributeTrackingDf(pa.DataFrameModel):  # pragma: no cover
+    """
+    Defines the schema for output of `_attribute_tracking_xarray()`
+    The attributes could be of any datatype. For instance, if your attributes are of float type,
+    you can use Series[float] instead of Series[object].
+    """
+
+    # This is a basic schema considering attributes as object datatype.
+    # If your attributes are of specific datatypes, you can modify accordingly.
+    # Replace 'attribute_1', 'attribute_2' with your attribute names
+
+    attribute_1_candidate: Optional[Series[object]]
+    attribute_2_candidate: Optional[Series[object]]
+    attribute_1_benchmark: Optional[Series[object]]
+    attribute_2_benchmark: Optional[Series[object]]
+
+    class Config:
+        coerce = True
+        strict = False
+
+    @pa.dataframe_check
+    def validate_column_suffixes(cls, df: pd.DataFrame) -> Series[bool]:
+        """
+        Checks that each column name in the dataframe ends with either '_candidate' or '_benchmark'.
+        """
+        return all(name.endswith(('_candidate', '_benchmark')) for name in df.columns)
