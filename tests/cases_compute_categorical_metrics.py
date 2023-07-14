@@ -32,6 +32,7 @@ expected_dfs = [
             "matthews_correlation_coefficient": {0: 0.19452223907575214},
             "negative_likelihood_ratio": {0: 0.5509510099070579},
             "negative_predictive_value": {0: 0.3984375},
+            "overall_bias": {0: 0.9535906369448297},
             "positive_likelihood_ratio": {0: 1.3660848657244327},
             "positive_predictive_value": {0: 0.7891880387357667},
             "prevalence": {0: 0.6986443954301008},
@@ -75,6 +76,7 @@ expected_dfs = [
                 0: 0.8962879002550298,
                 1: 0.5849926875914051,
             },
+            "overall_bias": {0: 2.2180493273542603, 1: 0.8571595969064917},
             "positive_likelihood_ratio": {
                 0: 1.898895459847184,
                 1: 1.762948207171315,
@@ -126,6 +128,7 @@ expected_dfs = [
             "false_discovery_rate": {0: 0.687895, 1: 0.337662},
             "false_negative_rate": {0: 0.307735, 1: 0.432271},
             "fowlkes_mallows_index": {0: 0.464822, 1: 0.613212},
+            "overall_bias": {0: 2.2180493273542603, 1: 0.8571595969064917},
             "positive_predictive_value": {0: 0.312105, 1: 0.662338},
             "true_positive_rate": {0: 0.692265, 1: 0.567729},
         }
