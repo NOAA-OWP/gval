@@ -496,7 +496,7 @@ def balanced_accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 
 def overall_bias(tp: Number, fp: Number, fn: Number) -> float:
     """
-    Computes 6he degree of correspondence between the mean forecast and the mean observation.
+    Computes the degree of correspondence between the mean forecast and the mean observation.
 
     Parameters
     ----------
