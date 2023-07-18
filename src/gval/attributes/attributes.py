@@ -10,7 +10,7 @@ TODO:
 
 __author__ = "Fernando Aristizabal"
 
-from typing import Optional, Iterable, Union
+from typing import Optional, Iterable, Union, Tuple
 
 import pandas as pd
 import xarray as xr
@@ -19,7 +19,7 @@ from pandera.typing import DataFrame
 
 from gval.utils.schemas import AttributeTrackingDf
 
-@pa.check_types
+#@pa.check_types
 def _attribute_tracking_xarray(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
@@ -107,9 +107,20 @@ def _attribute_tracking_xarray(
     # Concatenate the dataframes together
     combined_df = pd.concat([candidate_df, benchmark_df], axis=1)
 
+    # validate schema
+    AttributeTrackingDf.validate_column_suffixes(
+        combined_df, candidate_suffix, benchmark_suffix
+    )
+
     if agreement_map is None:
         return combined_df
     
-    agreement_map = agreement_map.assign_attrs({**candidate_attrs, **benchmark_attrs})
+
+    updated_candidate_attrs = candidate_df.to_dict(orient='records')[0]
+    updated_benchmark_attrs = benchmark_df.to_dict(orient='records')[0]
+
+    agreement_map = agreement_map.assign_attrs(
+        {**updated_candidate_attrs, **updated_benchmark_attrs}
+    )
 
     return combined_df, agreement_map

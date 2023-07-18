@@ -7,11 +7,14 @@ __author__ = "Fernando Aristizabal"
 
 from pytest import raises
 from pytest_cases import parametrize_with_cases
+import pandas as pd
+import xarray as xr
 
 from gval.attributes.attributes import _attribute_tracking_xarray
+from tests.conftest import _assert_pairing_dict_equal
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, agreement_map, candidate_suffix, benchmark_suffix, candidate_include, candidate_exclude, benchmark_include, benchmark_exclude, expected_df",
+    "candidate_map, benchmark_map, agreement_map, candidate_suffix, benchmark_suffix, candidate_include, candidate_exclude, benchmark_include, benchmark_exclude, expected_df, expected_attr",
     glob="attribute_tracking"
 )
 def test_attribute_tracking(
@@ -24,7 +27,8 @@ def test_attribute_tracking(
     candidate_exclude,
     benchmark_include,
     benchmark_exclude,
-    expected_df
+    expected_df,
+    expected_attr
 ):
     """Tests attribute tracking functionality"""
 
@@ -37,11 +41,15 @@ def test_attribute_tracking(
         benchmark_suffix = benchmark_suffix,
         candidate_include = candidate_include,
         candidate_exclude = candidate_exclude,
-        benchmark_include = benchmark_include
+        benchmark_include = benchmark_include,
+        benchmark_exclude = benchmark_exclude
     )
 
     if agreement_map is None:
+        #breakpoint()
+        #print(results, expected_df)
         pd.testing.assert_frame_equal(results, expected_df)
     else:
+        #breakpoint()
         pd.testing.assert_frame_equal(results[0], expected_df)
-        xr.testing.assert_identical(results[1], expected_attr)
+        _assert_pairing_dict_equal(results[1].attrs, expected_attr)

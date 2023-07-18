@@ -133,8 +133,12 @@ class AttributeTrackingDf(pa.DataFrameModel):  # pragma: no cover
         strict = False
 
     @pa.dataframe_check
-    def validate_column_suffixes(cls, df: pd.DataFrame) -> Series[bool]:
+    def validate_column_suffixes(
+        cls, df: pd.DataFrame, candidate_suffix: str, benchmark_suffix: str
+    ) -> Series[bool]:
         """
         Checks that each column name in the dataframe ends with either '_candidate' or '_benchmark'.
         """
-        return all(name.endswith(('_candidate', '_benchmark')) for name in df.columns)
+        return all(
+            name.endswith((candidate_suffix, benchmark_suffix)) for name in df.columns
+        )

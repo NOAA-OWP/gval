@@ -9,6 +9,7 @@ from itertools import product
 
 import numpy as np
 import xarray as xr
+import pandas as pd
 from pytest_cases import parametrize
 
 from tests.conftest import _load_xarray, _load_gpkg
@@ -30,16 +31,16 @@ test3=a3
 test4=4.1 
 """
 
-candidate_map_fns = np.array(["candidate_map_attrs_1.tif"]*14)
-benchmark_map_fns = np.array(["benchmark_map_attrs_1.tif"]*14)
+candidate_map_fns = ["candidate_map_attrs_1.tif"]*14
+benchmark_map_fns = ["benchmark_map_attrs_1.tif"]*14
 
-agreement_maps = np.array([xr.DataArray(np.ones((3, 3)), dims=["y", "x"])] + [None]*13)),
-candidate_suffixes = np.array(["_candidate", "_c"] + ["_candidate"]*12)
-benchmark_suffixes = np.array(["_benchmark", "_b"] + ["_benchmark"]*12),
-candidate_includes = np.array([None, None, ("test1","test2")] + [None]*11),
-candidate_excludes = np.array([None, None, None, ("test2")] + [None]*10),
-benchmark_includes = np.array([None, None, None, None, ("test1","test4")] + [None]*9),
-benchmark_excludes = np.array([None, None, None, None, None, ("test1","test2")] + [None]*8),
+agreement_maps = [xr.DataArray(np.ones((3, 3)), dims=["y", "x"])] + [None]*13
+candidate_suffixes = ["_candidate", "_c"] + ["_candidate"]*12
+benchmark_suffixes = ["_benchmark", "_b"] + ["_benchmark"]*12
+candidate_includes = [None, None, ["test1","test2"]] + [None]*11
+candidate_excludes = [None, None, None, ["test2"]] + [None]*10
+benchmark_includes = [None, None, None, None, ["test1","test4"]] + [None]*9
+benchmark_excludes = [None, None, None, None, None, ["test1","test2"]] + [None]*8
 
 
 expected_dfs = [
@@ -54,7 +55,7 @@ expected_dfs = [
             "test2_benchmark":2,
             "test3_benchmark":"a3",
             "test4_benchmark":4.1
-        },
+        }, index=[0]
     ),
     pd.DataFrame(
         {
@@ -67,7 +68,7 @@ expected_dfs = [
             "test2_b":2,
             "test3_b":"a3",
             "test4_b":4.1
-        },
+        }, index=[0]
     ),
     pd.DataFrame(
         {
@@ -78,7 +79,7 @@ expected_dfs = [
             "test2_benchmark":2,
             "test3_benchmark":"a3",
             "test4_benchmark":4.1
-        },
+        }, index=[0]
     ),
     pd.DataFrame(
         {
@@ -90,7 +91,7 @@ expected_dfs = [
             "test2_benchmark":2,
             "test3_benchmark":"a3",
             "test4_benchmark":4.1
-        },
+        }, index=[0]
     ),
     pd.DataFrame(
         {
@@ -100,7 +101,7 @@ expected_dfs = [
             "test3_candidate":"a3",
             "test1_benchmark":1,
             "test4_benchmark":4.1
-        },
+        }, index=[0]
     ),
     pd.DataFrame(
         {
@@ -111,7 +112,7 @@ expected_dfs = [
             "AREA_OR_POINT_benchmark":"Area",
             "test3_benchmark":"a3",
             "test4_benchmark":4.1
-        },
+        }, index=[0]
     ),
 ]
 
@@ -131,7 +132,7 @@ expected_attrs = np.array(
 
 @parametrize(
     "candidate_map_fn, benchmark_map_fn, agreement_map, candidate_suffix, benchmark_suffix, candidate_include, candidate_exclude, benchmark_include, benchmark_exclude, expected_df, expected_attr",
-    list(zip(candidate_map_fns, benchmark_map_fns, agreement_maps, candidate_suffixes, benchmark_suffixes, candidate_includes, candidate_excludes, benchmark_includes, benchmark_excludes, expected_dfs))
+    list(zip(candidate_map_fns, benchmark_map_fns, agreement_maps, candidate_suffixes, benchmark_suffixes, candidate_includes, candidate_excludes, benchmark_includes, benchmark_excludes, expected_dfs, expected_attrs))
 )
 def case_attribute_tracking(
     candidate_map_fn,
@@ -147,8 +148,8 @@ def case_attribute_tracking(
     expected_attr
 ):
     return (
-        _load_xarray(candidate_map_fn),
-        _load_xarray(benchmark_map_fn),
+        _load_xarray(candidate_map_fn, band_as_variable=True, mask_and_scale=True),
+        _load_xarray(benchmark_map_fn, band_as_variable=True, mask_and_scale=True),
         agreement_map,
         candidate_suffix,
         benchmark_suffix,
