@@ -46,10 +46,7 @@ def test_attribute_tracking(
     )
 
     if agreement_map is None:
-        #breakpoint()
-        #print(results, expected_df)
         pd.testing.assert_frame_equal(results, expected_df)
     else:
-        #breakpoint()
         pd.testing.assert_frame_equal(results[0], expected_df)
         _assert_pairing_dict_equal(results[1].attrs, expected_attr)

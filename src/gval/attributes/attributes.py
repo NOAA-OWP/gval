@@ -19,7 +19,7 @@ from pandera.typing import DataFrame
 
 from gval.utils.schemas import AttributeTrackingDf
 
-#@pa.check_types
+
 def _attribute_tracking_xarray(
     candidate_map: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
@@ -30,7 +30,10 @@ def _attribute_tracking_xarray(
     candidate_exclude: Optional[Iterable[str]] = None,
     benchmark_include: Optional[Iterable[str]] = None,
     benchmark_exclude: Optional[Iterable[str]] = None
-) -> Union[DataFrame[AttributeTrackingDf], Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]]]:
+) -> Union[
+    DataFrame[AttributeTrackingDf],
+    Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]]
+]:
     """
     Concatenate xarray attributes into a single pandas dataframe.
 
