@@ -306,11 +306,7 @@ def test_data_set_accessor_continuous(
     "candidate_map, benchmark_map, agreement_map",
     glob="accessor_attributes",
 )
-def test_accessor_attributes(
-    candidate_map,
-    benchmark_map,
-    agreement_map
-):
+def test_accessor_attributes(candidate_map, benchmark_map, agreement_map):
     attrs_df, agreement_map = candidate_map.gval.attribute_tracking(
         benchmark_map=benchmark_map, agreement_map=agreement_map
     )

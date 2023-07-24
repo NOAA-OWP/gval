@@ -53,6 +53,7 @@ class Sample_identifiers(columns_method):  # pragma: no cover
         coerce = True
         strict = True
 
+
 class Crosstab_df(Sample_identifiers):  # pragma: no cover
     """Crosstab DF schema
 
