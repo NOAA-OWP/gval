@@ -18,7 +18,8 @@ from gval import Comparison
 from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
 from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
-from gval.utils.schemas import Crosstab_df, Metrics_df
+from gval.attributes.attributes import _attribute_tracking_xarray
+from gval.utils.schemas import Crosstab_df, Metrics_df, AttributeTrackingDf
 from gval.utils.visualize import _map_plot
 from gval.comparison.pairing_functions import difference
 
@@ -57,6 +58,45 @@ class GVALXarray:
         if not isinstance(benchmark_map, self.data_type):
             raise TypeError(f"Benchmark Map needs to be data type of {self.data_type}")
 
+    def __handle_attribute_tracking(
+        self,
+        candidate_map: Union[xr.Dataset, xr.DataArray],
+        benchmark_map: Union[xr.Dataset, xr.DataArray],
+        agreement_map: Optional[Union[xr.Dataset, xr.DataArray]] = None,
+        attribute_tracking_kwargs: Optional[Dict] = None
+    ): # pragma: no cover
+        """
+        Handles attribute tracking for categorical and continuous comparison
+        """
+        
+        # use user passed attribute_tracking_kwargs to pass arguments to attribute_tracking_xarray()
+        if attribute_tracking_kwargs is not None:
+            if "benchmark_map" in attribute_tracking_kwargs:
+                del attribute_tracking_kwargs["benchmark_map"]
+            
+            if "agreement_map" in attribute_tracking_kwargs:
+                
+                if attribute_tracking_kwargs["agreement_map"] is None:
+                    agreement_map = None
+                else:
+                    del attribute_tracking_kwargs["agreement_map"]
+            
+            results = candidate_map.gval.attribute_tracking_xarray(
+                benchmark_map=benchmark_map,
+                agreement_map=agreement_map,
+                **attribute_tracking_kwargs
+            )
+
+        else:
+
+            results = candidate_map.gval.attribute_tracking_xarray(
+                benchmark_map=benchmark_map,
+                agreement_map=agreement_map
+            )
+
+        return results
+        
+
     def categorical_compare(
         self,
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
@@ -77,8 +117,13 @@ class GVALXarray:
         average: str = "micro",
         weights: Optional[Iterable[Number]] = None,
         rasterize_attributes: Optional[list] = None,
+        attribute_tracking: bool = False,
+        attribute_tracking_kwargs: Optional[Dict] = None
     ) -> Tuple[
-        Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
+        Union[
+            Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df],
+            Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]
+        ]
     ]:
         """
         Computes comparison between two categorical value xarray's.
@@ -138,11 +183,18 @@ class GVALXarray:
         rasterize_attributes: Optional[list], default = None
             Numerical attributes of a Benchmark Map GeoDataFrame to rasterize.  Only applicable if benchmark map is a vector file.
             This cannot be none if the benchmark map is a vector file.
+        attribute_tracking: bool, default = False
+            Whether to return a dataframe with the attributes of the candidate and benchmark maps.
+        attribute_tracking_kwargs: Optional[Dict], default = None
+            Keyword arguments to pass to `gval.attribute_tracking()`.  This is only used if `attribute_tracking` is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See `gval.attribute_tracking` for more information.
 
         Returns
         -------
-        Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
-            Tuple with agreement map, cross-tabulation table, and metric table
+        Union[
+            Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df],
+            Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]
+        ]
+            Tuple with agreement map, cross-tabulation table, and metric table. Possibly attribute tracking table as well.
         """
 
         # using homogenize accessor to avoid code reuse
@@ -180,6 +232,21 @@ class GVALXarray:
             weights=weights,
         )
 
+        if attribute_tracking:
+            results = self.__handle_attribute_tracking(
+                candidate_map=candidate,
+                benchmark_map=benchmark,
+                agreement_map=agreement_map,
+                attribute_tracking_kwargs=attribute_tracking_kwargs
+            )
+
+            if len(results) == 2:
+                attributes_df, agreement_map = results
+            else:
+                attributes_df = results
+
+            return agreement_map, crosstab_df, metrics_df, attributes_df
+
         return agreement_map, crosstab_df, metrics_df
 
     def continuous_compare(
@@ -191,8 +258,13 @@ class GVALXarray:
         nodata: Optional[Number] = None,
         encode_nodata: Optional[bool] = False,
         rasterize_attributes: Optional[list] = None,
+        attribute_tracking: bool = False,
+        attribute_tracking_kwargs: Optional[Dict] = None
     ) -> Tuple[
-        Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]
+        Union[
+            Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df],
+            Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]
+        ]
     ]:
         """
         Computes comparison between two continuous value xarray's.
@@ -220,11 +292,18 @@ class GVALXarray:
             Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
         rasterize_attributes: Optional[list], default = None
             Numerical attributes of a GeoDataFrame to rasterize.
-
+        attribute_tracking: bool, default = False
+            Whether to return a dataframe with the attributes of the candidate and benchmark maps.
+        attribute_tracking_kwargs: Optional[Dict], default = None
+            Keyword arguments to pass to `gval.attribute_tracking()`.  This is only used if `attribute_tracking` is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See `gval.attribute_tracking` for more information.
+        
         Returns
         -------
-        Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]
-            Tuple with agreement map and metric table.
+        Union[
+            Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df],
+            Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]
+        ]
+            Tuple with agreement map and metric table, possibly attribute tracking table as well.
         """
 
         # using homogenize accessor to avoid code reuse
@@ -246,7 +325,20 @@ class GVALXarray:
             metrics=metrics,
         )
 
-        del candidate, benchmark
+        if attribute_tracking:
+            results = self.__handle_attribute_tracking(
+                candidate_map=candidate,
+                benchmark_map=benchmark,
+                agreement_map=agreement_map,
+                attribute_tracking_kwargs=attribute_tracking_kwargs
+            )
+
+            if len(results) == 2:
+                attributes_df, agreement_map = results
+            else:
+                attributes_df = results
+
+            return agreement_map, metrics_df, attributes_df
 
         return agreement_map, metrics_df
 
@@ -422,6 +514,66 @@ class GVALXarray:
                 exclude_value,
                 comparison_function,
             )
+        
+    def attribute_tracking(
+        self,
+        benchmark_map: Union[xr.DataArray, xr.Dataset],
+        agreement_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+        candidate_suffix: Optional[str] = '_candidate',
+        benchmark_suffix: Optional[str] = '_benchmark',
+        candidate_include: Optional[Iterable[str]] = None,
+        candidate_exclude: Optional[Iterable[str]] = None,
+        benchmark_include: Optional[Iterable[str]] = None,
+        benchmark_exclude: Optional[Iterable[str]] = None
+    ) -> Union[
+        DataFrame[AttributeTrackingDf],
+        Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]]
+    ]:
+        """
+        Concatenate xarray attributes into a single pandas dataframe.
+
+        Parameters
+        ----------
+        candidate_map : Union[xr.DataArray, xr.Dataset]
+            Self. Candidate map xarray object.
+        benchmark_map : Union[xr.DataArray, xr.Dataset]
+            Benchmark map xarray object.
+        candidate_suffix : Optional[str], default = '_candidate'
+            Suffix to append to candidate map xarray attributes, by default '_candidate'.
+        benchmark_suffix : Optional[str], default = '_benchmark'
+            Suffix to append to benchmark map xarray attributes, by default '_benchmark'.
+        candidate_include : Optional[Iterable[str]], default = None
+            List of attributes to include from candidate map. candidate_include and candidate_exclude are mutually exclusive arguments.
+        candidate_exclude : Optional[Iterable[str]], default = None
+            List of attributes to exclude from candidate map. candidate_include and candidate_exclude are mutually exclusive arguments.
+        benchmark_include : Optional[Iterable[str]], default = None
+            List of attributes to include from benchmark map. benchmark_include and benchmark_exclude are mutually exclusive arguments.
+        benchmark_exclude : Optional[Iterable[str]], default = None
+            List of attributes to exclude from benchmark map. benchmark_include and benchmark_exclude are mutually exclusive arguments.
+        
+        Raises
+        ------
+        ValueError
+            If candidate_include and candidate_exclude are both not None.
+        ValueError
+            If benchmark_include and benchmark_exclude are both not None.
+        
+        Returns
+        -------
+        Union[DataFrame[AttributeTrackingDf], Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]]]
+            Pandas dataframe with concatenated attributes from candidate and benchmark maps. If agreement_map is not None, returns a tuple with the dataframe and the agreement map.
+        """
+        return _attribute_tracking_xarray(
+            candidate_map=self._obj,
+            benchmark_map=benchmark_map,
+            agreement_map=agreement_map,
+            candidate_suffix=candidate_suffix,
+            benchmark_suffix=benchmark_suffix,
+            candidate_include=candidate_include,
+            candidate_exclude=candidate_exclude,
+            benchmark_include=benchmark_include,
+            benchmark_exclude=benchmark_exclude,
+        )
 
     def cat_plot(
         self,

@@ -160,3 +160,37 @@ def case_attribute_tracking(
         expected_df,
         expected_attr
     )
+
+candidate_map_fns = candidate_map_fns[0:2]
+benchmark_map_fns = benchmark_map_fns[0:2]
+
+candidate_includes = [["test1","test2"], None]
+candidate_excludes = [["test2"], None]
+
+benchmark_includes = [None, ["test1","test4"]]
+benchmark_excludes = [None, ["test1","test2"]]
+
+exceptions = [ValueError, ValueError]
+
+@parametrize(
+    "candidate_map_fn, benchmark_map_fn, candidate_include, candidate_exclude, benchmark_include, benchmark_exclude, exception",
+    list(zip(candidate_map_fns, benchmark_map_fns, candidate_includes, candidate_excludes, benchmark_includes, benchmark_excludes, exceptions))
+)
+def case_attribute_tracking_fail(
+    candidate_map_fn,
+    benchmark_map_fn,
+    candidate_include,
+    candidate_exclude,
+    benchmark_include,
+    benchmark_exclude,
+    exception
+):
+    return (
+        _load_xarray(candidate_map_fn, band_as_variable=True),
+        _load_xarray(benchmark_map_fn, band_as_variable=True),
+        candidate_include,
+        candidate_exclude,
+        benchmark_include,
+        benchmark_exclude,
+        exception
+    )
