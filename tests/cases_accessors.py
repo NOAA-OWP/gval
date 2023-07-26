@@ -4,6 +4,7 @@ Test cases for test_accessors.py
 
 import numpy as np
 import pandas as pd
+import xarray as xr
 from pytest_cases import parametrize
 
 from tests.conftest import _load_xarray, _load_gpkg
@@ -375,3 +376,16 @@ def case_data_set_accessor_continuous(candidate_map, benchmark_map):
         _load_xarray(candidate_map, band_as_variable=True),
         _load_xarray(benchmark_map, band_as_variable=True),
     )
+
+
+candidate_maps = ["candidate_map_attrs_1.tif"]
+benchmark_maps = ["benchmark_map_attrs_1.tif"]
+agreement_maps = [xr.DataArray(np.ones((3, 3)), dims=["y", "x"])]
+
+
+@parametrize(
+    "candidate_map, benchmark_map, agreement_map",
+    list(zip(candidate_maps, benchmark_maps, agreement_maps)),
+)
+def case_accessor_attributes(candidate_map, benchmark_map, agreement_map):
+    return (_load_xarray(candidate_map), _load_xarray(benchmark_map), agreement_map)

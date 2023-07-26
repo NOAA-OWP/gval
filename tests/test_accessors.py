@@ -300,3 +300,16 @@ def test_data_set_accessor_continuous(
 
     assert isinstance(agreement_map, xr.Dataset)
     assert isinstance(metrics_df, DataFrame)
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, agreement_map",
+    glob="accessor_attributes",
+)
+def test_accessor_attributes(candidate_map, benchmark_map, agreement_map):
+    attrs_df, agreement_map = candidate_map.gval.attribute_tracking(
+        benchmark_map=benchmark_map, agreement_map=agreement_map
+    )
+
+    assert isinstance(agreement_map, xr.DataArray)
+    assert isinstance(attrs_df, DataFrame)
