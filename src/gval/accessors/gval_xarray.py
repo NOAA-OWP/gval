@@ -117,13 +117,17 @@ class GVALXarray:
         attribute_tracking_kwargs: Optional[Dict] = None,
     ) -> Tuple[
         Union[
-            Union[xr.Dataset, xr.DataArray],
-            DataFrame[Crosstab_df],
-            DataFrame[Metrics_df],
-            Union[xr.Dataset, xr.DataArray],
-            DataFrame[Crosstab_df],
-            DataFrame[Metrics_df],
-            DataFrame[AttributeTrackingDf],
+            Tuple[
+                Union[xr.Dataset, xr.DataArray],
+                DataFrame[Crosstab_df],
+                DataFrame[Metrics_df]
+            ],
+            Tuple[
+                Union[xr.Dataset, xr.DataArray],
+                DataFrame[Crosstab_df],
+                DataFrame[Metrics_df],
+                DataFrame[AttributeTrackingDf]
+            ],
         ]
     ]:
         """
@@ -192,8 +196,8 @@ class GVALXarray:
         Returns
         -------
         Union[
-            Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df],
-            Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]
+            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]],
+            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]]
         ]
             Tuple with agreement map, cross-tabulation table, and metric table. Possibly attribute tracking table as well.
         """
@@ -260,11 +264,15 @@ class GVALXarray:
         attribute_tracking_kwargs: Optional[Dict] = None,
     ) -> Tuple[
         Union[
-            Union[xr.Dataset, xr.DataArray],
-            DataFrame[Metrics_df],
-            Union[xr.Dataset, xr.DataArray],
-            DataFrame[Metrics_df],
-            DataFrame[AttributeTrackingDf],
+            Tuple[
+                Union[xr.Dataset, xr.DataArray],
+                DataFrame[Metrics_df]
+            ],
+            Tuple[
+                Union[xr.Dataset, xr.DataArray],
+                DataFrame[Metrics_df],
+                DataFrame[AttributeTrackingDf]
+            ],
         ]
     ]:
         """
@@ -301,8 +309,8 @@ class GVALXarray:
         Returns
         -------
         Union[
-            Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df],
-            Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]
+            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]],
+            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]]
         ]
             Tuple with agreement map and metric table, possibly attribute tracking table as well.
         """
