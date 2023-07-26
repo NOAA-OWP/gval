@@ -120,13 +120,13 @@ class GVALXarray:
             Tuple[
                 Union[xr.Dataset, xr.DataArray],
                 DataFrame[Crosstab_df],
-                DataFrame[Metrics_df]
+                DataFrame[Metrics_df],
             ],
             Tuple[
                 Union[xr.Dataset, xr.DataArray],
                 DataFrame[Crosstab_df],
                 DataFrame[Metrics_df],
-                DataFrame[AttributeTrackingDf]
+                DataFrame[AttributeTrackingDf],
             ],
         ]
     ]:
@@ -264,14 +264,11 @@ class GVALXarray:
         attribute_tracking_kwargs: Optional[Dict] = None,
     ) -> Tuple[
         Union[
-            Tuple[
-                Union[xr.Dataset, xr.DataArray],
-                DataFrame[Metrics_df]
-            ],
+            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]],
             Tuple[
                 Union[xr.Dataset, xr.DataArray],
                 DataFrame[Metrics_df],
-                DataFrame[AttributeTrackingDf]
+                DataFrame[AttributeTrackingDf],
             ],
         ]
     ]:
