@@ -12,7 +12,7 @@ from gval.utils.loading_datasets import (
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes, memory_strategies",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes, memory_strategies, comparison_function",
     glob="data_array_accessor_success",
 )
 def test_data_array_accessor_success(
@@ -22,6 +22,7 @@ def test_data_array_accessor_success(
     negative_categories,
     rasterize_attributes,
     memory_strategies,
+    comparison_function,
 ):
     adjust_memory_strategy(memory_strategies)
 
@@ -34,6 +35,9 @@ def test_data_array_accessor_success(
         positive_categories=positive_categories,
         negative_categories=negative_categories,
         rasterize_attributes=rasterize_attributes,
+        comparison_function=comparison_function,
+        allow_candidate_values=[1, 2, np.nan],
+        allow_benchmark_values=[0, 2, np.nan],
     )
 
     if rasterize_attributes is None:

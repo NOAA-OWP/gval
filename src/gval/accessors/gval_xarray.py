@@ -93,6 +93,7 @@ class GVALXarray:
 
         return results
 
+    @Comparison.comparison_function_from_string
     def categorical_compare(
         self,
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
@@ -465,6 +466,7 @@ class GVALXarray:
 
         return agreement_map
 
+    @Comparison.comparison_function_from_string
     def compute_crosstab(
         self,
         benchmark_map: Union[xr.Dataset, xr.DataArray],
@@ -474,6 +476,7 @@ class GVALXarray:
         comparison_function: Optional[
             Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]
         ] = "szudzik",
+        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]] = None,
     ) -> DataFrame[Crosstab_df]:
         """
         Crosstab 2 or 3-dimensional xarray DataArray to produce Crosstab DataFrame.
@@ -490,6 +493,12 @@ class GVALXarray:
             Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
         comparison_function : Optional[Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]], default = "szudzik"
                 Function to compute agreement values. If None, then no agreement values are computed.
+        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]], default = None
+            When "pairing_dict" is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as `{(c, b) : a}` where `(c, b)` is a tuple of the candidate and benchmark value pairing, respectively, and `a` is the value for the agreement array to be used for this pairing.
+
+            If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.
+
+            A pairing dictionary can be used by the user to note which values to allow and which to ignore for comparisons. It can also be used to decide how nans are handled for cases where either the candidate and benchmark maps have nans or both.
 
         Returns
         -------
@@ -497,10 +506,6 @@ class GVALXarray:
             Crosstab DataFrame
         """
         self.check_same_type(benchmark_map)
-
-        # NOTE: Temporary fix until better solution is found
-        if isinstance(comparison_function, str):
-            comparison_function = getattr(Comparison, comparison_function)
 
         if isinstance(self._obj, xr.Dataset):
             return _crosstab_Datasets(
