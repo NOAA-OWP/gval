@@ -20,7 +20,6 @@ candidate_maps = [
     _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True, chunks="auto"),
     _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
     _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
-    _load_xarray("candidate_map_0_accessor.tif", mask_and_scale=True),
 ]
 benchmark_maps = [
     _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
@@ -29,7 +28,6 @@ benchmark_maps = [
     ),
     _load_gpkg("polygons_two_class_categorical.gpkg"),
     _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True, chunks="auto"),
-    _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
     _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
     _load_xarray("benchmark_map_0_accessor.tif", mask_and_scale=True),
 ]
@@ -103,8 +101,24 @@ comparison_funcs = [
     "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes, memory_strategies, comparison_function",
     list(
         zip(
-            candidate_maps,
-            benchmark_maps,
+            [
+                candidate_maps[0],
+                candidate_maps[1],
+                candidate_maps[2],
+                candidate_maps[3],
+                candidate_maps[4],
+                candidate_maps[5],
+                candidate_maps[0],
+            ],
+            [
+                benchmark_maps[0],
+                benchmark_maps[1],
+                benchmark_maps[2],
+                benchmark_maps[3],
+                benchmark_maps[4],
+                benchmark_maps[5],
+                benchmark_maps[0],
+            ],
             positive_cat,
             negative_cat,
             rasterize_attrs,
