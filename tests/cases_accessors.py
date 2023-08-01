@@ -73,23 +73,57 @@ plot_maps = [
 ]
 
 
-positive_cat = np.array([2, 2, 2, 2, 2, 2])
-negative_cat = np.array([[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]])
-rasterize_attrs = [None, None, ["category"], None, None, None]
-memory_strategy = ["normal", "normal", "normal", "normal", "moderate", "aggressive"]
+positive_cat = np.array([2, 2, 2, 2, 2, 2, 2])
+negative_cat = np.array([[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]])
+rasterize_attrs = [None, None, ["category"], None, None, None, None]
+memory_strategy = [
+    "normal",
+    "normal",
+    "normal",
+    "normal",
+    "moderate",
+    "aggressive",
+    "normal",
+]
 exception_list = [OSError, ValueError, TypeError]
+comparison_funcs = [
+    "szudzik",
+    "szudzik",
+    "szudzik",
+    "szudzik",
+    "szudzik",
+    "szudzik",
+    "pairing_dict",
+]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes, memory_strategies",
+    "candidate_map, benchmark_map, positive_categories, negative_categories, rasterize_attributes, memory_strategies, comparison_function",
     list(
         zip(
-            candidate_maps,
-            benchmark_maps,
+            [
+                candidate_maps[0],
+                candidate_maps[1],
+                candidate_maps[2],
+                candidate_maps[3],
+                candidate_maps[4],
+                candidate_maps[5],
+                candidate_maps[0],
+            ],
+            [
+                benchmark_maps[0],
+                benchmark_maps[1],
+                benchmark_maps[2],
+                benchmark_maps[3],
+                benchmark_maps[4],
+                benchmark_maps[5],
+                benchmark_maps[0],
+            ],
             positive_cat,
             negative_cat,
             rasterize_attrs,
             memory_strategy,
+            comparison_funcs,
         )
     ),
 )
@@ -100,6 +134,7 @@ def case_data_array_accessor_success(
     negative_categories,
     rasterize_attributes,
     memory_strategies,
+    comparison_function,
 ):
     return (
         candidate_map,
@@ -108,6 +143,7 @@ def case_data_array_accessor_success(
         negative_categories,
         rasterize_attributes,
         memory_strategies,
+        comparison_function,
     )
 
 

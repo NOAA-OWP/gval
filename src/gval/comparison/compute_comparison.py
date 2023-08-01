@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Callable
 from functools import wraps
 import inspect
 from numbers import Number
@@ -11,6 +11,7 @@ from gval.comparison.pairing_functions import (
     cantor_pair_signed,
     szudzik_pair_signed,
     difference,
+    _make_pairing_dict_fn,
 )
 from gval.comparison.agreement import _compute_agreement_map
 
@@ -233,12 +234,62 @@ class ComparisonProcessing:
         Agreement map.
         """
 
-        if isinstance(kwargs["comparison_function"], str):
-            if kwargs["comparison_function"] in self.registered_functions:
-                kwargs["comparison_function"] = getattr(
-                    self, kwargs["comparison_function"]
-                )
-            else:
-                raise KeyError("Pairing function not found in registered functions")
+        return self.comparison_function_from_string(func=_compute_agreement_map)(
+            **kwargs
+        )
 
-        return _compute_agreement_map(**kwargs)
+    def comparison_function_from_string(
+        self, func: Callable
+    ) -> Callable:  # pragma: no cover
+        """
+
+        Decorator function to compose a pairing dict comparison function from a string argument
+
+        Parameters
+        ----------
+        func: Callable
+            Function requiring check for pairing_dict comparison function
+
+        Returns
+        -------
+        Callable
+            Function with appropriate comparison function
+        """
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # NOTE: Temporary fix until better solution is found
+            if "comparison_function" in kwargs and isinstance(
+                kwargs["comparison_function"], str
+            ):
+                if kwargs["comparison_function"] in self.registered_functions:
+                    kwargs["comparison_function"] = getattr(
+                        self, kwargs["comparison_function"]
+                    )
+                else:
+                    raise KeyError("Pairing function not found in registered functions")
+
+                # In case the arguments do not exist
+                kwargs["pairing_dict"] = kwargs.get("pairing_dict")
+                kwargs["allow_candidate_values"] = kwargs.get("allow_candidate_values")
+                kwargs["allow_benchmark_values"] = kwargs.get("allow_benchmark_values")
+
+                if (
+                    kwargs["comparison_function"] == "pairing_dict"
+                ):  # when pairing_dict is a dict
+                    # this creates the pairing dictionary from the passed allowed values
+                    kwargs["comparison_function"] = _make_pairing_dict_fn(
+                        pairing_dict=kwargs["pairing_dict"],
+                        unique_candidate_values=kwargs["allow_candidate_values"],
+                        unique_benchmark_values=kwargs["allow_benchmark_values"],
+                    )
+
+            else:
+                kwargs["comparison_function"] = getattr(self, "szudzik")
+
+            # Call the decorated function
+            result = func(*args, **kwargs)
+
+            return result
+
+        return wrapper
