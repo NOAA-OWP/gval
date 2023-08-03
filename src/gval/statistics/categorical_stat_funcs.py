@@ -324,7 +324,7 @@ def prevalence(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
     ----------
     .. [1] [Prevalence](https://en.wikipedia.org/wiki/Prevalence)
     """
-    return (tp + fp) / (tp + fp + tn + fn)
+    return (tp + fn) / (tp + fp + tn + fn)
 
 
 def accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
