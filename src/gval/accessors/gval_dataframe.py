@@ -3,9 +3,11 @@ from typing import Union, Iterable, Optional
 
 import pandas as pd
 from pandera.typing import DataFrame
+import xarray as xr
 
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
 from gval.utils.schemas import Metrics_df
+from gval.homogenize.rasterize import _rasterize_data
 
 
 @pd.api.extensions.register_dataframe_accessor("gval")
@@ -87,4 +89,39 @@ class GVALDataFrame:
             negative_categories=negative_categories,
             average=average,
             weights=weights,
+        )
+
+    def rasterize_data(
+        self, reference_map: Union[xr.Dataset, xr.DataArray], rasterize_attributes: list
+    ) -> Union[xr.Dataset, xr.DataArray]:
+        """
+        Convenience function for rasterizing vector data using a reference raster.  For more control use `make_geocube`
+        from the geocube package.
+
+        Parameters
+        ----------
+        reference_map: Union[xr.Dataset, xr.DataArray]
+            Map to reference in creation of rasterized vector map
+        rasterize_attributes: list
+            Attributes to rasterize
+
+        Returns
+        -------
+        Union[xr.Dataset, xr.DataArray]
+            Rasterized Data
+
+        Raises
+        ------
+        KeyError
+
+        References
+        ----------
+        .. [1] [geocube `make_geocube`](https://corteva.github.io/geocube/html/geocube.html)
+
+        """
+
+        return _rasterize_data(
+            candidate_map=reference_map,
+            benchmark_map=self._obj,
+            rasterize_attributes=rasterize_attributes,
         )

@@ -317,3 +317,16 @@ def test_accessor_attributes(candidate_map, benchmark_map, agreement_map):
 
     assert isinstance(agreement_map, xr.DataArray)
     assert isinstance(attrs_df, DataFrame)
+
+
+@parametrize_with_cases(
+    "vector_map, reference_map, attributes",
+    glob="dataframe_accessor_rasterize",
+)
+def test_dataframe_accessor_rasterize(vector_map, reference_map, attributes):
+    raster_map = vector_map.gval.rasterize_data(
+        reference_map=reference_map, rasterize_attributes=attributes
+    )
+
+    assert isinstance(raster_map, type(reference_map))
+    assert raster_map.shape == reference_map.shape
