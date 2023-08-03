@@ -462,7 +462,7 @@ class GVALXarray:
         )
 
         if self.agreement_map_format == "vector":
-            agreement_map = _vectorize_data(agreement_map)
+            agreement_map = agreement_map.gval.vectorize_data()
 
         return agreement_map
 
@@ -677,3 +677,15 @@ class GVALXarray:
             basemap=basemap,
             colorbar_label=colorbar_label,
         )
+
+    def vectorize_data(self) -> gpd.GeoDataFrame:
+        """
+        Vectorize an xarray DataArray or Dataset
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            Vectorized data
+        """
+
+        return _vectorize_data(self._obj)

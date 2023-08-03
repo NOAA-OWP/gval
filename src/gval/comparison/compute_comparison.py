@@ -284,7 +284,7 @@ class ComparisonProcessing:
                         unique_benchmark_values=kwargs["allow_benchmark_values"],
                     )
 
-            else:
+            if "comparison_function" not in kwargs:
                 kwargs["comparison_function"] = getattr(self, "szudzik")
 
             # Call the decorated function

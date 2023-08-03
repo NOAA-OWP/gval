@@ -391,6 +391,14 @@ def case_continuous_plot_fail(candidate_map):
     return candidate_map
 
 
+@parametrize(
+    "vector_map, reference_map, attributes",
+    list(zip(benchmark_maps[2:3], candidate_maps[0:1], [["category"]])),
+)
+def case_dataframe_accessor_rasterize(vector_map, reference_map, attributes):
+    return vector_map, reference_map, attributes
+
+
 candidate_maps = ["candidate_continuous_0.tif", "candidate_continuous_1.tif"]
 benchmark_maps = ["benchmark_continuous_0.tif", "benchmark_continuous_1.tif"]
 
@@ -424,4 +432,4 @@ agreement_maps = [xr.DataArray(np.ones((3, 3)), dims=["y", "x"])]
     list(zip(candidate_maps, benchmark_maps, agreement_maps)),
 )
 def case_accessor_attributes(candidate_map, benchmark_map, agreement_map):
-    return (_load_xarray(candidate_map), _load_xarray(benchmark_map), agreement_map)
+    return _load_xarray(candidate_map), _load_xarray(benchmark_map), agreement_map
