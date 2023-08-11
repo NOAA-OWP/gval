@@ -102,6 +102,11 @@ def compile_readme():
     )
 
     shutil.copy(
+        f"{abs_path}/../notebooks/Multi-Class Categorical Statistics.ipynb",
+        f"{abs_path}/sphinx/SphinxMulticatTutorial.ipynb",
+    )
+
+    shutil.copy(
         f"{abs_path}/../CONTRIBUTING.MD",
         f"{abs_path}/sphinx/SPHINX_CONTRIBUTING.MD",
     )
