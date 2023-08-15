@@ -16,7 +16,9 @@ ___________________________________
    :maxdepth: 3
    :caption: Table of Contents
 
-   tutorials
+   SphinxTutorial
+   SphinxMulticatTutorial
+   SphinxContinuousTutorial
    api
    contributing
 
