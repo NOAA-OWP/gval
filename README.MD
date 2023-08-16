@@ -19,10 +19,10 @@ See the full documentation [here](noaa-owp.github.io/gval/).
 
 WARNING:
 
-- Our current public API and output formats are likely to change in
-    the future.
-- Software is provided "AS-IS" without any guarantees. Please QA/QC
-    your metrics carefully until this project matures.
+- Our current public API and output formats are likely to change in the
+  future.
+- Software is provided "AS-IS" without any guarantees. Please QA/QC your
+  metrics carefully until this project matures.
 
 # Installation
 
