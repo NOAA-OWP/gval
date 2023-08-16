@@ -17,6 +17,7 @@ ___________________________________
    :caption: Table of Contents
 
    SphinxTutorial
+   SphinxMulticatTutorial
    SphinxContinuousTutorial
    api
    contributing
