@@ -81,7 +81,7 @@ if __name__ == "__main__":
     )
 
     # Save report and display results in terminal
-    final_df.to_csv("./remote_performance_report.csv")
+    final_df.to_csv("./local_performance_report.csv")
     final_df["test_len"] = final_df["Test"].apply(lambda x: len(x.split("[")[0]))
     max_len = final_df["test_len"].max()
 
