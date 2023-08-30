@@ -211,7 +211,7 @@ def catalog_compare(
             agreement_row = agreement_catalog.iloc[i].to_frame().T
         except NotImplementedError:
             agreement_row = agreement_catalog.loc[agreement_catalog.index == i]
-        
+
         sub_df.index = [i] * len(sub_df)
         return agreement_row.join(sub_df)
 
@@ -220,7 +220,7 @@ def catalog_compare(
         return dd.concat(
             [nested_merge(i, sub_df) for i, sub_df in enumerate(metrics_df)]
         ).reset_index(drop=True)
-    
+
     if isinstance(metrics_df, pd.Series):
         return pd.concat(
             [nested_merge(i, sub_df) for i, sub_df in enumerate(metrics_df)]
