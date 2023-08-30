@@ -7,4 +7,4 @@ CatStats = CategoricalStatistics()
 ContStats = ContinuousStatistics()
 
 from gval.accessors import gval_array, gval_dataset, gval_dataframe
-from gval.catalogs import compare_catalogs
+from gval.catalogs import catalog_compare
