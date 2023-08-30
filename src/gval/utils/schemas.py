@@ -11,13 +11,6 @@ import pandas as pd
 import pandera as pa
 from pandera.typing import Series, Index, Int64
 
-"""
-# TODO:
-- Define custom datatypes that are unions of base types?
-    - several of the float types below could be set to numeric
-    - the band column could be set to numeric or str to allow for datasets.
-"""
-
 
 class Xrspatial_crosstab_df(pa.DataFrameModel):  # pragma: no cover
     """Defines the schema for output of `xrspatial.zonal.crosstab()`"""

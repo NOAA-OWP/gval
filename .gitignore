@@ -151,4 +151,5 @@ notebooks/metric_file.csv
 # docs
 docs/sphinx/_build/
 
-# Local Performance Report
+# local performance report
+local_performance_report.csv
