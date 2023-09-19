@@ -14,14 +14,27 @@ from tests.conftest import _load_xarray, _load_gpkg
 
 
 candidate_map_fns = np.array(
-    ["candidate_continuous_1.tif", "candidate_map_multiband_two_class_categorical.tif"]
+    [
+        _load_xarray("candidate_continuous_1.tif", mask_and_scale=True),
+        _load_xarray(
+            "candidate_map_multiband_two_class_categorical.tif", mask_and_scale=True
+        ),
+    ]
 )
 benchmark_map_fns = np.array(
-    ["benchmark_continuous_1.tif", "benchmark_map_multiband_two_class_categorical.tif"]
+    [
+        _load_xarray("benchmark_continuous_1.tif", mask_and_scale=True),
+        _load_xarray(
+            "benchmark_map_multiband_two_class_categorical.tif", mask_and_scale=True
+        ),
+    ]
 )
 
 subsampling_dataframes = np.array(
-    ["subsample_continuous_polygons.gpkg", "subsample_two-class_polygons.gpkg"]
+    [
+        _load_gpkg("subsample_continuous_polygons.gpkg"),
+        _load_gpkg("subsample_two-class_polygons.gpkg"),
+    ]
 )
 
 create_dataframe_options = [
@@ -286,7 +299,7 @@ create_dataframe_options_fail = [
     "df, args", list(zip(subsampling_dataframes[0:1], create_dataframe_options_fail))
 )
 def case_create_sampling_dataframes_fail(df, args):
-    return _load_gpkg(df), args
+    return df, args
 
 
 expected_lengths = [2, 2]
@@ -310,14 +323,12 @@ sample_percents = [[6.826683809589588], [6.826683809589588, 4.107072429734824]]
 def case_subsampling(
     candidate, benchmark, subsample_df, subsample_type, expected_length, sample_percent
 ):
-    cand = _load_xarray(candidate, mask_and_scale=True)
-    cand = cand.sel({"band": 1}) if expected_length == 1 else cand
-    bench = _load_xarray(benchmark, mask_and_scale=True)
-    bench = bench.sel({"band": 1}) if expected_length == 1 else bench
+    candidate = candidate.sel({"band": 1}) if expected_length == 1 else candidate
+    benchmark = benchmark.sel({"band": 1}) if expected_length == 1 else benchmark
     return (
-        cand,
-        bench,
-        _load_gpkg(subsample_df),
+        candidate,
+        benchmark,
+        subsample_df,
         subsample_type,
         expected_length,
         sample_percent,
@@ -340,9 +351,9 @@ exceptions = [ValueError, rxr.exceptions.NoDataInBounds]
 )
 def case_subsampling_fail(candidate, benchmark, subsample_df, exception):
     return (
-        _load_xarray(candidate),
-        _load_xarray(benchmark),
-        _load_gpkg(subsample_df),
+        candidate,
+        benchmark,
+        subsample_df,
         exception,
     )
 
@@ -366,9 +377,9 @@ def case_categorical_subsample(
     candidate, benchmark, subsample_df, expected_df, sampling_average
 ):
     return (
-        _load_xarray(candidate, mask_and_scale=True),
-        _load_xarray(benchmark, mask_and_scale=True),
-        _load_gpkg(subsample_df),
+        candidate,
+        benchmark,
+        subsample_df,
         expected_df,
         sampling_average,
     )
@@ -393,9 +404,9 @@ def case_continuous_subsample(
     candidate, benchmark, subsample_df, expected_df, sampling_average
 ):
     return (
-        _load_xarray(candidate, mask_and_scale=True, band_as_variable=True),
-        _load_xarray(benchmark, mask_and_scale=True, band_as_variable=True),
-        _load_gpkg(subsample_df),
+        candidate,
+        benchmark,
+        subsample_df,
         expected_df,
         sampling_average,
     )
