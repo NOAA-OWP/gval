@@ -42,15 +42,7 @@ def subsample(
     if subsampling_df.crs is None:
         raise ValueError("sampling_df crs cannot be none")
 
-    # exclude_only = (sampling_df['sample_type'].values != "exclude").sum() == 0
-
-    (
-        sampled_maps,
-        candidate_copy,
-    ) = (
-        [],
-        None,
-    )
+    sampled_maps = []
 
     for idx, (_, row) in enumerate(subsampling_df.iterrows()):
         drop, invert = (
@@ -62,9 +54,6 @@ def subsample(
         benchmark_copy = benchmark.rio.clip(
             [row["geometry"]], subsampling_df.crs, drop=drop, invert=invert
         )
-
-        # Get sampled maps and percents
-        sampled_maps.append([candidate_copy, benchmark_copy])
 
         if isinstance(candidate, xr.DataArray):
             candidate_copy.attrs["sample_percentage"] = get_subsample_percent(
@@ -78,6 +67,9 @@ def subsample(
                 )
                 for c_var in candidate_copy.data_vars
             ]
+
+        # Get sampled maps and percents
+        sampled_maps.append([candidate_copy, benchmark_copy])
 
     return sampled_maps
 
@@ -109,11 +101,14 @@ def get_subsample_percent(
 
     mask = make_geocube(sampling_df, measurements=["subsample_id"], like=og_data)
 
-    percent = float(
-        xarray_reduce(mask["subsample_id"], mask["subsample_id"], func="count")
-        / total_size
-        * 100
-    )
+    try:
+        percent = float(
+            xarray_reduce(mask["subsample_id"], mask["subsample_id"], func="count")
+            / total_size
+            * 100
+        )
+    except IndexError as e:  # pragma: no cover
+        raise e("No spatial overlap in subsample geometry and candidate/benchmark data")
 
     del mask
 

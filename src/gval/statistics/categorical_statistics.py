@@ -277,7 +277,7 @@ class CategoricalStatistics(BaseStatistics):
 
                 stat_val = func(*func_args)
 
-                def check_value(stat_name: str, stat: Number):
+                def check_value(stat_name: str, stat: Number):  # pragma: no cover
                     if np.isnan(stat) or np.isinf(stat):
                         print(
                             "Warning:",

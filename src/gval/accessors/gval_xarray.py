@@ -357,7 +357,7 @@ class GVALXarray:
         else:
             c_is_int, b_is_int = map(integer_check, [candidate, benchmark])
 
-        if c_is_int or b_is_int:
+        if c_is_int or b_is_int:  # pragma: no cover
             raise TypeError(
                 "Cannot compute continuous statistics on data with type integer"
             )
@@ -560,7 +560,7 @@ class GVALXarray:
             agreement_maps.append(agreement_map)
 
         if subsampling_df is not None:
-            if "sample_percent" in subsampling_df.columns:
+            if "sample_percent" in subsampling_df.columns:  # pragma: no cover
                 subsampling_df.drop(columns=["sample_percent"], inplace=True)
             subsampling_df.loc[:, "sample_percent"] = sample_percentage
             return (
@@ -819,36 +819,3 @@ class GVALXarray:
         """
 
         return _vectorize_data(self._obj)
-
-
-if __name__ == "__main__":
-    import rioxarray as rxr
-
-    path = "/home/sven/repos/gval/notebooks/"
-
-    candidate_masked = rxr.open_rasterio(
-        f"{path}candidate_map_two_class_categorical.tif", mask_and_scale=True
-    )
-    benchmark_masked = rxr.open_rasterio(
-        f"{path}benchmark_map_two_class_categorical.tif", mask_and_scale=True
-    )
-    candidate_masked, benchmark_masked = candidate_masked.gval.homogenize(
-        benchmark_masked
-    )
-
-    polygons_include = gpd.read_file(f"{path}subsample_two-class_polygons_include.gpkg")
-    polygons_exclude = gpd.read_file(f"{path}subsample_two-class_polygons_exclude.gpkg")
-
-    polygons_include.gval.create_subsampling_df(
-        inplace=True, subsampling_type=["include", "include"]
-    )
-    ag_masked, met_masked = candidate_masked.gval.continuous_compare(
-        benchmark_map=benchmark_masked,
-        metrics=[
-            "mean_absolute_error",
-            "mean_percentage_error",
-            "symmetric_mean_absolute_percentage_error",
-            "root_mean_squared_error",
-        ],
-        subsampling_df=polygons_include,
-    )

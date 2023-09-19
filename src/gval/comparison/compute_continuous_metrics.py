@@ -7,7 +7,6 @@ __author__ = "Fernando Aristizabal"
 
 from typing import Iterable, Union
 
-import numpy as np
 import pandera as pa
 import pandas as pd
 from pandera.typing import DataFrame
@@ -109,10 +108,6 @@ def _compute_continuous_metrics(
     metric_df = pd.concat(metric_dfs).reset_index().drop(columns=["index"])
 
     if subsampling_df is not None:
-        metric_df.loc[:, "sample_percent"] = np.ravel(
-            [x for x in subsampling_df["sample_percent"].values]
-        )
-
         if subsampling_average == "band":
             metric_df = (
                 metric_df.groupby(Subsample_identifiers.columns())
@@ -122,12 +117,7 @@ def _compute_continuous_metrics(
 
             metric_df.insert(1, "band", "averaged")
 
-        if subsampling_average == "sample":
-            sample_percent = (
-                metric_df.groupby("band")
-                .sum(numeric_only=True)["sample_percent"]
-                .values
-            )
+        if subsampling_average == "subsample":
             metric_df = (
                 metric_df.groupby(Sample_identifiers.columns())
                 .mean(numeric_only=True)
@@ -135,13 +125,12 @@ def _compute_continuous_metrics(
             )
 
             metric_df.insert(0, "subsample", "averaged")
-            metric_df.loc[:, "sample_percent"] = sample_percent
 
         if subsampling_average == "weighted":
             if subsampling_df.get("weights") is None:
                 raise ValueError(
                     "Must have weights if weighted is chosen for subsampling"
-                )
+                )  # pragma: no cover
 
             metric_df.loc[:, "weights"] = subsampling_df["weights"]
 
@@ -157,7 +146,7 @@ def _compute_continuous_metrics(
 
             # take average of weighted metrics
             metric_df = (
-                metric_df.groupby(Subsample_identifiers.columns())
+                metric_df.groupby(Sample_identifiers.columns())
                 .sum(numeric_only=True)
                 .drop(
                     columns=["weights", "subsample"],
@@ -167,6 +156,6 @@ def _compute_continuous_metrics(
                 .reset_index()
             )
 
-            metric_df.insert(1, "band", "averaged")
+            metric_df.insert(0, "subsample", "averaged")
 
     return metric_df

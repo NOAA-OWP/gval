@@ -179,7 +179,7 @@ class GVALDataFrame:
             if crs is None:
                 raise TypeError(
                     "Either provide CRS for or give the original DataFrame a crs if inplace is True"
-                )
+                )  # pragma: no cover
 
             if "geometry" not in geo_df.columns:
                 geo_df["geometry"] = (
