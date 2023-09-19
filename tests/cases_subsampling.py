@@ -1,10 +1,9 @@
 """
-Test functionality for gval/compare.py
+Test functionality for gval/subsampling.py
 """
 
 # __all__ = ['*']
 
-import numpy as np
 from shapely.geometry import Point
 import pandas as pd
 import rioxarray as rxr
@@ -13,29 +12,28 @@ from pytest_cases import parametrize
 from tests.conftest import _load_xarray, _load_gpkg
 
 
-candidate_map_fns = np.array(
-    [
-        _load_xarray("candidate_continuous_1.tif", mask_and_scale=True),
-        _load_xarray(
-            "candidate_map_multiband_two_class_categorical.tif", mask_and_scale=True
-        ),
-    ]
-)
-benchmark_map_fns = np.array(
-    [
-        _load_xarray("benchmark_continuous_1.tif", mask_and_scale=True),
-        _load_xarray(
-            "benchmark_map_multiband_two_class_categorical.tif", mask_and_scale=True
-        ),
-    ]
-)
+candidate_map_fns = [
+    _load_xarray(
+        "candidate_continuous_1.tif", mask_and_scale=True, band_as_variable=True
+    ),
+    _load_xarray(
+        "candidate_map_multiband_two_class_categorical.tif", mask_and_scale=True
+    ),
+]
 
-subsampling_dataframes = np.array(
-    [
-        _load_gpkg("subsample_continuous_polygons.gpkg"),
-        _load_gpkg("subsample_two-class_polygons.gpkg"),
-    ]
-)
+benchmark_map_fns = [
+    _load_xarray(
+        "benchmark_continuous_1.tif", mask_and_scale=True, band_as_variable=True
+    ),
+    _load_xarray(
+        "benchmark_map_multiband_two_class_categorical.tif", mask_and_scale=True
+    ),
+]
+
+subsampling_dataframes = [
+    _load_gpkg("subsample_continuous_polygons.gpkg"),
+    _load_gpkg("subsample_two-class_polygons.gpkg"),
+]
 
 create_dataframe_options = [
     {"subsampling_type": ["include", "include"], "subsampling_weights": [1, 2]},
@@ -283,7 +281,7 @@ expected_dfs = [
 
 @parametrize("df, args", list(zip(subsampling_dataframes, create_dataframe_options)))
 def case_create_sampling_dataframes(df, args):
-    return _load_gpkg(df), args
+    return df, args
 
 
 create_dataframe_options_fail = [
@@ -311,9 +309,9 @@ sample_percents = [[6.826683809589588], [6.826683809589588, 4.107072429734824]]
     "candidate, benchmark, subsample_df, subsample_type, expected_length, sample_percent",
     list(
         zip(
-            candidate_map_fns[[1, 1]],
-            benchmark_map_fns[[1, 1]],
-            subsampling_dataframes[[1, 1]],
+            [candidate_map_fns[1], candidate_map_fns[1]],
+            [benchmark_map_fns[1], benchmark_map_fns[1]],
+            [subsampling_dataframes[1], subsampling_dataframes[1]],
             subsample_types,
             expected_lengths,
             sample_percents,
@@ -342,8 +340,8 @@ exceptions = [ValueError, rxr.exceptions.NoDataInBounds]
     "candidate, benchmark, subsample_df, exception",
     list(
         zip(
-            candidate_map_fns[[0, 0]],
-            benchmark_map_fns[[0, 0]],
+            [candidate_map_fns[0], candidate_map_fns[0]],
+            [benchmark_map_fns[0], benchmark_map_fns[0]],
             subsampling_dataframes,
             exceptions,
         )
@@ -365,9 +363,13 @@ sample_average_types = ["full-detail", "band", "subsample"]
     "candidate, benchmark, subsample_df, expected_df, sampling_average",
     list(
         zip(
-            candidate_map_fns[[1, 1, 1]],
-            benchmark_map_fns[[1, 1, 1]],
-            subsampling_dataframes[[1, 1, 1]],
+            [candidate_map_fns[1], candidate_map_fns[1], candidate_map_fns[1]],
+            [benchmark_map_fns[1], benchmark_map_fns[1], benchmark_map_fns[1]],
+            [
+                subsampling_dataframes[1],
+                subsampling_dataframes[1],
+                subsampling_dataframes[1],
+            ],
             [expected_dfs[0], expected_dfs[1], expected_dfs[2]],
             sample_average_types,
         )
@@ -392,9 +394,24 @@ sample_average_types = ["full-detail", "band", "subsample", "weighted"]
     "candidate, benchmark, subsample_df, expected_df, sampling_average",
     list(
         zip(
-            candidate_map_fns[[0, 0, 0, 0]],
-            benchmark_map_fns[[0, 0, 0, 0]],
-            subsampling_dataframes[[0, 0, 0, 0]],
+            [
+                candidate_map_fns[0],
+                candidate_map_fns[0],
+                candidate_map_fns[0],
+                candidate_map_fns[0],
+            ],
+            [
+                benchmark_map_fns[0],
+                benchmark_map_fns[0],
+                benchmark_map_fns[0],
+                benchmark_map_fns[0],
+            ],
+            [
+                subsampling_dataframes[0],
+                subsampling_dataframes[0],
+                subsampling_dataframes[0],
+                subsampling_dataframes[0],
+            ],
             [expected_dfs[3], expected_dfs[4], expected_dfs[5], expected_dfs[6]],
             sample_average_types,
         )
