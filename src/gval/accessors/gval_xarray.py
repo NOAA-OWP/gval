@@ -564,9 +564,9 @@ class GVALXarray:
                 subsampling_df.drop(columns=["sample_percent"], inplace=True)
             subsampling_df.loc[:, "sample_percent"] = sample_percentage
             return (
-                agreement_maps,
-                candidate_maps,
-                benchmark_maps if continuous else agreement_maps,
+                (agreement_maps, candidate_maps, benchmark_maps)
+                if continuous
+                else agreement_maps
             )
 
         return agreement_maps[0]
@@ -819,3 +819,26 @@ class GVALXarray:
         """
 
         return _vectorize_data(self._obj)
+
+
+if __name__ == "__main__":
+    import rioxarray as rxr
+
+    path = "/home/sven/repos/gval/notebooks/"
+    subsample_df = gpd.read_file(f"{path}subsample_two-class_polygons.gpkg")
+    subsample_df.gval.create_subsampling_df(subsampling_type="include", inplace=True)
+
+    candidate = rxr.open_rasterio(
+        f"{path}candidate_map_multiband_two_class_categorical.tif", mask_and_scale=True
+    )
+    benchmark = rxr.open_rasterio(
+        f"{path}benchmark_map_multiband_two_class_categorical.tif", mask_and_scale=True
+    )
+
+    ag, ctab, met = candidate.gval.categorical_compare(
+        benchmark_map=benchmark,
+        positive_categories=[2],
+        negative_categories=[0, 1],
+        subsampling_df=subsample_df,
+        subsampling_average="full-detail",
+    )

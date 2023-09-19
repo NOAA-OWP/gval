@@ -94,7 +94,7 @@ def test_categorical_subsampling(
         met, expected_df, check_dtype=False
     ), "Compute statistics did not return expected values"
 
-    assert len(ag) == 3
+    assert len(ag) == 2
 
 
 @parametrize_with_cases(
