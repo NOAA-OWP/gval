@@ -1,12 +1,14 @@
 from numbers import Number
-from typing import Union, Iterable, Optional
+from typing import Union, Iterable, Optional, List
 
 import pandas as pd
+from shapely import Geometry
+import geopandas as gpd
 from pandera.typing import DataFrame
 import xarray as xr
 
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
-from gval.utils.schemas import Metrics_df
+from gval.utils.schemas import Metrics_df, SubsamplingDf
 from gval.homogenize.rasterize import _rasterize_data
 
 
@@ -31,6 +33,7 @@ class GVALDataFrame:
         metrics: Union[str, Iterable[str]] = "all",
         average: str = "micro",
         weights: Optional[Iterable[Number]] = None,
+        subsampling_average: Optional[str] = None,
     ) -> DataFrame[Metrics_df]:
         """
         Computes categorical metrics from a crosstab df.
@@ -56,6 +59,12 @@ class GVALDataFrame:
             Example:
 
             `positive_categories = [1, 2]; weights = [0.25, 0.75]`
+        subsampling_average: Optional[str], default = None
+            Way to aggregate statistics for subsamples if provided. Options are "sample", "band", and "full-detail"
+            Sample calculates metrics and averages the results by subsample
+            Band calculates metrics and averages all the metrics by band
+            Full-detail does not aggregation on subsample or band
+
 
         Returns
         -------
@@ -89,6 +98,7 @@ class GVALDataFrame:
             negative_categories=negative_categories,
             average=average,
             weights=weights,
+            sampling_average=subsampling_average,
         )
 
     def rasterize_data(
@@ -125,3 +135,65 @@ class GVALDataFrame:
             benchmark_map=self._obj,
             rasterize_attributes=rasterize_attributes,
         )
+
+    def create_subsampling_df(
+        self,
+        geometries: List[Geometry] = None,
+        crs: str = None,
+        subsampling_type: Union[str, List[str]] = "exclude",
+        subsampling_weights: List[Union[int, float]] = None,
+        inplace: bool = False,
+    ) -> Union[None, SubsamplingDf]:
+        """
+        Parameters
+        __________
+        geometries: List[Geometry], default = None
+            Geometries if none are already in the GeoDataFrame
+        crs: str
+            The spatial reference for the geometries provided
+        subsampling_type: Union[str, List[str]], default = "exclude"
+            Whether each geometry should be an inclusive subsample or an exclusionary mask
+        subsampling_weights: List[Union[int, float]], default = None
+            Values to scale the numeric impact of a particular sample
+        inplace: bool, default = False
+            Whether to adjust the GeoDataFrame calling the operation or a return a new one
+
+        Raises
+        ------
+        ValueError
+            List provided has more or less entries than the DataFrame
+        TypeError
+            CRS must be provided if geometries are provided
+
+        Returns
+        -------
+        Union[None, SubsamplingDf]
+            GeoDataFrame adhering to subsampling dataframe if not inplace, otherwise None
+
+        """
+
+        geo_df = self._obj if inplace else gpd.GeoDataFrame()
+        crs = crs if crs is not None else self._obj.crs
+
+        if (geometries and inplace) or ("geometry" in self._obj.columns):
+            if crs is None:
+                raise TypeError(
+                    "Either provide CRS for or give the original DataFrame a crs if inplace is True"
+                )
+
+            if "geometry" not in geo_df.columns:
+                geo_df["geometry"] = (
+                    geometries if geometries is not None else self._obj["geometry"]
+                )
+                geo_df.crs = crs
+
+        if subsampling_type:
+            geo_df["subsample_type"] = subsampling_type
+
+        if subsampling_weights:
+            geo_df["weights"] = subsampling_weights
+
+        geo_df.loc[:, "subsample_id"] = geo_df.index.values + 1
+
+        if not inplace:
+            return geo_df

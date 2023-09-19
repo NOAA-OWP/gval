@@ -1,8 +1,10 @@
-from typing import Iterable, Optional, Tuple, Union, Callable, Dict
+from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List
 from numbers import Number
+from functools import partial
 
 import numpy as np
 import numba as nb
+import pandas as pd
 import xarray as xr
 from rasterio.enums import Resampling
 from pandera.typing import DataFrame
@@ -22,6 +24,7 @@ from gval.attributes.attributes import _attribute_tracking_xarray
 from gval.utils.schemas import Crosstab_df, Metrics_df, AttributeTrackingDf
 from gval.utils.visualize import _map_plot
 from gval.comparison.pairing_functions import difference
+from gval.subsampling.subsampling import subsample
 
 
 class GVALXarray:
@@ -116,6 +119,8 @@ class GVALXarray:
         rasterize_attributes: Optional[list] = None,
         attribute_tracking: bool = False,
         attribute_tracking_kwargs: Optional[Dict] = None,
+        subsampling_df: Optional[gpd.GeoDataFrame] = None,
+        subsampling_average: Optional[str] = None,
     ) -> Tuple[
         Union[
             Tuple[
@@ -193,6 +198,13 @@ class GVALXarray:
             Whether to return a dataframe with the attributes of the candidate and benchmark maps.
         attribute_tracking_kwargs: Optional[Dict], default = None
             Keyword arguments to pass to `gval.attribute_tracking()`.  This is only used if `attribute_tracking` is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See `gval.attribute_tracking` for more information.
+        subsampling_df: Optional[gpd.GeoDataFrame], default = None
+            DataFrame with spatial geometries and method types to subsample
+        subsampling_average: Optional[str], default = None
+            Way to aggregate statistics for subsamples if provided. Options are "sample", "band", and "full-detail"
+            Sample calculates metrics and averages the results by subsample
+            Band calculates metrics and averages all the metrics by band
+            Full-detail does not aggregation on subsample or band
 
         Returns
         -------
@@ -200,7 +212,7 @@ class GVALXarray:
             Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]],
             Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]]
         ]
-            Tuple with agreement map, cross-tabulation table, and metric table. Possibly attribute tracking table as well.
+            Tuple with agreement map/s, cross-tabulation table, and metric table. Possibly attribute tracking table as well.
         """
 
         # using homogenize accessor to avoid code reuse
@@ -216,6 +228,7 @@ class GVALXarray:
             allow_benchmark_values=allow_benchmark_values,
             nodata=nodata,
             encode_nodata=encode_nodata,
+            subsampling_df=subsampling_df,
         )
 
         crosstab_df = candidate.gval.compute_crosstab(
@@ -224,6 +237,7 @@ class GVALXarray:
             allow_benchmark_values=allow_benchmark_values,
             exclude_value=exclude_value,
             comparison_function=comparison_function,
+            subsampling_df=subsampling_df,
         )
 
         metrics_df = _compute_categorical_metrics(
@@ -233,6 +247,7 @@ class GVALXarray:
             negative_categories=negative_categories,
             average=average,
             weights=weights,
+            sampling_average=subsampling_average,
         )
 
         if attribute_tracking:
@@ -263,6 +278,8 @@ class GVALXarray:
         rasterize_attributes: Optional[list] = None,
         attribute_tracking: bool = False,
         attribute_tracking_kwargs: Optional[Dict] = None,
+        subsampling_df: Optional[gpd.GeoDataFrame] = None,
+        subsampling_average: str = "none",
     ) -> Tuple[
         Union[
             Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]],
@@ -303,6 +320,14 @@ class GVALXarray:
             Whether to return a dataframe with the attributes of the candidate and benchmark maps.
         attribute_tracking_kwargs: Optional[Dict], default = None
             Keyword arguments to pass to `gval.attribute_tracking()`.  This is only used if `attribute_tracking` is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See `gval.attribute_tracking` for more information.
+        subsampling_df: Optional[gpd.GeoDataFrame], default = None
+            DataFrame with spatial geometries and method types to subsample
+        subsampling_average: str, default = None
+            Way to aggregate statistics for subsamples if provided. Options are "sample", "band", "weighted", and "none"
+            Sample calculates metrics and averages the results by subsample
+            Band calculates metrics and averages all the metrics by band
+            Weighted calculates metrics, scales by the weight and then averages them based on the weights
+            Full-detail provides full detailed table
 
         Returns
         -------
@@ -318,18 +343,49 @@ class GVALXarray:
             benchmark_map, target_map, resampling, rasterize_attributes
         )
 
-        agreement_map = candidate.gval.compute_agreement_map(
+        # Check whether either dataset is of integer type
+        integer_check = partial(np.issubdtype, arg2=np.integer)
+
+        # Temporary code to check if the datatype is an integer --------------------------------
+        if isinstance(candidate, xr.Dataset):
+            c_is_int, b_is_int = False, False
+            for c_var, b_var in zip(candidate.data_vars, benchmark.data_vars):
+                c_is_int, b_is_int = np.bitwise_or(
+                    list(map(integer_check, [candidate[c_var], benchmark[b_var]])),
+                    [c_is_int, b_is_int],
+                )
+        else:
+            c_is_int, b_is_int = map(integer_check, [candidate, benchmark])
+
+        if c_is_int or b_is_int:
+            raise TypeError(
+                "Cannot compute continuous statistics on data with type integer"
+            )
+        # ---------------------------------------------------------------------------------------
+
+        results = candidate.gval.compute_agreement_map(
             benchmark_map=benchmark,
             comparison_function=difference,
             nodata=nodata,
             encode_nodata=encode_nodata,
+            subsampling_df=subsampling_df,
+            continuous=True,
+        )
+
+        # If sampling_df return type gives three values assign all vars results, otherwise only agreement map results
+        agreement_map, candidate_map, benchmark_map = (
+            results
+            if subsampling_df is not None
+            else (results, self._obj, benchmark_map)
         )
 
         metrics_df = _compute_continuous_metrics(
             agreement_map=agreement_map,
-            candidate_map=candidate,
-            benchmark_map=benchmark,
+            candidate_map=candidate_map,
+            benchmark_map=benchmark_map,
             metrics=metrics,
+            subsampling_average=subsampling_average,
+            subsampling_df=subsampling_df,
         )
 
         if attribute_tracking:
@@ -418,7 +474,9 @@ class GVALXarray:
         allow_benchmark_values: Optional[Iterable[Union[int, float]]] = None,
         nodata: Optional[Number] = None,
         encode_nodata: Optional[bool] = False,
-    ) -> Union[xr.Dataset, xr.DataArray]:
+        subsampling_df: Optional[gpd.GeoDataFrame] = None,
+        continuous: bool = False,
+    ) -> Union[Union[xr.Dataset, xr.DataArray, List[Union[xr.Dataset, xr.DataArray]]]]:
         """
         Computes agreement map as xarray from candidate and benchmark xarray's.
 
@@ -442,29 +500,76 @@ class GVALXarray:
             No data value to write to agreement map output. This will use `rxr.rio.write_nodata(nodata)`.
         encode_nodata : Optional[bool], default = False
             Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
+        subsampling_df : Optional[gpd.GeoDataFrame], default = None
+            DataFrame with geometries to subsample data with or use as an exclusionary mask
+        continuous :  bool, default = False
+            Whether to return modified candidate and benchmark maps
 
         Returns
         -------
-        Union[xr.Dataset, xr.DataArray]
+        Union[Union[xr.Dataset, xr.DataArray, List[Union[xr.Dataset, xr.DataArray]]]]
             Agreement map.
         """
+
         self.check_same_type(benchmark_map)
 
-        agreement_map = Comparison.process_agreement_map(
-            candidate_map=self._obj,
-            benchmark_map=benchmark_map,
-            comparison_function=comparison_function,
-            pairing_dict=pairing_dict,
-            allow_candidate_values=allow_candidate_values,
-            allow_benchmark_values=allow_benchmark_values,
-            nodata=nodata,
-            encode_nodata=encode_nodata,
+        agreement_range = 1 if subsampling_df is None else subsampling_df.shape[0]
+
+        agreement_maps, candidate_maps, benchmark_maps, sample_percentage = (
+            [],
+            [],
+            [],
+            [],
         )
+        for idx in range(agreement_range):
+            results = (
+                subsample(
+                    candidate=self._obj,
+                    benchmark=benchmark_map,
+                    subsampling_df=subsampling_df.iloc[idx : idx + 1, :],
+                )
+                if subsampling_df is not None
+                else [[self._obj, benchmark_map]]
+            )
 
-        if self.agreement_map_format == "vector":
-            agreement_map = agreement_map.gval.vectorize_data()
+            candidate_copy, benchmark_copy = results[0]
+            if "sample_percentage" in candidate_copy.attrs:
+                sample_percentage.append(candidate_copy.attrs["sample_percentage"])
 
-        return agreement_map
+            agreement_map = Comparison.process_agreement_map(
+                candidate_map=candidate_copy,
+                benchmark_map=benchmark_copy,
+                comparison_function=comparison_function,
+                pairing_dict=pairing_dict,
+                allow_candidate_values=allow_candidate_values,
+                allow_benchmark_values=allow_benchmark_values,
+                nodata=nodata,
+                encode_nodata=encode_nodata,
+            )
+
+            # Preserve sampled maps for continuous statistics, otherwise delete
+            if continuous:
+                candidate_maps.append(candidate_copy)
+                benchmark_maps.append(benchmark_copy)
+            else:
+                del candidate_copy, benchmark_copy
+
+            if self.agreement_map_format == "vector":
+                agreement_map = agreement_map.gval.vectorize_data()
+
+            agreement_maps.append(agreement_map)
+
+        if subsampling_df is not None:
+            if "sample_percent" in subsampling_df.columns:
+                subsampling_df.drop(columns=["sample_percent"], inplace=True)
+            subsampling_df.loc[:, "sample_percent"] = sample_percentage
+            return (
+                agreement_maps,
+                candidate_maps,
+                benchmark_maps if continuous else agreement_maps,
+            )
+
+        return agreement_maps[0]
 
     @Comparison.comparison_function_from_string
     def compute_crosstab(
@@ -477,6 +582,7 @@ class GVALXarray:
             Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]
         ] = "szudzik",
         pairing_dict: Optional[Dict[Tuple[Number, Number], Number]] = None,
+        subsampling_df: Optional[gpd.GeoDataFrame] = None,
     ) -> DataFrame[Crosstab_df]:
         """
         Crosstab 2 or 3-dimensional xarray DataArray to produce Crosstab DataFrame.
@@ -499,6 +605,9 @@ class GVALXarray:
             If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.
 
             A pairing dictionary can be used by the user to note which values to allow and which to ignore for comparisons. It can also be used to decide how nans are handled for cases where either the candidate and benchmark maps have nans or both.
+        subsampling_df: Optional[gpd.GeoDataFrame], default = None
+            DataFrame with spatial geometries and method types to subsample
+
 
         Returns
         -------
@@ -507,24 +616,45 @@ class GVALXarray:
         """
         self.check_same_type(benchmark_map)
 
-        if isinstance(self._obj, xr.Dataset):
-            return _crosstab_Datasets(
-                self._obj,
-                benchmark_map,
-                allow_candidate_values,
-                allow_benchmark_values,
-                exclude_value,
-                comparison_function,
+        results = (
+            subsample(
+                candidate=self._obj,
+                benchmark=benchmark_map,
+                subsampling_df=subsampling_df,
             )
-        else:
-            return _crosstab_DataArrays(
-                self._obj,
-                benchmark_map,
-                allow_candidate_values,
-                allow_benchmark_values,
-                exclude_value,
-                comparison_function,
-            )
+            if subsampling_df is not None
+            else [[self._obj, benchmark_map]]
+        )
+
+        crosstabs = []
+        for idx, (candidate, benchmark) in enumerate(results):
+            if isinstance(self._obj, xr.Dataset):
+                crosstab = _crosstab_Datasets(
+                    candidate,
+                    benchmark,
+                    allow_candidate_values,
+                    allow_benchmark_values,
+                    exclude_value,
+                    comparison_function,
+                )
+            else:
+                crosstab = _crosstab_DataArrays(
+                    candidate,
+                    benchmark,
+                    allow_candidate_values,
+                    allow_benchmark_values,
+                    exclude_value,
+                    comparison_function,
+                )
+
+            if subsampling_df is not None:
+                crosstab.insert(
+                    0, "subsample", subsampling_df.iloc[idx]["subsample_id"]
+                )
+
+            crosstabs.append(crosstab)
+
+        return pd.concat(crosstabs)
 
     def attribute_tracking(
         self,
@@ -689,3 +819,36 @@ class GVALXarray:
         """
 
         return _vectorize_data(self._obj)
+
+
+if __name__ == "__main__":
+    import rioxarray as rxr
+
+    path = "/home/sven/repos/gval/notebooks/"
+
+    candidate_masked = rxr.open_rasterio(
+        f"{path}candidate_map_two_class_categorical.tif", mask_and_scale=True
+    )
+    benchmark_masked = rxr.open_rasterio(
+        f"{path}benchmark_map_two_class_categorical.tif", mask_and_scale=True
+    )
+    candidate_masked, benchmark_masked = candidate_masked.gval.homogenize(
+        benchmark_masked
+    )
+
+    polygons_include = gpd.read_file(f"{path}subsample_two-class_polygons_include.gpkg")
+    polygons_exclude = gpd.read_file(f"{path}subsample_two-class_polygons_exclude.gpkg")
+
+    polygons_include.gval.create_subsampling_df(
+        inplace=True, subsampling_type=["include", "include"]
+    )
+    ag_masked, met_masked = candidate_masked.gval.continuous_compare(
+        benchmark_map=benchmark_masked,
+        metrics=[
+            "mean_absolute_error",
+            "mean_percentage_error",
+            "symmetric_mean_absolute_percentage_error",
+            "root_mean_squared_error",
+        ],
+        subsampling_df=polygons_include,
+    )
