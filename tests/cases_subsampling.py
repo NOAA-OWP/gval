@@ -31,11 +31,10 @@ benchmark_map_fns = [
     ),
 ]
 
-
-subsampling_continuous_df = gpd.GeoDataFrame(
-    {
-        "geometry": {
-            0: Polygon(
+subsampling_dataframes = [
+    gpd.GeoDataFrame(
+        geometry=[
+            Polygon(
                 [
                     (-97.72375, 29.56328),
                     (-97.72304, 29.55858),
@@ -44,7 +43,7 @@ subsampling_continuous_df = gpd.GeoDataFrame(
                     (-97.72375, 29.56328),
                 ]
             ),
-            1: Polygon(
+            Polygon(
                 [
                     (-97.71604, 29.55635),
                     (-97.71587, 29.55196),
@@ -54,15 +53,12 @@ subsampling_continuous_df = gpd.GeoDataFrame(
                     (-97.71604, 29.55635),
                 ]
             ),
-        }
-    }
-)
-subsampling_continuous_df.crs = "EPSG:4326"
-
-subsampling_categorical_df = gpd.GeoDataFrame(
-    {
-        "geometry": {
-            0: Polygon(
+        ],
+        crs="EPSG:4326",
+    ),
+    gpd.GeoDataFrame(
+        geometry=[
+            Polygon(
                 [
                     (-97.56735, 30.07450),
                     (-97.51800, 29.96872),
@@ -72,7 +68,7 @@ subsampling_categorical_df = gpd.GeoDataFrame(
                     (-97.56735, 30.07450),
                 ]
             ),
-            1: Polygon(
+            Polygon(
                 [
                     (-97.21658, 30.07011),
                     (-97.20986, 29.95981),
@@ -81,13 +77,11 @@ subsampling_categorical_df = gpd.GeoDataFrame(
                     (-97.21658, 30.07011),
                 ]
             ),
-        }
-    }
-)
-subsampling_categorical_df.crs = "EPSG:4326"
+        ],
+        crs="EPSG:4326",
+    ),
+]
 
-
-subsampling_dataframes = [subsampling_continuous_df, subsampling_categorical_df]
 
 create_dataframe_options = [
     {"subsampling_type": ["include", "include"], "subsampling_weights": [1, 2]},
