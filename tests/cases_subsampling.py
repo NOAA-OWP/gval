@@ -32,9 +32,9 @@ benchmark_map_fns = [
 ]
 
 subsampling_dataframes = [
-    gpd.GeoDataFrame(
-        geometry=[
-            Polygon(
+    {
+        "geometry": {
+            0: Polygon(
                 [
                     (-97.72375, 29.56328),
                     (-97.72304, 29.55858),
@@ -43,7 +43,7 @@ subsampling_dataframes = [
                     (-97.72375, 29.56328),
                 ]
             ),
-            Polygon(
+            1: Polygon(
                 [
                     (-97.71604, 29.55635),
                     (-97.71587, 29.55196),
@@ -53,12 +53,11 @@ subsampling_dataframes = [
                     (-97.71604, 29.55635),
                 ]
             ),
-        ],
-        crs="EPSG:4326",
-    ),
-    gpd.GeoDataFrame(
-        geometry=[
-            Polygon(
+        }
+    },
+    {
+        "geometry": {
+            0: Polygon(
                 [
                     (-97.56735, 30.07450),
                     (-97.51800, 29.96872),
@@ -68,7 +67,7 @@ subsampling_dataframes = [
                     (-97.56735, 30.07450),
                 ]
             ),
-            Polygon(
+            1: Polygon(
                 [
                     (-97.21658, 30.07011),
                     (-97.20986, 29.95981),
@@ -77,11 +76,9 @@ subsampling_dataframes = [
                     (-97.21658, 30.07011),
                 ]
             ),
-        ],
-        crs="EPSG:4326",
-    ),
+        }
+    },
 ]
-
 
 create_dataframe_options = [
     {"subsampling_type": ["include", "include"], "subsampling_weights": [1, 2]},
@@ -335,7 +332,7 @@ expected_dfs = [
 
 @parametrize("df, args", list(zip(subsampling_dataframes, create_dataframe_options)))
 def case_create_sampling_dataframes(df, args):
-    return df, args
+    return gpd.GeoDataFrame(df, crs="EPSG:4326"), args
 
 
 create_dataframe_options_fail = [
@@ -351,7 +348,7 @@ create_dataframe_options_fail = [
     "df, args", list(zip(subsampling_dataframes[0:1], create_dataframe_options_fail))
 )
 def case_create_sampling_dataframes_fail(df, args):
-    return df, args
+    return gpd.GeoDataFrame(df, crs="EPSG:4326"), args
 
 
 expected_lengths = [2, 2]
@@ -380,7 +377,7 @@ def case_subsampling(
     return (
         candidate,
         benchmark,
-        subsample_df,
+        gpd.GeoDataFrame(subsample_df, crs="EPSG:4326"),
         subsample_type,
         expected_length,
         sample_percent,
@@ -405,7 +402,7 @@ def case_subsampling_fail(candidate, benchmark, subsample_df, exception):
     return (
         candidate,
         benchmark,
-        subsample_df,
+        gpd.GeoDataFrame(subsample_df, crs="EPSG:4326"),
         exception,
     )
 
@@ -435,7 +432,7 @@ def case_categorical_subsample(
     return (
         candidate,
         benchmark,
-        subsample_df,
+        gpd.GeoDataFrame(subsample_df, crs="EPSG:4326"),
         expected_df,
         sampling_average,
     )
@@ -477,7 +474,7 @@ def case_continuous_subsample(
     return (
         candidate,
         benchmark,
-        subsample_df,
+        gpd.GeoDataFrame(subsample_df, crs="EPSG:4326"),
         expected_df,
         sampling_average,
     )

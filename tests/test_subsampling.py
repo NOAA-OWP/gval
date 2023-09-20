@@ -105,7 +105,10 @@ def test_continuous_subsampling(
     candidate, benchmark, subsample_df, expected_df, sampling_average
 ):
     subsample_df.gval.create_subsampling_df(
-        subsampling_type="exclude", subsampling_weights=[2, 1], inplace=True
+        subsampling_type="exclude",
+        subsampling_weights=[2, 1],
+        inplace=True,
+        crs="EPSG:4326",
     )
 
     ag, met = candidate.gval.continuous_compare(
