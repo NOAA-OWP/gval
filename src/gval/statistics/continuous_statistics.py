@@ -273,8 +273,10 @@ class ContinuousStatistics(BaseStatistics):
 
                 def check_value(stat_name: str, stat: Number):
                     if np.isnan(stat) or np.isinf(stat):
-                        raise ValueError(
-                            f"Invalid value calculated for {stat_name}:", stat
+                        print(
+                            "Warning:",
+                            f"Invalid value calculated for {stat_name}:",
+                            stat,
                         )
 
                 if isinstance(stat_val, dict):

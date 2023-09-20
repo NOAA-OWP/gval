@@ -17,7 +17,12 @@ import pandera as pa
 from pandera.typing import DataFrame
 
 from gval import CatStats
-from gval.utils.schemas import Crosstab_df, Sample_identifiers, Metrics_df
+from gval.utils.schemas import (
+    Crosstab_df,
+    Sample_identifiers,
+    Subsample_identifiers,
+    Metrics_df,
+)
 
 
 def _handle_positive_negative_categories(
@@ -69,6 +74,7 @@ def _compute_categorical_metrics(
     metrics: Union[str, Iterable[str]] = "all",
     average: str = "micro",
     weights: Optional[Iterable[Number]] = None,
+    sampling_average: Optional[str] = None,
 ) -> DataFrame[Metrics_df]:
     """
     Computes categorical metrics from a crosstab df.
@@ -94,6 +100,11 @@ def _compute_categorical_metrics(
         Example:
 
         `positive_categories = [1, 2]; weights = [0.25, 0.75]`
+    sampling_average: Optional[str], default = None
+        Way to aggregate statistics for subsamples if provided. Options are "sample", "band", and "full-detail"
+        Sample calculates metrics and averages the results by subsample
+        Band calculates metrics and averages all the metrics by band
+        Full-detail does not aggregation on subsample or band
 
     Returns
     -------
@@ -202,7 +213,7 @@ def _compute_categorical_metrics(
     #########################################################################################
     # computes metrics per category or micro level category
 
-    def compute_metrics_per_category(pos_cats, neg_cats):
+    def compute_metrics_per_category(pos_cats, neg_cats, groupby_cols):
         if not isinstance(pos_cats, set):
             pos_cats = set([pos_cats])
 
@@ -213,7 +224,7 @@ def _compute_categorical_metrics(
 
         # groupby sample identifiers then compute metrics
         metric_df = (
-            crosstab_df.groupby(Sample_identifiers.columns())
+            crosstab_df.groupby(groupby_cols)
             .apply(compute_metrics_per_sample)
             .reset_index()
         )
@@ -245,7 +256,15 @@ def _compute_categorical_metrics(
         return metric_df
 
     #########################################################################################
-    # compute metrics
+    # Get subsampling_grouping
+    if sampling_average == "band":
+        groupby = Subsample_identifiers.columns()
+    elif sampling_average == "subsample" or sampling_average is None:
+        groupby = Sample_identifiers.columns()
+    else:
+        groupby = list(
+            np.ravel([Sample_identifiers.columns(), Subsample_identifiers.columns()])
+        )  # full-detail
 
     # replaces metrics variable with all metrics if metrics is set to all
     metrics = CatStats.available_functions() if metrics == "all" else metrics
@@ -253,13 +272,13 @@ def _compute_categorical_metrics(
     # actually compute metrics given averaging scheme
     if average == "micro":
         metric_df = compute_metrics_per_category(
-            positive_categories, negative_categories
+            positive_categories, negative_categories, groupby
         )
     elif (average == "macro") or (average == "weighted") or (average is None):
         metric_df = pd.concat(
             [
                 compute_metrics_per_category(
-                    pos_cat, positive_categories.difference({pos_cat})
+                    pos_cat, positive_categories.difference({pos_cat}), groupby
                 )
                 for pos_cat in positive_categories
             ]
@@ -278,7 +297,7 @@ def _compute_categorical_metrics(
 
     elif average == "macro":
         metric_df = (
-            metric_df.groupby(Sample_identifiers.columns())
+            metric_df.groupby(groupby)
             .mean(numeric_only=True)
             .drop(
                 columns=["fn", "fp", "tn", "tp", "positive_categories"], errors="ignore"
@@ -331,5 +350,10 @@ def _compute_categorical_metrics(
             .divide(metric_df.loc[:, "weights"].sum())
             .reset_index()
         )
+
+    if sampling_average == "band":
+        metric_df.insert(1, "band", "averaged")
+    elif sampling_average == "subsample":
+        metric_df.insert(0, "subsample", "averaged")
 
     return metric_df
