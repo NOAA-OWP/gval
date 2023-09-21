@@ -82,14 +82,13 @@ def case_compute_statistics(names, args, expected):
     return names, args, expected
 
 
-stat_names = ["all", "all", "all", "non_existent_function"]
+stat_names = ["all", "all", "non_existent_function"]
 arg_dicts_fail = [
-    {"tp": 120, "tn": 0, "fp": 10, "fn": 10},
     {},
     {"tp": 45, "tn": "test", "fp": "test", "fn": True},
     {"tp": 120, "tn": 0, "fp": 10, "fn": 10},
 ]
-exceptions = [ValueError, ValueError, TypingError, KeyError]
+exceptions = [ValueError, TypingError, KeyError]
 
 
 @parametrize(

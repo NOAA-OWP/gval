@@ -5,6 +5,7 @@ Categorical Statistics Class
 from typing import Union, Tuple
 from functools import wraps
 import inspect
+from numbers import Number
 
 import numpy as np
 from numba import vectorize
@@ -276,8 +277,19 @@ class CategoricalStatistics(BaseStatistics):
 
                 stat_val = func(*func_args)
 
-                if np.isnan(stat_val) or np.isinf(stat_val):
-                    raise ValueError(f"Invalid value calculated for {name}:", stat_val)
+                def check_value(stat_name: str, stat: Number):  # pragma: no cover
+                    if np.isnan(stat) or np.isinf(stat):
+                        print(
+                            "Warning:",
+                            f"Invalid value calculated for {stat_name}:",
+                            stat,
+                        )
+
+                if isinstance(stat_val, dict):
+                    for st_name, val in stat_val.items():
+                        check_value(st_name, val)
+                else:
+                    check_value(name, stat_val)
 
                 return_stats.append(stat_val)
                 return_funcs.append(name)

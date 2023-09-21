@@ -5,11 +5,12 @@ DataFrame Schemas with Pandera.
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import pandas as pd
 import pandera as pa
 from pandera.typing import Series, Index, Int64
+from shapely import Geometry
 
 
 class Xrspatial_crosstab_df(pa.DataFrameModel):  # pragma: no cover
@@ -40,6 +41,7 @@ class Sample_identifiers(columns_method):  # pragma: no cover
     band: Series[str]
     # this is where we extend these identifiers to map or catalog level identifiers.
     # NOTE: Sample identifiers are currently columns. Should they be indices instead???
+    # Add subsample
     idx: Index[Int64]
 
     class Config:
@@ -47,7 +49,21 @@ class Sample_identifiers(columns_method):  # pragma: no cover
         strict = True
 
 
-class Crosstab_df(Sample_identifiers):  # pragma: no cover
+class Subsample_identifiers(columns_method):  # pragma: no cover
+    """Crosstab DF schema"""
+
+    subsample: Optional[Series[str]]
+    # this is where we extend these identifiers to map or catalog level identifiers.
+    # NOTE: Sample identifiers are currently columns. Should they be indices instead???
+    # Add subsample
+    idx: Index[Int64]
+
+    class Config:
+        coerce = True
+        strict = True
+
+
+class Crosstab_df(Sample_identifiers, Subsample_identifiers):  # pragma: no cover
     """Crosstab DF schema
 
     Inherits columns from `Sample_identifiers`
@@ -136,3 +152,18 @@ class AttributeTrackingDf(pa.DataFrameModel):  # pragma: no cover
         return all(
             name.endswith((candidate_suffix, benchmark_suffix)) for name in df.columns
         )
+
+
+class SubsamplingDf(pa.DataFrameModel):  # pragma: no cover
+    """
+    Defines the schema for subsampling DataFrame`
+    """
+
+    subsample_id: Series[int]
+    geometry: Series[Geometry]
+    subsample_type: Series[str]
+    weights: Optional[Union[float, int]]  # Possibly for the future for sample weighting
+
+    class Config:
+        coerce = True
+        strict = False

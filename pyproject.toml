@@ -12,7 +12,7 @@ authors = [
 requires-python = ">=3.8"
 keywords = ["geospatial", "evaluations"]
 license = {text = "MIT"}
-version = "0.2.0"
+version = "0.2.1"
 dynamic = ["readme", "dependencies"]
 
 
