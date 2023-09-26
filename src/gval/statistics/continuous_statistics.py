@@ -49,7 +49,7 @@ class ContinuousStatistics(BaseStatistics):
                 "benchmark_map": self.optional_param,
             },
             "required": [
-                self.optional_param,
+                self.required_param,
                 self.optional_param,
                 self.optional_param,
             ],
@@ -256,7 +256,7 @@ class ContinuousStatistics(BaseStatistics):
                 func = getattr(self, name)
 
                 # Necessary for numba functions which cannot accept keyword arguments
-                func_args, skip_function = [], False
+                func_args, skip_function, return_nan = [], False, False
                 for param, req in zip(params, required):
                     if param in kwargs and kwargs[param] is not None:
                         func_args.append(kwargs[param])
@@ -264,15 +264,19 @@ class ContinuousStatistics(BaseStatistics):
                         skip_function = True
                         break
                     else:
-                        raise ValueError("Parameter missing form kwargs")
+                        print(
+                            f"Parameter {param} missing from kwargs of {name}, returning nan"
+                        )
+                        return_nan = True
+                        break
 
                 if skip_function:
                     continue
 
-                stat_val = func(*func_args)
+                stat_val = np.nan if return_nan else func(*func_args)
 
                 def check_value(stat_name: str, stat: Number):
-                    if np.isnan(stat) or np.isinf(stat):
+                    if (np.isnan(stat) or np.isinf(stat)) and not return_nan:
                         print(
                             "Warning:",
                             f"Invalid value calculated for {stat_name}:",

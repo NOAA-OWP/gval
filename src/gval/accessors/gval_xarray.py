@@ -263,7 +263,11 @@ class GVALXarray:
             else:
                 attributes_df = results
 
+            del candidate, benchmark
+
             return agreement_map, crosstab_df, metrics_df, attributes_df
+
+        del candidate, benchmark
 
         return agreement_map, crosstab_df, metrics_df
 

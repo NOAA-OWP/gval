@@ -86,13 +86,13 @@ def case_compute_continuous_metrics_success(
     )
 
 
-stat_names = ["non_existent_function", "all"]
-exceptions = [KeyError, ValueError]
+stat_names = ["non_existent_function"]
+exceptions = [KeyError]
 
 
 @parametrize(
     "names, error_map, exception",
-    list(zip(stat_names, candidate_maps_fail[2:], exceptions)),
+    list(zip(stat_names, candidate_maps_fail[2:3], exceptions)),
 )
 def case_compute_continuous_statistics_fail(names, error_map, exception):
     test_map = _load_xarray(error_map) if error_map is not None else error_map
