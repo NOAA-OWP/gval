@@ -10,7 +10,7 @@ TODO:
 
 __author__ = "Fernando Aristizabal"
 
-from typing import Optional, Iterable, Union, Tuple
+from typing import Iterable, Tuple
 
 import pandas as pd
 import xarray as xr
@@ -20,39 +20,39 @@ from gval.utils.schemas import AttributeTrackingDf
 
 
 def _attribute_tracking_xarray(
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
-    agreement_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-    candidate_suffix: Optional[str] = "_candidate",
-    benchmark_suffix: Optional[str] = "_benchmark",
-    candidate_include: Optional[Iterable[str]] = None,
-    candidate_exclude: Optional[Iterable[str]] = None,
-    benchmark_include: Optional[Iterable[str]] = None,
-    benchmark_exclude: Optional[Iterable[str]] = None,
-) -> Union[
-    DataFrame[AttributeTrackingDf],
-    Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]],
-]:
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
+    agreement_map: xr.DataArray | xr.Dataset = None,
+    candidate_suffix: str = "_candidate",
+    benchmark_suffix: str = "_benchmark",
+    candidate_include: Iterable[str] | None = None,
+    candidate_exclude: Iterable[str] | None = None,
+    benchmark_include: Iterable[str] | None = None,
+    benchmark_exclude: Iterable[str] | None = None,
+) -> (
+    DataFrame[AttributeTrackingDf]
+    | Tuple[DataFrame[AttributeTrackingDf], xr.DataArray | xr.Dataset]
+):
     """
     Concatenate xarray attributes into a single pandas dataframe.
 
     Parameters
     ----------
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset,
         Candidate map xarray object.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset,
         Benchmark map xarray object.
-    candidate_suffix : Optional[str], default = '_candidate'
+    candidate_suffix : str, default = '_candidate'
         Suffix to append to candidate map xarray attributes, by default '_candidate'.
-    benchmark_suffix : Optional[str], default = '_benchmark'
+    benchmark_suffix : str, default = '_benchmark'
         Suffix to append to benchmark map xarray attributes, by default '_benchmark'.
-    candidate_include : Optional[Iterable[str]], default = None
+    candidate_include : Iterable[str] | None, default = None
         List of attributes to include from candidate map. candidate_include and candidate_exclude are mutually exclusive arguments.
-    candidate_exclude : Optional[Iterable[str]], default = None
+    candidate_exclude : Iterable[str] | None, default = None
         List of attributes to exclude from candidate map. candidate_include and candidate_exclude are mutually exclusive arguments.
-    benchmark_include : Optional[Iterable[str]], default = None
+    benchmark_include : Iterable[str] | None, default = None
         List of attributes to include from benchmark map. benchmark_include and benchmark_exclude are mutually exclusive arguments.
-    benchmark_exclude : Optional[Iterable[str]], default = None
+    benchmark_exclude : Iterable[str] | None, default = None
         List of attributes to exclude from benchmark map. benchmark_include and benchmark_exclude are mutually exclusive arguments.
 
     Raises
@@ -64,7 +64,7 @@ def _attribute_tracking_xarray(
 
     Returns
     -------
-    Union[DataFrame[AttributeTrackingDf], Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]]]
+    DataFrame[AttributeTrackingDf] | Tuple[DataFrame[AttributeTrackingDf], xr.DataArray | xr.Dataset]:
         Pandas dataframe with concatenated attributes from candidate and benchmark maps. If agreement_map is not None, returns a tuple with the dataframe and the agreement map.
     """
 

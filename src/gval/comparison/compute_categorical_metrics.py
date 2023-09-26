@@ -5,7 +5,7 @@ Computes categorical metrics given a crosstab df.
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Optional, Union
+from typing import Iterable
 from numbers import Number
 
 # deprecation warnings: DeprecationWarning: In a future version, `df.iloc[:, i] = newvals` will attempt to set the values inplace instead of always setting a new array. To retain the old behavior, use either `df[df.columns[i]] = newvals` or, if columns are non-unique, `df.isetitem(i, newvals)
@@ -69,12 +69,12 @@ def _handle_positive_negative_categories(
 @pa.check_types
 def _compute_categorical_metrics(
     crosstab_df: DataFrame[Crosstab_df],
-    positive_categories: Optional[Union[Number, Iterable[Number]]],
-    negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
-    metrics: Union[str, Iterable[str]] = "all",
+    positive_categories: Number | Iterable[Number],
+    negative_categories: Number | Iterable[Number] = None,
+    metrics: str | Iterable[str] = "all",
     average: str = "micro",
-    weights: Optional[Iterable[Number]] = None,
-    sampling_average: Optional[str] = None,
+    weights: Iterable[Number] = None,
+    sampling_average: str = None,
 ) -> DataFrame[Metrics_df]:
     """
     Computes categorical metrics from a crosstab df.
@@ -83,24 +83,24 @@ def _compute_categorical_metrics(
     ----------
     crosstab_df : DataFrame[Crosstab_df]
         Crosstab DataFrame with candidate, benchmark, and agreement values as well as the counts for each occurrence.
-    positive_categories : Optional[Union[Number, Iterable[Number]]]
+    positive_categories : Number | Iterable[Number]
         Number or list of numbers representing the values to consider as the positive condition. For average types "macro" and "weighted", this represents the categories to compute metrics for.
-    metrics : Union[str, Iterable[str]], default = "all"
+    metrics : str | Iterable[str], default = "all"
         String or list of strings representing metrics to compute.
-    negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+    negative_categories : Number, Iterable[Number] | None, default = None
         Number or list of numbers representing the values to consider as the negative condition. This should be set to None when no negative categories are used or when the average type is "macro" or "weighted".
     average : str, default = "micro"
         Type of average to use when computing metrics. Options are "micro", "macro", and "weighted".
         Micro weighing computes the conditions, tp, tn, fp, and fn, for each category and then sums them.
         Macro weighing computes the metrics for each category then averages them.
         Weighted average computes the metrics for each category then averages them weighted by the number of weights argument in each category.
-    weights : Optional[Iterable[Number]], default = None
+    weights : Iterable[Number] | None, default = None
         Weights to use when computing weighted average. Elements correspond to positive categories in order.
 
         Example:
 
         `positive_categories = [1, 2]; weights = [0.25, 0.75]`
-    sampling_average: Optional[str], default = None
+    sampling_average: str | None, default = None
         Way to aggregate statistics for subsamples if provided. Options are "sample", "band", and "full-detail"
         Sample calculates metrics and averages the results by subsample
         Band calculates metrics and averages all the metrics by band
@@ -126,9 +126,9 @@ def _compute_categorical_metrics(
 
     References
     ----------
-    .. [1] [Evaluation of binary classifiers](https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers)
-    .. [2] [7th International Verification Methods Workshop](https://www.cawcr.gov.au/projects/verification/#Contingency_table)
-    .. [3] [3.3. Metrics and scoring: quantifying the quality of predictions](https://scikit-learn.org/stable/modules/model_evaluation.html)
+    .. [1] `Evaluation of binary classifiers <https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers>`_
+    .. [2] `7th International Verification Methods Workshop <https://www.cawcr.gov.au/projects/verification/#Contingency_table>`_
+    .. [3] `3.3. Metrics and scoring: quantifying the quality of predictions <https://scikit-learn.org/stable/modules/model_evaluation.html>`_
     """
 
     #########################################################################################

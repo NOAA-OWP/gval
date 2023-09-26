@@ -1,5 +1,5 @@
 from numbers import Number
-from typing import Union, Iterable, Optional, List
+from typing import Iterable
 
 import pandas as pd
 from shapely import Geometry
@@ -28,12 +28,12 @@ class GVALDataFrame:
 
     def compute_categorical_metrics(
         self,
-        positive_categories: Union[Number, Iterable[Number]],
-        negative_categories: Union[Number, Iterable[Number]],
-        metrics: Union[str, Iterable[str]] = "all",
+        positive_categories: Number | Iterable[Number],
+        negative_categories: Number | Iterable[Number],
+        metrics: str | Iterable[str] = "all",
         average: str = "micro",
-        weights: Optional[Iterable[Number]] = None,
-        subsampling_average: Optional[str] = None,
+        weights: Iterable[Number] | None = None,
+        subsampling_average: str | None = None,
     ) -> DataFrame[Metrics_df]:
         """
         Computes categorical metrics from a crosstab df.
@@ -42,24 +42,24 @@ class GVALDataFrame:
         ----------
         crosstab_df : DataFrame[Crosstab_df]
             Crosstab DataFrame with candidate, benchmark, and agreement values as well as the counts for each occurrence.
-        positive_categories : Optional[Union[Number, Iterable[Number]]]
+        positive_categories : Number | Iterable[Number] | None
             Number or list of numbers representing the values to consider as the positive condition. For average types "macro" and "weighted", this represents the categories to compute metrics for.
-        negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+        negative_categories : Number | Iterable[Number] | None, default = None
             Number or list of numbers representing the values to consider as the negative condition. This should be set to None when no negative categories are used or when the average type is "macro" or "weighted".
-        metrics : Union[str, Iterable[str]], default = "all"
+        metrics : str | Iterable[str], default = "all"
             String or list of strings representing metrics to compute.
         average : str, default = "micro"
             Type of average to use when computing metrics. Options are "micro", "macro", and "weighted".
             Micro weighing computes the conditions, tp, tn, fp, and fn, for each category and then sums them.
             Macro weighing computes the metrics for each category then averages them.
             Weighted average computes the metrics for each category then averages them weighted by the number of weights argument in each category.
-        weights : Optional[Iterable[Number]], default = None
+        weights : Iterable[Number] | None, default = None
             Weights to use when computing weighted average. Elements correspond to positive categories in order.
 
             Example:
 
             `positive_categories = [1, 2]; weights = [0.25, 0.75]`
-        subsampling_average: Optional[str], default = None
+        subsampling_average: str | None, default = None
             Way to aggregate statistics for subsamples if provided. Options are "sample", "band", and "full-detail"
             Sample calculates metrics and averages the results by subsample
             Band calculates metrics and averages all the metrics by band
@@ -86,9 +86,9 @@ class GVALDataFrame:
 
         References
         ----------
-        .. [1] [Evaluation of binary classifiers](https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers)
-        .. [2] [7th International Verification Methods Workshop](https://www.cawcr.gov.au/projects/verification/#Contingency_table)
-        .. [3] [3.3. Metrics and scoring: quantifying the quality of predictions](https://scikit-learn.org/stable/modules/model_evaluation.html)
+        .. [1] `Evaluation of binary classifiers <https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers>`_
+        .. [2] `7th International Verification Methods Workshop <https://www.cawcr.gov.au/projects/verification/#Contingency_table>`_
+        .. [3] `3.3. Metrics and scoring: quantifying the quality of predictions <https://scikit-learn.org/stable/modules/model_evaluation.html>`_
         """
 
         return _compute_categorical_metrics(
@@ -102,22 +102,22 @@ class GVALDataFrame:
         )
 
     def rasterize_data(
-        self, reference_map: Union[xr.Dataset, xr.DataArray], rasterize_attributes: list
-    ) -> Union[xr.Dataset, xr.DataArray]:
+        self, reference_map: xr.Dataset | xr.DataArray, rasterize_attributes: list
+    ) -> xr.Dataset | xr.DataArray:
         """
         Convenience function for rasterizing vector data using a reference raster.  For more control use `make_geocube`
         from the geocube package.
 
         Parameters
         ----------
-        reference_map: Union[xr.Dataset, xr.DataArray]
+        reference_map: xr.Dataset | xr.DataArray
             Map to reference in creation of rasterized vector map
         rasterize_attributes: list
             Attributes to rasterize
 
         Returns
         -------
-        Union[xr.Dataset, xr.DataArray]
+        xr.Dataset | xr.DataArray
             Rasterized Data
 
         Raises
@@ -126,7 +126,7 @@ class GVALDataFrame:
 
         References
         ----------
-        .. [1] [geocube `make_geocube`](https://corteva.github.io/geocube/html/geocube.html)
+        .. [1] `make_geocube <https://corteva.github.io/geocube/html/geocube.html>`_
 
         """
 
@@ -138,12 +138,12 @@ class GVALDataFrame:
 
     def create_subsampling_df(
         self,
-        geometries: List[Geometry] = None,
+        geometries: Iterable[Geometry] = None,
         crs: str = None,
-        subsampling_type: Union[str, List[str]] = "exclude",
-        subsampling_weights: List[Union[int, float]] = None,
+        subsampling_type: str | Iterable[str] = "exclude",
+        subsampling_weights: Iterable[int | float] = None,
         inplace: bool = False,
-    ) -> Union[None, SubsamplingDf]:
+    ) -> None | SubsamplingDf:
         """
         Parameters
         __________
@@ -151,9 +151,9 @@ class GVALDataFrame:
             Geometries if none are already in the GeoDataFrame
         crs: str
             The spatial reference for the geometries provided
-        subsampling_type: Union[str, List[str]], default = "exclude"
+        subsampling_type: str | Iterable[str], default = "exclude"
             Whether each geometry should be an inclusive subsample or an exclusionary mask
-        subsampling_weights: List[Union[int, float]], default = None
+        subsampling_weights: Iterable[int | float] | None, default = None
             Values to scale the numeric impact of a particular sample
         inplace: bool, default = False
             Whether to adjust the GeoDataFrame calling the operation or a return a new one
@@ -167,7 +167,7 @@ class GVALDataFrame:
 
         Returns
         -------
-        Union[None, SubsamplingDf]
+        None | SubsamplingDf
             GeoDataFrame adhering to subsampling dataframe if not inplace, otherwise None
 
         """

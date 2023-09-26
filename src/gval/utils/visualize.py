@@ -1,5 +1,5 @@
 import warnings
-from typing import Tuple, Union
+from typing import Tuple
 from itertools import zip_longest
 
 import numpy as np
@@ -12,14 +12,14 @@ import xyzservices
 
 
 def _map_plot(
-    ds: Union[xr.DataArray, xr.Dataset],
+    ds: xr.DataArray | xr.Dataset,
     title: str = "Categorical Map",
     colormap: str = "viridis",
     figsize: Tuple[int, int] = None,
     legend_labels: list = None,
-    plot_bands: Union[str, list] = "all",
+    plot_bands: str | list = "all",
     plot_type: str = "categorical",
-    colorbar_label: Union[str, list] = "",
+    colorbar_label: str | list = "",
     basemap: xyzservices.lib.TileProvider = cx.providers.Stamen.Terrain,
 ):
     """
@@ -37,18 +37,18 @@ def _map_plot(
         Size of the plot
     legend_labels : list, default = None
         Override labels in legend
-    plot_bands : Union[str, list], default = 'all'
+    plot_bands : str | list, default = 'all'
         Which bands to plot if multiple. Default is all bands.
     plot_type : str, default = 'categorical', options
         Whether to plot the map as a categorical map
-    color_bar_label : Union[str, list], default =""
+    color_bar_label : str | list, default =""
         Label or labels for colorbar in the case of continuous plots
-    basemap : Union[bool, xyzservices.lib.TileProvider], default = cx.providers.Stamen.Terrain
+    basemap : bool | xyzservices.lib.TileProvider, default = cx.providers.Stamen.Terrain
         Add basemap to the plot
 
     Returns
     -------
-    Union[xr.DataArray, xr.Dataset]
+    xr.DataArray | xr.Dataset
         QuadMesh Matplotlib object
 
     Raises
@@ -58,8 +58,8 @@ def _map_plot(
 
     References
     ----------
-    .. [1] [Matplotlib figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html)
-    .. [2] [Matplotlib legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html)
+    .. [1] `Matplotlib figure <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html>`_
+    .. [2] `Matplotlib legend <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html>`_
     """
 
     categorical = True if plot_type == "categorical" else False

@@ -13,7 +13,7 @@ TODO:
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Optional, Union, Callable
+from typing import Iterable, Callable
 from numbers import Number
 
 import numpy as np
@@ -32,7 +32,7 @@ from gval.utils.loading_datasets import _check_dask_array
 def _convert_crosstab_to_contigency_table(
     crosstab_df: DataFrame[Xrspatial_crosstab_df],
     band_name: str,
-    band_value: Union[str, Number],
+    band_value: str | Number,
 ) -> DataFrame[Crosstab_df]:
     """
     Reorganizes crosstab output to Crosstab 2D DataFrame format.
@@ -41,6 +41,10 @@ def _convert_crosstab_to_contigency_table(
     Parameters
     crosstab_df : DataFrame[Xrspatial_crosstab_df]
         Output DataFrame from :func:`xarray-spatial.zonal.crosstab`.
+    band_name : str
+        Name of the band
+    band_value : str | Number
+        Value of the band
 
     Returns
     -------
@@ -98,13 +102,13 @@ def _compute_agreement_values(
     return crosstab_df
 
 
-def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataArray"):
+def _crosstab_docstring(dimension: int | str, xarray_obj: str = "xr.DataArray"):
     """
     Docstring decorator for crosstab functions.
 
     Parameters
     ----------
-    dimension : Union[int, str]
+    dimension : int | str
         Number of dimensions function will support. Use either 2, 3, or 2/3.
     xarray_obj : str, default = "xr.DataArray"
         Type of xarray object function accepts. xr.DataArray or xr.Dataset.
@@ -130,13 +134,13 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
                 Candidate map, {dimension}-dimensional.
             benchmark_map : {xarray_obj}
                 Benchmark map, {dimension}-dimensional.
-            allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
+            allow_candidate_values : Iterable[int | float] | None, default = None
                 Sequence of values in candidate to include in crosstab. Remaining values are excluded.
-            allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
+            allow_benchmark_values : Iterable[int | float] | None, default = None
                 Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
-            exclude_value : Optional[Number], default = None
+            exclude_value : Number | None, default = None
                 Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-            comparison_function : Callable[[float, float], float], default = None
+            comparison_function : Callable[[float, float], float] | None, default = None
                 Function to compute agreement values. If None, then no agreement values are computed.
 
             Returns
@@ -162,11 +166,11 @@ def _crosstab_2d_DataArrays(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
     band_name: str = "band",
-    band_value: Union[str, Number] = 1,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
+    band_value: str | Number = 1,
+    allow_candidate_values: Iterable[Number] | None = None,
+    allow_benchmark_values: Iterable[Number] | None = None,
+    exclude_value: Number | None = None,
+    comparison_function: Callable[..., float] | None = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -199,10 +203,10 @@ def _crosstab_2d_DataArrays(
 def _crosstab_3d_DataArrays(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
+    allow_candidate_values: Iterable[Number] | None = None,
+    allow_benchmark_values: Iterable[Number] | None = None,
+    exclude_value: Number | None = None,
+    comparison_function: Callable[..., float] | None = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -275,10 +279,10 @@ def _crosstab_3d_DataArrays(
 def _crosstab_DataArrays(
     candidate_map: xr.DataArray,
     benchmark_map: xr.DataArray,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
+    allow_candidate_values: Iterable[Number] | None = None,
+    allow_benchmark_values: Iterable[Number] | None = None,
+    exclude_value: Number | None = None,
+    comparison_function: Callable[..., float] | None = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
@@ -309,10 +313,10 @@ def _crosstab_DataArrays(
 def _crosstab_Datasets(
     candidate_map: xr.Dataset,
     benchmark_map: xr.Dataset,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
+    allow_candidate_values: Iterable[Number] | None = None,
+    allow_benchmark_values: Iterable[Number] | None = None,
+    exclude_value: Number | None = None,
+    comparison_function: Callable[..., float] | None = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 

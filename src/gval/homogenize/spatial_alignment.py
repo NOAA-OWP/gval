@@ -9,7 +9,7 @@ Functions to check for and ensure spatial alignment of two xarray DataArrays
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Optional, Tuple, Union
+from typing import Tuple
 
 import xarray as xr
 from shapely.geometry import box
@@ -24,17 +24,17 @@ ODCExtensionDa
 
 
 def _matching_crs(
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
 ) -> bool:
     """
     Checks candidate and benchmark maps for matching crs's.
 
     Parameters
     ----------
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset
         Candidate map.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -47,8 +47,8 @@ def _matching_crs(
 
 
 def _matching_spatial_indices(
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
     raise_exception: bool = False,
 ) -> bool:
     """
@@ -58,10 +58,12 @@ def _matching_spatial_indices(
 
     Parameters
     ----------
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset
         Candidate map.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
+    raise_exception : bool, default = False
+        Whether or not to raise an exception
 
     Returns
     -------
@@ -87,8 +89,8 @@ def _matching_spatial_indices(
 
 
 def _rasters_intersect(
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
     raise_exception: bool = False,
 ) -> bool:
     """
@@ -98,9 +100,9 @@ def _rasters_intersect(
 
     Parameters
     ----------
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset
         Candidate map.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -141,24 +143,24 @@ def _rasters_intersect(
 
 
 def _reproject_map(
-    original_map: Union[xr.DataArray, xr.Dataset],
-    target_map: Union[xr.DataArray, xr.Dataset],
+    original_map: xr.DataArray | xr.Dataset,
+    target_map: xr.DataArray | xr.Dataset,
     resampling: str,
-) -> Union[xr.DataArray, xr.Dataset]:
+) -> xr.DataArray | xr.Dataset:
     """
 
     Parameters
     ----------
-    original_map: Union[xr.DataArray, xr.Dataset]
+    original_map: xr.DataArray | xr.Dataset
         Map to be reprojected
-    target_map: Union[xr.DataArray, xr.Dataset]
+    target_map: xr.DataArray | xr.Dataset
         Map to use for extent, resolution, and spatial reference
     resampling: str
         Method to resample changing resolutions
 
     Returns
     -------
-    Union[xr.DataArray, xr.Dataset]
+    xr.DataArray | xr.Dataset
         Reprojected map
     """
 
@@ -186,30 +188,31 @@ def _reproject_map(
 
 
 def _align_rasters(
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
-    target_map: Optional[Union[xr.DataArray, xr.Dataset, str]],
-    resampling: Optional[Resampling] = Resampling.nearest,
-) -> Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]:
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
+    target_map: xr.DataArray | xr.Dataset | str | None = None,
+    resampling: Resampling = Resampling.nearest,
+) -> Tuple[xr.DataArray | xr.Dataset, xr.DataArray | xr.Dataset]:
     """
     Reprojects raster to match a target map.
 
     Parameters
     ----------
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset
         Candidate map. Nodata value should be set.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map. Nodata value should be set.
-    target_map : Optional[Union[xr.DataArray, xr.Dataset, str]]
+    target_map : xr.DataArray | xr.Dataset | str | None, default = None
         Target map as string that can have values "candidate" or "benchmark". Otherwise pass an `xr.DataArray` or `xr.Dataset` to align maps to.
     resampling : rasterio.enums.Resampling
         See :func:`rasterio.warp.reproject` for more details.
     **kwargs : dict or keyword arguments
         Dictionary or keyword arguments to be passed `rio.xarray.reproject_match()`. DEPRECATED: This was found to conflict with rxr.rio.reproject_matchrk
         ().
+
     Returns
     -------
-    Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]
+    Tuple[xr.DataArray | xr.Dataset , xr.DataArray | xr.Dataset]
         Tuple with aligned candidate and benchmark map respectively.
 
     Raises
@@ -271,11 +274,11 @@ def _align_rasters(
 
 
 def _spatial_alignment(
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
-    target_map: Optional[Union[xr.DataArray, xr.Dataset, str]] = "benchmark",
-    resampling: Optional[Resampling] = Resampling.nearest,
-) -> Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]:
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
+    target_map: xr.DataArray | xr.Dataset | str = "benchmark",
+    resampling: Resampling = Resampling.nearest,
+) -> Tuple[xr.DataArray | xr.Dataset, xr.DataArray | xr.Dataset]:
     """
     Reproject :class:`xarray.Dataset` objects
 
@@ -287,11 +290,11 @@ def _spatial_alignment(
 
     Parameters
     ----------
-    candidate_map: Union[xr.DataArray, xr.Dataset]
+    candidate_map: xr.DataArray | xr.Dataset
         Candidate map in xarray DataArray format.
-    benchmark_map: Union[xr.DataArray, xr.Dataset]
+    benchmark_map: xr.DataArray | xr.Dataset
         Benchmark map in xarray DataArray format.
-    target_map: Optional[Union[xr.DataArray, xr.Dataset, str]], default = "benchmark"
+    target_map: xr.DataArray | xr.Dataset | str, default = "benchmark"
         xarray object to match candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
     resampling : rasterio.enums.Resampling
         See :func:`rasterio.warp.reproject` for more details.
@@ -301,7 +304,7 @@ def _spatial_alignment(
 
     Returns
     --------
-    Tuple[Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]]
+    Tuple[xr.DataArray | xr.Dataset, xr.DataArray | xr.Dataset]
         Tuple with candidate and benchmark map respectively.
 
     Raises
@@ -311,9 +314,9 @@ def _spatial_alignment(
 
     References
     ----------
-    .. [1] [`xr.reproject_match](https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject)
-    .. [2] [`xr.reproject](https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject)
-    .. [2] [`rasterio.warp.reproject](https://rasterio.readthedocs.io/en/latest/api/rasterio.warp.html#rasterio.warp.reproject)
+    .. [1] `xr.reproject_match <https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject>`_
+    .. [2] `xr.reproject <https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject>`_
+    .. [3] `rasterio.warp.reproject <https://rasterio.readthedocs.io/en/latest/api/rasterio.warp.html#rasterio.warp.reproject>`_
 
     """
 

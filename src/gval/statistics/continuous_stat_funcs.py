@@ -3,7 +3,6 @@ Continuous Statistics Functions From Error Based Agreement Maps.
 """
 
 from numbers import Number
-from typing import Union
 
 import xarray as xr
 import numpy as np
@@ -12,7 +11,7 @@ from gval.statistics.continuous_stat_utils import convert_output
 
 
 @convert_output
-def mean_absolute_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
+def mean_absolute_error(error: xr.DataArray | xr.Dataset) -> Number:
     """
     Compute mean absolute error (MAE).
 
@@ -20,7 +19,7 @@ def mean_absolute_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
 
     Returns
@@ -30,13 +29,13 @@ def mean_absolute_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Mean absolute error](https://en.wikipedia.org/wiki/Mean_absolute_error)
+    .. [1] `Mean absolute error `https://en.wikipedia.org/wiki/Mean_absolute_error>`_
     """
     return np.abs(error).mean()
 
 
 @convert_output
-def mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
+def mean_squared_error(error: xr.DataArray | xr.Dataset) -> Number:
     """
     Compute mean squared error (MSE).
 
@@ -44,7 +43,7 @@ def mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
 
     Returns
@@ -54,14 +53,14 @@ def mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error)
+    .. [1] `Mean squared error <https://en.wikipedia.org/wiki/Mean_squared_error>`_
     """
 
     return (error**2).mean()
 
 
 @convert_output
-def root_mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
+def root_mean_squared_error(error: xr.DataArray | xr.Dataset) -> Number:
     """
     Compute root mean squared error (RMSE).
 
@@ -69,7 +68,7 @@ def root_mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
 
     Returns
@@ -79,14 +78,14 @@ def root_mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Root mean square deviation](https://en.wikipedia.org/wiki/Root-mean-square_deviation)
+    .. [1] `Root mean square deviation <https://en.wikipedia.org/wiki/Root-mean-square_deviation>`_
     """
 
     return np.sqrt((error**2).mean())
 
 
 @convert_output
-def mean_signed_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
+def mean_signed_error(error: xr.DataArray | xr.Dataset) -> Number:
     """
     Compute mean signed error (MSiE).
 
@@ -94,7 +93,7 @@ def mean_signed_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
 
     Returns
@@ -104,7 +103,7 @@ def mean_signed_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Mean signed error](https://en.wikipedia.org/wiki/Mean_signed_difference)
+    .. [1] `Mean signed error <https://en.wikipedia.org/wiki/Mean_signed_difference>`_
     """
 
     return error.mean()
@@ -112,8 +111,8 @@ def mean_signed_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
 @convert_output
 def mean_percentage_error(
-    error: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
 ) -> Number:
     """
     Compute mean percentage error (MPE).
@@ -122,9 +121,9 @@ def mean_percentage_error(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -134,15 +133,15 @@ def mean_percentage_error(
 
     References
     ----------
-    .. [1] [Mean percentage error](https://en.wikipedia.org/wiki/Mean_percentage_error)
+    .. [1] `Mean percentage error <https://en.wikipedia.org/wiki/Mean_percentage_error>`_
     """
     return (error / benchmark_map.mean()).mean()
 
 
 @convert_output
 def mean_absolute_percentage_error(
-    error: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
 ) -> Number:
     """
     Compute mean absolute percentage error (MAPE).
@@ -151,9 +150,9 @@ def mean_absolute_percentage_error(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -163,7 +162,7 @@ def mean_absolute_percentage_error(
 
     References
     ----------
-    .. [1] [Mean absolute percentage error](https://en.wikipedia.org/wiki/Mean_absolute_percentage_error)
+    .. [1] `Mean absolute percentage error <https://en.wikipedia.org/wiki/Mean_absolute_percentage_error>`_
     """
 
     return np.abs(error / benchmark_map).mean()
@@ -171,8 +170,8 @@ def mean_absolute_percentage_error(
 
 @convert_output
 def mean_normalized_root_mean_squared_error(
-    error: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
 ) -> Number:
     """
     Compute mean normalized root mean squared error (NRMSE).
@@ -181,9 +180,9 @@ def mean_normalized_root_mean_squared_error(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -193,7 +192,7 @@ def mean_normalized_root_mean_squared_error(
 
     References
     ----------
-    .. [1] [Normalized root-mean-square deviation](https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation)
+    .. [1] `Normalized root-mean-square deviation <https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation>`_
     """
 
     return np.sqrt((error**2).mean()) / benchmark_map.mean()
@@ -201,8 +200,8 @@ def mean_normalized_root_mean_squared_error(
 
 @convert_output
 def range_normalized_root_mean_squared_error(
-    error: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
 ) -> Number:
     """
     Compute range normalized root mean squared error (RNRMSE).
@@ -211,9 +210,9 @@ def range_normalized_root_mean_squared_error(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -223,15 +222,14 @@ def range_normalized_root_mean_squared_error(
 
     References
     ----------
-    .. [1] [Normalized root-mean-square deviation](https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation)
+    .. [1] `Normalized root-mean-square deviation <https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation>`_
     """
     return np.sqrt((error**2).mean()) / (benchmark_map.max() - benchmark_map.min())
 
 
 @convert_output
 def mean_normalized_mean_absolute_error(
-    error: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset, benchmark_map: xr.DataArray | xr.Dataset
 ) -> Number:
     """
     Compute mean normalized mean absolute error (NMAE).
@@ -240,9 +238,9 @@ def mean_normalized_mean_absolute_error(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -252,15 +250,14 @@ def mean_normalized_mean_absolute_error(
 
     References
     ----------
-    .. [1] [Normalized mean absolute error](https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error)
+    .. [1] `Normalized mean absolute error <https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error>`_
     """
     return np.abs(error).mean() / benchmark_map.mean()
 
 
 @convert_output
 def range_normalized_mean_absolute_error(
-    error: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset, benchmark_map: xr.DataArray | xr.Dataset
 ) -> Number:
     """
     Compute range normalized mean absolute error (RNMAE).
@@ -269,9 +266,9 @@ def range_normalized_mean_absolute_error(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -281,15 +278,15 @@ def range_normalized_mean_absolute_error(
 
     References
     ----------
-    .. [1] [Normalized mean absolute error](https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error)
+    .. [1] `Normalized mean absolute error <https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error>`_
     """
     return np.abs(error).mean() / (benchmark_map.max() - benchmark_map.min())
 
 
 @convert_output
 def coefficient_of_determination(
-    error: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
 ) -> Number:
     """
     Compute coefficient of determination (R2).
@@ -298,9 +295,9 @@ def coefficient_of_determination(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -310,7 +307,7 @@ def coefficient_of_determination(
 
     References
     ----------
-    .. [1] [Coefficient of determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)
+    .. [1] `Coefficient of determination <https://en.wikipedia.org/wiki/Coefficient_of_determination>`_
     """
 
     return 1 - (error**2).sum() / ((benchmark_map - benchmark_map.mean()) ** 2).sum()
@@ -318,9 +315,9 @@ def coefficient_of_determination(
 
 @convert_output
 def symmetric_mean_absolute_percentage_error(
-    error: Union[xr.DataArray, xr.Dataset],
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
+    error: xr.DataArray | xr.Dataset,
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
 ) -> Number:
     """
     Compute symmetric mean absolute percentage error (sMAPE).
@@ -329,11 +326,11 @@ def symmetric_mean_absolute_percentage_error(
 
     Parameters
     ----------
-    error : Union[xr.DataArray, xr.Dataset]
+    error : xr.DataArray | xr.Dataset
         Candidate minus benchmark error.
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset
         Candidate map.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
 
     Returns
@@ -343,7 +340,7 @@ def symmetric_mean_absolute_percentage_error(
 
     References
     ----------
-    .. [1] [Symmetric mean absolute percentage error](https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error)
+    .. [1] `Symmetric mean absolute percentage error <https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error>`_
     """
     return (
         2 * np.abs(error).sum() / (np.abs(candidate_map) + np.abs(benchmark_map)).sum()

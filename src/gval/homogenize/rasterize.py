@@ -3,7 +3,6 @@ Functions to rasterize vector datasets to process in raster space
 """
 
 from numbers import Number
-from typing import Union
 
 import numpy as np
 import xarray as xr
@@ -14,15 +13,15 @@ from gval.utils.loading_datasets import _handle_xarray_memory
 
 
 def _rasterize_data(
-    candidate_map: Union[xr.Dataset, xr.DataArray],
+    candidate_map: xr.Dataset | xr.DataArray,
     benchmark_map: gpd.GeoDataFrame,
     rasterize_attributes: list,
-) -> Union[xr.Dataset, xr.DataArray]:
+) -> xr.Dataset | xr.DataArray:
     """
 
     Parameters
     ----------
-    candidate_map: Union[xr.Dataset, xr.DataArray]
+    candidate_map: xr.Dataset | xr.DataArray
         Candidate map to reference in creation of rasterized benchmark map
     benchmark_map: gpd.GeoDataFrame
         Benchmark map to be rasterized
@@ -31,7 +30,7 @@ def _rasterize_data(
 
     Returns
     -------
-    Union[xr.Dataset, xr.DataArray]
+    xr.Dataset | xr.DataArray
         Rasterized Data
 
     Raises

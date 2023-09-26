@@ -1,4 +1,4 @@
-from typing import Union, Callable
+from typing import Callable
 from functools import wraps
 import inspect
 from numbers import Number
@@ -221,7 +221,7 @@ class ComparisonProcessing:
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    def process_agreement_map(self, **kwargs) -> Union[xr.DataArray, xr.Dataset]:
+    def process_agreement_map(self, **kwargs) -> xr.DataArray | xr.Dataset:
         """
 
         Parameters
@@ -230,8 +230,8 @@ class ComparisonProcessing:
 
         Returns
         -------
-        Union[xr.DataArray, xr.Dataset]
-        Agreement map.
+        xr.DataArray | xr.Dataset
+            Agreement map.
         """
 
         return self.comparison_function_from_string(func=_compute_agreement_map)(

@@ -2,7 +2,7 @@
 Continuous Statistics Functions From Error Based Agreement Maps.
 """
 
-from typing import Callable, Union, Optional
+from typing import Callable
 from functools import wraps
 
 import xarray as xr
@@ -49,11 +49,11 @@ def compute_error_if_none(func: Callable) -> Callable:  # pragma: no cover
     if the error is not supplied.
 
     The decorated function should have three positional arguments:
-    error: Union[xr.DataArray, xr.Dataset], optional
+    error: xr.DataArray | xr.Dataset, optional
         Candidate minus benchmark error.
-    benchmark_map: Union[xr.DataArray, xr.Dataset], optional
+    benchmark_map: xr.DataArray | xr.Dataset, optional
         Benchmark map.
-    candidate_map: Union[xr.DataArray, xr.Dataset], optional
+    candidate_map: xr.DataArray | xr.Dataset, optional
         Candidate map.
 
     The error is computed as the difference between the candidate_map and the benchmark_map.
@@ -73,9 +73,9 @@ def compute_error_if_none(func: Callable) -> Callable:  # pragma: no cover
     """
 
     def wrapper(
-        error: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-        benchmark_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
-        candidate_map: Optional[Union[xr.DataArray, xr.Dataset]] = None,
+        error: xr.DataArray | xr.Dataset | None = None,
+        benchmark_map: xr.DataArray | xr.Dataset | None = None,
+        candidate_map: xr.DataArray | xr.Dataset | None = None,
     ):
         if error is None:
             if benchmark_map is not None and candidate_map is not None:

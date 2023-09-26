@@ -1,5 +1,3 @@
-from typing import Union
-
 import geopandas as gpd
 import numpy as np
 from shapely.geometry import shape
@@ -8,13 +6,13 @@ import xarray as xr
 
 
 def _vectorize_data(
-    raster_data: Union[xr.Dataset, xr.DataArray],
+    raster_data: xr.Dataset | xr.DataArray,
 ) -> gpd.GeoDataFrame:
     """
 
     Parameters
     ----------
-    raster_data: Union[xr.Dataset, xr.DataArray]
+    raster_data: xr.Dataset | xr.DataArray
         Raster map to convert to vectorized map
 
     Returns

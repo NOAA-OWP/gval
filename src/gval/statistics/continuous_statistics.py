@@ -3,7 +3,7 @@ Continuous Statistics Class
 """
 
 from numbers import Number
-from typing import Union, Tuple
+from typing import Tuple
 from functools import wraps
 import inspect
 
@@ -56,8 +56,8 @@ class ContinuousStatistics(BaseStatistics):
             "param_types": [
                 "xarray.core.dataset.Dataset",
                 "xarray.core.dataarray.DataArray",
-                "Union[xarray.core.dataarray.DataArray, xarray.core.dataset.Dataset]",
-                "Union[xarray.core.dataset.Dataset, xarray.core.dataarray.DataArray]",
+                "xarray.core.dataarray.DataArray | xarray.core.dataset.Dataset",
+                "xarray.core.dataset.Dataset | xarray.core.dataarray.DataArray",
             ],
             "return_type": [float, Number],
             "no_of_args": [1, 2, 3],
@@ -222,14 +222,12 @@ class ContinuousStatistics(BaseStatistics):
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    def process_statistics(
-        self, func_names: Union[str, list], **kwargs
-    ) -> Tuple[float, str]:
+    def process_statistics(self, func_names: str | list, **kwargs) -> Tuple[float, str]:
         """
 
         Parameters
         ----------
-        func_names: Union[str, list]
+        func_names: str | list
             Name of registered function to run
         **kwargs: dict or keyword arguments
             Dictionary or keyword arguments of to pass to metric functions.

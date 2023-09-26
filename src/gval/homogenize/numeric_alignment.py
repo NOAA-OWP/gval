@@ -4,7 +4,7 @@ Functions to check for and ensure numeric datatypes are compatible in numeric pr
 
 """
 
-from typing import Union, Tuple
+from typing import Tuple
 
 import numpy as np
 import xarray as xr
@@ -112,22 +112,22 @@ def _align_datasets_dtype(
 
 
 def _align_numeric_data_type(
-    candidate_map: Union[xr.Dataset, xr.DataArray],
-    benchmark_map: Union[xr.Dataset, xr.DataArray],
-) -> Tuple[Union[xr.Dataset, xr.DataArray], Union[xr.Dataset, xr.DataArray]]:
+    candidate_map: xr.Dataset | xr.DataArray,
+    benchmark_map: xr.Dataset | xr.DataArray,
+) -> Tuple[xr.Dataset | xr.DataArray, xr.Dataset | xr.DataArray]:
     """
     Align data type for xarray objects
 
     Parameters
     ----------
-    candidate_map: Union[xr.Dataset, xr.DataArray]
+    candidate_map: xr.Dataset | xr.DataArray
         Candidate map xarray object
-    benchmark_map: Union[xr.Dataset, xr.DataArray]
+    benchmark_map: xr.Dataset | xr.DataArray
         Benchmark map xarray dataset
 
     Returns
     -------
-    Tuple[Union[xr.Dataset, xr.DataArray], Union[xr.Dataset, xr.DataArray]]
+    Tuple[xr.Dataset | xr.DataArray, xr.Dataset, xr.DataArray]
 
     """
 

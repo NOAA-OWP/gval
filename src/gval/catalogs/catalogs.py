@@ -6,7 +6,7 @@ from __future__ import annotations
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Optional, Callable, Tuple
+from typing import Iterable, Callable, Tuple
 import os
 
 import pandas as pd
@@ -20,16 +20,16 @@ def catalog_compare(
     benchmark_catalog: pd.DataFrame | dd.DataFrame,
     map_ids: str | Iterable[str],
     how: str = "inner",
-    on: Optional[str | Iterable[str]] = None,
-    left_on: Optional[str | Iterable[str]] = None,
-    right_on: Optional[str | Iterable[str]] = None,
+    on: str | Iterable[str] | None = None,
+    left_on: str | Iterable[str] | None = None,
+    right_on: str | Iterable[str] | None = None,
     suffixes: tuple[str, str] = ("_candidate", "_benchmark"),
-    merge_kwargs: Optional[dict] = None,
-    open_kwargs: Optional[dict] = None,
+    merge_kwargs: dict | None = None,
+    open_kwargs: dict | None = None,
     compare_type: str | Callable = "continuous",
-    compare_kwargs: Optional[dict] = None,
-    agreement_map_field: Optional[str] = None,
-    agreement_map_write_kwargs: Optional[dict] = None,
+    compare_kwargs: dict | None = None,
+    agreement_map_field: str | None = None,
+    agreement_map_write_kwargs: dict | None = None,
 ) -> pd.DataFrame | dd.DataFrame:
     """
     Compare catalogs of candidate and benchmark maps.
@@ -46,23 +46,23 @@ def catalog_compare(
         The columns corresponding to map_ids should have either str, xarray.DataArray, xarray.Dataset, rasterio.io.DatasetReader, rasterio.vrt.WarpedVRT, or os.PathLike objects.
     how : str, default = "inner"
         Type of merge to perform. See pandas.DataFrame.merge for more information.
-    on : str | Iterable of str, default = None
+    on : str | Iterable of str | None, default = None
         Column(s) to join on. Must be found in both catalogs. If None, and left_on and right_on are also None, then the intersection of the columns in both catalogs will be used.
-    left_on : str | Iterable of str, default = None
+    left_on : str | Iterable of str | None, default = None
         Column(s) to join on in left catalog. Must be found in left catalog.
-    right_on : str | Iterable of str, default = None
+    right_on : str | Iterable of str | None, default = None
         Column(s) to join on in right catalog. Must be found in right catalog.
     suffixes : tuple of str, default = ("_candidate", "_benchmark")
         Suffixes to apply to overlapping column names in candidate and benchmark catalogs, respectively. Length two tuple of strings.
-    merge_kwargs : dict, default = None
+    merge_kwargs : dict | None, default = None
         Keyword arguments to pass to pandas.DataFrame.merge.
     compare_type : str | Callable, default = "continuous"
         Type of comparison to perform. If str, then must be one of {"continuous", "categorical", "probabilistic"}. If Callable, then must be a function that takes two xarray.DataArray or xarray.Dataset objects and returns a tuple of length 2. The first element of the tuple must be an xarray.DataArray or xarray.Dataset object representing the agreement map. The second element of the tuple must be a pandas.DataFrame object representing the metrics.
-    compare_kwargs : dict, default = None
+    compare_kwargs : dict | None, default = None
         Keyword arguments to pass to the compare_type function.
-    agreement_map_field : str, default = None
+    agreement_map_field : str | None, default = None
         Column name to write agreement maps to. If None, then agreement maps will not be written to file.
-    agreement_map_write_kwargs : dict, default = None
+    agreement_map_write_kwargs : dict | None, default = None
         Keyword arguments to pass to xarray.DataArray.rio.to_raster when writing agreement maps to file.
 
     Raises

@@ -2,7 +2,7 @@
 Categorical Statistics Class
 """
 
-from typing import Union, Tuple
+from typing import Tuple
 from functools import wraps
 import inspect
 from numbers import Number
@@ -228,14 +228,12 @@ class CategoricalStatistics(BaseStatistics):
         else:
             raise KeyError("Statistic not found in registered functions")
 
-    def process_statistics(
-        self, func_names: Union[str, list], **kwargs
-    ) -> Tuple[float, str]:
+    def process_statistics(self, func_names: str | list, **kwargs) -> Tuple[float, str]:
         """
 
         Parameters
         ----------
-        func_names: Union[str, list]
+        func_names: str | list
             Name of registered function to run
         **kwargs: dict or keyword arguments
             Dictionary or keyword arguments of to pass to metric functions.

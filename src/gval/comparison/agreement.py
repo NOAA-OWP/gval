@@ -14,7 +14,7 @@ TODO:
 __author__ = "Fernando Aristizabal"
 
 
-from typing import Iterable, Optional, Union, Tuple, Callable, Dict
+from typing import Iterable, Tuple, Callable, Dict
 from numbers import Number
 
 import numpy as np
@@ -29,46 +29,48 @@ from gval.utils.loading_datasets import _handle_xarray_memory
 
 
 def _compute_agreement_map(
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
-    comparison_function: Union[
-        Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
-    ],
-    pairing_dict: Optional[Dict[Tuple[Number, Number], Number]] = None,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    nodata: Optional[Number] = None,
-    encode_nodata: Optional[bool] = False,
-) -> Union[xr.DataArray, xr.Dataset]:
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
+    comparison_function: Callable
+    | nb.np.ufunc.dufunc.DUFunc
+    | np.ufunc
+    | np.vectorize
+    | str,
+    pairing_dict: Dict[Tuple[Number, Number], Number] | None = None,
+    allow_candidate_values: Iterable[Number] | None = None,
+    allow_benchmark_values: Iterable[Number] | None = None,
+    nodata: Number | None = None,
+    encode_nodata: bool = False,
+) -> xr.DataArray | xr.Dataset:
     """
     Computes agreement map as xarray from candidate and benchmark xarray's.
 
     Parameters
     ----------
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset
         Candidate map.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
-    comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]
+    comparison_function : Callable | nb.np.ufunc.dufunc.DUFunc | np.ufunc | np.vectorize | str
         Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
-    pairing_dict: Optional[Dict[Tuple[Number, Number], Number]], default = None
+    pairing_dict: Dict[Tuple[Number, Number], Number] | None, default = None
         When "pairing_dict" is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as `{(c, b) : a}` where `(c, b)` is a tuple of the candidate and benchmark value pairing, respectively, and `a` is the value for the agreement array to be used for this pairing.
 
         If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.
 
         A pairing dictionary can be used by the user to note which values to allow and which to ignore for comparisons. It can also be used to decide how nans are handled for cases where either the candidate and benchmark maps have nans or both.
-    allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
+    allow_candidate_values : Iterable[int | float] | None, default = None
         List of values in candidate to include in computation of agreement map. Remaining values are excluded. If "pairing_dict" is set selected for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.
-    allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
+    allow_benchmark_values : Iterable[int | float] | None, default = None
         List of values in benchmark to include in computation of agreement map. Remaining values are excluded. If "pairing_dict" is set selected for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.
-    nodata : Optional[Number], default = None
+    nodata : Number | None, default = None
         No data value to write to agreement map output. This will use `rxr.rio.write_nodata(nodata)`.
-    encode_nodata : Optional[bool], default = False
+    encode_nodata : bool, default = False
         Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
 
     Returns
     -------
-    Union[xr.DataArray, xr.Dataset]
+    xr.DataArray | xr.Dataset
         Agreement map.
 
     Raises
@@ -78,11 +80,11 @@ def _compute_agreement_map(
 
     References
     ----------
-    .. [1] [Creating NumPy universal function](https://numba.readthedocs.io/en/stable/user/vectorize.html)
-    .. [2] [NumPy vectorize](https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html)
-    .. [3] [NumPy frompyfunc](https://numpy.org/doc/stable/reference/generated/numpy.frompyfunc.html)
-    .. [4] [Rioxarray Manage Information Loss](https://corteva.github.io/rioxarray/stable/getting_started/manage_information_loss.html)
-    .. [5] [Rioxarray NoData Management](https://corteva.github.io/rioxarray/stable/getting_started/nodata_management.html)
+    .. [1] `Creating NumPy universal function <https://numba.readthedocs.io/en/stable/user/vectorize.html>`_
+    .. [2] `NumPy vectorize <https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html>`_
+    .. [3] `NumPy frompyfunc <https://numpy.org/doc/stable/reference/generated/numpy.frompyfunc.html>`_
+    .. [4] `Rioxarray Manage Information Loss <https://corteva.github.io/rioxarray/stable/getting_started/manage_information_loss.html>`_
+    .. [5] `Rioxarray NoData Management <https://corteva.github.io/rioxarray/stable/getting_started/nodata_management.html>`_
     """
 
     """

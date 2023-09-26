@@ -5,7 +5,7 @@ Computes continuous value metrics given an agreement map.
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Union
+from typing import Iterable
 
 import pandera as pa
 import pandas as pd
@@ -19,10 +19,10 @@ from gval.utils.schemas import Metrics_df, Subsample_identifiers, Sample_identif
 
 @pa.check_types
 def _compute_continuous_metrics(
-    agreement_map: Union[xr.DataArray, xr.Dataset],
-    candidate_map: Union[xr.DataArray, xr.Dataset],
-    benchmark_map: Union[xr.DataArray, xr.Dataset],
-    metrics: Union[str, Iterable[str]] = "all",
+    agreement_map: xr.DataArray | xr.Dataset | Iterable[xr.DataArray | xr.Dataset],
+    candidate_map: xr.DataArray | xr.Dataset,
+    benchmark_map: xr.DataArray | xr.Dataset,
+    metrics: str | Iterable[str] = "all",
     subsampling_average: str = "micro",
     subsampling_df: gpd.GeoDataFrame = None,
 ) -> DataFrame[Metrics_df]:
@@ -31,13 +31,13 @@ def _compute_continuous_metrics(
 
     Parameters
     ----------
-    agreement_map : Union[xr.DataArray, xr.Dataset, List[Union[xr.DataArray, xr.Dataset]]]
+    agreement_map : xr.DataArray | xr.Dataset | Iterable[xr.DataArray | xr.Dataset]
         Agreement map, error based (candidate - benchmark).
-    candidate_map : Union[xr.DataArray, xr.Dataset]
+    candidate_map : xr.DataArray | xr.Dataset
         Candidate map.
-    benchmark_map : Union[xr.DataArray, xr.Dataset]
+    benchmark_map : xr.DataArray | xr.Dataset
         Benchmark map.
-    metrics : Union[str, Iterable[str]], default = "all"
+    metrics : str | Iterable[str], default = "all"
         String or list of strings representing metrics to compute.
     subsampling_average : str, default = "micro"
         Strategy to average samples if there is more than one in the agreement map
@@ -56,8 +56,8 @@ def _compute_continuous_metrics(
 
     References
     ----------
-    .. [1] [7th International Verification Methods Workshop](https://www.cawcr.gov.au/projects/verification/)
-    .. [2] [3.3. Metrics and scoring: quantifying the quality of predictions](https://scikit-learn.org/stable/modules/model_evaluation.html)
+    .. [1] `7th International Verification Methods Workshop <https://www.cawcr.gov.au/projects/verification/`>_
+    .. [2] `3.3. Metrics and scoring: quantifying the quality of predictions <https://scikit-learn.org/stable/modules/model_evaluation.html`>_
     """
 
     if not isinstance(agreement_map, list):

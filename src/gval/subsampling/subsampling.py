@@ -1,4 +1,4 @@
-from typing import Union, List, Optional, Tuple
+from typing import Iterable, Tuple
 
 import numpy as np
 import dask
@@ -9,22 +9,20 @@ from geocube.api.core import make_geocube
 
 
 def subsample(
-    candidate: Union[xr.DataArray, xr.Dataset],
-    benchmark: Union[xr.DataArray, xr.Dataset],
-    subsampling_df: Optional[gpd.GeoDataFrame] = None,
-) -> Union[
-    List[Union[Tuple[xr.DataArray, xr.DataArray], Tuple[xr.Dataset, xr.Dataset]]]
-]:
+    candidate: xr.DataArray | xr.Dataset,
+    benchmark: xr.DataArray | xr.Dataset,
+    subsampling_df: gpd.GeoDataFrame | None = None,
+) -> Iterable[Tuple[xr.DataArray, xr.DataArray] | Tuple[xr.Dataset, xr.Dataset]]:
     """
     Method to subsample a candidate and benchmark map
 
     Parameters
     ----------
-    candidate: Union[xr.DataArray, xr.Dataset]
+    candidate: xr.DataArray | xr.Dataset
         Candidate map for evaluating
-    benchmark: Union[xr.DataArray, xr.Dataset]
+    benchmark: xr.DataArray | xr.Dataset
         Benchmark map for
-    subsampling_df: Optional[gpd.GeoDataFrame], default = None
+    subsampling_df: gpd.GeoDataFrame | None, default = None
         Dataframe with columns regarding the geometry and method to subsample
 
     Raises
@@ -34,7 +32,7 @@ def subsample(
 
     Returns
     -------
-    Union[List[Union[Tuple[xr.DataArray, xr.DataArray], Tuple[xr.Dataset, xr.Dataset]]]]
+    Iterable[Tuple[xr.DataArray, xr.DataArray] | Tuple[xr.Dataset, xr.Dataset]]
         Subsampled candidate and benchmark maps or a list of subsampled candidate and benchmark maps
 
     """
@@ -75,7 +73,7 @@ def subsample(
 
 
 def get_subsample_percent(
-    sampling_df: gpd.GeoDataFrame, og_data: Union[xr.DataArray, xr.Dataset]
+    sampling_df: gpd.GeoDataFrame, og_data: xr.DataArray | xr.Dataset
 ) -> float:
     """
     Get percent of original map subsampled by geometry
@@ -84,7 +82,7 @@ def get_subsample_percent(
     ----------
     sampling_df: gpd.GeoDataFrame
         Dataframe with subsample geometries and options
-    og_data: Union[xr.DataArray, xr.Dataset]
+    og_data: xr.DataArray | xr.Dataset
         Original nodata count
 
     Returns
