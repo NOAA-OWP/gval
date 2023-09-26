@@ -6,7 +6,6 @@ Test functionality for computing_continuous_metrics.py
 __author__ = "Fernando Aristizabal"
 
 from numbers import Number
-from typing import Union
 
 import numpy as np
 from pytest_cases import parametrize
@@ -102,13 +101,13 @@ def case_compute_continuous_statistics_fail(names, error_map, exception):
 stat_args = [{"name": "test_func"}, {"name": "test_func2"}]
 
 
-def pass1(error: Union[xr.DataArray, xr.Dataset]) -> Number:
+def pass1(error: xr.DataArray | xr.Dataset) -> Number:
     return (error + 1).mean()
 
 
 def pass2(
-    error: Union[xr.Dataset, xr.DataArray],
-    benchmark_map: Union[xr.Dataset, xr.DataArray],
+    error: xr.Dataset | xr.DataArray,
+    benchmark_map: xr.Dataset | xr.DataArray,
 ) -> Number:
     return ((error + benchmark_map) / 1000).sum()
 
@@ -130,11 +129,11 @@ stat_args = [
 ]
 
 
-def fail1(error: Union[xr.Dataset, xr.DataArray]) -> Number:
+def fail1(error: xr.Dataset | xr.DataArray) -> Number:
     return error.mean()
 
 
-def fail2(arb: Union[xr.Dataset, xr.DataArray]) -> Number:
+def fail2(arb: xr.Dataset | xr.DataArray) -> Number:
     return arb.mean()
 
 
@@ -142,7 +141,7 @@ def fail3(error: np.array) -> Number:
     return error.mean()
 
 
-def fail4(error: Union[xr.Dataset, xr.DataArray]) -> str:
+def fail4(error: xr.Dataset | xr.DataArray) -> str:
     return error.mean()
 
 
@@ -162,13 +161,13 @@ def case_register_continuous_function_fail(args, func, exception):
 class Tester:
     @staticmethod
     def pass5(
-        error: Union[xr.Dataset, xr.DataArray],
-        benchmark_map: Union[xr.Dataset, xr.DataArray],
+        error: xr.Dataset | xr.DataArray,
+        benchmark_map: xr.Dataset | xr.DataArray,
     ) -> Number:
         return error / benchmark_map
 
     @staticmethod
-    def pass6(error: Union[xr.Dataset, xr.DataArray]) -> Number:
+    def pass6(error: xr.Dataset | xr.DataArray) -> Number:
         return error * 1.01
 
 
@@ -190,7 +189,7 @@ class TesterFail1:
 
 class TesterFail2:
     @staticmethod
-    def mean_absolute_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
+    def mean_absolute_error(error: xr.DataArray | xr.Dataset) -> Number:
         return error + 0.01
 
 

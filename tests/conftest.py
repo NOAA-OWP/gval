@@ -5,7 +5,6 @@ Configuration file for pytests
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Union  # , Optional
 
 import os
 
@@ -67,7 +66,7 @@ TODO:
 """
 
 
-def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.PathLike]:
+def _build_map_file_path(file_name: str | os.PathLike) -> str | os.PathLike:
     """
     Returns local file path for a given file name.
 
@@ -75,12 +74,12 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
 
     Parameters
     ----------
-    file_name : Union[str, os.PathLike]
+    file_name : str | os.PathLike
         Base filename.
 
     Returns
     -------
-    Union[str, os.PathLike]
+    str | os.PathLike
         Local, absolute file path for input.
     """
     file_path = os.path.join(TEST_DATA_DIR, file_name)
@@ -89,7 +88,7 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
 
 
 def _load_gpkg(
-    file_name: Union[str, os.PathLike],
+    file_name: str | os.PathLike,
     *args,
     **kwargs
     # masked: bool = False,
@@ -113,18 +112,18 @@ def _load_gpkg(
 
 
 def _load_xarray(
-    file_name: Union[str, os.PathLike],
+    file_name: str | os.PathLike,
     *args,
     **kwargs
     # masked: bool = False,
     # mask_and_scale: bool = False,
-) -> Union[xr.DataArray, xr.Dataset]:
+) -> xr.DataArray | xr.Dataset:
     """
     Loads xarray given a base file name.
 
     Parameters
     ----------
-    file_name : Union[str, os.PathLike]
+    file_name : str | os.PathLike
         Base file name of file within local TEST_DATA_DIR or TEST_DATA_S3_NAME.
     mask_and_scale: bool
 
