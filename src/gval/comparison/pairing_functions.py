@@ -81,7 +81,7 @@ def cantor_pair(c: Number, b: Number) -> Number:  # pragma: no cover
 
     References
     ----------
-    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] `Cantor and Szudzik Pairing Functions <https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik>`_
     """
     _is_not_natural_number(c, True)
     _is_not_natural_number(b, True)
@@ -111,7 +111,7 @@ def szudzik_pair(c: Number, b: Number) -> Number:  # pragma: no cover
 
     References
     ----------
-    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] `Cantor and Szudzik Pairing Functions <https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik>`_
     """
     _is_not_natural_number(c, True)
     _is_not_natural_number(b, True)
@@ -139,7 +139,7 @@ def _negative_value_transformation(x: Number) -> Number:  # pragma: no cover
 
     References
     ----------
-    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] `Cantor and Szudzik Pairing Functions <https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik>`_
     """
     if np.isnan(x):
         return x
@@ -166,7 +166,7 @@ def cantor_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
 
     References
     ----------
-    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] `Cantor and Szudzik Pairing Functions <https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik>`_
     """
     ct = _negative_value_transformation(c)
     bt = _negative_value_transformation(b)
@@ -196,7 +196,7 @@ def szudzik_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
 
     References
     ----------
-    .. [1] [Cantor and Szudzik Pairing Functions](https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik)
+    .. [1] `Cantor and Szudzik Pairing Functions <https://www.vertexfragment.com/ramblings/cantor-szudzik-pairing-functions/#signed-szudzik>`_
     """
     ct = _negative_value_transformation(c)
     bt = _negative_value_transformation(b)

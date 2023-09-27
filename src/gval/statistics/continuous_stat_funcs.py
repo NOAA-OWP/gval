@@ -30,7 +30,7 @@ def mean_absolute_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Mean absolute error](https://en.wikipedia.org/wiki/Mean_absolute_error)
+    .. [1] `Mean absolute error <https://en.wikipedia.org/wiki/Mean_absolute_error>`_
     """
     return np.abs(error).mean()
 
@@ -54,7 +54,7 @@ def mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error)
+    .. [1] `Mean squared error <https://en.wikipedia.org/wiki/Mean_squared_error>`_
     """
 
     return (error**2).mean()
@@ -79,7 +79,7 @@ def root_mean_squared_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Root mean square deviation](https://en.wikipedia.org/wiki/Root-mean-square_deviation)
+    .. [1] `Root mean square deviation <https://en.wikipedia.org/wiki/Root-mean-square_deviation>`_
     """
 
     return np.sqrt((error**2).mean())
@@ -104,7 +104,7 @@ def mean_signed_error(error: Union[xr.DataArray, xr.Dataset]) -> Number:
 
     References
     ----------
-    .. [1] [Mean signed error](https://en.wikipedia.org/wiki/Mean_signed_difference)
+    .. [1] `Mean signed error <https://en.wikipedia.org/wiki/Mean_signed_difference>`_
     """
 
     return error.mean()
@@ -134,7 +134,7 @@ def mean_percentage_error(
 
     References
     ----------
-    .. [1] [Mean percentage error](https://en.wikipedia.org/wiki/Mean_percentage_error)
+    .. [1] `Mean percentage error <https://en.wikipedia.org/wiki/Mean_percentage_error>`_
     """
     return (error / benchmark_map.mean()).mean()
 
@@ -163,7 +163,7 @@ def mean_absolute_percentage_error(
 
     References
     ----------
-    .. [1] [Mean absolute percentage error](https://en.wikipedia.org/wiki/Mean_absolute_percentage_error)
+    .. [1] `Mean absolute percentage error <https://en.wikipedia.org/wiki/Mean_absolute_percentage_error>`_
     """
 
     return np.abs(error / benchmark_map).mean()
@@ -193,7 +193,7 @@ def mean_normalized_root_mean_squared_error(
 
     References
     ----------
-    .. [1] [Normalized root-mean-square deviation](https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation)
+    .. [1] `Normalized root-mean-square deviation <https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation>`_
     """
 
     return np.sqrt((error**2).mean()) / benchmark_map.mean()
@@ -223,7 +223,7 @@ def range_normalized_root_mean_squared_error(
 
     References
     ----------
-    .. [1] [Normalized root-mean-square deviation](https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation)
+    .. [1] `Normalized root-mean-square deviation <https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation>`_
     """
     return np.sqrt((error**2).mean()) / (benchmark_map.max() - benchmark_map.min())
 
@@ -252,7 +252,7 @@ def mean_normalized_mean_absolute_error(
 
     References
     ----------
-    .. [1] [Normalized mean absolute error](https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error)
+    .. [1] `Normalized mean absolute error <https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error>`_
     """
     return np.abs(error).mean() / benchmark_map.mean()
 
@@ -281,7 +281,7 @@ def range_normalized_mean_absolute_error(
 
     References
     ----------
-    .. [1] [Normalized mean absolute error](https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error)
+    .. [1] `Normalized mean absolute error <https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error>`_
     """
     return np.abs(error).mean() / (benchmark_map.max() - benchmark_map.min())
 
@@ -310,7 +310,7 @@ def coefficient_of_determination(
 
     References
     ----------
-    .. [1] [Coefficient of determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)
+    .. [1] `Coefficient of determination <https://en.wikipedia.org/wiki/Coefficient_of_determination>`_
     """
 
     return 1 - (error**2).sum() / ((benchmark_map - benchmark_map.mean()) ** 2).sum()
@@ -343,7 +343,7 @@ def symmetric_mean_absolute_percentage_error(
 
     References
     ----------
-    .. [1] [Symmetric mean absolute percentage error](https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error)
+    .. [1] `Symmetric mean absolute percentage error <https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error>`_
     """
     return (
         2 * np.abs(error).sum() / (np.abs(candidate_map) + np.abs(benchmark_map)).sum()

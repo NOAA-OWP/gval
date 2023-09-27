@@ -89,8 +89,8 @@ def load_raster_as_xarray(
 
     References
     ----------
-    .. [1] [Rioxarray `open_rasterio`](https://corteva.github.io/rioxarray/stable/rioxarray.html)
-    .. [2] [`rasterio.open()`](https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open)
+    .. [1] `rioxarray.open_rasterio() <https://corteva.github.io/rioxarray/stable/rioxarray.html>`_
+    .. [2] `rasterio.open() <https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open>`_
     """
 
     return rxr.open_rasterio(

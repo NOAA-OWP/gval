@@ -311,9 +311,9 @@ def _spatial_alignment(
 
     References
     ----------
-    .. [1] [`xr.reproject_match](https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject)
-    .. [2] [`xr.reproject](https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject)
-    .. [2] [`rasterio.warp.reproject](https://rasterio.readthedocs.io/en/latest/api/rasterio.warp.html#rasterio.warp.reproject)
+    .. [1] `xr.reproject_match <https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject>`_
+    .. [2] `xr.reproject <https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray.raster_dataset.RasterDataset.reproject>`_
+    .. [2] `rasterio.warp.reproject <https://rasterio.readthedocs.io/en/latest/api/rasterio.warp.html#rasterio.warp.reproject>`_
 
     """
 

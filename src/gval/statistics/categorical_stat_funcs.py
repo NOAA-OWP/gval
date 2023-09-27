@@ -24,7 +24,7 @@ def true_positive_rate(tp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
+    .. [1] `Sensitivity and Specificity <https://en.wikipedia.org/wiki/Sensitivity_and_specificity>`_
     """
     return tp / (tp + fn)
 
@@ -47,7 +47,7 @@ def true_negative_rate(tn: Number, fp: Number) -> float:
 
     References
     ----------
-    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
+    .. [1] `Sensitivity and Specificity <https://en.wikipedia.org/wiki/Sensitivity_and_specificity>`_
     """
     return tn / (tn + fp)
 
@@ -70,7 +70,7 @@ def positive_predictive_value(tp: Number, fp: Number) -> float:
 
     References
     ----------
-    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
+    .. [1] `Sensitivity and Specificity <https://en.wikipedia.org/wiki/Sensitivity_and_specificity>`_
     """
     return tp / (tp + fp)
 
@@ -93,7 +93,7 @@ def negative_predictive_value(tn: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Sensitivity and Specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity)
+    .. [1] `Sensitivity and Specificity <https://en.wikipedia.org/wiki/Sensitivity_and_specificity>`_
     """
     return tn / (tn + fn)
 
@@ -116,7 +116,7 @@ def false_negative_rate(tp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Type I and Type II Errors](https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates)
+    .. [1] `Type I and Type II Error <https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates>`_
     """
     return fn / (fn + tp)
 
@@ -139,7 +139,7 @@ def false_positive_rate(tn: Number, fp: Number) -> float:
 
     References
     ----------
-    .. [1] [Type I and Type II Errors](https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates)
+    .. [1] `Type I and Type II Errors <https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates>`_
     """
     return fp / (fp + tn)
 
@@ -162,7 +162,7 @@ def false_discovery_rate(tp: Number, fp: Number) -> float:
 
     References
     ----------
-    .. [1] [False Discovery Rate](https://en.wikipedia.org/wiki/False_discovery_rate)
+    .. [1] `False Discovery Rate <https://en.wikipedia.org/wiki/False_discovery_rate>`_
     """
     return fp / (fp + tp)
 
@@ -185,7 +185,7 @@ def false_omission_rate(tn: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Positive and Negative Predictive Values](https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values)
+    .. [1] `Positive and Negative Predictive Values <https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values>`_
     """
     return fn / (fn + tn)
 
@@ -212,7 +212,7 @@ def positive_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
 
     References
     ----------
-    .. [1] [Likelihood Ratios](https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio)
+    .. [1] `Likelihood Ratios <https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio>`_
     """
     return (tp / (tp + fn)) / (fp / (fp + tn))
 
@@ -239,7 +239,7 @@ def negative_likelihood_ratio(tp: Number, tn: Number, fp: Number, fn: Number) ->
 
     References
     ----------
-    .. [1] [Likelihood Ratios](https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio)
+    .. [1] `Likelihood Ratios <https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio>`_
     """
     return (fn / (fn + tp)) / (tn / (tn + fp))
 
@@ -266,7 +266,7 @@ def prevalence_threshold(tp: Number, tn: Number, fp: Number, fn: Number) -> floa
 
     References
     ----------
-    .. [1] [Prevalence Threshold](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7540853/)
+    .. [1] `Prevalence Threshold <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7540853/>`_
     """
     return math.sqrt(fp / (fp + tn)) / (
         math.sqrt(tp / (tp + fn)) + math.sqrt(fp / (fp + tn))
@@ -295,7 +295,7 @@ def critical_success_index(tp: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Critical Success Index](https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf#page=4)
+    .. [1] `Critical Success Index <https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf#page=4>`_
     """
     return tp / (tp + fn + fp)
 
@@ -322,7 +322,7 @@ def prevalence(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Prevalence](https://en.wikipedia.org/wiki/Prevalence)
+    .. [1] `Prevalence <https://en.wikipedia.org/wiki/Prevalence>`_
     """
     return (tp + fn) / (tp + fp + tn + fn)
 
@@ -349,7 +349,7 @@ def accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Accuracy and Precision](https://en.wikipedia.org/wiki/Accuracy_and_precision)
+    .. [1] `Accuracy and Precision <https://en.wikipedia.org/wiki/Accuracy_and_precision>`_
     """
     return (tp + tn) / (tp + fp + tn + fn)
 
@@ -374,7 +374,7 @@ def f_score(tp: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [F-score](https://en.wikipedia.org/wiki/F-score)
+    .. [1] `F-score <https://en.wikipedia.org/wiki/F-score>`_
     """
     return 2 * tp / (2 * tp + fp + fn)
 
@@ -404,7 +404,7 @@ def matthews_correlation_coefficient(
 
     References
     ----------
-    .. [1] [Matthews Correlation Coefficient](https://en.wikipedia.org/wiki/Phi_coefficient)
+    .. [1] `Matthews Correlation Coefficient <https://en.wikipedia.org/wiki/Phi_coefficient>`_
     """
     return (tp * tn - fp * fn) / math.sqrt(
         (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
@@ -431,7 +431,7 @@ def fowlkes_mallows_index(tp: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Fowlkes-Mallows Index](https://en.wikipedia.org/wiki/Fowlkes%E2%80%93Mallows_index)
+    .. [1] `Fowlkes-Mallows Index <https://en.wikipedia.org/wiki/Fowlkes%E2%80%93Mallows_index>`_
     """
     return math.sqrt((tp / (tp + fp)) * (tp / (tp + fn)))
 
@@ -458,7 +458,7 @@ def equitable_threat_score(tp: Number, tn: Number, fp: Number, fn: Number) -> fl
 
     References
     ----------
-    .. [1] [Equitable Threat Score](https://resources.eumetrain.org/data/4/451/english/msg/ver_categ_forec/uos2/uos2_ko4.htm)
+    .. [1] `Equitable Threat Score <https://resources.eumetrain.org/data/4/451/english/msg/ver_categ_forec/uos2/uos2_ko4.htm>`_
 
     """
     total_population = tp + tn + fp + fn
@@ -488,7 +488,7 @@ def balanced_accuracy(tp: Number, tn: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Balanced Accuracy](https://neptune.ai/blog/balanced-accuracy#Balanced%20Accuracy)
+    .. [1] `Balanced Accuracy <https://neptune.ai/blog/balanced-accuracy#Balanced%20Accuracy>`_
     """
 
     return ((tp / (tp + fn)) + (tn / (tn + fp))) / 2
@@ -514,7 +514,7 @@ def overall_bias(tp: Number, fp: Number, fn: Number) -> float:
 
     References
     ----------
-    .. [1] [Forecast Verification Glossary](https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf)
+    .. [1] `Forecast Verification Glossary <https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf>`_
 
     """
 
