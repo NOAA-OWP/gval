@@ -86,9 +86,9 @@ class GVALDataFrame:
 
         References
         ----------
-        .. [1] [Evaluation of binary classifiers](https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers)
-        .. [2] [7th International Verification Methods Workshop](https://www.cawcr.gov.au/projects/verification/#Contingency_table)
-        .. [3] [3.3. Metrics and scoring: quantifying the quality of predictions](https://scikit-learn.org/stable/modules/model_evaluation.html)
+        .. [1] `Evaluation of binary classifiers <https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers>`_
+        .. [2] `7th International Verification Methods Workshop <https://www.cawcr.gov.au/projects/verification/#Contingency_table>`_
+        .. [3] `3.3. Metrics and scoring: quantifying the quality of predictions <https://scikit-learn.org/stable/modules/model_evaluation.html>`_
         """
 
         return _compute_categorical_metrics(
@@ -126,7 +126,7 @@ class GVALDataFrame:
 
         References
         ----------
-        .. [1] [geocube `make_geocube`](https://corteva.github.io/geocube/html/geocube.html)
+        .. [1] `make_geocube <https://corteva.github.io/geocube/html/geocube.html>`_
 
         """
 

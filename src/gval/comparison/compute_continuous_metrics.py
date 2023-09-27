@@ -56,8 +56,8 @@ def _compute_continuous_metrics(
 
     References
     ----------
-    .. [1] [7th International Verification Methods Workshop](https://www.cawcr.gov.au/projects/verification/)
-    .. [2] [3.3. Metrics and scoring: quantifying the quality of predictions](https://scikit-learn.org/stable/modules/model_evaluation.html)
+    .. [1] `7th International Verification Methods Workshop <https://www.cawcr.gov.au/projects/verification/>`_
+    .. [2] `3.3. Metrics and scoring: quantifying the quality of predictions <https://scikit-learn.org/stable/modules/model_evaluation.html>`_
     """
 
     if not isinstance(agreement_map, list):

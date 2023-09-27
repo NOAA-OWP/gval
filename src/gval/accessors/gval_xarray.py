@@ -752,8 +752,8 @@ class GVALXarray:
 
         References
         ----------
-        .. [1] [Matplotlib figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html)
-        .. [2] [Matplotlib legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html)
+        .. [1] `Matplotlib figure <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html>`_
+        .. [2] `Matplotlib legend <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html>`_
         """
 
         return _map_plot(
@@ -797,8 +797,8 @@ class GVALXarray:
 
         References
         ----------
-        .. [1] [Matplotlib figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html)
-        .. [2] [Matplotlib legend](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html)
+        .. [1] `Matplotlib figure <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html>`_
+        .. [2] `Matplotlib legend <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html>`_
         """
 
         return _map_plot(

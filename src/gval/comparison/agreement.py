@@ -78,11 +78,11 @@ def _compute_agreement_map(
 
     References
     ----------
-    .. [1] [Creating NumPy universal function](https://numba.readthedocs.io/en/stable/user/vectorize.html)
-    .. [2] [NumPy vectorize](https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html)
-    .. [3] [NumPy frompyfunc](https://numpy.org/doc/stable/reference/generated/numpy.frompyfunc.html)
-    .. [4] [Rioxarray Manage Information Loss](https://corteva.github.io/rioxarray/stable/getting_started/manage_information_loss.html)
-    .. [5] [Rioxarray NoData Management](https://corteva.github.io/rioxarray/stable/getting_started/nodata_management.html)
+    .. [1] `Creating NumPy universal function <https://numba.readthedocs.io/en/stable/user/vectorize.html>`_
+    .. [2] `NumPy vectorize <https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html>`_
+    .. [3] `NumPy frompyfunc <https://numpy.org/doc/stable/reference/generated/numpy.frompyfunc.html>`_
+    .. [4] `Rioxarray Manage Information Loss <https://corteva.github.io/rioxarray/stable/getting_started/manage_information_loss.html>`_
+    .. [5] `Rioxarray NoData Management <https://corteva.github.io/rioxarray/stable/getting_started/nodata_management.html>`_
     """
 
     """
