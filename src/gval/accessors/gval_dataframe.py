@@ -182,11 +182,12 @@ class GVALDataFrame:
                 )  # pragma: no cover
 
             if "geometry" not in geo_df.columns:
-                geo_df["geometry"] = (
-                    geometries if geometries is not None else self._obj["geometry"]
+                geo_df.set_geometry(
+                    geometries if geometries is not None else self._obj["geometry"],
+                    inplace=True
                 )
                 geo_df.crs = crs
-
+                
         if subsampling_type:
             geo_df["subsample_type"] = subsampling_type
 
