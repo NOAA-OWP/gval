@@ -7,7 +7,7 @@ GVAL (pronounced "g-val") is a high-level Python framework to evaluate the skill
 
 GVAL is intended to work on raster and vector files as xarray and geopandas objects, respectively. Abilities to prepare or homogenize maps for comparison are included. The comparisons are based on scoring philosophies for three statistical data types including categorical, continuous, and probabilistic.
 
-See the full documentation [here](noaa-owp.github.io/gval/).
+See the full documentation [here](https://noaa-owp.github.io/gval/).
 
 WARNING:
 - Our current public API and output formats are likely to change in the future.
