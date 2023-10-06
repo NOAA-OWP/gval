@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from pytest_cases import parametrize_with_cases
 import xarray as xr
 from pytest import raises
@@ -40,10 +41,10 @@ def test_data_array_accessor_success(
         allow_benchmark_values=[0, 2, np.nan],
     )
 
-    if rasterize_attributes is None:
-        assert isinstance(data[0], xr.DataArray)
+    if rasterize_attributes is not None:
+        assert isinstance(data[0], pd.DataFrame)
     else:
-        assert isinstance(data[0], DataFrame)
+        assert isinstance(data[0], xr.DataArray)
     assert isinstance(data[1], DataFrame)
     assert isinstance(data[2], DataFrame)
 
@@ -105,10 +106,7 @@ def test_data_array_accessor_compute_agreement_success(
 
     data = aligned_cand.gval.compute_agreement_map(benchmark_map=aligned_bench)
 
-    if vectorized:
-        assert isinstance(data, DataFrame)
-    else:
-        assert isinstance(data, xr.DataArray)
+    assert isinstance(data, xr.DataArray)
 
 
 @parametrize_with_cases(
@@ -120,27 +118,22 @@ def test_data_array_accessor_compute_agreement_fail(candidate_map, benchmark_map
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map",
+    "agreement_map",
     glob="data_array_accessor_crosstab_table_success",
 )
-def test_data_array_accessor_crosstab_table_success(candidate_map, benchmark_map):
-    aligned_cand, aligned_bench = candidate_map.gval.homogenize(
-        benchmark_map=benchmark_map
-    )
-    data = aligned_cand.gval.compute_crosstab(benchmark_map=aligned_bench)
+def test_data_array_accessor_crosstab_table_success(agreement_map):
+    data = agreement_map.gval.compute_crosstab()
 
     assert isinstance(data, DataFrame)
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, exception",
+    "agreement_map, exception",
     glob="data_array_accessor_crosstab_table_fail",
 )
-def test_data_array_accessor_crosstab_table_fail(
-    candidate_map, benchmark_map, exception
-):
+def test_data_array_accessor_crosstab_table_fail(agreement_map, exception):
     with raises(exception):
-        _ = candidate_map.gval.compute_crosstab(benchmark_map=benchmark_map)
+        _ = agreement_map.gval.compute_crosstab()
 
 
 @parametrize_with_cases(
@@ -205,24 +198,21 @@ def test_data_set_accessor_compute_agreement_fail(candidate_map, benchmark_map):
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map", glob="data_set_accessor_crosstab_table_success"
+    "agreement_map", glob="data_set_accessor_crosstab_table_success"
 )
-def test_data_set_accessor_crosstab_table_success(candidate_map, benchmark_map):
-    aligned_cand, aligned_bench = candidate_map.gval.homogenize(
-        benchmark_map=benchmark_map
-    )
-    data = aligned_cand.gval.compute_crosstab(benchmark_map=aligned_bench)
+def test_data_set_accessor_crosstab_table_success(agreement_map):
+    data = agreement_map.gval.compute_crosstab()
 
     assert isinstance(data, DataFrame)
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map",
+    "agreement_map",
     glob="data_set_accessor_crosstab_table_fail",
 )
-def test_data_set_accessor_crosstab_table_fail(candidate_map, benchmark_map):
-    with raises(IndexError):
-        _ = candidate_map.gval.compute_crosstab(benchmark_map=benchmark_map)
+def test_data_set_accessor_crosstab_table_fail(agreement_map):
+    with raises(KeyError):
+        _ = agreement_map.gval.compute_crosstab()
 
 
 @parametrize_with_cases(

@@ -25,7 +25,6 @@ from gval.comparison.pairing_functions import (
 )
 from gval.comparison.agreement import _compute_agreement_map
 from gval.comparison.tabulation import (
-    _convert_crosstab_to_contigency_table,
     _crosstab_2d_DataArrays,
     _crosstab_3d_DataArrays,
     _crosstab_DataArrays,
@@ -128,59 +127,40 @@ def test_difference(c, b, expected_value):
 #################################################################################
 
 
-@parametrize_with_cases(
-    "crosstab_df, band_name, band_value, expected_df",
-    glob="convert_crosstab_to_contigency_table",
-)
-def test_convert_crosstab_to_contigency_table(
-    crosstab_df, band_name, band_value, expected_df
-):
-    computed_df = _convert_crosstab_to_contigency_table(
-        crosstab_df, band_name, band_value
-    )
-    pd.testing.assert_frame_equal(computed_df, expected_df, check_dtype=False)
+@parametrize_with_cases("agreement_map, expected_df", glob="crosstab_2d_DataArrays")
+def test_crosstab_2d_DataArrays(agreement_map, expected_df):
+    """Test crosstabbing agreement DataArrays"""
+    crosstab_df = _crosstab_2d_DataArrays(agreement_map)
+    pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
 
 
-@parametrize_with_cases(
-    "candidate_map, benchmark_map, expected_df", glob="crosstab_2d_DataArrays"
-)
-def test_crosstab_2d_DataArrays(candidate_map, benchmark_map, expected_df):
-    """Test crosstabbing candidate and benchmark DataArrays"""
-    crosstab_df = _crosstab_2d_DataArrays(candidate_map, benchmark_map)
+@parametrize_with_cases("agreement_map, expected_df", glob="crosstab_3d_DataArrays")
+def test_crosstab_3d_DataArrays(agreement_map, expected_df):
+    """Test crosstabbing agreement DataArrays"""
+    crosstab_df = _crosstab_3d_DataArrays(agreement_map)
     pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
 
 
 @parametrize_with_cases(
-    "candidate_map, benchmark_map, expected_df", glob="crosstab_3d_DataArrays"
+    "agreement_map, expected_df", glob="crosstab_DataArrays_success"
 )
-def test_crosstab_3d_DataArrays(candidate_map, benchmark_map, expected_df):
-    """Test crosstabbing candidate and benchmark DataArrays"""
-    crosstab_df = _crosstab_3d_DataArrays(candidate_map, benchmark_map)
+def test_crosstab_DataArrays_success(agreement_map, expected_df):
+    """Test crosstabbing agreement DataArrays"""
+    crosstab_df = _crosstab_DataArrays(agreement_map)
     pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
 
 
-@parametrize_with_cases(
-    "candidate_map, benchmark_map, expected_df", glob="crosstab_DataArrays_success"
-)
-def test_crosstab_DataArrays_success(candidate_map, benchmark_map, expected_df):
-    """Test crosstabbing candidate and benchmark DataArrays"""
-    crosstab_df = _crosstab_DataArrays(candidate_map, benchmark_map)
-    pd.testing.assert_frame_equal(crosstab_df, expected_df, check_dtype=False)
-
-
-@parametrize_with_cases("candidate_map, benchmark_map", glob="crosstab_DataArrays_fail")
-def test_crosstab_DataArrays_fail(candidate_map, benchmark_map):
-    """Test crosstabbing candidate and benchmark DataArrays"""
+@parametrize_with_cases("agreement_map", glob="crosstab_DataArrays_fail")
+def test_crosstab_DataArrays_fail(agreement_map):
+    """Test crosstabbing agreement DataArrays"""
     with raises(ValueError):
-        _crosstab_DataArrays(candidate_map, benchmark_map)
+        _crosstab_DataArrays(agreement_map)
 
 
-@parametrize_with_cases(
-    "candidate_map, benchmark_map, expected_df", glob="crosstab_Datasets"
-)
-def test_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
-    """Test crosstabbing candidate and benchmark datasets"""
-    crosstab_df = _crosstab_Datasets(candidate_map, benchmark_map)
+@parametrize_with_cases("agreement_map, expected_df", glob="crosstab_Datasets")
+def test_crosstab_Datasets(agreement_map, expected_df):
+    """Test crosstabbing agreement datasets"""
+    crosstab_df = _crosstab_Datasets(agreement_map)
     # takes band_# pattern to just #
     crosstab_df["band"] = crosstab_df["band"].apply(lambda x: x.split("_")[-1])
     crosstab_df = Crosstab_df(crosstab_df)

@@ -71,7 +71,21 @@ plot_maps = [
         {"band": 1, "x": -169443.7041}, method="nearest"
     ),
 ]
-
+agreement_maps = [
+    _load_xarray("agreement_map_0_accessor.tif", mask_and_scale=True),
+    _load_xarray("agreement_map_0_accessor.tif", mask_and_scale=True).sel(
+        band=1, drop=True
+    ),
+    _load_xarray(
+        "agreement_map_1_accessor.tif", mask_and_scale=True, band_as_variable=True
+    ),
+]
+agreement_map_fail = [
+    _load_xarray("agreement_accessor_fail.tif", mask_and_scale=True),
+    _load_xarray(
+        "agreement_accessor_fail.tif", mask_and_scale=True, band_as_variable=True
+    ),
+]
 
 positive_cat = np.array([2, 2, 2, 2, 2, 2, 2])
 negative_cat = np.array([[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]])
@@ -211,24 +225,22 @@ def case_data_array_accessor_compute_agreement(
 
 
 @parametrize(
-    "candidate_map, benchmark_map",
-    list(zip(candidate_maps[:2], benchmark_maps[:2])),
+    "agreement_map",
+    list(agreement_maps[:2]),
 )
-def case_data_array_accessor_crosstab_table_success(candidate_map, benchmark_map):
-    return candidate_map, benchmark_map
+def case_data_array_accessor_crosstab_table_success(agreement_map):
+    return agreement_map
 
 
-exceptions = [IndexError, IndexError]
+exceptions = [KeyError]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, exception",
-    list(zip(candidate_maps, benchmark_maps, exceptions)),
+    "agreement_map, exception",
+    list(zip(agreement_map_fail[:1], exceptions)),
 )
-def case_data_array_accessor_crosstab_table_fail(
-    candidate_map, benchmark_map, exception
-):
-    return candidate_map, benchmark_map, exception
+def case_data_array_accessor_crosstab_table_fail(agreement_map, exception):
+    return agreement_map, exception
 
 
 @parametrize(
@@ -284,22 +296,22 @@ def case_data_set_accessor_compute_agreement(candidate_map, benchmark_map):
 
 
 @parametrize(
-    "candidate_map, benchmark_map",
-    list(zip(candidate_datasets[0:1], benchmark_datasets[0:1])),
+    "agreement_map",
+    list(agreement_maps[2:]),
 )
-def case_data_set_accessor_crosstab_table_success(candidate_map, benchmark_map):
-    return candidate_map, benchmark_map
+def case_data_set_accessor_crosstab_table_success(agreement_map):
+    return agreement_map
 
 
 exceptions = [RasterMisalignment]
 
 
 @parametrize(
-    "candidate_map, benchmark_map",
-    list(zip(candidate_datasets[0:1], benchmark_datasets[0:1])),
+    "agreement_map",
+    list(agreement_map_fail[1:]),
 )
-def case_data_set_accessor_crosstab_table_fail(candidate_map, benchmark_map):
-    return candidate_map, benchmark_map
+def case_data_set_accessor_crosstab_table_fail(agreement_map):
+    return agreement_map
 
 
 crosstab = pd.DataFrame(

@@ -105,6 +105,7 @@ def test_compare_catalogs(
                 expected_agreement_map_xr = rxr.open_rasterio(
                     expected_agreement_map[counter[0]], **open_kwargs
                 )
+                agreement_map.gval.attributes_to_string()
                 xr.testing.assert_identical(agreement_map, expected_agreement_map_xr)
 
             # increment counter

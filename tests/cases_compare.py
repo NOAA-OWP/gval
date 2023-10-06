@@ -259,74 +259,68 @@ crosstab_dfs = [
     )
 ]
 
-
-@parametrize("crosstab_df, band_name, band_value, expected_df", crosstab_dfs)
-def case_convert_crosstab_to_contigency_table(
-    crosstab_df, band_name, band_value, expected_df
-):
-    return (crosstab_df, band_name, band_value, expected_df)
-
-
 crosstab_2d_DataArrayss = [
     (
         _load_xarray(
-            "candidate_map_0_aligned_to_candidate_map_0.tif",
-            masked=True,
-            mask_and_scale=True,
-        ).sel(band=1, drop=True),
-        _load_xarray(
-            "benchmark_map_0_aligned_to_candidate_map_0.tif",
+            "agreement_map_0_aligned_to_candidate_map_0.tif",
             masked=True,
             mask_and_scale=True,
         ).sel(band=1, drop=True),
         Crosstab_df.validate(
             pd.DataFrame(
                 {
-                    "band": [1, 1],
+                    "band": ["1", "1"],
                     "candidate_values": [1.0, 2.0],
                     "benchmark_values": [0.0, 0.0],
-                    "counts": [10982559, 544467],
+                    "agreement_values": [6.0, 20.0],
+                    "counts": [10982559.0, 544467.0],
                 }
             )
         ),
     ),
     (
         _load_xarray(
-            "candidate_map_1_aligned_to_candidate_map_1.tif",
-            masked=False,
-            mask_and_scale=False,
-        ).sel(band=1, drop=True),
-        _load_xarray(
-            "benchmark_map_1_aligned_to_candidate_map_1.tif",
+            "agreement_map_1_aligned_to_candidate_map_1.tif",
             masked=False,
             mask_and_scale=False,
         ).sel(band=1, drop=True),
         Crosstab_df.validate(
             pd.DataFrame(
                 {
-                    "band": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    "band": ["1", "1", "1", "1", "1", "1", "1", "1", "1"],
                     "candidate_values": [
-                        -9999.0,
+                        1.0,
+                        1.0,
                         1.0,
                         2.0,
-                        -9999.0,
-                        1.0,
+                        2.0,
                         2.0,
                         -9999.0,
-                        1.0,
-                        2.0,
+                        -9999.0,
+                        -9999.0,
                     ],
-                    "benchmark_values": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
+                    "benchmark_values": [0.0, 1.0, 2.0, 0.0, 1.0, 2.0, 0.0, 1.0, 2.0],
+                    "agreement_values": [
+                        6.0,
+                        8.0,
+                        18.0,
+                        20.0,
+                        22.0,
+                        24.0,
+                        399900006.0,
+                        399900008.0,
+                        399900010.0,
+                    ],
                     "counts": [
-                        963789,
-                        856376,
-                        4664,
-                        113119,
-                        199644,
-                        231918,
-                        1086601,
-                        377453,
-                        80368,
+                        856376.0,
+                        199644.0,
+                        377453.0,
+                        4664.0,
+                        231918.0,
+                        80368.0,
+                        963789.0,
+                        113119.0,
+                        1086601.0,
                     ],
                 }
             )
@@ -335,20 +329,15 @@ crosstab_2d_DataArrayss = [
 ]
 
 
-@parametrize("candidate_map, benchmark_map, expected_df", crosstab_2d_DataArrayss)
-def case_crosstab_2d_DataArrays(candidate_map, benchmark_map, expected_df):
-    return candidate_map, benchmark_map, expected_df
+@parametrize("agreement_map, expected_df", crosstab_2d_DataArrayss)
+def case_crosstab_2d_DataArrays(agreement_map, expected_df):
+    return agreement_map, expected_df
 
 
 crosstab_3d_DataArrayss = [
     (
         _load_xarray(
-            "candidate_categorical_multiband_aligned_0.tif",
-            masked=True,
-            mask_and_scale=True,
-        ),
-        _load_xarray(
-            "benchmark_categorical_multiband_aligned_0.tif",
+            "agreement_categorical_multiband_0.tif",
             masked=True,
             mask_and_scale=True,
         ),
@@ -356,21 +345,31 @@ crosstab_3d_DataArrayss = [
             pd.DataFrame(
                 {
                     "band": ["1", "1", "1", "2", "2", "2"],
-                    "candidate_values": [-10000.0, 1.0, 2.0, -10000.0, 1.0, 2.0],
+                    "candidate_values": [1.0, 2.0, -10000.0, 1.0, 2.0, -10000.0],
                     "benchmark_values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                    "counts": [9489603, 10982559, 544467, 2470284, 4845100, 4845025],
+                    "agreement_values": [
+                        6.0,
+                        20.0,
+                        399980000.0,
+                        6.0,
+                        20.0,
+                        399980000.0,
+                    ],
+                    "counts": [
+                        10982559.0,
+                        544467.0,
+                        9489603.0,
+                        4845100.0,
+                        4845025.0,
+                        2470284.0,
+                    ],
                 }
             )
         ),
     ),
     (
         _load_xarray(
-            "candidate_categorical_multiband_aligned_0.tif",
-            masked=False,
-            mask_and_scale=False,
-        ),
-        _load_xarray(
-            "benchmark_categorical_multiband_aligned_0.tif",
+            "agreement_categorical_multiband_1.tif",
             masked=False,
             mask_and_scale=False,
         ),
@@ -396,58 +395,76 @@ crosstab_3d_DataArrayss = [
                         "2",
                     ],
                     "candidate_values": [
-                        -10000,
-                        -9999,
+                        1,
                         1,
                         2,
-                        -10000,
+                        2,
                         -9999,
+                        -9999,
+                        -10000,
+                        -10000,
+                        1,
                         1,
                         2,
-                        -10000,
-                        -9999,
-                        1,
                         2,
-                        -10000,
                         -9999,
-                        1,
-                        2,
+                        -9999,
+                        -10000,
+                        -10000,
                     ],
                     "benchmark_values": [
                         0,
-                        0,
-                        0,
-                        0,
-                        2,
-                        2,
-                        2,
                         2,
                         0,
-                        0,
-                        0,
+                        2,
                         0,
                         2,
+                        0,
                         2,
+                        0,
                         2,
+                        0,
+                        2,
+                        0,
+                        2,
+                        0,
                         2,
                     ],
+                    "agreement_values": [
+                        6.0,
+                        18.0,
+                        20.0,
+                        24.0,
+                        399900006.0,
+                        399900010.0,
+                        399980000.0,
+                        399980004.0,
+                        6.0,
+                        18.0,
+                        20.0,
+                        24.0,
+                        399900006.0,
+                        399900010.0,
+                        399980000.0,
+                        399980004.0,
+                    ],
                     "counts": [
-                        9489603,
-                        4740048,
-                        10982559,
-                        544467,
-                        4415,
-                        2050,
-                        679166,
-                        2624332,
-                        2470284,
-                        2370734,
-                        4845100,
-                        4845025,
-                        2472075,
-                        2371364,
-                        4844092,
-                        4847966,
+                        10982559.0,
+                        679166.0,
+                        544467.0,
+                        2624332.0,
+                        4740048.0,
+                        2050.0,
+                        9489603.0,
+                        4415.0,
+                        4845100.0,
+                        4844092.0,
+                        4845025.0,
+                        4847966.0,
+                        2370734.0,
+                        2371364.0,
+                        2470284.0,
+                        2472075.0,
                     ],
                 }
             )
@@ -456,51 +473,38 @@ crosstab_3d_DataArrayss = [
 ]
 
 
-@parametrize("candidate_map, benchmark_map, expected_df", crosstab_3d_DataArrayss)
-def case_crosstab_3d_DataArrays(candidate_map, benchmark_map, expected_df):
-    return candidate_map, benchmark_map, expected_df
+@parametrize("agreement_map, expected_df", crosstab_3d_DataArrayss)
+def case_crosstab_3d_DataArrays(agreement_map, expected_df):
+    return agreement_map, expected_df
 
 
 @parametrize(
-    "candidate_map, benchmark_map, expected_df",
+    "agreement_map, expected_df",
     crosstab_2d_DataArrayss + crosstab_3d_DataArrayss,
 )
-def case_crosstab_DataArrays_success(candidate_map, benchmark_map, expected_df):
-    return candidate_map, benchmark_map, expected_df
+def case_crosstab_DataArrays_success(agreement_map, expected_df):
+    return agreement_map, expected_df
 
 
 crosstab_DataArrays_fails = [
-    (
-        _load_xarray(
-            "candidate_categorical_multiband_aligned_0.tif",
-            masked=True,
-            mask_and_scale=True,
-        ).expand_dims({"dummy_dim": 1}),
-        _load_xarray(
-            "benchmark_categorical_multiband_aligned_0.tif",
-            masked=True,
-            mask_and_scale=True,
-        ).expand_dims({"dummy_dim": 1}),
-    )
+    _load_xarray(
+        "agreement_categorical_multiband_0.tif",
+        masked=True,
+        mask_and_scale=True,
+    ).expand_dims({"dummy_dim": 1}),
 ]
 
 
-@parametrize("candidate_map, benchmark_map", crosstab_DataArrays_fails)
-def case_crosstab_DataArrays_fail(candidate_map, benchmark_map):
-    return candidate_map, benchmark_map
+@parametrize("agreement_map", crosstab_DataArrays_fails)
+def case_crosstab_DataArrays_fail(agreement_map):
+    return agreement_map
 
 
 _crosstab_Datasets = crosstab_3d_DataArrayss
 _input_datasets = [
     (
         _load_xarray(
-            "candidate_categorical_multiband_aligned_0.tif",
-            masked=True,
-            mask_and_scale=True,
-            band_as_variable=True,
-        ),
-        _load_xarray(
-            "benchmark_categorical_multiband_aligned_0.tif",
+            "agreement_categorical_multiband_0.tif",
             masked=True,
             mask_and_scale=True,
             band_as_variable=True,
@@ -508,13 +512,7 @@ _input_datasets = [
     ),
     (
         _load_xarray(
-            "candidate_categorical_multiband_aligned_0.tif",
-            masked=False,
-            mask_and_scale=False,
-            band_as_variable=True,
-        ),
-        _load_xarray(
-            "benchmark_categorical_multiband_aligned_0.tif",
+            "agreement_categorical_multiband_1.tif",
             masked=False,
             mask_and_scale=False,
             band_as_variable=True,
@@ -522,15 +520,15 @@ _input_datasets = [
     ),
 ]
 
-expected_dfs = [(c[2],) for c in crosstab_3d_DataArrayss]
+expected_dfs = [(c[1],) for c in crosstab_3d_DataArrayss]
 
 
 @parametrize(
-    "candidate_map, benchmark_map, expected_df",
+    "agreement_map, expected_df",
     [i + ii for i, ii in zip(_input_datasets, expected_dfs)],
 )
-def case_crosstab_Datasets(candidate_map, benchmark_map, expected_df):
-    return candidate_map, benchmark_map, expected_df
+def case_crosstab_Datasets(agreement_map, expected_df):
+    return agreement_map, expected_df
 
 
 compute_agreement_maps_success = [
