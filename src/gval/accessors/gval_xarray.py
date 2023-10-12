@@ -260,8 +260,6 @@ class GVALXarray:
             else:
                 attributes_df = results
 
-            del candidate, benchmark
-
             agreement_map = (
                 agreement_map.gval.vectorize_data()
                 if vector_agreement
@@ -269,8 +267,6 @@ class GVALXarray:
             )
 
             return agreement_map, crosstab_df, metrics_df, attributes_df
-
-        del candidate, benchmark
 
         agreement_map = (
             agreement_map.gval.vectorize_data() if vector_agreement else agreement_map
