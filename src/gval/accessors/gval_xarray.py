@@ -21,6 +21,7 @@ from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
 from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
 from gval.attributes.attributes import _attribute_tracking_xarray
+from gval.utils.loading_datasets import _parse_string_attributes
 from gval.utils.schemas import Crosstab_df, Metrics_df, AttributeTrackingDf
 from gval.utils.visualize import _map_plot
 from gval.comparison.pairing_functions import difference
@@ -40,7 +41,7 @@ class GVALXarray:
     """
 
     def __init__(self, xarray_obj):
-        self._obj = xarray_obj
+        self._obj = _parse_string_attributes(xarray_obj)
         self.data_type = type(xarray_obj)
         self.agreement_map_format = "raster"
 
@@ -232,12 +233,7 @@ class GVALXarray:
         )
 
         crosstab_df = candidate.gval.compute_crosstab(
-            benchmark_map=benchmark,
-            allow_candidate_values=allow_candidate_values,
-            allow_benchmark_values=allow_benchmark_values,
-            exclude_value=exclude_value,
-            comparison_function=comparison_function,
-            subsampling_df=subsampling_df,
+            agreement_map=agreement_map, subsampling_df=subsampling_df
         )
 
         metrics_df = _compute_categorical_metrics(
@@ -250,6 +246,7 @@ class GVALXarray:
             sampling_average=subsampling_average,
         )
 
+        vector_agreement = self.agreement_map_format == "vector"
         if attribute_tracking:
             results = self.__handle_attribute_tracking(
                 candidate_map=candidate,
@@ -263,11 +260,17 @@ class GVALXarray:
             else:
                 attributes_df = results
 
-            del candidate, benchmark
+            agreement_map = (
+                agreement_map.gval.vectorize_data()
+                if vector_agreement
+                else agreement_map
+            )
 
             return agreement_map, crosstab_df, metrics_df, attributes_df
 
-        del candidate, benchmark
+        agreement_map = (
+            agreement_map.gval.vectorize_data() if vector_agreement else agreement_map
+        )
 
         return agreement_map, crosstab_df, metrics_df
 
@@ -378,9 +381,7 @@ class GVALXarray:
 
         # If sampling_df return type gives three values assign all vars results, otherwise only agreement map results
         agreement_map, candidate_map, benchmark_map = (
-            results
-            if subsampling_df is not None
-            else (results, self._obj, benchmark_map)
+            results if subsampling_df is not None else (results, candidate, benchmark)
         )
 
         metrics_df = _compute_continuous_metrics(
@@ -405,7 +406,11 @@ class GVALXarray:
             else:
                 attributes_df = results
 
+            del candidate_map, benchmark_map
+
             return agreement_map, metrics_df, attributes_df
+
+        del candidate_map, benchmark_map
 
         return agreement_map, metrics_df
 
@@ -549,6 +554,7 @@ class GVALXarray:
                 allow_benchmark_values=allow_benchmark_values,
                 nodata=nodata,
                 encode_nodata=encode_nodata,
+                continuous=continuous,
             )
 
             # Preserve sampled maps for continuous statistics, otherwise delete
@@ -557,9 +563,6 @@ class GVALXarray:
                 benchmark_maps.append(benchmark_copy)
             else:
                 del candidate_copy, benchmark_copy
-
-            if self.agreement_map_format == "vector":
-                agreement_map = agreement_map.gval.vectorize_data()
 
             agreement_maps.append(agreement_map)
 
@@ -575,17 +578,11 @@ class GVALXarray:
 
         return agreement_maps[0]
 
-    @Comparison.comparison_function_from_string
     def compute_crosstab(
         self,
-        benchmark_map: Union[xr.Dataset, xr.DataArray],
-        allow_candidate_values: Optional[Iterable[Number]] = None,
-        allow_benchmark_values: Optional[Iterable[Number]] = None,
-        exclude_value: Optional[Number] = None,
-        comparison_function: Optional[
-            Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]
-        ] = "szudzik",
-        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]] = None,
+        agreement_map: Optional[
+            Union[xr.DataArray, xr.Dataset, Iterable[Union[xr.DataArray, xr.Dataset]]]
+        ] = None,
         subsampling_df: Optional[gpd.GeoDataFrame] = None,
     ) -> DataFrame[Crosstab_df]:
         """
@@ -593,22 +590,9 @@ class GVALXarray:
 
         Parameters
         ----------
-        benchmark_map : Union[xr.Dataset, xr.DataArray]
+        agreement_map : Union[xr.Dataset, xr.DataArray], default = None
             Benchmark map, {dimension}-dimensional.
-        allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
-            Sequence of values in candidate to include in crosstab. Remaining values are excluded.
-        allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
-            Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
-        exclude_value : Optional[Number], default = None
-            Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-        comparison_function : Optional[Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str]], default = "szudzik"
-                Function to compute agreement values. If None, then no agreement values are computed.
-        pairing_dict: Optional[Dict[Tuple[Number, Number], Number]], default = None
-            When "pairing_dict" is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as `{(c, b) : a}` where `(c, b)` is a tuple of the candidate and benchmark value pairing, respectively, and `a` is the value for the agreement array to be used for this pairing.
 
-            If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.
-
-            A pairing dictionary can be used by the user to note which values to allow and which to ignore for comparisons. It can also be used to decide how nans are handled for cases where either the candidate and benchmark maps have nans or both.
         subsampling_df: Optional[gpd.GeoDataFrame], default = None
             DataFrame with spatial geometries and method types to subsample
 
@@ -618,38 +602,23 @@ class GVALXarray:
         DataFrame[Crosstab_df]
             Crosstab DataFrame
         """
-        self.check_same_type(benchmark_map)
 
-        results = (
-            subsample(
-                candidate=self._obj,
-                benchmark=benchmark_map,
-                subsampling_df=subsampling_df,
+        # Use self if agreement_map argument is not provided otherwise use agreement_map parameter
+        if agreement_map is not None:
+            agreement_map = (
+                agreement_map if isinstance(agreement_map, list) else [agreement_map]
             )
-            if subsampling_df is not None
-            else [[self._obj, benchmark_map]]
-        )
+        else:
+            agreement_map = [self._obj]
 
+        # Create cross-tabulation table for each agreement map and concatenate them
         crosstabs = []
-        for idx, (candidate, benchmark) in enumerate(results):
-            if isinstance(self._obj, xr.Dataset):
-                crosstab = _crosstab_Datasets(
-                    candidate,
-                    benchmark,
-                    allow_candidate_values,
-                    allow_benchmark_values,
-                    exclude_value,
-                    comparison_function,
-                )
-            else:
-                crosstab = _crosstab_DataArrays(
-                    candidate,
-                    benchmark,
-                    allow_candidate_values,
-                    allow_benchmark_values,
-                    exclude_value,
-                    comparison_function,
-                )
+        for idx, agreement in enumerate(agreement_map):
+            crosstab = (
+                _crosstab_Datasets(agreement)
+                if isinstance(self._obj, xr.Dataset)
+                else _crosstab_DataArrays(agreement)
+            )
 
             if subsampling_df is not None:
                 crosstab.insert(
@@ -728,7 +697,7 @@ class GVALXarray:
         legend_labels: list = None,
         plot_bands: Union[str, list] = "all",
         colorbar_label: Union[str, list] = "",
-        basemap: xyzservices.lib.TileProvider = cx.providers.Stamen.Terrain,
+        basemap: xyzservices.lib.TileProvider = cx.providers.OpenStreetMap.Mapnik,
     ):
         """
         Plots categorical Map for xarray object
@@ -775,7 +744,7 @@ class GVALXarray:
         figsize: Tuple[int, int] = None,
         plot_bands: Union[str, list] = "all",
         colorbar_label: Union[str, list] = "",
-        basemap: xyzservices.lib.TileProvider = cx.providers.Stamen.Terrain,
+        basemap: xyzservices.lib.TileProvider = cx.providers.OpenStreetMap.Mapnik,
     ):
         """
         Plots categorical Map for xarray object

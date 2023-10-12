@@ -69,8 +69,8 @@ class Crosstab_df(Sample_identifiers, Subsample_identifiers):  # pragma: no cove
     Inherits columns from `Sample_identifiers`
     """
 
-    candidate_values: Series[float]
-    benchmark_values: Series[float]
+    candidate_values: Series = pa.Field(nullable=True)
+    benchmark_values: Series = pa.Field(nullable=True)
     agreement_values: Optional[Series[float]]
     counts: Series[float]
 

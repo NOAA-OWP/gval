@@ -20,7 +20,7 @@ def _map_plot(
     plot_bands: Union[str, list] = "all",
     plot_type: str = "categorical",
     colorbar_label: Union[str, list] = "",
-    basemap: xyzservices.lib.TileProvider = cx.providers.Stamen.Terrain,
+    basemap: xyzservices.lib.TileProvider = cx.providers.OpenStreetMap.Mapnik,
 ):
     """
     Plots categorical or continuous Map for xarray object

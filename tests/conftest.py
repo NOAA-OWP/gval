@@ -174,3 +174,27 @@ def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None
     # checks keys to make sure they hash they same way
     for k, v in expected_dict.items():
         computed_dict[k]
+
+
+def _attributes_to_string(
+    obj: Union[xr.DataArray, xr.Dataset]
+) -> Union[xr.DataArray, xr.Dataset]:
+    """
+    Converts attributes to string to mimic a raster loaded from disk
+
+    Parameters
+    ----------
+    obj: Union[xr.DataArray, xr.Dataset]
+        Object to convert properties in string format
+
+    Returns
+    -------
+    Union[xr.DataArray, xr.Dataset]
+        object with properties converted to string format
+    """
+    if "pairing_dictionary" in obj.attrs and isinstance(
+        obj.attrs["pairing_dictionary"], dict
+    ):
+        obj.attrs["pairing_dictionary"] = str(obj.attrs["pairing_dictionary"])
+
+    return obj

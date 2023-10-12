@@ -7,6 +7,7 @@ __author__ = "Fernando Aristizabal"
 
 from typing import Union, Optional, Tuple, Dict, Any
 import os
+import ast
 
 import rioxarray as rxr
 import xarray as xr
@@ -192,8 +193,13 @@ def _handle_xarray_memory(
             if band_as_var
             else data_obj.encoding["source"]
         )
-        new_obj = rxr.open_rasterio(
-            file_name, mask_and_scale=True, band_as_variable=band_as_var, cache=cache
+        new_obj = _parse_string_attributes(
+            rxr.open_rasterio(
+                file_name,
+                mask_and_scale=True,
+                band_as_variable=band_as_var,
+                cache=cache,
+            )
         )
         del data_obj
         return new_obj
@@ -207,11 +213,13 @@ def _handle_xarray_memory(
                 data_obj.rio.to_raster(in_file.name, tiled=True, windowed=True)
                 del data_obj
                 cog_translate(in_file.name, out_file.name, dst_profile, in_memory=True)
-                return rxr.open_rasterio(
-                    out_file.name,
-                    mask_and_scale=True,
-                    band_as_variable=band_as_var,
-                    cache=cache,
+                return _parse_string_attributes(
+                    rxr.open_rasterio(
+                        out_file.name,
+                        mask_and_scale=True,
+                        band_as_variable=band_as_var,
+                        cache=cache,
+                    )
                 )
 
 
@@ -236,3 +244,49 @@ def _check_dask_array(original_map: Union[xr.DataArray, xr.Dataset]) -> bool:
         else original_map.chunks
     )
     return chunks is not None
+
+
+def _parse_string_attributes(
+    obj: Union[xr.DataArray, xr.Dataset]
+) -> Union[xr.DataArray, xr.Dataset]:
+    """
+    Parses string attributes stored in rasters
+
+    Parameters
+    ----------
+    obj: Union[xr.DataArray, xr.Dataset]
+        Xarray object with possible string attributes
+
+    Returns
+    -------
+    Union[xr.DataArray, xr.Dataset]
+        Object returned with parsed attributes
+    """
+
+    if "pairing_dictionary" in obj.attrs and isinstance(
+        obj.attrs["pairing_dictionary"], str
+    ):
+        eval_str = ast.literal_eval(
+            obj.attrs["pairing_dictionary"].replace("nan", '"nan"')
+        )
+        obj.attrs["pairing_dictionary"] = {
+            (float(k[0]), float(k[1])): float(v) for k, v in eval_str.items()
+        }
+
+        if isinstance(obj, xr.Dataset):
+            for var in obj.data_vars:
+                obj[var].attrs["pairing_dictionary"] = obj.attrs["pairing_dictionary"]
+
+    if isinstance(obj, xr.Dataset):
+        for var in obj.data_vars:
+            if "pairing_dictionary" in obj[var].attrs and isinstance(
+                obj[var].attrs["pairing_dictionary"], str
+            ):
+                eval_str = ast.literal_eval(
+                    obj[var].attrs["pairing_dictionary"].replace("nan", '"nan"')
+                )
+                obj[var].attrs["pairing_dictionary"] = {
+                    (float(k[0]), float(k[1])): float(v) for k, v in eval_str.items()
+                }
+
+    return obj

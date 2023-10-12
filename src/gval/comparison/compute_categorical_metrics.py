@@ -51,7 +51,13 @@ def _handle_positive_negative_categories(
 
     # finds the unique values in the sample's candidate and benchmark values
     unique_values = set(
-        crosstab_df.loc[:, ["candidate_values", "benchmark_values"]].to_numpy().ravel()
+        [
+            item
+            for item in crosstab_df.loc[:, ["candidate_values", "benchmark_values"]]
+            .to_numpy()
+            .ravel()
+            if not isinstance(item, list)
+        ]
     )
 
     # this checks that user passed positive or negative categories exist in sample df
