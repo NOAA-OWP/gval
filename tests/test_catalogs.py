@@ -10,6 +10,7 @@ import dask.dataframe as dd
 import rioxarray as rxr
 import xarray as xr
 
+from tests.conftest import _attributes_to_string
 from gval.catalogs.catalogs import catalog_compare
 
 
@@ -93,17 +94,6 @@ def test_compare_catalogs(
     # check that the values are the same
     pd.testing.assert_frame_equal(agreement_catalog, expected)
 
-    def attributes_to_string(obj):  # pragma: no cover
-        """
-        Converts attributes to string to mimic a raster loaded from disk
-        """
-        if "pairing_dictionary" in obj.attrs and isinstance(
-            obj.attrs["pairing_dictionary"], dict
-        ):
-            obj.attrs["pairing_dictionary"] = str(obj.attrs["pairing_dictionary"])
-
-        return obj
-
     # load agreement maps and check metadata
     if agreement_map_field is not None:
         # load agreement maps with apply and check that they are the same
@@ -118,8 +108,8 @@ def test_compare_catalogs(
                 )
 
                 xr.testing.assert_identical(
-                    attributes_to_string(agreement_map),
-                    attributes_to_string(expected_agreement_map_xr),
+                    _attributes_to_string(agreement_map),
+                    _attributes_to_string(expected_agreement_map_xr),
                 )
 
             # increment counter
