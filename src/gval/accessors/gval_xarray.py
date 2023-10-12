@@ -1,7 +1,6 @@
 from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List
 from numbers import Number
 from functools import partial
-import ast
 
 import numpy as np
 import numba as nb
@@ -22,6 +21,7 @@ from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
 from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
 from gval.attributes.attributes import _attribute_tracking_xarray
+from gval.utils.loading_datasets import _parse_string_attributes
 from gval.utils.schemas import Crosstab_df, Metrics_df, AttributeTrackingDf
 from gval.utils.visualize import _map_plot
 from gval.comparison.pairing_functions import difference
@@ -41,7 +41,7 @@ class GVALXarray:
     """
 
     def __init__(self, xarray_obj):
-        self._obj = xarray_obj
+        self._obj = _parse_string_attributes(xarray_obj)
         self.data_type = type(xarray_obj)
         self.agreement_map_format = "raster"
 
@@ -96,38 +96,6 @@ class GVALXarray:
             )
 
         return results
-
-    def parse_string_attributes(self):
-        """
-        Parses string attributes stored in rasters
-        """
-
-        if "pairing_dictionary" in self._obj.attrs and isinstance(
-            self._obj.attrs["pairing_dictionary"], str
-        ):
-            eval = ast.literal_eval(
-                self._obj.attrs["pairing_dictionary"].replace("nan", '"nan"')
-            )
-            self._obj.attrs["pairing_dictionary"] = {
-                (float(k[0]), float(k[1])): float(v) for k, v in eval.items()
-            }
-
-            if isinstance(self._obj, xr.Dataset):
-                for var in self._obj.data_vars:
-                    self._obj[var].attrs["pairing_dictionary"] = self._obj.attrs[
-                        "pairing_dictionary"
-                    ]
-
-    def attributes_to_string(self):  # pragma: no cover
-        """
-        Converts attributes to string to mimic a raster loaded from disk
-        """
-        if "pairing_dictionary" in self._obj.attrs and isinstance(
-            self._obj.attrs["pairing_dictionary"], dict
-        ):
-            self._obj.attrs["pairing_dictionary"] = str(
-                self._obj.attrs["pairing_dictionary"]
-            )
 
     @Comparison.comparison_function_from_string
     def categorical_compare(

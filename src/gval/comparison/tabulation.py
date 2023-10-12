@@ -106,7 +106,6 @@ def _crosstab_2d_DataArrays(
         return not np.isnan(number)
 
     # Handle pairing dictionary attribute
-    agreement_map.gval.parse_string_attributes()
     pairing_dict = agreement_map.attrs["pairing_dictionary"]
 
     rev_dict = {}
@@ -240,7 +239,6 @@ def _crosstab_Datasets(agreement_map: xr.DataArray) -> DataFrame[Crosstab_df]:
 
     # gets variable names
     agreement_variable_names = list(agreement_map.data_vars)
-    agreement_map.gval.parse_string_attributes()
 
     # loop variables
     previous_crosstab_df = None  # initializing to avoid having unset

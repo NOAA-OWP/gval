@@ -93,6 +93,17 @@ def test_compare_catalogs(
     # check that the values are the same
     pd.testing.assert_frame_equal(agreement_catalog, expected)
 
+    def attributes_to_string(obj):  # pragma: no cover
+        """
+        Converts attributes to string to mimic a raster loaded from disk
+        """
+        if "pairing_dictionary" in obj.attrs and isinstance(
+            obj.attrs["pairing_dictionary"], dict
+        ):
+            obj.attrs["pairing_dictionary"] = str(obj.attrs["pairing_dictionary"])
+
+        return obj
+
     # load agreement maps and check metadata
     if agreement_map_field is not None:
         # load agreement maps with apply and check that they are the same
@@ -105,8 +116,11 @@ def test_compare_catalogs(
                 expected_agreement_map_xr = rxr.open_rasterio(
                     expected_agreement_map[counter[0]], **open_kwargs
                 )
-                agreement_map.gval.attributes_to_string()
-                xr.testing.assert_identical(agreement_map, expected_agreement_map_xr)
+
+                xr.testing.assert_identical(
+                    attributes_to_string(agreement_map),
+                    attributes_to_string(expected_agreement_map_xr),
+                )
 
             # increment counter
             counter[0] += 1
