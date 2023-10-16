@@ -10,6 +10,7 @@ import dask.dataframe as dd
 import rioxarray as rxr
 import xarray as xr
 
+from tests.conftest import _attributes_to_string
 from gval.catalogs.catalogs import catalog_compare
 
 
@@ -105,7 +106,11 @@ def test_compare_catalogs(
                 expected_agreement_map_xr = rxr.open_rasterio(
                     expected_agreement_map[counter[0]], **open_kwargs
                 )
-                xr.testing.assert_identical(agreement_map, expected_agreement_map_xr)
+
+                xr.testing.assert_identical(
+                    _attributes_to_string(agreement_map),
+                    _attributes_to_string(expected_agreement_map_xr),
+                )
 
             # increment counter
             counter[0] += 1

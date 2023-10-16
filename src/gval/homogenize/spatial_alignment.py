@@ -18,7 +18,6 @@ from odc.geo.xr import ODCExtensionDa
 
 from gval.utils.loading_datasets import _handle_xarray_memory
 from gval.utils.exceptions import RasterMisalignment, RastersDontIntersect
-from gval.utils.loading_datasets import _check_dask_array
 
 ODCExtensionDa
 
@@ -162,27 +161,28 @@ def _reproject_map(
         Reprojected map
     """
 
-    is_dst, is_dask = isinstance(original_map, xr.Dataset), _check_dask_array(
-        original_map
+    is_dst = isinstance(original_map, xr.Dataset)
+
+    nodata = target_map["band_1"].rio.nodata if is_dst else target_map.rio.nodata
+    reproj = original_map.odc.reproject(
+        target_map.odc.geobox, tight=True, dst_nodata=nodata, resampling=resampling
     )
 
-    if not is_dask:
-        return original_map.rio.reproject_match(target_map, resampling)
-    else:
-        nodata = target_map["band_1"].rio.nodata if is_dst else target_map.rio.nodata
-        reproj = original_map.odc.reproject(
-            target_map.odc.geobox, tight=True, dst_nodata=nodata
-        )
+    # Coordinates need to be aligned
+    reproj_coords = (
+        reproj.rename({"longitude": "x", "latitude": "y"})
+        if "longitude" in reproj.coords
+        else reproj
+    )
 
-        # Coordinates need to be aligned
-        reproj_coords = reproj.rename({"longitude": "x", "latitude": "y"})
-        del reproj
-        #  Coordinates are virtually the same but 1e-8 or so is rounded differently
-        final_reproj = reproj_coords.assign_coords(
-            {"x": target_map.coords["x"], "y": target_map.coords["y"]}
-        )
-        del reproj_coords
-        return final_reproj
+    del reproj
+
+    #  Coordinates are virtually the same but 1e-8 or so is rounded differently
+    final_reproj = reproj_coords.assign_coords(
+        {"x": target_map.coords["x"], "y": target_map.coords["y"]}
+    )
+    del reproj_coords
+    return final_reproj
 
 
 def _align_rasters(

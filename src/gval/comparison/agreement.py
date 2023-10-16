@@ -16,16 +16,17 @@ __author__ = "Fernando Aristizabal"
 
 from typing import Iterable, Optional, Union, Tuple, Callable, Dict
 from numbers import Number
+from itertools import product
 
 import numpy as np
 import xarray as xr
 import numba as nb
-
+import dask
 
 from gval.comparison.pairing_functions import (
     _make_pairing_dict_fn,
 )
-from gval.utils.loading_datasets import _handle_xarray_memory
+from gval.utils.loading_datasets import _handle_xarray_memory, _check_dask_array
 
 
 def _compute_agreement_map(
@@ -39,6 +40,7 @@ def _compute_agreement_map(
     allow_benchmark_values: Optional[Iterable[Number]] = None,
     nodata: Optional[Number] = None,
     encode_nodata: Optional[bool] = False,
+    continuous: Optional[bool] = False,
 ) -> Union[xr.DataArray, xr.Dataset]:
     """
     Computes agreement map as xarray from candidate and benchmark xarray's.
@@ -178,6 +180,53 @@ def _compute_agreement_map(
     agreement_map = xr.apply_ufunc(
         comparison_function, *ufunc_args, **apply_ufunc_kwargs
     )
+
+    is_dask = _check_dask_array(candidate_map)
+
+    def get_unique_values(candidate, benchmark):
+        unique_c = (
+            dask.array.unique(candidate.data).compute()
+            if is_dask
+            else np.unique(candidate)
+        )
+        unique_b = (
+            dask.array.unique(benchmark.data).compute()
+            if is_dask
+            else np.unique(benchmark)
+        )
+
+        return unique_c, unique_b
+
+    # Add pairing dictionary and reverse pairing dictionary to agreement map attributes
+    if pairing_dict is not None and not continuous:
+        agreement_map.attrs["pairing_dictionary"] = pairing_dict
+
+    if pairing_dict is None and not continuous:
+        if allow_candidate_values is None or allow_benchmark_values is None:
+            if isinstance(candidate_map, xr.Dataset):
+                for idx, var in enumerate(candidate_map.data_vars):
+                    agreement_map[var].attrs["pairing_dictionary"] = {
+                        (x, y): comparison_function(x, y)
+                        for x, y in product(
+                            *get_unique_values(candidate_map[var], benchmark_map[var])
+                        )
+                    }
+
+                    if idx == 0:
+                        agreement_map.attrs
+
+            else:
+                agreement_map.attrs["pairing_dictionary"] = {
+                    (x, y): comparison_function(x, y)
+                    for x, y in product(
+                        *get_unique_values(candidate_map, benchmark_map)
+                    )
+                }
+        else:
+            agreement_map.attrs["pairing_dictionary"] = {
+                (x, y): comparison_function(x, y)
+                for x, y in product(allow_candidate_values, allow_benchmark_values)
+            }
 
     if isinstance(candidate_map, xr.DataArray):
         agreement_map = _manage_information_loss(

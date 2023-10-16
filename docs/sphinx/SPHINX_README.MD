@@ -15,6 +15,8 @@ for comparison are included. The comparisons are based on scoring
 philosophies for three statistical data types including categorical,
 continuous, and probabilistic.
 
+See the full documentation [here](https://noaa-owp.github.io/gval/).
+
 WARNING:
 
 - Our current public API and output formats are likely to change in the

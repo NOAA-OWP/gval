@@ -13,89 +13,19 @@ TODO:
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Optional, Union, Callable
+from typing import Union, Iterable
 from numbers import Number
 
 import numpy as np
 import pandas as pd
-from xrspatial.zonal import crosstab
 import xarray as xr
 import pandera as pa
 from pandera.typing import DataFrame
 import dask
+from flox.xarray import xarray_reduce
 
-from gval.utils.schemas import Xrspatial_crosstab_df, Crosstab_df
+from gval.utils.schemas import Crosstab_df
 from gval.utils.loading_datasets import _check_dask_array
-
-
-@pa.check_types
-def _convert_crosstab_to_contigency_table(
-    crosstab_df: DataFrame[Xrspatial_crosstab_df],
-    band_name: str,
-    band_value: Union[str, Number],
-) -> DataFrame[Crosstab_df]:
-    """
-    Reorganizes crosstab output to Crosstab 2D DataFrame format.
-
-    ----------
-    Parameters
-    crosstab_df : DataFrame[Xrspatial_crosstab_df]
-        Output DataFrame from :func:`xarray-spatial.zonal.crosstab`.
-
-    Returns
-    -------
-    DataFrame[Crosstab_df]
-        Crosstab DataFrame using candidate and benchmark conventions.
-    """
-    if isinstance(crosstab_df, dask.dataframe.core.DataFrame):
-        crosstab_df = crosstab_df.compute()
-
-    # renames zone, renames column index, melts dataframe, then resets the index.
-    crosstab_df = (
-        crosstab_df.rename(columns={"zone": "candidate_values"})
-        .rename_axis(columns="benchmark_values")
-        .melt(id_vars="candidate_values", value_name="counts", ignore_index=False)
-        .reset_index(drop=True)
-    )
-
-    # add band column
-    crosstab_df.insert(0, band_name, band_value)
-
-    return crosstab_df
-
-
-@pa.check_types
-def _compute_agreement_values(
-    crosstab_df: DataFrame[Crosstab_df],
-    comparison_function: Callable[..., float],
-) -> DataFrame[Crosstab_df]:
-    """
-    Computes agreement values from Crosstab DataFrame.
-
-    Parameters
-    ----------
-    crosstab_df : DataFrame[Crosstab_df]
-        Crosstab DataFrame.
-    comparison_function : Callable[[float, float], float]
-        Function to compute agreement values.
-
-    Returns
-    -------
-    DataFrame[Crosstab_df]
-        Crosstab DataFrame with agreement values.
-    """
-
-    def apply_pairing_function(row):
-        return comparison_function(row["candidate_values"], row["benchmark_values"])
-
-    # copy crosstab_df
-    crosstab_df = crosstab_df.copy()
-
-    agreement_values = crosstab_df.apply(apply_pairing_function, axis=1)
-
-    crosstab_df.insert(3, "agreement_values", agreement_values)
-
-    return crosstab_df
 
 
 def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataArray"):
@@ -126,18 +56,8 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
 
             Parameters
             ----------
-            candidate_map : {xarray_obj}
-                Candidate map, {dimension}-dimensional.
-            benchmark_map : {xarray_obj}
-                Benchmark map, {dimension}-dimensional.
-            allow_candidate_values : Optional[Iterable[Union[int,float]]], default = None
-                Sequence of values in candidate to include in crosstab. Remaining values are excluded.
-            allow_benchmark_values : Optional[Iterable[Union[int,float]]], default = None
-                Sequence of values in benchmark to include in crosstab. Remaining values are excluded.
-            exclude_value : Optional[Number], default = None
-                Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-            comparison_function : Callable[[float, float], float], default = None
-                Function to compute agreement values. If None, then no agreement values are computed.
+            agreement_map : {xarray_obj}
+                Agreement map, {dimension}-dimensional.
 
             Returns
             -------
@@ -146,9 +66,9 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
 
             References
             ----------
-            .. [1] :func:[`xrspatial.zonal.crosstab`](https://xarray-spatial.org/reference/_autosummary/xrspatial.zonal.crosstab.html)
-            .. [2] [xarray.rio._check_dimensions()](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)
-            .. [3] [xr.rio._obj.dims](https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)
+            .. [1] `flox.xarray.xarray_reduce() <https://flox.readthedocs.io/en/latest/generated/flox.xarray.xarray_reduce.html>`_
+            .. [2] `xarray.rio._check_dimensions() <(https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)>`_
+            .. [3] `xr.rio._obj.dims <https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)`>_
             """
         func.__doc__ = docstring.format(dimension, xarray_obj)
         return func
@@ -159,63 +79,100 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
 @pa.check_types
 @_crosstab_docstring(2, "xr.DataArray")
 def _crosstab_2d_DataArrays(
-    candidate_map: xr.DataArray,
-    benchmark_map: xr.DataArray,
+    agreement_map: xr.DataArray,
     band_name: str = "band",
     band_value: Union[str, Number] = 1,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
 ) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
-    if _check_dask_array(candidate_map):
-        candidate_map = candidate_map.drop("spatial_ref")
-        benchmark_map = benchmark_map.drop("spatial_ref")
+    is_dsk = False
+    if _check_dask_array(agreement_map):
+        agreement_map = agreement_map.drop("spatial_ref")
+        is_dsk = True
 
-    crosstab_df = crosstab(
-        zones=candidate_map,
-        values=benchmark_map,
-        zone_ids=allow_candidate_values,
-        cat_ids=allow_benchmark_values,
-        nodata_values=exclude_value,
-    )
+    agreement_map.name = "group"
+
+    if is_dsk:
+        agreement_counts = xarray_reduce(
+            agreement_map,
+            agreement_map,
+            expected_groups=dask.array.unique(agreement_map.data),
+            func="count",
+        )
+    else:
+        agreement_counts = xarray_reduce(agreement_map, agreement_map, func="count")
+
+    def not_nan(number):
+        return not np.isnan(number)
+
+    # Handle pairing dictionary attribute
+    pairing_dict = agreement_map.attrs["pairing_dictionary"]
+
+    rev_dict = {}
+    for k, v in pairing_dict.items():
+        if np.isnan(v):
+            continue
+        if v in rev_dict:
+            rev_dict[v].append(list(k))
+        else:
+            rev_dict[v] = [list(k)]
 
     # reorganize df to follow contingency table schema instead of xarray-spatial conventions
-    crosstab_df = _convert_crosstab_to_contigency_table(
-        crosstab_df, band_name, band_value
+    crosstab_df = pd.DataFrame(
+        {
+            "candidate_values": [
+                [y[0] for y in rev_dict[x]]
+                for x in filter(not_nan, agreement_counts.coords["group"].values)
+            ],
+            "benchmark_values": [
+                [y[1] for y in rev_dict[x]]
+                for x in filter(not_nan, agreement_counts.coords["group"].values)
+            ],
+            "agreement_values": list(
+                filter(not_nan, agreement_counts.coords["group"].values.astype(float))
+            ),
+            "counts": [
+                x
+                for x, y in zip(
+                    agreement_counts.values.astype(float),
+                    agreement_counts.coords["group"].values.astype(float),
+                )
+                if not np.isnan(y)
+            ],
+        }
     )
 
-    # insert agreement values
-    if comparison_function is not None:
-        crosstab_df = _compute_agreement_values(crosstab_df, comparison_function)
+    # Add all entries that don't exist in crosstab that exist in pairing dictionary with 0 count
+    for k, v in agreement_map.attrs["pairing_dictionary"].items():
+        if v not in crosstab_df["agreement_values"].values and not np.isnan(v):
+            crosstab_df.loc[-1] = [k[0], k[1], v, 0]  # adding a row
+            crosstab_df.index = crosstab_df.index + 1
+
+    # Sort and reindex
+    crosstab_df.sort_values(["agreement_values"], inplace=True)
+    crosstab_df.reset_index()
+
+    def is_iterable(x):
+        return x[0] if isinstance(x, Iterable) else x
+
+    # TODO  Resolve the case of multiple candidate/benchmark pairs being mapped to the same agreement
+    #  value, for now just take the first pair
+    crosstab_df.loc[:, "candidate_values"] = crosstab_df["candidate_values"].apply(
+        is_iterable
+    )
+    crosstab_df.loc[:, "benchmark_values"] = crosstab_df["benchmark_values"].apply(
+        is_iterable
+    )
+
+    crosstab_df.insert(0, band_name, band_value)
 
     return crosstab_df
 
 
 @pa.check_types
 @_crosstab_docstring(3, "xr.DataArray")
-def _crosstab_3d_DataArrays(
-    candidate_map: xr.DataArray,
-    benchmark_map: xr.DataArray,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
-) -> DataFrame[Crosstab_df]:
+def _crosstab_3d_DataArrays(agreement_map: xr.DataArray) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
-
-    # check number of dimensions
-    assert (
-        len(candidate_map.shape) == len(benchmark_map.shape) == 3
-    ), "Candidate and benchmark must both be 3-dimensional"
-
-    # check dimensionality
-    # Is this necessary or is this done with functionality that checks band coordinates and within crosstab()
-    # assert (
-    #    candidate_map.shape == benchmark_map.shape
-    # ), f"Dimensionalities of candidate {candidate_map.shape} and benchmark {benchmark_map.#shape} must match."
 
     """
     NOTE:
@@ -229,33 +186,18 @@ def _crosstab_3d_DataArrays(
         - This is ok and is useful to restrict dimensionality.
     """
     # get band name
-    band_name_candidate = candidate_map.rio._check_dimensions()
-    band_name_benchmark = benchmark_map.rio._check_dimensions()
+    band_name_agreement = agreement_map.rio._check_dimensions()
 
     # get coordinates for bands
-    candidate_map_band_coordinates = candidate_map[band_name_candidate].values
-    benchmark_map_band_coordinates = benchmark_map[band_name_benchmark].values
-
-    # check coordinates of extra dim to make sure they are the same
-    # TODO: Having dataarrays with different extra dim coords remains untested.
-    np.testing.assert_equal(
-        candidate_map_band_coordinates,
-        benchmark_map_band_coordinates,
-        f"Coordinates of candidate dimension, {band_name_candidate}, and benchmark, {band_name_benchmark}, must be the same.",
-    )
+    agreement_map_band_coordinates = agreement_map[band_name_agreement].values
 
     # cycle through extra dim
     previous_crosstab_df = None  # initializing to avoid having unset
-    for i, b in enumerate(candidate_map_band_coordinates):
+    for i, b in enumerate(agreement_map_band_coordinates):
         crosstab_df = _crosstab_2d_DataArrays(
-            candidate_map=candidate_map.sel({band_name_candidate: b}),
-            benchmark_map=benchmark_map.sel({band_name_benchmark: b}),
-            band_name=band_name_candidate,
+            agreement_map=agreement_map.sel({band_name_agreement: b}),
+            band_name=band_name_agreement,
             band_value=b,
-            allow_candidate_values=allow_candidate_values,
-            allow_benchmark_values=allow_benchmark_values,
-            exclude_value=exclude_value,
-            comparison_function=comparison_function,
         )
 
         # concats crosstab_dfs across bands
@@ -272,79 +214,37 @@ def _crosstab_3d_DataArrays(
 
 @pa.check_types
 @_crosstab_docstring("2/3", "xr.DataArray")
-def _crosstab_DataArrays(
-    candidate_map: xr.DataArray,
-    benchmark_map: xr.DataArray,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
-) -> DataFrame[Crosstab_df]:
+def _crosstab_DataArrays(agreement_map: xr.DataArray) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
     # TODO: these can be predicates and optional exception raising
     # 3d
-    if len(candidate_map.shape) == len(benchmark_map.shape) == 3:
+    if len(agreement_map.shape) == 3:
         crosstab_func = _crosstab_3d_DataArrays
     # 2d
-    elif len(candidate_map.shape) == len(benchmark_map.shape) == 2:
+    elif len(agreement_map.shape) == 2:
         crosstab_func = _crosstab_2d_DataArrays
     else:
         raise ValueError(
             "Candidate and benchmark must be both 2 or 3 dimensional only."
         )
 
-    return crosstab_func(
-        candidate_map=candidate_map,
-        benchmark_map=benchmark_map,
-        allow_candidate_values=allow_candidate_values,
-        allow_benchmark_values=allow_benchmark_values,
-        exclude_value=exclude_value,
-        comparison_function=comparison_function,
-    )
+    return crosstab_func(agreement_map=agreement_map)
 
 
 @pa.check_types
 @_crosstab_docstring("3", "xr.Dataset")
-def _crosstab_Datasets(
-    candidate_map: xr.Dataset,
-    benchmark_map: xr.Dataset,
-    allow_candidate_values: Optional[Iterable[Number]] = None,
-    allow_benchmark_values: Optional[Iterable[Number]] = None,
-    exclude_value: Optional[Number] = None,
-    comparison_function: Optional[Callable[..., float]] = None,
-) -> DataFrame[Crosstab_df]:
+def _crosstab_Datasets(agreement_map: xr.DataArray) -> DataFrame[Crosstab_df]:
     """Please see `_crosstab_docstring` function decorator for docstring"""
 
-    if _check_dask_array(candidate_map):
-        # TODO:  Currently there is an issue open on xarray spatial regarding dask dataset useage in crosstab
-        # https://github.com/makepath/xarray-spatial/issues/777
-        candidate_map = candidate_map.compute()
-        benchmark_map = benchmark_map.compute()
-
     # gets variable names
-    candidate_variable_names = list(candidate_map.data_vars)
-    benchmark_variable_names = list(benchmark_map.data_vars)
-
-    # checks matching variable names
-    # TODO: Is this desired? Should we just check for matching variable lengths?
-    np.testing.assert_equal(
-        candidate_variable_names,
-        benchmark_variable_names,
-        "Variable names must match for candidate and benchmark",
-    )
+    agreement_variable_names = list(agreement_map.data_vars)
 
     # loop variables
     previous_crosstab_df = None  # initializing to avoid having unset
-    for i, b in enumerate(candidate_variable_names):
+    for i, b in enumerate(agreement_variable_names):
         crosstab_df = _crosstab_2d_DataArrays(
-            candidate_map=candidate_map[b],
-            benchmark_map=benchmark_map[b],
-            band_value=b,
-            allow_candidate_values=allow_candidate_values,
-            allow_benchmark_values=allow_benchmark_values,
-            exclude_value=exclude_value,
-            comparison_function=comparison_function,
+            agreement_map=agreement_map[b], band_value=b
         )
 
         # concats crosstab_dfs across bands
