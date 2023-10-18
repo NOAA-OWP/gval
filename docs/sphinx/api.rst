@@ -7,5 +7,7 @@ GVAL API
 
    extension
    comparison
+   subsampling
+   catalog
    statistics
    utils

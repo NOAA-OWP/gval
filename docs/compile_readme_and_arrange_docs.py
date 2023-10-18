@@ -107,6 +107,16 @@ def compile_readme():
     )
 
     shutil.copy(
+        f"{abs_path}/../notebooks/Subsampling Tutorial.ipynb",
+        f"{abs_path}/sphinx/SphinxSubsamplingTutorial.ipynb",
+    )
+
+    shutil.copy(
+        f"{abs_path}/../notebooks/Catalog Tutorial.ipynb",
+        f"{abs_path}/sphinx/SphinxCatalogTutorial.ipynb",
+    )
+
+    shutil.copy(
         f"{abs_path}/../CONTRIBUTING.MD",
         f"{abs_path}/sphinx/SPHINX_CONTRIBUTING.MD",
     )

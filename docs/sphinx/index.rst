@@ -19,6 +19,8 @@ ___________________________________
    SphinxTutorial
    SphinxMulticatTutorial
    SphinxContinuousTutorial
+   SphinxSubsamplingTutorial
+   SphinxCatalogTutorial
    api
    contributing
 
