@@ -7,5 +7,6 @@ GVAL API
 
    extension
    comparison
+   catalog
    statistics
    utils

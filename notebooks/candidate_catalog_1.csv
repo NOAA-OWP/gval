@@ -1,3 +1,3 @@
-,map_id,compare_id,value1,value2,agreement_maps
-0,./candidate_categorical_0.tif,compare1,1,5,agreement_categorical_0.tif
-1,./candidate_categorical_1.tif,compare2,2,6,agreement_categorical_1.tif
+map_id,compare_id,agreement_maps
+./candidate_categorical_0.tif,compare1,agreement_categorical_0.tif
+./candidate_categorical_1.tif,compare2,agreement_categorical_1.tif
