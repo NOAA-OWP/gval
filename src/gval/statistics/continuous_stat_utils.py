@@ -7,6 +7,8 @@ from functools import wraps
 
 import xarray as xr
 
+from gval.utils.loading_datasets import _check_dask_array
+
 
 def convert_output(func: Callable) -> Callable:  # pragma: no cover
     """
@@ -31,6 +33,8 @@ def convert_output(func: Callable) -> Callable:  # pragma: no cover
         # Call the decorated function
         result = func(*args, **kwargs)
 
+        if _check_dask_array(result):
+            result = result.compute()
         if isinstance(result, xr.DataArray):
             # Convert to a single numeric value
             return result.item()

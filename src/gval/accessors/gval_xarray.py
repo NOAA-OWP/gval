@@ -364,10 +364,6 @@ class GVALXarray:
         else:
             c_is_int, b_is_int = map(integer_check, [candidate, benchmark])
 
-        if c_is_int or b_is_int:  # pragma: no cover
-            raise TypeError(
-                "Cannot compute continuous statistics on data with type integer"
-            )
         # ---------------------------------------------------------------------------------------
 
         results = candidate.gval.compute_agreement_map(

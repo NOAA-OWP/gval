@@ -7,14 +7,17 @@ __author__ = "Fernando Aristizabal"
 
 from typing import Iterable, Union
 
+import numpy as np
 import pandera as pa
 import pandas as pd
 from pandera.typing import DataFrame
 import xarray as xr
 import geopandas as gpd
+import dask as da
 
 from gval import ContStats
 from gval.utils.schemas import Metrics_df, Subsample_identifiers, Sample_identifiers
+from gval.utils.loading_datasets import _check_dask_array
 
 
 @pa.check_types
@@ -69,6 +72,42 @@ def _compute_continuous_metrics(
     for idx, (agreement, benchmark, candidate) in enumerate(
         zip(agreement_map, benchmark_map, candidate_map)
     ):
+        
+        is_dsk = _check_dask_array(candidate)
+        is_int = np.issubdtype(candidate.dtype, np.integer) if isinstance(candidate, xr.DataArray) \
+            else np.issubdtype(candidate['band_1'].dtype, np.integer)
+        nodata = candidate.rio.nodata if isinstance(candidate, xr.DataArray) else candidate['band_1'].rio.nodata
+
+        picked_coords = None
+
+        # Remove no data value if int type form calculation, otherwise leave all values in
+        # Necessary because there is not int sentinel value
+        if is_int and nodata is not None:
+
+            cmask, bmask = (xr.where(candidate == nodata, 0, 1), xr.where(benchmark == nodata, 0, 1))
+            tmask = cmask & bmask
+
+            if is_dsk:
+                grid_coords = da.array.asarray(
+                    da.array.meshgrid(candidate.coords['x'], candidate.coords['y'])
+                ).T.reshape(-1, 2)
+                picked_coords = grid_coords[da.array.ravel(tmask.data).astype(bool), :]
+            else:
+                grid_coords = np.array(
+                    np.meshgrid(candidate.coords['x'], candidate.coords['y'])
+                ).T.reshape(-1, 2)
+                picked_coords = grid_coords[np.ravel(tmask.data).astype(bool), :]
+
+        candidate = candidate.sel({'x': picked_coords[:, 0], 'y': picked_coords[:, 1]}) \
+            if picked_coords is not None else candidate
+
+        benchmark = benchmark.sel({'x': picked_coords[:, 0], 'y': picked_coords[:, 1]}) \
+            if picked_coords is not None else benchmark
+
+        agreement = agreement.sel({'x': picked_coords[:, 0], 'y': picked_coords[:, 1]}) \
+            if picked_coords is not None else agreement
+
+        
         # compute error based metrics such as MAE, MSE, RMSE, etc. from agreement map and produce metrics_df
         statistics, names = ContStats.process_statistics(
             metrics,
