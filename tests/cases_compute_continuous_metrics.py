@@ -87,7 +87,7 @@ def case_compute_continuous_metrics_success(
 
 
 stat_names = ["non_existent_function"]
-exceptions = [KeyError]
+exceptions = [TypeError]
 
 
 @parametrize(

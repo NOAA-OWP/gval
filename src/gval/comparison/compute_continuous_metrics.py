@@ -5,7 +5,7 @@ Computes continuous value metrics given an agreement map.
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Union
+from typing import Iterable, Union, List
 
 import numpy as np
 import pandera as pa
@@ -17,7 +17,89 @@ import dask as da
 
 from gval import ContStats
 from gval.utils.schemas import Metrics_df, Subsample_identifiers, Sample_identifiers
-from gval.utils.loading_datasets import _check_dask_array
+from gval.utils.loading_datasets import _check_dask_array, _convert_to_dataset
+
+
+def _get_selected_datasets(
+    agreement: xr.Dataset,
+    candidate: xr.Dataset,
+    benchmark: xr.Dataset,
+    nodata: list,
+    var_name: str,
+) -> List[xr.Dataset]:
+    """
+    Selects specific coordinates for integer valued datasets to not process nodata values
+
+    Parameters
+    ----------
+    agreement : xr.Dataset
+        Agreement Map
+    candidate : xr.Dataset
+        Candidate Map
+    benchmark : xr.Dataset
+        Benchmark Map
+    nodata : list
+        Nodata values in the list
+    var_name : str
+        Name of variable
+
+    Returns
+    -------
+    List[xr.Dataset, xr.Dataset, xr.Dataset]
+        Datasets with selected coordinates
+    """
+
+    is_dsk = _check_dask_array(agreement)
+    cmask, bmask = (
+        xr.where(candidate[var_name] == nodata, 0, 1),
+        xr.where(benchmark[var_name] == nodata, 0, 1),
+    )
+    tmask = cmask & bmask
+
+    # Create a coord meshgrid and select appropriate coords to select from xarray
+    if is_dsk:
+        with da.config.set({"array.slicing.split_large_chunks": True}):
+            grid_coords = da.array.asarray(
+                da.array.meshgrid(candidate.coords["x"], candidate.coords["y"])
+            ).T.reshape(-1, 2)
+            picked_coords = grid_coords[da.array.ravel(tmask.data).astype(bool), :]
+    else:
+        grid_coords = np.array(
+            np.meshgrid(candidate.coords["x"], candidate.coords["y"])
+        ).T.reshape(-1, 2)
+        picked_coords = grid_coords[np.ravel(tmask.data).astype(bool), :]
+
+    # Select coordinates from xarray
+    with da.config.set({"array.slicing.split_large_chunks": True}):
+        agreement_sel = (
+            agreement[var_name].sel(
+                {"x": picked_coords[:, 0], "y": picked_coords[:, 1]}
+            )
+            if picked_coords is not None
+            else agreement[var_name]
+        )
+
+        candidate_sel = (
+            candidate[var_name].sel(
+                {"x": picked_coords[:, 0], "y": picked_coords[:, 1]}
+            )
+            if picked_coords is not None
+            else candidate[var_name]
+        )
+
+        benchmark_sel = (
+            benchmark[var_name].sel(
+                {"x": picked_coords[:, 0], "y": picked_coords[:, 1]}
+            )
+            if picked_coords is not None
+            else benchmark[var_name]
+        )
+
+    return (
+        agreement_sel,
+        candidate_sel,
+        benchmark_sel,
+    )
 
 
 @pa.check_types
@@ -72,49 +154,53 @@ def _compute_continuous_metrics(
     for idx, (agreement, benchmark, candidate) in enumerate(
         zip(agreement_map, benchmark_map, candidate_map)
     ):
-        
-        is_dsk = _check_dask_array(candidate)
-        is_int = np.issubdtype(candidate.dtype, np.integer) if isinstance(candidate, xr.DataArray) \
-            else np.issubdtype(candidate['band_1'].dtype, np.integer)
-        nodata = candidate.rio.nodata if isinstance(candidate, xr.DataArray) else candidate['band_1'].rio.nodata
+        # Change data to Dataset if DataArray
+        agreement = _convert_to_dataset(agreement)
+        candidate = _convert_to_dataset(candidate)
+        benchmark = _convert_to_dataset(benchmark)
 
-        picked_coords = None
+        # Check if integer type and nodata values
+        is_int = (
+            np.issubdtype(candidate.dtype, np.integer)
+            if isinstance(candidate, xr.DataArray)
+            else np.issubdtype(candidate["band_1"].dtype, np.integer)
+        )
+        nodata = [agreement[x].rio.nodata for x in agreement.data_vars]
 
         # Remove no data value if int type form calculation, otherwise leave all values in
-        # Necessary because there is not int sentinel value
-        if is_int and nodata is not None:
+        # Necessary because there is not an int sentinel value
+        if is_int and np.all([x is not None for x in nodata]):
+            final_stats = []
+            # Iterate through each band and gather statistics
+            for nodata_idx, var_name in enumerate(agreement.data_vars):
+                # Create mask for all nodata values
+                agreement_sel, candidate_sel, benchmark_sel = _get_selected_datasets(
+                    agreement, candidate, benchmark, nodata[nodata_idx], var_name
+                )
 
-            cmask, bmask = (xr.where(candidate == nodata, 0, 1), xr.where(benchmark == nodata, 0, 1))
-            tmask = cmask & bmask
+                statistics, names = ContStats.process_statistics(
+                    metrics,
+                    error=agreement_sel,
+                    candidate_map=candidate_sel,
+                    benchmark_map=benchmark_sel,
+                )
 
-            if is_dsk:
-                grid_coords = da.array.asarray(
-                    da.array.meshgrid(candidate.coords['x'], candidate.coords['y'])
-                ).T.reshape(-1, 2)
-                picked_coords = grid_coords[da.array.ravel(tmask.data).astype(bool), :]
-            else:
-                grid_coords = np.array(
-                    np.meshgrid(candidate.coords['x'], candidate.coords['y'])
-                ).T.reshape(-1, 2)
-                picked_coords = grid_coords[np.ravel(tmask.data).astype(bool), :]
+                del agreement_sel, candidate_sel, benchmark_sel
 
-        candidate = candidate.sel({'x': picked_coords[:, 0], 'y': picked_coords[:, 1]}) \
-            if picked_coords is not None else candidate
+                final_stats.append(statistics)
 
-        benchmark = benchmark.sel({'x': picked_coords[:, 0], 'y': picked_coords[:, 1]}) \
-            if picked_coords is not None else benchmark
+            statistics = [
+                {f"band_{idx + 1}": val for idx, val in enumerate(lst)}
+                for lst in np.array(final_stats).T
+            ]
 
-        agreement = agreement.sel({'x': picked_coords[:, 0], 'y': picked_coords[:, 1]}) \
-            if picked_coords is not None else agreement
-
-        
-        # compute error based metrics such as MAE, MSE, RMSE, etc. from agreement map and produce metrics_df
-        statistics, names = ContStats.process_statistics(
-            metrics,
-            error=agreement,
-            candidate_map=candidate,
-            benchmark_map=benchmark,
-        )
+        else:
+            statistics, names = ContStats.process_statistics(
+                metrics,
+                error=agreement,
+                candidate_map=candidate,
+                benchmark_map=benchmark,
+            )
 
         # create metrics_df
         metric_df = dict()

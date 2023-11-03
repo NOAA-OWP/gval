@@ -79,26 +79,41 @@ expected = [
     pd.DataFrame(
         {
             "map_id_candidate": [
-                f"{TEST_DATA_DIR}/candidate_continuous_0.tif",
-                f"{TEST_DATA_DIR}/candidate_continuous_1.tif",
+                "s3://gval-test/candidate_continuous_0.tif",
+                "s3://gval-test/candidate_continuous_1.tif",
+                "s3://gval-test/candidate_continuous_1.tif",
             ],
-            "compare_id": ["compare1", "compare2"],
+            "compare_id": ["compare1", "compare2", "compare2"],
             "map_id_benchmark": [
-                f"{TEST_DATA_DIR}/benchmark_continuous_0.tif",
-                f"{TEST_DATA_DIR}/benchmark_continuous_1.tif",
+                "s3://gval-test/benchmark_continuous_0.tif",
+                "s3://gval-test/benchmark_continuous_1.tif",
+                "s3://gval-test/benchmark_continuous_1.tif",
             ],
-            "value1_candidate": [1, 2],
-            "value2_candidate": [5, 6],
+            "value1_candidate": [1, 2, 2],
+            "value2_candidate": [5, 6, 6],
             "agreement_maps": [
                 "agreement_continuous_0.tif",
                 "agreement_continuous_1.tif",
+                "agreement_continuous_1.tif",
             ],
-            "value1_benchmark": [1, 2],
-            "value2_benchmark": [5, 6],
-            "band": [1.0, 1.0],
-            "coefficient_of_determination": [-0.066160, -0.329965],
-            "mean_absolute_error": [0.317389, 0.485031],
-            "mean_absolute_percentage_error": [0.159568, 0.177735],
+            "value1_benchmark": [1, 2, 2],
+            "value2_benchmark": [5, 6, 6],
+            "band": [1.0, 1.0, 2.0],
+            "coefficient_of_determination": [
+                -0.06615996360778809,
+                -2.829420804977417,
+                0.10903036594390869,
+            ],
+            "mean_absolute_error": [
+                0.3173885941505432,
+                0.48503121733665466,
+                0.48503121733665466,
+            ],
+            "mean_absolute_percentage_error": [
+                0.15956786274909973,
+                0.20223499834537506,
+                0.15323485434055328,
+            ],
         }
     )
 ] * 2 + [
@@ -175,7 +190,12 @@ compare_kwargs = [
     },
 ]
 
-open_kwargs = [{"mask_and_scale": True, "masked": True}] * 4
+open_kwargs = [
+    {"mask_and_scale": True, "masked": True},
+    {"mask_and_scale": True, "masked": True, "chunks": "auto"},
+    {"mask_and_scale": True, "masked": True},
+    {"mask_and_scale": True, "masked": True},
+]
 
 # agreement_map_field = [None, "agreement_maps"]
 agreement_map_field = ["agreement_maps"] * 4
@@ -184,6 +204,7 @@ agreement_map_write_kwargs = [{"tiled": True, "windowed": True}] * 4
 expected_agreement_maps = [
     (
         f"{TEST_DATA_DIR}/agreement_continuous_0.tif",
+        f"{TEST_DATA_DIR}/agreement_continuous_1.tif",
         f"{TEST_DATA_DIR}/agreement_continuous_1.tif",
     )
 ] * 2 + [

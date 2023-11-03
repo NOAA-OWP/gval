@@ -290,3 +290,33 @@ def _parse_string_attributes(
                 }
 
     return obj
+
+
+def _convert_to_dataset(xr_object=Union[xr.DataArray, xr.Dataset]) -> xr.Dataset:
+    """
+    Converts xarray object to dataset if it is not one already.
+
+    Parameters
+    ----------
+    xr_object : Union[xr.DataArray, xr.Dataset]
+        Xarray object to convert or simply return
+
+    Returns
+    -------
+    xr.Dataset
+        Dataset object
+
+    """
+
+    if isinstance(xr_object, xr.DataArray):
+        nodata = xr_object.rio.nodata
+        xr_object = xr_object.to_dataset(dim="band")
+        xr_object = xr_object.rename_vars({x: f"band_{x}" for x in xr_object.data_vars})
+
+        # Account for nodata
+        for var_name in xr_object.data_vars:
+            xr_object[var_name] = xr_object[var_name].rio.write_nodata(nodata)
+
+        return xr_object
+    else:
+        return xr_object
