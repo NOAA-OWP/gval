@@ -7,6 +7,8 @@ from functools import wraps
 
 import xarray as xr
 
+from gval.utils.loading_datasets import _check_dask_array
+
 
 def convert_output(func: Callable) -> Callable:  # pragma: no cover
     """
@@ -31,12 +33,18 @@ def convert_output(func: Callable) -> Callable:  # pragma: no cover
         # Call the decorated function
         result = func(*args, **kwargs)
 
+        is_dsk = _check_dask_array(result)
         if isinstance(result, xr.DataArray):
             # Convert to a single numeric value
-            return result.item()
+            return result.compute().item() if is_dsk else result.item()
         elif isinstance(result, xr.Dataset):
             # Convert to a dictionary with band names as keys
-            return {band: result[band].item() for band in result.data_vars}
+            if is_dsk:
+                return {
+                    band: result[band].compute().item() for band in result.data_vars
+                }
+            else:
+                return {band: result[band].item() for band in result.data_vars}
 
         return result
 

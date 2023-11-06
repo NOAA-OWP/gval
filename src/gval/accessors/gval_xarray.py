@@ -1,6 +1,5 @@
 from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List
 from numbers import Number
-from functools import partial
 
 import numpy as np
 import numba as nb
@@ -349,26 +348,6 @@ class GVALXarray:
         candidate, benchmark = self._obj.gval.homogenize(
             benchmark_map, target_map, resampling, rasterize_attributes
         )
-
-        # Check whether either dataset is of integer type
-        integer_check = partial(np.issubdtype, arg2=np.integer)
-
-        # Temporary code to check if the datatype is an integer --------------------------------
-        if isinstance(candidate, xr.Dataset):
-            c_is_int, b_is_int = False, False
-            for c_var, b_var in zip(candidate.data_vars, benchmark.data_vars):
-                c_is_int, b_is_int = np.bitwise_or(
-                    list(map(integer_check, [candidate[c_var], benchmark[b_var]])),
-                    [c_is_int, b_is_int],
-                )
-        else:
-            c_is_int, b_is_int = map(integer_check, [candidate, benchmark])
-
-        if c_is_int or b_is_int:  # pragma: no cover
-            raise TypeError(
-                "Cannot compute continuous statistics on data with type integer"
-            )
-        # ---------------------------------------------------------------------------------------
 
         results = candidate.gval.compute_agreement_map(
             benchmark_map=benchmark,
