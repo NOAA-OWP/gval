@@ -465,7 +465,7 @@ def get_stac_data(
                 stack.attrs["time_aggregate"] = "max"
             else:
                 raise ValueError("A valid aggregate must be used for time ranges")
-            
+
             stack.rio.write_crs(crs, inplace=True)
         else:
             stack = stack[0]
