@@ -335,111 +335,6 @@ def _convert_to_dataset(xr_object=Union[xr.DataArray, xr.Dataset]) -> xr.Dataset
         return xr_object
 
 
-# def dataset_from_stac(url: str,
-#                       collection: str,
-#                       time: str,
-#                       bands: list = None,
-#                       query: str = None,
-#                       time_aggregate: str = None,
-#                       max_items: int = None,
-#                       intersects: dict = None,
-#                       bbox: list = None,
-#                       resolution: int = 10,
-#                       chunks: dict = {'band': 1, 'x': 2048, 'y': 2048},
-#                       crs: str = None,
-#                       nodata_override: Union[Number, list] = None,
-#                       nodata_fill: Number = None) -> xr.Dataset:
-#     """
-#
-#     Parameters
-#     ----------
-#     url : str
-#         Address hosting the STAC API
-#     collection : str
-#         Name of collection to get (currently limited to one)
-#     time : str
-#         Single or range of values to query in the time dimension
-#     bands: list, default = None
-#         Bands to retrieve from service
-#     query : str, default = None
-#         String command to filter data
-#     time_aggregate : str, default = None
-#         Method to aggregate multiple time stamps
-#     max_items : int, default = None
-#         The maximum amount of records to retrieve
-#     intersects : dict, default = None
-#         Dictionary representing the type of geometry and its respective coordinates
-#     bbox : list, default = None
-#         Coordinates to filter the spatial range of request
-#     resolution : int, default = 10
-#         Resolution to get data from
-#     chunks : dict, default = {'band': 1, 'x': 2048, 'y': 2048}
-#         Blocks to break up memory for dask processing
-#     crs : str, default = None
-#         CRS to get the data in
-#     nodata_override : Union[Number, list], default = None
-#         Value/s to override the original nodata (primarily for cases when served data has none defined)
-#     nodata_fill : Number, default = None
-#         Value to fill nodata where not present
-#     Returns
-#     -------
-#     xr.Dataset
-#         Dataset with the time slice and desired bands
-#     """
-#
-#     # Call cataloging url, search, and convert to xarray
-#     catalog = pystac_client.Client.open(url)
-#
-#     stac_items = catalog.search(
-#         datetime=time,
-#         collections=[collection],
-#         max_items=max_items,
-#         intersects=intersects,
-#         bbox=bbox,
-#         query=query
-#     )
-#
-#     stack = stac_load(
-#         stac_items.item_collection(),
-#         bands=bands,
-#         crs=crs,
-#         resolution=resolution,
-#         chunks=chunks
-#     )
-#
-#     names = [f'band_{x+1}' for x in range(len(stack.data_vars))]
-#     stack = stack.rename_vars({x: y for x, y in zip(stack.data_vars, names)})
-#
-#     # Only get unique time indices in case there are duplicates
-#     vals = np.unique(stack.coords['time'])
-#     stack = stack.sel({'time': vals})
-#
-#     # Aggregate if there is more than one time
-#     if stack.coords['time'].shape[0] > 1:
-#         if time_aggregate == 'mean':
-#             stack = stack.mean(dim='time')
-#         elif time_aggregate == 'min':
-#             stack = stack.min(dim='time')
-#         elif time_aggregate == 'max':
-#             stack = stack.max(dim='time')
-#         else:
-#             raise ValueError("A valid aggregate must be used for time ranges")
-#
-#     # Resolve nodata issues
-#     for idx, var in enumerate(stack.data_vars):
-#
-#         if nodata_override is not None:
-#             idx = idx if len(nodata_override) > 1 else 0
-#             stack[var].rio.write_nodata(nodata_override[idx], inplace=True)
-#         else:
-#             if stack[var].rio.nodata is None and stack[var].rio.encoded_nodata is None and nodata_fill is None:  # pragma: no cover
-#                 raise ValueError("Please provide a nodata_override as there is none present")
-#             else:
-#                 stack[var].rio.write_nodata(nodata_fill, inplace=True)
-#
-#     return stack.squeeze()
-
-
 def _get_raster_band_nodata(band_metadata, nodata_fill) -> Number:
     """
 
@@ -512,11 +407,16 @@ def get_stac_data(
 
     Parameters
     ----------
-    url
-    collection
-    time
-    bands
-    time_aggregate
+    url : str
+        Endpoint with STAC API service
+    collection : str
+        Name of the collection to call data from
+    time : str
+        Time domain of interest (in case of multiple times a time aggregate must be supplied)
+    bands : list, default = None
+        Bands of interest in collection
+    time_aggregate : str
+        Way to reduce time to s single timestamp in the case of multiple time steps (currently valid options are)
     max_items
     intersects
     bbox
@@ -524,6 +424,8 @@ def get_stac_data(
 
     Returns
     -------
+    xr.Dataset
+        Xarray object with resepective STAC API data
 
     """
 
@@ -551,17 +453,27 @@ def get_stac_data(
 
         # Aggregate if there is more than one time
         if stack.coords["time"].shape[0] > 1:
+            crs = stack.rio.crs
             if time_aggregate == "mean":
                 stack = stack.mean(dim="time")
-            elif time_aggregate == "mean":
-                stack = stack.median(dim="time")
+                stack.attrs["time_aggregate"] = "mean"
+            elif time_aggregate == "min":
+                stack = stack.min(dim="time")
+                stack.attrs["time_aggregate"] = "min"
+            elif time_aggregate == "max":
+                stack = stack.max(dim="time")
+                stack.attrs["time_aggregate"] = "max"
             else:
                 raise ValueError("A valid aggregate must be used for time ranges")
+            
+            stack.rio.write_crs(crs, inplace=True)
         else:
             stack = stack[0]
+            stack.attrs["time_aggregate"] = "none"
 
         # Select specific bands
         if bands is not None:
+            bands = [bands] if isinstance(bands, str) else bands
             stack = stack.sel({"band": bands})
 
         band_metadata = (
@@ -584,60 +496,3 @@ def get_stac_data(
             stack["band_1"].attrs["original_name"] = bands[0]
 
         return stack
-
-
-if __name__ == "__main__":
-    # from gval.utils.loading_datasets import dataset_from_stac
-    #
-    # candidate = dataset_from_stac(
-    #     url="https://earth-search.aws.element84.com/v1",
-    #     collection="sentinel-2-l2a",
-    #     time="2020-04-01",
-    #     bands="aot",
-    #     bbox=[-105.78, 35.79, -105.66, 35.90],
-    #     nodata_fill=0,
-    # )
-    #
-    # benchmark = dataset_from_stac(
-    #     url="https://earth-search.aws.element84.com/v1",
-    #     collection="sentinel-2-l2a",
-    #     time="2020-04-03",
-    #     bands="aot",
-    #     bbox=[-105.78, 35.79, -105.66, 35.90],
-    #     nodata_fill=0,
-    # )
-    #
-    # from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
-    #
-    # c, b = candidate.gval.homogenize(benchmark)
-    # ag = c.gval.compute_agreement_map(b, continuous=True)
-    # ag.compute()
-    # metrics_df = _compute_continuous_metrics(
-    #     agreement_map=ag,
-    #     candidate_map=c,
-    #     benchmark_map=b
-    # )
-    #
-    # print(metrics_df)
-
-    from gval.utils.loading_datasets import get_stackstac_data
-
-    candidate2 = get_stackstac_data(
-        url="https://earth-search.aws.element84.com/v1",
-        collection="sentinel-2-l2a",
-        time="2020-04-01",
-        bands=None,
-        bbox=[-105.78, 35.79, -105.66, 35.90],
-    )
-
-    benchmark2 = get_stackstac_data(
-        url="https://earth-search.aws.element84.com/v1",
-        collection="sentinel-2-l2a",
-        time="2020-04-03",
-        bands="aot",
-        bbox=[-105.78, 35.79, -105.66, 35.90],
-    )
-
-    ag2, met2 = candidate2.gval.continuous_compare(benchmark2)
-
-    print(met2)
