@@ -11,7 +11,6 @@ import pandas as pd
 import pandera as pa
 from pandera.typing import Series, Index, Int64
 from shapely import Geometry
-import xarray as xr
 
 
 class Xrspatial_crosstab_df(pa.DataFrameModel):  # pragma: no cover
@@ -129,8 +128,9 @@ class Prob_metrics_df(Sample_identifiers, Subsample_identifiers):  # pragma: no 
     metrics: Optional[Series[object]]
 
     class Config:
-        coerce = True
+        coerce = False
         strict = False  # set to False, bc columns could include any number of metrics
+
 
 class AttributeTrackingDf(pa.DataFrameModel):  # pragma: no cover
     """

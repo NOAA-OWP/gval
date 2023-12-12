@@ -3,6 +3,7 @@ from itertools import product
 import numpy as np
 from tqdm import tqdm
 import xarray as xr
+import rioxarray as rxr
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
 from gval.utils.exceptions import RasterMisalignment

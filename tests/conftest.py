@@ -20,6 +20,7 @@ import pandas as pd
 TEST_DATA_S3_NAME = "gval-test"
 TEST_DATA_DIR = f"s3://{TEST_DATA_S3_NAME}"
 
+
 def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.PathLike]:
     """
     Returns local file path for a given file name.
@@ -153,7 +154,9 @@ def _attributes_to_string(
     return obj
 
 
-def _compare_metrics_df_with_xarray(metrics_df: pd.DataFrame, expected_df: pd.DataFrame):
+def _compare_metrics_df_with_xarray(
+    metrics_df: pd.DataFrame, expected_df: pd.DataFrame
+):
     """
     Compares metrics dataframe with expected dataframe and raises AssertionError if they do not match.
 
@@ -176,19 +179,18 @@ def _compare_metrics_df_with_xarray(metrics_df: pd.DataFrame, expected_df: pd.Da
     """
 
     # compare indices and columns
-    assert metrics_df.index.equals(expected_df.index), (
-        f"Metrics dataframe indices do not match expected indices. "
-    )
-    assert metrics_df.columns.equals(expected_df.columns), (
-        f"Metrics dataframe columns do not match expected columns. "
-    )
+    assert metrics_df.index.equals(
+        expected_df.index
+    ), "Metrics dataframe indices do not match expected indices. "
+    assert metrics_df.columns.equals(
+        expected_df.columns
+    ), "Metrics dataframe columns do not match expected columns. "
 
     for r in range(metrics_df.shape[0]):
         for c in range(metrics_df.shape[1]):
-            
             m = metrics_df.iloc[r, c]
             e = expected_df.iloc[r, c]
-            
+
             if isinstance(m, (xr.DataArray, xr.Dataset)):
                 xr.testing.assert_allclose(m, e, atol=1e-8)
             elif isinstance(m, Exception):

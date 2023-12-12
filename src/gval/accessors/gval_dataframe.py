@@ -184,10 +184,10 @@ class GVALDataFrame:
             if "geometry" not in geo_df.columns:
                 geo_df.set_geometry(
                     geometries if geometries is not None else self._obj["geometry"],
-                    inplace=True
+                    inplace=True,
                 )
                 geo_df.crs = crs
-                
+
         if subsampling_type:
             geo_df["subsample_type"] = subsampling_type
 

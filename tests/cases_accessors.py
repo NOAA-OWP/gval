@@ -367,27 +367,26 @@ def case_accessor_attributes(candidate_map, benchmark_map, agreement_map):
 
 
 def case_data_array_accessor_probabilistic_success():
-
     nodata_value = np.nan
     encoded_nodata_value = -9999
     upper_left = (-95.2, 37.2)
     lower_right = (-94.8, 36.8)
-    shapes = 'circle'
+    shapes = "circle"
     return_datasets = False
     sizes = 50
     band_dim_name = "member"
 
-    expected_xr = xr.DataArray(0.22347608, coords={'spatial_ref': 0})
+    expected_xr = xr.DataArray(0.22347608, coords={"spatial_ref": 0})
 
     # compute_kwargs
     compute_kwargs = {
-        'metric_kwargs' : {'brier_score' : {'member_dim' : "member", 'keep_attrs' : True}},
-        'return_on_error' : "error"
+        "metric_kwargs": {"brier_score": {"member_dim": "member", "keep_attrs": True}},
+        "return_on_error": "error",
     }
 
     # creating expected df. expected_xr is added later due to pd dtype issues
-    expected_df = pd.DataFrame({"band": ['member'], "brier_score": [None]})
-    expected_df.loc[0, 'brier_score'] = expected_xr
+    expected_df = pd.DataFrame({"band": ["member"], "brier_score": [None]})
+    expected_df.loc[0, "brier_score"] = expected_xr
 
     # Band parameters for candidate
     # background value, circle value, circle center, and circle radius
@@ -407,9 +406,16 @@ def case_data_array_accessor_probabilistic_success():
 
     # generate xarray pairs
     candidate_map, benchmark_map = _create_xarray_pairs(
-        upper_left, lower_right, sizes, band_params_candidate, band_params_benchmark, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_datasets
+        upper_left,
+        lower_right,
+        sizes,
+        band_params_candidate,
+        band_params_benchmark,
+        nodata_value,
+        encoded_nodata_value,
+        shapes,
+        band_dim_name,
+        return_datasets,
     )
 
     return candidate_map, benchmark_map, compute_kwargs, expected_df
-
-    

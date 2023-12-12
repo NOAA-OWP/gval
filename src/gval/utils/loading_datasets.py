@@ -3,21 +3,20 @@ from __future__ import annotations
 
 __author__ = "Fernando Aristizabal"
 
-from typing import Union, Optional, Tuple, Dict, Any, List, Iterable
+from typing import Union, Optional, Tuple, Iterable
 from numbers import Number
 
-import os
 import ast
 
 import rioxarray as rxr
 import xarray as xr
-import rasterio
 import numpy as np
 from tempfile import NamedTemporaryFile
 from rio_cogeo.cogeo import cog_translate
 from rio_cogeo.profiles import cog_profiles
 
 _MEMORY_STRATEGY = "normal"
+
 
 def adjust_memory_strategy(strategy: str):
     """
@@ -229,15 +228,16 @@ def _convert_to_dataset(xr_object=Union[xr.DataArray, xr.Dataset]) -> xr.Dataset
     else:
         return xr_object
 
+
 def _create_circle_mask(
     sizes: int | Tuple[int], center: Tuple[Number, Number], radius: Number
 ) -> np.ndarray:
     """
     Function to create a circle mask
-    
+
     Parameters
     ----------
-    sizes : int or Tuple of int
+    sizes : Int or Tuple of Int
         Size of xarray's in number of pixels or tuple with the x and y sizes, respectively.
     center : Tuple of Number
         Tuple with the center coordinates (x, y).
@@ -249,21 +249,22 @@ def _create_circle_mask(
     mask : np.ndarray
         Numpy array with the circle mask.
     """
-    Y, X = np.ogrid[:sizes[1], :sizes[0]]
-    dist_from_center = np.sqrt((X - center[0])**2 + (Y - center[1])**2)
+    Y, X = np.ogrid[: sizes[1], : sizes[0]]
+    dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
     mask = dist_from_center <= radius
     return mask
+
 
 def _create_xarray(
     upper_left: Tuple[Number, Number],
     lower_right: Tuple[Number, Number],
-    sizes: Int | Tuple[Int, Int],
+    sizes: int | Tuple[int, int],
     band_params: Iterable[Tuple[Number, Number, Tuple[Number, Number], Number]],
     nodata_value: Optional[Number] = None,
     encoded_nodata_value: Optional[Number] = None,
-    shapes: str = 'circle',
-    band_dim_name: str = 'band',
-    return_dataset: bool = False
+    shapes: str = "circle",
+    band_dim_name: str = "band",
+    return_dataset: bool = False,
 ) -> xr.DataArray | xr.Dataset:
     """
     Function to create xarray's with circles per band, and optionally return a Dataset
@@ -315,43 +316,37 @@ def _create_xarray(
         sizes = (sizes, sizes)
 
     # handle shapes
-    if shapes == 'circle':
+    if shapes == "circle":
         mask_func = _create_circle_mask
-    #elif False:
-        # placeholder for future shapes
-        #pass
+    # elif False:
+    # placeholder for future shapes
+    # pass
     else:
         raise ValueError(f"Shape '{shapes}' is not supported.")
 
     # Create empty array
-    array = np.full(
-        (len(band_params),) + tuple(reversed(sizes)),
-        nodata_value
-    )
+    array = np.full((len(band_params),) + tuple(reversed(sizes)), nodata_value)
 
     for band_idx, params in enumerate(band_params):
         background_value, circle_value, circle_center, circle_radius = params
-        
+
         # Apply background value, leaving the border as nodata
         array[band_idx, 1:-1, 1:-1] = background_value
-        
-        if shapes == 'circle':
-            
+
+        if shapes == "circle":
             # Create circle mask and apply circle value
-            circle_mask = mask_func(
-                sizes, circle_center, circle_radius
-            )
-            
+            circle_mask = mask_func(sizes, circle_center, circle_radius)
+
             array[band_idx, circle_mask] = circle_value
 
-        #elif False:
-            # placeholder for future shapes
+        # elif False:
+        # placeholder for future shapes
         #    pass
 
     # create xarray DataArray
-    data_array = xr.DataArray(data=array, dims=[band_dim_name, 'y', 'x'])
+    data_array = xr.DataArray(data=array, dims=[band_dim_name, "y", "x"])
     data_array.rio.write_crs("epsg:4326", inplace=True)
-    
+
     # assign nodata values
     if nodata_value is not None:
         data_array.rio.write_nodata(nodata_value, inplace=True)
@@ -363,15 +358,13 @@ def _create_xarray(
     lats = np.linspace(upper_left[1], lower_right[1], sizes[1])
     longs = np.linspace(lower_right[0], upper_left[0], sizes[0])
     bands = np.arange(1, len(band_params) + 1)
-    
+
     # assign coordinates
-    data_array = data_array.assign_coords(
-        {band_dim_name : bands, 'y' : lats, 'x' : longs}
-    )
+    data_array = data_array.assign_coords({band_dim_name: bands, "y": lats, "x": longs})
 
     if return_dataset:
         # Convert the DataArray to a Dataset
-        dataset = data_array.to_dataset(name='variable')
+        dataset = data_array.to_dataset(name="variable")
         return dataset
 
     return data_array
@@ -380,14 +373,18 @@ def _create_xarray(
 def _create_xarray_pairs(
     upper_left: Tuple[Number, Number],
     lower_right: Tuple[Number, Number],
-    sizes: Int | Tuple[Int, Int],
-    band_params_candidate: Iterable[Tuple[Number, Number, Tuple[Number, Number], Number]],
-    band_params_benchmark: Iterable[Tuple[Number, Number, Tuple[Number, Number], Number]],
+    sizes: int | Tuple[int, int],
+    band_params_candidate: Iterable[
+        Tuple[Number, Number, Tuple[Number, Number], Number]
+    ],
+    band_params_benchmark: Iterable[
+        Tuple[Number, Number, Tuple[Number, Number], Number]
+    ],
     nodata_value: Optional[Number] = None,
     encoded_nodata_value: Optional[Number] = None,
-    shapes: str = 'circle',
-    band_dim_name: str = 'band',
-    return_dataset: bool = False
+    shapes: str = "circle",
+    band_dim_name: str = "band",
+    return_dataset: bool = False,
 ) -> Tuple[xr.DataArray | xr.Dataset]:
     """
     Function to create xarray's with shapes per band, and optionally return a Dataset
@@ -436,9 +433,17 @@ def _create_xarray_pairs(
     """
 
     args = [
-        upper_left, lower_right, sizes, None, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset
+        upper_left,
+        lower_right,
+        sizes,
+        None,
+        nodata_value,
+        encoded_nodata_value,
+        shapes,
+        band_dim_name,
+        return_dataset,
     ]
-    
+
     candidate_args = args.copy()
     benchmark_args = args.copy()
 

@@ -291,10 +291,8 @@ def test_dataframe_accessor_rasterize(vector_map, reference_map, attributes):
 def test_data_array_accessor_probabilistic_success(
     candidate_map, benchmark_map, compute_kwargs, expected_df
 ):
-
     _, metrics_df = candidate_map.gval.probabilistic_compare(
-        benchmark_map,
-        **compute_kwargs
+        benchmark_map, **compute_kwargs
     )
 
     _compare_metrics_df_with_xarray(metrics_df, expected_df)

@@ -28,7 +28,10 @@ from gval.utils.visualize import _map_plot
 from gval.comparison.pairing_functions import difference
 from gval.subsampling.subsampling import subsample
 from gval.utils.schemas import (
-    Crosstab_df, Metrics_df, AttributeTrackingDf, Prob_metrics_df
+    Crosstab_df,
+    Metrics_df,
+    AttributeTrackingDf,
+    Prob_metrics_df,
 )
 
 
@@ -393,7 +396,7 @@ class GVALXarray:
             return agreement_map, metrics_df, attributes_df
 
         return agreement_map, metrics_df
-    
+
     def probabilistic_compare(
         self,
         benchmark_map: gpd.GeoDataFrame | xr.Dataset | xr.DataArray,
@@ -481,7 +484,7 @@ class GVALXarray:
             )
 
             if len(results) == 2:
-                #attributes_df, agreement_map = results
+                # attributes_df, agreement_map = results
                 attributes_df, _ = results
             else:
                 attributes_df = results
