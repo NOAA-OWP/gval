@@ -7,15 +7,53 @@ __author__ = "Fernando Aristizabal"
 
 from pytest_cases import parametrize_with_cases
 import xarray as xr
+from pytest import raises
 
-from gval.utils.loading_datasets import load_raster_as_xarray
+from gval.utils.loading_datasets import _create_xarray, _create_xarray_pairs
 
 
-@parametrize_with_cases("file_name")
-def test_load_raster_as_xarray(file_name):
-    """tests loading rasters as xarrays"""
-    # NOTE: Do we need cases to test additional arguments if it is just wrapping rxr.open_rasterio()
-    xr_map = load_raster_as_xarray(file_name)
-    assert isinstance(
-        xr_map, (xr.DataArray, xr.Dataset)
-    ), "Did not load as xr.DataArray or xr.Dataset"
+@parametrize_with_cases(
+    "upper_left, lower_right, sizes, band_params, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset, expected_xr",
+    glob="create_xarray_*_success",
+)
+def test_create_xarray(
+    upper_left, lower_right, sizes, band_params, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset, expected_xr
+):
+    """tests creating xarray from scratch"""
+    
+    computed_xr = _create_xarray(
+        upper_left, lower_right, sizes, band_params, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset
+    )
+    
+    xr.testing.assert_equal(computed_xr, expected_xr)
+
+@parametrize_with_cases(
+    "upper_left, lower_right, sizes, band_params_candidate, band_params_benchmark, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset, expected_candidate_xr, expected_benchmark_xr",
+    glob="_create_xarray_pairs",
+)
+def test_create_xarray_pairs(
+    upper_left, lower_right, sizes, band_params_candidate, band_params_benchmark, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset, expected_candidate_xr, expected_benchmark_xr
+):
+    """tests creating xarray from scratch"""
+    
+    computed_candidate_xr, computed_benchmark_xr = _create_xarray_pairs(
+        upper_left, lower_right, sizes, band_params_candidate, band_params_benchmark, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset
+    )
+    
+    xr.testing.assert_equal(computed_candidate_xr, expected_candidate_xr)
+    xr.testing.assert_equal(computed_benchmark_xr, expected_benchmark_xr)
+
+
+@parametrize_with_cases(
+    "upper_left, lower_right, sizes, band_params, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset, expected_xr",
+    glob="create_xarray_unsupported_shape_fail",
+)
+def test_create_xarray_unsupported_shape_fail(
+    upper_left, lower_right, sizes, band_params, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset, expected_xr
+):
+    """tests creating xarray from scratch"""
+    
+    with raises(ValueError):
+        _create_xarray(
+            upper_left, lower_right, sizes, band_params, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset
+        )

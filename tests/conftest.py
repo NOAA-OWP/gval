@@ -5,67 +5,20 @@ Configuration file for pytests
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Union  # , Optional
+from typing import Union
 
 import os
 
 import numpy as np
 import xarray as xr
+import rioxarray as rxr
 import geopandas as gpd
-
-# import boto3
-
-from gval.utils.loading_datasets import load_raster_as_xarray
-
-# from config import PROJECT_DIR
-
-
-# generate test data dir path
-# TEST_DATA_DIR = os.path.join(PROJECT_DIR, "data", "data")
+import pandas as pd
 
 
 # name of S3 for test data
 TEST_DATA_S3_NAME = "gval-test"
 TEST_DATA_DIR = f"s3://{TEST_DATA_S3_NAME}"
-# client
-# TEST_DATA_S3_CLIENT = boto3.client("s3")
-
-# def _check_file(
-#     file_path: Union[str, os.PathLike],
-#     test_data_s3_name: Optional[str] = TEST_DATA_S3_NAME,
-#     test_data_s3_client: Optional[
-#         boto3.session.botocore.client.BaseClient
-#     ] = TEST_DATA_S3_CLIENT,
-# ) -> None:
-#     """
-#     Downloads file if not already available locally.
-#
-#     TODO: Check for modified dates and only download if file has been updated on S3 end.
-#
-#     Parameters
-#     ----------
-#     file_path : Union[str, os.PathLike]
-#         Local absolute file path the check.
-#     test_data_s3_name : str, default = TEST_DATA_S3_NAME
-#         Name of S3 to retrieve file from.
-#     test_data_s3_client : boto3.session.botocore.client.BaseClient, default = TEST_DATA_S3_CLIENT
-#         S3 client object from boto3.
-#     """
-#     # gets base name of file
-#     file_name = os.path.basename(file_path)
-#
-#     # downloads file if not locally available
-#     if not os.path.exists(file_path):
-#         test_data_s3_client.download_file(test_data_s3_name, file_name, file_path)
-
-
-"""
-TODO:
- - Is there a way to create a stack of functions from _load_xarray, _build_map_file_path, and check_file that operates as a fixture/parameterization instead of normal python?
- - This would create less boilerplate code to maintain by avoiding calls to load_raster_as_xarray and _build_map_file_path
- - There is also no way to parameterize load_raster_as_xarray function.
-"""
-
 
 def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.PathLike]:
     """
@@ -135,7 +88,7 @@ def _load_xarray(
         xarray object.
     """
     file_path = _build_map_file_path(file_name)
-    return load_raster_as_xarray(file_path, *args, **kwargs)
+    return rxr.open_rasterio(file_path, *args, **kwargs)
 
 
 def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None:
@@ -198,3 +151,47 @@ def _attributes_to_string(
         obj.attrs["pairing_dictionary"] = str(obj.attrs["pairing_dictionary"])
 
     return obj
+
+
+def _compare_metrics_df_with_xarray(metrics_df: pd.DataFrame, expected_df: pd.DataFrame):
+    """
+    Compares metrics dataframe with expected dataframe and raises AssertionError if they do not match.
+
+    Used to compare dataframes with xarray objects.
+
+    Parameters
+    ----------
+    metrics_df : pd.DataFrame
+        Metrics dataframe to compare.
+    expected_df : pd.DataFrame
+        Expected metrics dataframe to compare to.
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    AssertionError
+    """
+
+    # compare indices and columns
+    assert metrics_df.index.equals(expected_df.index), (
+        f"Metrics dataframe indices do not match expected indices. "
+    )
+    assert metrics_df.columns.equals(expected_df.columns), (
+        f"Metrics dataframe columns do not match expected columns. "
+    )
+
+    for r in range(metrics_df.shape[0]):
+        for c in range(metrics_df.shape[1]):
+            
+            m = metrics_df.iloc[r, c]
+            e = expected_df.iloc[r, c]
+            
+            if isinstance(m, (xr.DataArray, xr.Dataset)):
+                xr.testing.assert_allclose(m, e, atol=1e-8)
+            elif isinstance(m, Exception):
+                assert isinstance(m, e)
+            else:
+                assert m == e

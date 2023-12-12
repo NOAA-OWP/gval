@@ -1,16 +1,17 @@
 """
 DataFrame Schemas with Pandera.
 """
+from __future__ import annotations
 
-# __all__ = ['*']
+from typing import List, Optional
+
 __author__ = "Fernando Aristizabal"
-
-from typing import List, Optional, Union
 
 import pandas as pd
 import pandera as pa
 from pandera.typing import Series, Index, Int64
 from shapely import Geometry
+import xarray as xr
 
 
 class Xrspatial_crosstab_df(pa.DataFrameModel):  # pragma: no cover
@@ -122,6 +123,15 @@ class Metrics_df(Conditions_df):  # pragma: no cover
         strict = False  # set to False, bc columns could include any number of metrics
 
 
+class Prob_metrics_df(Sample_identifiers, Subsample_identifiers):  # pragma: no cover
+    """Probabilistic metrics DF schema"""
+
+    metrics: Optional[Series[object]]
+
+    class Config:
+        coerce = True
+        strict = False  # set to False, bc columns could include any number of metrics
+
 class AttributeTrackingDf(pa.DataFrameModel):  # pragma: no cover
     """
     Defines the schema for output of `_attribute_tracking_xarray()`
@@ -162,7 +172,7 @@ class SubsamplingDf(pa.DataFrameModel):  # pragma: no cover
     subsample_id: Series[int]
     geometry: Series[Geometry]
     subsample_type: Series[str]
-    weights: Optional[Union[float, int]]  # Possibly for the future for sample weighting
+    weights: Optional[float | int]  # Possibly for the future for sample weighting
 
     class Config:
         coerce = True
