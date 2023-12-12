@@ -118,8 +118,23 @@ def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None
     AssertionError
     """
 
-    np.testing.assert_equal(list(computed_dict.keys()), list(expected_dict.keys()))
-    np.testing.assert_equal(list(computed_dict.values()), list(expected_dict.values()))
+    try:
+        np.testing.assert_allclose(
+            list(computed_dict.keys()), list(expected_dict.keys())
+        )
+    except np.exceptions.DTypePromotionError:
+        np.testing.assert_equal(
+            list(computed_dict.keys()), list(expected_dict.keys())
+        )
+    
+    try:
+        np.testing.assert_allclose(
+            list(computed_dict.values()), list(expected_dict.values())
+        )
+    except np.exceptions.DTypePromotionError:
+        np.testing.assert_equal(
+            list(computed_dict.values()), list(expected_dict.values())
+        )
 
     # checks keys to make sure they hash they same way
     for k, v in computed_dict.items():

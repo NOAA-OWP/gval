@@ -47,7 +47,7 @@ def test_create_xarray(
 
 @parametrize_with_cases(
     "upper_left, lower_right, sizes, band_params_candidate, band_params_benchmark, nodata_value, encoded_nodata_value, shapes, band_dim_name, return_dataset, expected_candidate_xr, expected_benchmark_xr",
-    glob="_create_xarray_pairs",
+    glob="create_xarray_pairs",
 )
 def test_create_xarray_pairs(
     upper_left,
