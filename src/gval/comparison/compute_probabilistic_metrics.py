@@ -4,7 +4,7 @@ Computes probabilistic metrics.
 
 __author__ = "Fernando Aristizabal"
 
-from typing import Optional, Any
+from typing import Optional, Any, Union
 
 import numpy as np
 import pandas as pd

@@ -1,5 +1,5 @@
 """
-Defines gval accessor for xarray objects. 
+Defines gval accessor for xarray objects.
 """
 
 from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List, Any
@@ -39,7 +39,7 @@ from gval.utils.schemas import (
 
 class GVALXarray:
     """
-    Class for extending xarray functionality
+    Class for extending xarray functionality.
 
     Attributes
     ----------

@@ -123,10 +123,8 @@ def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None
             list(computed_dict.keys()), list(expected_dict.keys())
         )
     except np.exceptions.DTypePromotionError:
-        np.testing.assert_equal(
-            list(computed_dict.keys()), list(expected_dict.keys())
-        )
-    
+        np.testing.assert_equal(list(computed_dict.keys()), list(expected_dict.keys()))
+
     try:
         np.testing.assert_allclose(
             list(computed_dict.values()), list(expected_dict.values())
