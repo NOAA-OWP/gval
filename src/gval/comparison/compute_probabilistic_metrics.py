@@ -1,8 +1,8 @@
 """
 Computes probabilistic metrics.
 """
+from __future__ import annotations
 
-# __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
 from typing import Optional, Any
