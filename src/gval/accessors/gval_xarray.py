@@ -1,4 +1,6 @@
-from __future__ import annotations
+"""
+Defines gval accessor for xarray objects. 
+"""
 
 from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List, Any
 from numbers import Number
@@ -399,10 +401,10 @@ class GVALXarray:
 
     def probabilistic_compare(
         self,
-        benchmark_map: gpd.GeoDataFrame | xr.Dataset | xr.DataArray,
+        benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
         metric_kwargs: dict,
         return_on_error: Optional[Any] = None,
-        target_map: Optional[xr.Dataset | str] = "benchmark",
+        target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
         resampling: Optional[Resampling] = Resampling.nearest,
         rasterize_attributes: Optional[list] = None,
         attribute_tracking: bool = False,

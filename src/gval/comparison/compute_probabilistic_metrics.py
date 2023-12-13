@@ -1,7 +1,6 @@
 """
 Computes probabilistic metrics.
 """
-from __future__ import annotations
 
 __author__ = "Fernando Aristizabal"
 
@@ -134,8 +133,8 @@ REQUIRED_METRIC_KWARGS = {
 
 @pa.check_types
 def _compute_probabilistic_metrics(
-    candidate_map: xr.DataArray | xr.Dataset,
-    benchmark_map: xr.DataArray | xr.Dataset,
+    candidate_map: Union[xr.DataArray, xr.Dataset],
+    benchmark_map: Union[xr.DataArray, xr.Dataset],
     metric_kwargs: dict,
     return_on_error: Optional[Any] = None,
 ) -> DataFrame[Prob_metrics_df]:
