@@ -1,9 +1,8 @@
 """
 DataFrame Schemas with Pandera.
 """
-from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 __author__ = "Fernando Aristizabal"
 
@@ -172,7 +171,7 @@ class SubsamplingDf(pa.DataFrameModel):  # pragma: no cover
     subsample_id: Series[int]
     geometry: Series[Geometry]
     subsample_type: Series[str]
-    weights: Optional[float | int]  # Possibly for the future for sample weighting
+    weights: Optional[Union[float, int]]  # Possibly for the future for sample weighting
 
     class Config:
         coerce = True
