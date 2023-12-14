@@ -51,6 +51,7 @@ def test_attribute_tracking(
         pd.testing.assert_frame_equal(results[0], expected_df)
         _assert_pairing_dict_equal(results[1].attrs, expected_attr)
 
+
 @parametrize_with_cases(
     "candidate_map, benchmark_map, candidate_include, candidate_exclude, benchmark_include, benchmark_exclude, exception",
     glob="attribute_tracking_fail",

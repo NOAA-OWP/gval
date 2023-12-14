@@ -9,7 +9,6 @@ from typing import Union
 
 import os
 
-import numpy as np
 import xarray as xr
 import rioxarray as rxr
 import geopandas as gpd
@@ -95,18 +94,16 @@ def _load_xarray(
 
 
 def _assert_pairing_dict_equal(
-        computed_dict: Union[dict, PairingDict], expected_dict: Union[dict, PairingDict]
+    computed_dict: Union[dict, PairingDict], expected_dict: Union[dict, PairingDict]
 ) -> None:
     """
     Testing function used to test if two pairing dictionaries are equal.
 
-    This is necessary because np.nans can be of float or np.float64 kind which makes operator (==) comparisons false.
-
     Parameters
     ----------
-    computed_dict : dict
+    computed_dict : dict or PairingDict
         Pairing dict computed to test.
-    expected_dict : dict
+    expected_dict : dict or PairingDict
         Expected pairing dict to compare to.
 
     Returns
@@ -125,9 +122,8 @@ def _assert_pairing_dict_equal(
     diff = DeepDiff(expected_dict, computed_dict)
 
     if diff:
-        raise AssertionError(
-            f"Dictionaries are not equal. {diff}"
-        )
+        raise AssertionError(f"Dictionaries are not equal. {diff}")
+
 
 def _attributes_to_string(
     obj: Union[xr.DataArray, xr.Dataset]
