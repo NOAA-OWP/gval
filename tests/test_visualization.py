@@ -2,6 +2,8 @@ import numpy as np
 from pytest_cases import parametrize_with_cases
 from pytest import raises
 
+import gval
+
 
 @parametrize_with_cases(
     "candidate_map, crs, entries",
