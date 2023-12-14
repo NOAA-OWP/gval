@@ -14,7 +14,9 @@ import xarray as xr
 import rioxarray as rxr
 import geopandas as gpd
 import pandas as pd
+from deepdiff import DeepDiff
 
+from gval.comparison.pairing_functions import PairingDict
 
 # name of S3 for test data
 TEST_DATA_S3_NAME = "gval-test"
@@ -92,7 +94,9 @@ def _load_xarray(
     return rxr.open_rasterio(file_path, *args, **kwargs)
 
 
-def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None:
+def _assert_pairing_dict_equal(
+        computed_dict: Union[dict, PairingDict], expected_dict: Union[dict, PairingDict]
+) -> None:
     """
     Testing function used to test if two pairing dictionaries are equal.
 
@@ -111,37 +115,19 @@ def _assert_pairing_dict_equal(computed_dict: dict, expected_dict: dict) -> None
 
     See also
     --------
-    :obj:`np.testing.assert_equal`
+    :obj:`deepdiff.DeepDiff`
 
     Raises
     ------
     AssertionError
     """
+    # compute difference between dictionaries. If empty dict, they are equal
+    diff = DeepDiff(expected_dict, computed_dict)
 
-    try:
-        np.testing.assert_allclose(
-            list(computed_dict.keys()), list(expected_dict.keys())
+    if diff:
+        raise AssertionError(
+            f"Dictionaries are not equal. {diff}"
         )
-    except np.exceptions.DTypePromotionError:
-        np.testing.assert_equal(list(computed_dict.keys()), list(expected_dict.keys()))
-
-    try:
-        np.testing.assert_allclose(
-            list(computed_dict.values()), list(expected_dict.values())
-        )
-    except np.exceptions.DTypePromotionError:
-        np.testing.assert_equal(
-            list(computed_dict.values()), list(expected_dict.values())
-        )
-
-    # checks keys to make sure they hash they same way
-    for k, v in computed_dict.items():
-        expected_dict[k]
-
-    # checks keys to make sure they hash they same way
-    for k, v in expected_dict.items():
-        computed_dict[k]
-
 
 def _attributes_to_string(
     obj: Union[xr.DataArray, xr.Dataset]

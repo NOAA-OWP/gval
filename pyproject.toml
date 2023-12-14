@@ -36,7 +36,8 @@ dev = ["pytest==7.2.2",
     "sqlalchemy==2.0.17",
     "colorama==0.4.6",
     "build==0.10.0",
-    "twine==4.0.2"
+    "twine==4.0.2",
+    "deepdiff==6.7.1"
 ]
 
 [project.urls]

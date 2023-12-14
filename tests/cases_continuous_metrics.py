@@ -176,7 +176,7 @@ def case_mean_normalized_root_mean_squared_error(
 
 ev_range_normalized_root_mean_squared_error = [
     0.4702962636947632,
-    {"band_1": 0.8913060426712036, "band_2": 0.42992404103279114},
+    {"band_1": 0.8913060512675582, "band_2": 0.429924048257602},
 ]
 
 
@@ -230,7 +230,7 @@ def case_mean_normalized_mean_absolute_error(
 
 ev_range_normalized_mean_absolute_error = [
     0.27127230167388916,
-    {"band_1": 0.5915015339851379, "band_2": 0.2853124737739563},
+    {"band_1": 0.5915015327117586, "band_2": 0.2853124727834681},
 ]
 
 

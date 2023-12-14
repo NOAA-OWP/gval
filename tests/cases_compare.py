@@ -11,8 +11,10 @@ import pandas as pd
 from pytest_cases import parametrize
 
 from tests.conftest import _load_xarray
-from gval.comparison.pairing_functions import szudzik_pair_signed, cantor_pair_signed
 from gval.utils.schemas import Crosstab_df
+from gval.comparison.pairing_functions import (
+    szudzik_pair_signed, cantor_pair_signed, PairingDict
+)
 
 
 numbers_success = [
@@ -125,11 +127,11 @@ dict_with_nans_data = [
 
 expected_dict_data = [
     (
-        {
+        PairingDict({
             (np.finfo(float).max, 1): 1,
             (2, np.finfo(float).max): 2,
             (np.finfo(float).max, 5): 3,
-        }
+        })
     )
 ]
 

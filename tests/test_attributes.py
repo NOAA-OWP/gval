@@ -51,6 +51,14 @@ def test_attribute_tracking(
         pd.testing.assert_frame_equal(results[0], expected_df)
         _assert_pairing_dict_equal(results[1].attrs, expected_attr)
 
+        #from deepdiff import DeepDiff
+        #diff = DeepDiff(results[1].attrs, expected_attr)
+        
+        #if diff:
+        #    raise AssertionError(
+        #        f"Dictionaries are not equal. {diff}"
+        #    )
+
 
 @parametrize_with_cases(
     "candidate_map, benchmark_map, candidate_include, candidate_exclude, benchmark_include, benchmark_exclude, exception",
