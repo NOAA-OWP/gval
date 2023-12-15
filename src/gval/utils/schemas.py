@@ -2,10 +2,9 @@
 DataFrame Schemas with Pandera.
 """
 
-# __all__ = ['*']
-__author__ = "Fernando Aristizabal"
-
 from typing import List, Optional, Union
+
+__author__ = "Fernando Aristizabal"
 
 import pandas as pd
 import pandera as pa
@@ -119,6 +118,16 @@ class Metrics_df(Conditions_df):  # pragma: no cover
 
     class Config:
         coerce = True
+        strict = False  # set to False, bc columns could include any number of metrics
+
+
+class Prob_metrics_df(Sample_identifiers, Subsample_identifiers):  # pragma: no cover
+    """Probabilistic metrics DF schema"""
+
+    metrics: Optional[Series[object]]
+
+    class Config:
+        coerce = False
         strict = False  # set to False, bc columns could include any number of metrics
 
 

@@ -3,9 +3,9 @@ from itertools import product
 import numpy as np
 from tqdm import tqdm
 import xarray as xr
+import rioxarray as rxr
 
 from gval.homogenize.spatial_alignment import _spatial_alignment
-from gval.utils.loading_datasets import load_raster_as_xarray
 from gval.utils.exceptions import RasterMisalignment
 from gval.comparison.compare import (
     _compute_agreement_map,
@@ -49,9 +49,9 @@ def generate_aligned_and_agreement_maps(
     ]
 
     # Load rasters
-    candidate, benchmark = load_raster_as_xarray(
+    candidate, benchmark = rxr.open_rasterio(
         f"{data_dir}/{candidate_map}"
-    ), load_raster_as_xarray(f"{data_dir}/{benchmark_map}")
+    ), rxr.open_rasterio(f"{data_dir}/{benchmark_map}")
 
     names = [candidate_map, benchmark_map, target_map]
 
@@ -62,7 +62,7 @@ def generate_aligned_and_agreement_maps(
     for idx, map_al in enumerate(tqdm(target_maps)):
         try:
             align_arg = (
-                load_raster_as_xarray(f"{data_dir}/{target_map}")
+                rxr.open_rasterio(f"{data_dir}/{target_map}")
                 if map_al == "target"
                 else map_al
             )

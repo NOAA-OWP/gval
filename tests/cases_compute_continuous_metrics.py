@@ -1,5 +1,5 @@
 """
-Test functionality for computing_continuous_metrics.py
+Test functionality for compute_continuous_metrics.py
 """
 
 # __all__ = ['*']

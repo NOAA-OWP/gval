@@ -112,7 +112,7 @@ def _compute_continuous_metrics(
     subsampling_df: gpd.GeoDataFrame = None,
 ) -> DataFrame[Metrics_df]:
     """
-    Computes categorical metrics from a crosstab df.
+    Computes continuous metrics.
 
     Parameters
     ----------

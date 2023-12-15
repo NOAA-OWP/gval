@@ -1,112 +1,19 @@
-"""
-Functions to load datasets
-"""
+"""Functions to load or create datasets"""
+from __future__ import annotations
 
-# __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Union, Optional, Tuple, Dict, Any
-import os
+from typing import Union, Optional, Tuple, Iterable
+from numbers import Number
+
 import ast
 
 import rioxarray as rxr
 import xarray as xr
-import rasterio
+import numpy as np
 from tempfile import NamedTemporaryFile
 from rio_cogeo.cogeo import cog_translate
 from rio_cogeo.profiles import cog_profiles
-
-
-def load_raster_as_xarray(
-    filename: Union[
-        str, os.PathLike, rasterio.io.DatasetReader, rasterio.vrt.WarpedVRT
-    ],
-    parse_coordinates: Optional[bool] = None,
-    chunks: Optional[Union[int, Tuple, Dict]] = None,
-    cache: Optional[bool] = None,
-    lock: Optional[Any] = None,
-    masked: Optional[bool] = False,
-    mask_and_scale: Optional[bool] = False,
-    default_name: Optional[str] = None,
-    band_as_variable: Optional[bool] = False,
-    **open_kwargs,
-) -> Union[xr.DataArray, xr.Dataset]:
-    """
-    Wraps around :obj:`rioxarray.open_rasterio` providing control over some arguments.
-
-    .. deprecated:: 0.0.2
-        `load_raster_as_xarray` will be removed in gval 0.0.2.  Use `rioxarray.open_rasterio` instead
-
-    Parameters
-    ----------
-    filename : Union[ str, os.PathLike, rasterio.io.DatasetReader, rasterio.vrt.WarpedVRT ]
-        Path to the file to open. Or already open rasterio dataset
-    parse_coordinates : Optional[bool], default = None
-        Whether to parse the x and y coordinates out of the file's
-        ``transform`` attribute or not. The default is to automatically
-        parse the coordinates only if they are rectilinear (1D).
-        It can be useful to set ``parse_coordinates=False``
-        if your files are very large or if you don't need the coordinates.
-    chunks : Optional[Union[int, Tuple, Dict]], default = None
-        Chunk sizes along each dimension, e.g., ``5``, ``(5, 5)`` or
-        ``{'x': 5, 'y': 5}``. If chunks is provided, it used to load the new
-        DataArray into a dask array. Chunks can also be set to
-        ``True`` or ``"auto"`` to choose sensible chunk sizes according to
-        ``dask.config.get("array.chunk-size")``.
-    cache : Optional[bool], default = None
-        If True, cache data loaded from the underlying datastore in memory as
-        NumPy arrays when accessed to avoid reading from the underlying data-
-        store multiple times. Defaults to True unless you specify the `chunks`
-        argument to use dask, in which case it defaults to False.
-    lock : Optional[Any], default = None
-        If chunks is provided, this argument is used to ensure that only one
-        thread per process is reading from a rasterio file object at a time.
-
-        By default and when a lock instance is provided,
-        a :class:`xarray.backends.CachingFileManager` is used to cache File objects.
-        Since rasterio also caches some data, this will make repeated reads from the
-        same object fast.
-
-        When ``lock=False``, no lock is used, allowing for completely parallel reads
-        from multiple threads or processes. However, a new file handle is opened on
-        each request.
-    masked: Optional[bool], default = False
-        If True, read the mask and set values to NaN. Defaults to False.
-    mask_and_scale: Optional[bool], default = False
-        Lazily scale (using the `scales` and `offsets` from rasterio) and mask.
-        If the _Unsigned attribute is present treat integer arrays as unsigned.
-    default_name : Optional[str], default = None
-        The name of the data array if none exists. Default is None.
-    band_as_variable : Optional[bool], default = False
-        If True, will load bands in a raster to separate variables.
-    open_kwargs : kwargs, default = None
-        Optional keyword arguments to pass into :func:`rasterio.open`.
-
-
-    Returns
-    -------
-    Union[:obj:`xr.DataArray`, :obj:`xr.Dataset`]
-        Loaded data.
-
-    References
-    ----------
-    .. [1] `rioxarray.open_rasterio() <https://corteva.github.io/rioxarray/stable/rioxarray.html>`_
-    .. [2] `rasterio.open() <https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open>`_
-    """
-
-    return rxr.open_rasterio(
-        filename=filename,
-        parse_coordinates=parse_coordinates,
-        cache=cache,
-        lock=lock,
-        default_name=default_name,
-        band_as_variable=band_as_variable,
-        masked=masked,
-        chunks=chunks,
-        mask_and_scale=mask_and_scale,
-        **open_kwargs,
-    )
-
 
 _MEMORY_STRATEGY = "normal"
 
@@ -320,3 +227,230 @@ def _convert_to_dataset(xr_object=Union[xr.DataArray, xr.Dataset]) -> xr.Dataset
         return xr_object
     else:
         return xr_object
+
+
+def _create_circle_mask(
+    sizes: int | Tuple[int], center: Tuple[Number, Number], radius: Number
+) -> np.ndarray:
+    """
+    Function to create a circle mask
+
+    Parameters
+    ----------
+    sizes : Int or Tuple of Int
+        Size of xarray's in number of pixels or tuple with the x and y sizes, respectively.
+    center : Tuple of Number
+        Tuple with the center coordinates (x, y).
+    radius : Number
+        Radius of the circle.
+
+    Returns
+    -------
+    mask : np.ndarray
+        Numpy array with the circle mask.
+    """
+    Y, X = np.ogrid[: sizes[1], : sizes[0]]
+    dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
+    mask = dist_from_center <= radius
+    return mask
+
+
+def _create_xarray(
+    upper_left: Tuple[Number, Number],
+    lower_right: Tuple[Number, Number],
+    sizes: int | Tuple[int, int],
+    band_params: Iterable[Tuple[Number, Number, Tuple[Number, Number], Number]],
+    nodata_value: Optional[Number] = None,
+    encoded_nodata_value: Optional[Number] = None,
+    shapes: str = "circle",
+    band_dim_name: str = "band",
+    return_dataset: bool = False,
+) -> xr.DataArray | xr.Dataset:
+    """
+    Function to create xarray's with circles per band, and optionally return a Dataset
+
+    Parameters
+    ----------
+    upper_left : Tuple of Number
+        Tuple with the upper left coordinates (x, y).
+    lower_right : Tuple of Number
+        Tuple with the lower right coordinates (x, y).
+    sizes : Int or Tuple of Int
+        Size of xarray's in number of pixels or tuple with the x and y sizes, respectively.
+    band_params : Iterable of Tuples
+        Each tuple represents the parameters of each band comprised of:
+        (background_value, circle_value, circle_center, circle_radius).
+
+        Circle center is a tuple with (x, y) coordinates.
+
+        The data types are:
+            background_value: Number
+            circle_value: Number
+            circle_center: tuple of Number
+            circle_radius: Number
+    nodata_value : Optional[Number], default = None
+        Nodata value to use for the xarray's.
+    encoded_nodata_value : Optional[Number], default = None
+        Nodata value to use for the encoded xarray's.
+    shapes : str, default = 'circle'
+        Shape of mask within the xarray's. Currently only 'circle' is supported.
+    band_dim_name : str, default = 'band'
+        Name of the band dimension.
+    return_dataset : bool, default = False
+        Whether to return a Dataset instead of a DataArray.
+
+    Raises
+    ------
+    ValueError
+        If the shape is not supported.
+
+    Returns
+    -------
+    data_array : xarray.DataArray or xarray.Dataset
+        Xarray with the circles per band.
+    """
+
+    # Handle sizes
+    if isinstance(sizes, Number):
+        sizes = int(sizes)
+        sizes = (sizes, sizes)
+
+    # handle shapes
+    if shapes == "circle":
+        mask_func = _create_circle_mask
+    # elif False:
+    # placeholder for future shapes
+    # pass
+    else:
+        raise ValueError(f"Shape '{shapes}' is not supported.")
+
+    # Create empty array
+    array = np.full((len(band_params),) + tuple(reversed(sizes)), nodata_value)
+
+    for band_idx, params in enumerate(band_params):
+        background_value, circle_value, circle_center, circle_radius = params
+
+        # Apply background value, leaving the border as nodata
+        array[band_idx, 1:-1, 1:-1] = background_value
+
+        if shapes == "circle":
+            # Create circle mask and apply circle value
+            circle_mask = mask_func(sizes, circle_center, circle_radius)
+
+            array[band_idx, circle_mask] = circle_value
+
+        # elif False:
+        # placeholder for future shapes
+        #    pass
+
+    # create xarray DataArray
+    data_array = xr.DataArray(data=array, dims=[band_dim_name, "y", "x"])
+    data_array.rio.write_crs("epsg:4326", inplace=True)
+
+    # assign nodata values
+    if nodata_value is not None:
+        data_array.rio.write_nodata(nodata_value, inplace=True)
+
+    if encoded_nodata_value is not None:
+        data_array.rio.write_nodata(encoded_nodata_value, inplace=True, encoded=True)
+
+    # create coordinates
+    lats = np.linspace(upper_left[1], lower_right[1], sizes[1])
+    longs = np.linspace(lower_right[0], upper_left[0], sizes[0])
+    bands = np.arange(1, len(band_params) + 1)
+
+    # assign coordinates
+    data_array = data_array.assign_coords({band_dim_name: bands, "y": lats, "x": longs})
+
+    if return_dataset:
+        # Convert the DataArray to a Dataset
+        dataset = data_array.to_dataset(name="variable")
+        return dataset
+
+    return data_array
+
+
+def _create_xarray_pairs(
+    upper_left: Tuple[Number, Number],
+    lower_right: Tuple[Number, Number],
+    sizes: int | Tuple[int, int],
+    band_params_candidate: Iterable[
+        Tuple[Number, Number, Tuple[Number, Number], Number]
+    ],
+    band_params_benchmark: Iterable[
+        Tuple[Number, Number, Tuple[Number, Number], Number]
+    ],
+    nodata_value: Optional[Number] = None,
+    encoded_nodata_value: Optional[Number] = None,
+    shapes: str = "circle",
+    band_dim_name: str = "band",
+    return_dataset: bool = False,
+) -> Tuple[xr.DataArray | xr.Dataset]:
+    """
+    Function to create xarray's with shapes per band, and optionally return a Dataset
+
+    Parameters
+    ----------
+    upper_left : Tuple of Number
+        Tuple with the upper left coordinates (x, y).
+    lower_right : Tuple of Number
+        Tuple with the lower right coordinates (x, y).
+    sizes : Int or Tuple of Int
+        Size of xarray's in number of pixels or tuple with the x and y sizes, respectively.
+    band_params : Iterable of Tuples
+        Each tuple represents the parameters of each band comprised of:
+        (background_value, circle_value, circle_center, circle_radius).
+
+        Circle center is a tuple with (x, y) coordinates.
+
+        The data types are:
+            background_value: Number
+            circle_value: Number
+            circle_center: tuple of Number
+            circle_radius: Number
+    nodata_value : Optional[Number], default = None
+        Nodata value to use for the xarray's.
+    encoded_nodata_value : Optional[Number], default = None
+        Nodata value to use for the encoded xarray's.
+    shapes : str, default = 'circle'
+        Shape of mask within the xarray's. Currently only 'circle' is supported.
+    band_dim_name : str, default = 'band'
+        Name of the band dimension.
+    return_dataset : bool, default = False
+        Whether to return a Dataset instead of a DataArray.
+
+    Raises
+    ------
+    ValueError
+        If the shape is not supported.
+
+    Returns
+    -------
+    data_array : xarray.DataArray or xarray.Dataset
+        Candidate map.
+    data_array : xarray.DataArray or xarray.Dataset
+        Benchmark map.
+    """
+
+    args = [
+        upper_left,
+        lower_right,
+        sizes,
+        None,
+        nodata_value,
+        encoded_nodata_value,
+        shapes,
+        band_dim_name,
+        return_dataset,
+    ]
+
+    candidate_args = args.copy()
+    benchmark_args = args.copy()
+
+    candidate_args[3] = band_params_candidate
+    benchmark_args[3] = band_params_benchmark
+
+    candidate_map = _create_xarray(*candidate_args)
+    benchmark_map = _create_xarray(*benchmark_args)
+
+    return candidate_map, benchmark_map

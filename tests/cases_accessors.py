@@ -9,6 +9,7 @@ from pytest_cases import parametrize
 
 from tests.conftest import _load_xarray, _load_gpkg
 from gval.utils.exceptions import RasterMisalignment
+from gval.utils.loading_datasets import _create_xarray_pairs
 
 
 candidate_maps = [
@@ -363,3 +364,58 @@ agreement_maps = [xr.DataArray(np.ones((3, 3)), dims=["y", "x"])]
 )
 def case_accessor_attributes(candidate_map, benchmark_map, agreement_map):
     return _load_xarray(candidate_map), _load_xarray(benchmark_map), agreement_map
+
+
+def case_data_array_accessor_probabilistic_success():
+    nodata_value = np.nan
+    encoded_nodata_value = -9999
+    upper_left = (-95.2, 37.2)
+    lower_right = (-94.8, 36.8)
+    shapes = "circle"
+    return_datasets = False
+    sizes = 50
+    band_dim_name = "member"
+
+    expected_xr = xr.DataArray(0.22347608, coords={"spatial_ref": 0})
+
+    # compute_kwargs
+    compute_kwargs = {
+        "metric_kwargs": {"brier_score": {"member_dim": "member", "keep_attrs": True}},
+        "return_on_error": "error",
+    }
+
+    # creating expected df. expected_xr is added later due to pd dtype issues
+    expected_df = pd.DataFrame({"band": ["member"], "brier_score": [None]})
+    expected_df.loc[0, "brier_score"] = expected_xr
+
+    # Band parameters for candidate
+    # background value, circle value, circle center, and circle radius
+    band_params_candidate = [
+        (0, 1, (7, 7), 3),  # Band 1
+        (0, 0, (12, 12), 5),  # Band 2
+        (1, 1, (17, 17), 7),  # Band 3
+    ]
+
+    # Band parameters for benchmark
+    # background value, circle value, circle center, and circle radius
+    band_params_benchmark = [
+        (0, 1, (8, 8), 4),  # Band 1
+        (0, 0, (13, 13), 6),  # Band 2
+        (1, 1, (18, 18), 8),  # Band 3
+    ]
+
+    # generate xarray pairs
+    candidate_map, benchmark_map = _create_xarray_pairs(
+        upper_left,
+        lower_right,
+        sizes,
+        band_params_candidate,
+        band_params_benchmark,
+        nodata_value,
+        encoded_nodata_value,
+        shapes,
+        band_dim_name,
+        return_datasets,
+    )
+
+    return candidate_map, benchmark_map, compute_kwargs, expected_df

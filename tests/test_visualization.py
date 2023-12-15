@@ -2,6 +2,9 @@ import numpy as np
 from pytest_cases import parametrize_with_cases
 from pytest import raises
 
+# added comment because of flake8 believes it's unused
+import gval  # noqa: F401
+
 
 @parametrize_with_cases(
     "candidate_map, crs, entries",

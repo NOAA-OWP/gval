@@ -1,10 +1,10 @@
 import numpy as np
-import pandas as pd
 from pytest_cases import parametrize_with_cases
 import xarray as xr
 from pytest import raises
-from pandas import DataFrame
+import pandas as pd
 
+from tests.conftest import _compare_metrics_df_with_xarray
 from gval.utils.loading_datasets import (
     adjust_memory_strategy,
     get_current_memory_strategy,
@@ -45,8 +45,8 @@ def test_data_array_accessor_success(
         assert isinstance(data[0], pd.DataFrame)
     else:
         assert isinstance(data[0], xr.DataArray)
-    assert isinstance(data[1], DataFrame)
-    assert isinstance(data[2], DataFrame)
+    assert isinstance(data[1], pd.DataFrame)
+    assert isinstance(data[2], pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -124,7 +124,7 @@ def test_data_array_accessor_compute_agreement_fail(candidate_map, benchmark_map
 def test_data_array_accessor_crosstab_table_success(agreement_map):
     data = agreement_map.gval.compute_crosstab()
 
-    assert isinstance(data, DataFrame)
+    assert isinstance(data, pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -157,9 +157,9 @@ def test_data_set_accessor_success(
     if rasterize_attributes is None:
         assert isinstance(data[0], xr.Dataset)
     else:
-        assert isinstance(data[0], DataFrame)
-    assert isinstance(data[1], DataFrame)
-    assert isinstance(data[2], DataFrame)
+        assert isinstance(data[0], pd.DataFrame)
+    assert isinstance(data[1], pd.DataFrame)
+    assert isinstance(data[2], pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -203,7 +203,7 @@ def test_data_set_accessor_compute_agreement_fail(candidate_map, benchmark_map):
 def test_data_set_accessor_crosstab_table_success(agreement_map):
     data = agreement_map.gval.compute_crosstab()
 
-    assert isinstance(data, DataFrame)
+    assert isinstance(data, pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -226,7 +226,7 @@ def test_data_frame_accessor_compute_metrics(
         positive_categories=positive_categories, negative_categories=negative_categories
     )
 
-    assert isinstance(data, DataFrame)
+    assert isinstance(data, pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -239,7 +239,7 @@ def test_data_array_accessor_continuous(candidate_map, benchmark_map):
     )
 
     assert isinstance(agreement_map, xr.DataArray)
-    assert isinstance(metrics_df, DataFrame)
+    assert isinstance(metrics_df, pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -255,7 +255,7 @@ def test_data_set_accessor_continuous(
     )
 
     assert isinstance(agreement_map, xr.Dataset)
-    assert isinstance(metrics_df, DataFrame)
+    assert isinstance(metrics_df, pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -268,7 +268,7 @@ def test_accessor_attributes(candidate_map, benchmark_map, agreement_map):
     )
 
     assert isinstance(agreement_map, xr.DataArray)
-    assert isinstance(attrs_df, DataFrame)
+    assert isinstance(attrs_df, pd.DataFrame)
 
 
 @parametrize_with_cases(
@@ -282,3 +282,17 @@ def test_dataframe_accessor_rasterize(vector_map, reference_map, attributes):
 
     assert isinstance(raster_map, type(reference_map))
     assert raster_map.shape == reference_map.shape
+
+
+@parametrize_with_cases(
+    "candidate_map, benchmark_map, compute_kwargs, expected_df",
+    glob="data_array_accessor_probabilistic_success",
+)
+def test_data_array_accessor_probabilistic_success(
+    candidate_map, benchmark_map, compute_kwargs, expected_df
+):
+    _, metrics_df = candidate_map.gval.probabilistic_compare(
+        benchmark_map, **compute_kwargs
+    )
+
+    _compare_metrics_df_with_xarray(metrics_df, expected_df)

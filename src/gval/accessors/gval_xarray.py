@@ -1,4 +1,8 @@
-from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List
+"""
+Defines gval accessor for xarray objects.
+"""
+
+from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List, Any
 from numbers import Number
 
 import numpy as np
@@ -19,17 +23,23 @@ from gval import Comparison
 from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
 from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
 from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
+from gval.comparison.compute_probabilistic_metrics import _compute_probabilistic_metrics
 from gval.attributes.attributes import _attribute_tracking_xarray
 from gval.utils.loading_datasets import _parse_string_attributes
-from gval.utils.schemas import Crosstab_df, Metrics_df, AttributeTrackingDf
 from gval.utils.visualize import _map_plot
 from gval.comparison.pairing_functions import difference
 from gval.subsampling.subsampling import subsample
+from gval.utils.schemas import (
+    Crosstab_df,
+    Metrics_df,
+    AttributeTrackingDf,
+    Prob_metrics_df,
+)
 
 
 class GVALXarray:
     """
-    Class for extending xarray functionality
+    Class for extending xarray functionality.
 
     Attributes
     ----------
@@ -385,11 +395,103 @@ class GVALXarray:
             else:
                 attributes_df = results
 
-            del candidate_map, benchmark_map
-
             return agreement_map, metrics_df, attributes_df
 
-        del candidate_map, benchmark_map
+        return agreement_map, metrics_df
+
+    def probabilistic_compare(
+        self,
+        benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
+        metric_kwargs: dict,
+        return_on_error: Optional[Any] = None,
+        target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
+        resampling: Optional[Resampling] = Resampling.nearest,
+        rasterize_attributes: Optional[list] = None,
+        attribute_tracking: bool = False,
+        attribute_tracking_kwargs: Optional[Dict] = None,
+    ) -> DataFrame[Prob_metrics_df]:
+        """
+        Computes probabilistic metrics from candidate and benchmark maps.
+
+        Parameters
+        ----------
+        benchmark_map : xr.DataArray or xr.Dataset
+            Benchmark map.
+        metric_kwargs : dict
+            Dictionary of keyword arguments to metric functions. Keys must be metrics. Values are keyword arguments to metric functions. Don't pass keys or values for 'observations' or 'forecasts' as these are handled internally with `benchmark_map` and `candidate_map`, respectively. Available keyword arguments by metric are available in `DEFAULT_METRIC_KWARGS`. If values are None or empty dictionary, default values in `DEFAULT_METRIC_KWARGS` are used.
+        return_on_error : Optional[Any], default = None
+            Value to return within metrics dataframe if an error occurs when computing a metric. If None, the metric is not computed and None is returned. If 'error', the raised error is returned.
+        target_map: Optional[xr.Dataset or str], default = "benchmark"
+            xarray object to match the CRS's and coordinates of candidates and benchmarks to or str with 'candidate' or 'benchmark' as accepted values.
+        resampling : rasterio.enums.Resampling
+            See :func:`rasterio.warp.reproject` for more details.
+        nodata : Optional[Number], default = None
+            No data value to write to agreement map output. This will use `rxr.rio.write_nodata(nodata)`.
+        encode_nodata : Optional[bool], default = False
+            Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
+        rasterize_attributes: Optional[list], default = None
+            Numerical attributes of a GeoDataFrame to rasterize.
+        attribute_tracking: bool, default = False
+            Whether to return a dataframe with the attributes of the candidate and benchmark maps.
+        attribute_tracking_kwargs: Optional[Dict], default = None
+            Keyword arguments to pass to `gval.attribute_tracking()`.  This is only used if `attribute_tracking` is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See `gval.attribute_tracking` for more information.
+
+        Returns
+        -------
+        DataFrame[Prob_metrics_df]
+            Probabilistic metrics Pandas DataFrame with computed xarray's per metric and sample.
+
+        Raises
+        ------
+        ValueError
+            If keyword argument is required for metric but not passed.
+            If keyword argument is not available for metric but passed.
+            If metric is not available.
+
+        Warns
+        -----
+        UserWarning
+            Warns if a metric cannot be computed. `return_on_error` determines whether the metric is not computed and None is returned or if the raised error is returned.
+
+        References
+        ----------
+        .. [1] `Scoring rule <https://en.wikipedia.org/wiki/Scoring_rule#Examples_of_proper_scoring_rules>`_
+        .. [2] `Strictly Proper Scoring Rules, Prediction, and Estimation <https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf>`_
+        .. [3] `Properscoring/properscoring <https://github.com/properscoring/properscoring>`_
+        .. [4] `xskillscore/xskillscore <https://xskillscore.readthedocs.io/en/stable/api.html#probabilistic-metrics>`_
+        .. [5] `What is a proper scoring rule? <https://statisticaloddsandends.wordpress.com/2021/03/27/what-is-a-proper-scoring-rule/>`_
+        """
+
+        # agreement_map temporarily None
+        agreement_map = None
+
+        # using homogenize accessor to avoid code reuse
+        candidate, benchmark = self._obj.gval.homogenize(
+            benchmark_map, target_map, resampling, rasterize_attributes
+        )
+
+        metrics_df = _compute_probabilistic_metrics(
+            candidate_map=candidate,
+            benchmark_map=benchmark,
+            metric_kwargs=metric_kwargs,
+            return_on_error=return_on_error,
+        )
+
+        if attribute_tracking:
+            results = self.__handle_attribute_tracking(
+                candidate_map=candidate,
+                benchmark_map=benchmark,
+                agreement_map=agreement_map,
+                attribute_tracking_kwargs=attribute_tracking_kwargs,
+            )
+
+            if len(results) == 2:
+                # attributes_df, agreement_map = results
+                attributes_df, _ = results
+            else:
+                attributes_df = results
+
+            return agreement_map, metrics_df, attributes_df
 
         return agreement_map, metrics_df
 

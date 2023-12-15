@@ -1,5 +1,5 @@
 """
-Test functionality for computing_categorical_metrics.py
+Test functionality for compute_categorical_metrics.py
 """
 
 # __all__ = ['*']
