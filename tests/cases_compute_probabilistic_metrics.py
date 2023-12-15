@@ -39,7 +39,7 @@ def case_compute_prob_metrics_brier_score_success():
     expected_df.loc[0, "brier_score"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 1, (7, 7), 3),  # Band 1
         (0, 0, (12, 12), 5),  # Band 2
@@ -47,7 +47,7 @@ def case_compute_prob_metrics_brier_score_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (8, 8), 4),  # Band 1
         (0, 0, (13, 13), 6),  # Band 2
@@ -91,7 +91,7 @@ def case_compute_prob_metrics_crps_ensemble_success():
     expected_df.loc[0, "crps_ensemble"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (100, 300, (20, 20), 7),
         (150, 350, (30, 30), 10),
@@ -99,12 +99,8 @@ def case_compute_prob_metrics_crps_ensemble_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
-    band_params_benchmark = [
-        (145, 360, (25, 25), 15),
-        # (160, 360, (2, 2), 3),
-        # (210, 410, (3, 3), 4)
-    ]
+    # background value, circle value, circle center (x, y) , and circle radius
+    band_params_benchmark = [(145, 360, (25, 25), 15)]
 
     # Generate the xarray pairs
     candidate_map, benchmark_map = _create_xarray_pairs(
@@ -143,7 +139,7 @@ def case_compute_prob_metrics_crps_gaussian_success():
     expected_df.loc[0, "crps_gaussian"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (140, 340, (9, 9), 3),  # Band 1
         (190, 390, (14, 14), 5),  # Band 2
@@ -151,7 +147,7 @@ def case_compute_prob_metrics_crps_gaussian_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (150, 350, (10, 10), 4),  # Band 1
         (200, 400, (15, 15), 6),  # Band 2
@@ -198,14 +194,14 @@ def case_compute_prob_metrics_crps_quadrature_success():
     expected_df.loc[0, "crps_quadrature"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (140, 340, (3, 3), 1),  # Band 1
         (190, 390, (2, 2), 1),  # Band 2
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (150, 350, (3, 3), 1),  # Band 1
         (200, 400, (2, 2), 1),  # Band 2
@@ -253,7 +249,7 @@ def case_compute_prob_metrics_discrimination_success():
     expected_df.loc[0, "discrimination"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (140, 340, (9, 9), 3),  # Band 1
         (190, 390, (14, 14), 5),  # Band 2
@@ -261,7 +257,7 @@ def case_compute_prob_metrics_discrimination_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (150, 350, (10, 10), 4),  # Band 1
         (200, 400, (15, 15), 6),  # Band 2
@@ -305,7 +301,7 @@ def case_compute_prob_metrics_rank_histogram_success():
     expected_df.loc[0, "rank_histogram"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (140, 340, (9, 9), 3),  # Band 1
         (190, 390, (14, 14), 5),  # Band 2
@@ -313,7 +309,7 @@ def case_compute_prob_metrics_rank_histogram_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (150, 350, (10, 10), 4),  # Band 1
     ]
@@ -368,7 +364,7 @@ def case_compute_prob_metrics_reliability_success():
     expected_df.loc[0, "reliability"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0.03, 0.76, (9, 9), 3),  # Band 1
         (0.89, 0.09, (14, 14), 5),  # Band 2
@@ -376,7 +372,7 @@ def case_compute_prob_metrics_reliability_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (10, 10), 4),  # Band 1
         (1, 0, (15, 15), 6),  # Band 2
@@ -418,7 +414,7 @@ def case_compute_prob_metrics_roc_success():
     expected_df.loc[0, "roc"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 1, (9, 9), 3),  # Band 1
         (1, 0, (14, 14), 5),  # Band 2
@@ -426,7 +422,7 @@ def case_compute_prob_metrics_roc_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (10, 10), 4),  # Band 1
         (1, 0, (15, 15), 6),  # Band 2
@@ -481,7 +477,7 @@ def case_compute_prob_metrics_rps_success():
     expected_df.loc[0, "rps"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0.08, 0.92, (9, 9), 3),  # Band 1
         (0.76, 0.1, (14, 14), 5),  # Band 2
@@ -489,7 +485,7 @@ def case_compute_prob_metrics_rps_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0.2, 0.94, (10, 10), 4),  # Band 1
         (0.71, 0.13, (15, 15), 6),  # Band 2
@@ -538,7 +534,7 @@ def case_compute_prob_metrics_threshold_brier_score_success():
     expected_df.loc[0, "threshold_brier_score"] = expected_xr
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 0.85, (9, 9), 3),  # Band 1
         (0.75, 0, (14, 14), 5),  # Band 2
@@ -546,7 +542,7 @@ def case_compute_prob_metrics_threshold_brier_score_success():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (10, 10), 4),  # Band 1
     ]
@@ -586,13 +582,13 @@ def case_compute_prob_metrics_error_success():
     expected_df.loc[0, "crps_gaussian"] = expected_error
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (140, 340, (9, 9), 3),  # Band 1
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (150, 350, (10, 10), 4),  # Band 1
     ]
@@ -621,7 +617,7 @@ def case_compute_prob_metrics_kwargs_required_fail():
     compute_kwargs = {"metric_kwargs": {"crps_gaussian": None}, "return_on_error": None}
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 1, (7, 7), 3),  # Band 1
         (0, 0, (12, 12), 5),  # Band 2
@@ -629,7 +625,7 @@ def case_compute_prob_metrics_kwargs_required_fail():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (8, 8), 4),  # Band 1
         (0, 0, (13, 13), 6),  # Band 2
@@ -663,7 +659,7 @@ def case_compute_prob_metrics_specific_kwargs_required_fail():
     }
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 1, (7, 7), 3),  # Band 1
         (0, 0, (12, 12), 5),  # Band 2
@@ -671,7 +667,7 @@ def case_compute_prob_metrics_specific_kwargs_required_fail():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (8, 8), 4),  # Band 1
         (0, 0, (13, 13), 6),  # Band 2
@@ -705,7 +701,7 @@ def case_compute_prob_metrics_kwargs_extra_fail():
     }
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 1, (7, 7), 3),  # Band 1
         (0, 0, (12, 12), 5),  # Band 2
@@ -713,7 +709,7 @@ def case_compute_prob_metrics_kwargs_extra_fail():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (8, 8), 4),  # Band 1
         (0, 0, (13, 13), 6),  # Band 2
@@ -747,7 +743,7 @@ def case_compute_prob_metrics_missing_metric_fail():
     }
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 1, (7, 7), 3),  # Band 1
         (0, 0, (12, 12), 5),  # Band 2
@@ -755,7 +751,7 @@ def case_compute_prob_metrics_missing_metric_fail():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (8, 8), 4),  # Band 1
         (0, 0, (13, 13), 6),  # Band 2
@@ -789,7 +785,7 @@ def case_compute_prob_metrics_metric_func_warns():
     }
 
     # Band parameters for candidate
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_candidate = [
         (0, 1, (7, 7), 3),  # Band 1
         (0, 0, (12, 12), 5),  # Band 2
@@ -797,7 +793,7 @@ def case_compute_prob_metrics_metric_func_warns():
     ]
 
     # Band parameters for benchmark
-    # background value, circle value, circle center, and circle radius
+    # background value, circle value, circle center (x, y) , and circle radius
     band_params_benchmark = [
         (0, 1, (8, 8), 4),  # Band 1
         (0, 0, (13, 13), 6),  # Band 2

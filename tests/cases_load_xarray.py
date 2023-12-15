@@ -28,50 +28,54 @@ def case_map(file_name):
     return _build_map_file_path(file_name)
 
 
-def case_create_xarray_array_success():
-    upper_left = (0, 0)
-    lower_right = (10, 10)
-    sizes = (10, 10)
-    nodata_value = np.nan
-    encoded_nodata_value = -1
-    shapes = "circle"
-    band_dim_name = "band"
-    return_dataset = False
+# sets of parameters for create_xarray tests
+upper_left = (0, 0)
+lower_right = (10, 10)
+sizes = (10, 10)
+nodata_value = np.nan
+encoded_nodata_value = -1
+shapes = "circle"
+band_dim_name = "band"
+return_dataset = False
 
-    # create xarray
-    # background value, circle value, circle center, and circle radius
-    band_params = [
-        (0, 1, (7, 7), 3),  # band 1
-    ]
+# set band level parameters
+# background value, circle value, circle center (x, y), and circle radius
+band_params = [
+    (0, 1, (7, 7), 3),  # band 1
+]
 
-    data = np.array(
+# set data array for expected xarray
+data = np.array(
+    [
         [
             [
-                [
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                ],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, np.nan, np.nan, np.nan, np.nan, 1.0, 1.0, 1.0, 1.0, 1.0],
-            ]
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+            ],
+            [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
+            [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
+            [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
+            [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, np.nan],
+            [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [np.nan, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [np.nan, np.nan, np.nan, np.nan, np.nan, 1.0, 1.0, 1.0, 1.0, 1.0],
         ]
-    )
+    ]
+)
 
+
+def case_create_xarray_array_success():
+    # create xarray
     expected_xr = xr.DataArray(
         data=data,
         dims=["band", "y", "x"],
@@ -98,49 +102,9 @@ def case_create_xarray_array_success():
 
 
 def case_create_xarray_dataset_success():
-    upper_left = (0, 0)
-    lower_right = (10, 10)
-    sizes = (10, 10)
-    nodata_value = np.nan
-    encoded_nodata_value = -1
-    shapes = "circle"
-    band_dim_name = "band"
     return_dataset = True
 
     # create xarray
-    # background value, circle value, circle center, and circle radius
-    band_params = [
-        (0, 1, (7, 7), 3),  # band 1
-    ]
-
-    data = np.array(
-        [
-            [
-                [
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                ],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, np.nan, np.nan, np.nan, np.nan, 1.0, 1.0, 1.0, 1.0, 1.0],
-            ]
-        ]
-    )
-
     expected_xr = xr.DataArray(
         data=data,
         dims=["band", "y", "x"],
@@ -167,62 +131,31 @@ def case_create_xarray_dataset_success():
 
 
 def case_create_xarray_pairs():
-    upper_left = (0, 0)
-    lower_right = (10, 10)
     size = 10
-    nodata_value = np.nan
-    encoded_nodata_value = -1
-    shapes = "circle"
-    band_dim_name = "band"
-    return_dataset = False
 
-    # create xarray
-    # background value, circle value, circle center, and circle radius
+    # set band level parameters for candidate
+    # background value, circle value, circle center (x, y), and circle radius
     band_params_candidate = [
         (0, 1, (7, 7), 3),  # band 1
         (0, 2, (7, 7), 3),  # band 2
     ]
 
+    # set band level parameters for benchmark
     band_params_benchmark = [
         (0, 2, (7, 7), 3),  # band 1
         (0, 1, (7, 7), 3),  # band 2
     ]
 
-    data_band_1 = np.array(
-        [
-            [
-                [
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                ],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, np.nan, np.nan, np.nan, np.nan, 1.0, 1.0, 1.0, 1.0, 1.0],
-            ]
-        ]
-    )
-
+    # set band arrays
+    data_band_1 = data
     data_band_2 = data_band_1.copy()
     data_band_2[data_band_1 == 1] = 2
 
-    data = np.concatenate([data_band_1, data_band_2], axis=0)
+    updated_data = np.concatenate([data_band_1, data_band_2], axis=0)
 
+    # create xarray
     expected_candidate_xr = xr.DataArray(
-        data=data,
+        data=updated_data,
         dims=["band", "y", "x"],
         coords={
             "spatial_ref": 0,
@@ -232,10 +165,10 @@ def case_create_xarray_pairs():
         },
     )
 
-    data = np.concatenate([data_band_2, data_band_1], axis=0)
+    updated_data = np.concatenate([data_band_2, data_band_1], axis=0)
 
     expected_benchmark_xr = xr.DataArray(
-        data=data,
+        data=updated_data,
         dims=["band", "y", "x"],
         coords={
             "spatial_ref": 0,
@@ -262,49 +195,9 @@ def case_create_xarray_pairs():
 
 
 def case_create_xarray_unsupported_shape_fail():
-    upper_left = (0, 0)
-    lower_right = (10, 10)
-    sizes = (10, 10)
-    nodata_value = np.nan
-    encoded_nodata_value = -1
     shapes = "square"
-    band_dim_name = "band"
-    return_dataset = False
 
     # create xarray
-    # background value, circle value, circle center, and circle radius
-    band_params = [
-        (0, 1, (7, 7), 3),  # band 1
-    ]
-
-    data = np.array(
-        [
-            [
-                [
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                    np.nan,
-                ],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, np.nan],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-                [np.nan, np.nan, np.nan, np.nan, np.nan, 1.0, 1.0, 1.0, 1.0, 1.0],
-            ]
-        ]
-    )
-
     expected_xr = xr.DataArray(
         data=data,
         dims=["band", "y", "x"],
