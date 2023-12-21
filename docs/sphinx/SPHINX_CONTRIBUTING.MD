@@ -37,33 +37,74 @@ and patterns in the existing code-base.
 
 ### Guidelines
 
-If you would like to contribute, please follow the following steps:
+If you would like to contribute, please follow the following steps from your terminal:
 
-1. Fork the project.
-2. Clone your fork: `git clone <your_username>/gval`
-3. Create a feature branch: `git checkout -b <your_feature>`
-4. Install the code via `pip install . .[dev]`
-5. Set up pre-commit hooks via `pre-commit install`.  Afterwards when a commit is made it will run
+1. Fork the project on GitHub, clone your fork (`git clone <your_username>/gval`), and create a feature branch (`git checkout -b <your_feature>`).
+2. Setup nox based linting, testing, and documentation building.
+    - Virtual Environment: While not required, it's recommended to setup a virtual environment with the Python tool of your choice. Keep in mind that gval supports Python versions 3.8 to 3.11.
+        - With [venv](https://docs.python.org/3/library/venv.html):
+            - Ensure your environment is not committed to git. You can use one of the environment names within `.gitignore` to prevent this.
+            - To create environment: `python -m venv <your_env_dir>`.
+            - To activate: `source <your_env_dir>/bin/activate`.
+            - To deactivate: `deactivate`
+        - With [conda](https://docs.conda.io/projects/conda/en/latest/index.html):
+            - To create: `conda create -n <your_env_name> python=<X.X.X>`.
+            - To activate: `conda activate <your_env_name>`.
+            - To deactivate: `conda deactivate`.
+        - With [mamba](https://mamba.readthedocs.io/en/latest/):
+            - Same as conda just use `mamba` instead of `conda`.
+    - Development Dependencies: If you setup a virtual environment, make sure to activate it then run `pip install nox`. Alternatively, one could install all the development dependencies with `pip install .[dev]`.
+    - Set up pre-commit hooks via `pre-commit install`.  This will run [flake8-black](https://pypi.org/project/flake8-black/) to auto-format code and [flake8](https://github.com/PyCQA/flake8) for linting.
+        - 
+        - To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`. The html will be created in the `_build/html` folder.  Open `index.html` in a browser to preview docs.
+
+
+
+1. Fork the project on GitHub.
+2. Clone your fork: `git clone <your_username>/gval`.
+3. Create a feature branch: `git checkout -b <your_feature>`.
+4. Setup a virtual environment with a common tool. Keep in mind that gval supports Python versions 3.8 to 3.11. It's recommended to develop in one then use `nox` to test across versions.
+    - With [venv](https://docs.python.org/3/library/venv.html):
+        - Ensure your environment is not committed to git. You can use one of the environment names within `.gitignore` to prevent this.
+        - To create environment: `python -m venv <your_env_dir>`.
+        - To activate: `source <your_env_dir>/bin/activate`.
+        - To deactivate: `deactivate`
+    - With [conda](https://docs.conda.io/projects/conda/en/latest/index.html):
+        - To create: `conda create -n <your_env_name> python=<X.X.X>`.
+        - To activate: `conda activate <your_env_name>`.
+        - To deactivate: `conda deactivate`.
+    - With [mamba](https://mamba.readthedocs.io/en/latest/):
+        - Same as conda just use `mamba` instead of `conda`.
+5. With the environment activated, install the development version of gval via `pip install .[dev]`. This version includes linting, testing, and doc building dependencies.
+6. Set up pre-commit hooks via `pre-commit install`.  Afterwards when a commit is made it will run
 [flake8](https://github.com/PyCQA/flake8) for code and style linting as well as
 [flake8-black](https://pypi.org/project/flake8-black/) to autoformat the code.  In many cases issues will be rectified
 automatically with flake8-black but in some cases manual changes will be necessary.
-6. Code Standards: Make sure unit tests pass `pytest` and there is no significant reduction
-in code coverage and increase in memory.  Also run local_benchmark_test to make sure there is no significant
-cpu time performance loss.  To run everything (in root project directory):
-`pytest --memray --cov=gval --cov-report term-missing && python ./tests/local_benchmark.py`.
-7. The README is made up of other docs located in /docs/markdown.  To make changes to the README edit them directly
+7. The README is made up of other docs located in `/docs/markdown`.  To make changes to the README edit them directly
 then run the following script: `python docs/compile_readme_and_arrange_docs.py`.
-8. To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
-The html will be created in the _build/html folder.  Open index.html in a browser to preview docs.
-9. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks mentioned on step 5
-that will lint the code. Make sure all of these checks pass, if not make changes and re-commit.
-10. Push to the branch: `git push -u origin`, or if the branch is not pushed up yet:
-`git push --set-upstream origin <your branch>`
-11. Open a pull request (review checklist in PR template before requesting a review)
+8. To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`. The html will be created in the `_build/html` folder.  Open `index.html` in a browser to preview docs.
+9. Run linting and tests with nox. Nox automates various tasks across Python environments.
+    - To test across Python versions, you would need to install [conda](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html) or [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html). Otherwise nox will just test in your current Python version.
+    - To run all sessions with nox do: `nox`
+    - The above could take too long since the tests session is replicated with all Python versions.
+    - Try some of the possible variants to reduce computational time:
+        - Just black: `nox -s black`
+        - Just flake8: `nox -s flake8`
+        - Just tests: `nox -s tests`
+        - Just a specific version of Python: `nox -p 3.8`
+10. Keep in mind that you can run linting and testing outside of the precommit hooks and nox. Just use the following commands with any custom variation you'd like:
+    - For black: `black src/ tests/`.
+    - For flake8: `flake8 src/ tests/`
+    - For tests: `pytest`
+11. Commit your changes: `git commit`. This will invoke pre-commit hooks mentioned on previously.
+12. Push to remote with:
+    - New branch: `git push -u origin <your_branch>`.
+    - Existing branch with upstream set: `git push` .
+13. Open a pull request (review checklist in PR template before requesting a review).
 
 
 ## Standards
-- Python 3.8 or higher
+- Python 3.8 - 3.11
 - [Numpy&nbsp;Style&nbsp;Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
 - [Python&nbsp;Type&nbsp;Hints](https://docs.python.org/3/library/typing.html)
 - [PEP8](https://pep8.org/) Styling (and [this](https://peps.python.org/pep-0008/))

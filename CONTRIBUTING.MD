@@ -37,54 +37,59 @@ and patterns in the existing code-base.
 
 ### Guidelines
 
-If you would like to contribute, please follow the following steps:
+If you would like to contribute, please follow the following steps from your terminal within the project's root director:
 
-1. Fork the project.
-2. Clone your fork: `git clone <your_username>/gval`
-3. Create a feature branch: `git checkout -b <your_feature>`
-4. Install the code via `pip install . .[dev]`
-5. Set up pre-commit hooks via `pre-commit install`.  Afterwards when a commit is made it will run
-[flake8](https://github.com/PyCQA/flake8) for code and style linting as well as
-[flake8-black](https://pypi.org/project/flake8-black/) to autoformat the code.  In many cases issues will be rectified
-automatically with flake8-black but in some cases manual changes will be necessary.
-6. Code Standards: Make sure unit tests pass `pytest` and there is no significant reduction
-in code coverage and increase in memory.  Also run local_benchmark_test to make sure there is no significant
-cpu time performance loss.  To run everything (in root project directory):
-`pytest --memray --cov=gval --cov-report term-missing && python ./tests/local_benchmark.py`.
-7. The README is made up of other docs located in /docs/markdown.  To make changes to the README edit them directly
-then run the following script: `python docs/compile_readme_and_arrange_docs.py`.
-8. To build sphinx documentation locally, change to the docs/sphinx folder and run `make clean && make html`.
-The html will be created in the _build/html folder.  Open index.html in a browser to preview docs.
-9. Commit your changes: `git commit -m 'feature message'`  This will invoke pre-commit hooks mentioned on step 5
-that will lint the code. Make sure all of these checks pass, if not make changes and re-commit.
-10. Push to the branch: `git push -u origin`, or if the branch is not pushed up yet:
-`git push --set-upstream origin <your branch>`
-11. Open a pull request (review checklist in PR template before requesting a review)
+**Note**: Anything within angle brackets `<>` is meant to be user-specified with the brackets removed.
+
+1. Fork the project on GitHub, clone your fork (`git clone <your_username>/gval`), and create a feature branch (`git checkout -b <your_feature>`).
+2. While not required, it's recommended to setup a virtual environment with the Python tool of your choice. Keep in mind that gval supports Python versions 3.8 to 3.11.
+    - With [venv](https://docs.python.org/3/library/venv.html):
+        - Ensure your environment is not committed to git. You can use one of the environment names within `.gitignore` to prevent this.
+        - To create environment: `python -m venv <your_env_dir>`.
+        - To activate: `source <your_env_dir>/bin/activate`.
+        - To deactivate: `deactivate`
+    - With [conda](https://docs.conda.io/projects/conda/en/latest/index.html):
+        - To create: `conda create -n <your_env_name> python=<X.X.X>`.
+        - To activate: `conda activate <your_env_name>`.
+        - To deactivate: `conda deactivate`.
+    - With [mamba](https://mamba.readthedocs.io/en/latest/):
+        - Same as conda just use `mamba` instead of `conda`.
+3. If you setup a virtual environment, make sure to activate it then run `pip install nox`. Alternatively, one could install all the development dependencies with `pip install -e .[dev]`.
+4. Set up automatic tasks with pre-commit hooks which are ran prior to every git commit via `pre-commit install`.  This will run [flake8-black](https://pypi.org/project/flake8-black/) to auto-format code and [flake8](https://github.com/PyCQA/flake8) for linting.
+5. Code changes: Make your changes and commit them the repo with `git add . && git commit`.
+6. Nox: Prior to submitting a PR, run linting, tests, and doc building with nox. Nox automates various tasks across Python environments.
+    - To test across Python versions, you would need to install [conda](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html) or [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html). Otherwise, nox will just test in your current Python version.
+    - To run all sessions with nox do: `nox`
+    - The above could take too long since the tests session is replicated with all Python versions. Try some of the possible variants to reduce computational time:
+        - Just black: `nox -s black`
+        - Just flake8: `nox -s flake8`
+        - Just linting (black and flake8): `nox -t linting`
+        - Just tests: `nox -s tests`
+        - Just a specific version of Python: `nox -p 3.8`
+        - Alternative virtual environment backend: `nox -db mamba`
+        - Adding additional Python versions: `nox --extra-pythons 3.7`
+    - It's a good idea to preview the docs prior to pushing to remote by opening `docs/sphinx/_build/html/index.html` in your browser.
+7. Push to remote with:
+    - New branch: `git push -u origin <your_branch>`.
+    - Existing branch with upstream set: `git push`.
+8. Open a pull request on GitHub and review the checklist in PR template before requesting a review.
+
+Note: Keep in mind that nox is available as convenience to conduct linting, testing, coverage, and doc building in an automated fashion. If you choose to do each step manually, please the steps above except for the following steps:
+1. Setup a virtual environment if you desire as explained above then within the activated environment run `pip install -e .[dev]`.
+2. Run the linters by doing `flake8 src tests noxfile.py` and `black src tests noxfile.py`.
+3. Run the tests and coverage by doing `pytest --memray --cov=gval --cov-report term-missing` and ensure 90% test coverage at a minimum.
+4. Build the sphinx documentation locally by running `cd docs/sphinx` then do `make clean && make html` to build.
 
 
 ## Standards
-- Python 3.8 or higher
+- Python 3.8 - 3.11
 - [Numpy&nbsp;Style&nbsp;Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
 - [Python&nbsp;Type&nbsp;Hints](https://docs.python.org/3/library/typing.html)
 - [PEP8](https://pep8.org/) Styling (and [this](https://peps.python.org/pep-0008/))
 
 
-## Tooling Dependencies
-- Testing with [PyTest](https://docs.pytest.org/en/7.1.x/contents.html)
-    * For timed tests: [pytest-monitor](https://github.com/CFMTech/pytest-monitor/)
-    * For code coverage: [pytest-cov](https://pypi.org/project/pytest-cov/)
-    * For memory test: [pytest-memray](https://pytest-memray.readthedocs.io/en/latest/)
-
-- Dependencies and Packaging
-    * [pip](https://packaging.python.org/en/latest/key_projects/#pip)
-- Distribution
-    *[PyPI](https://pypi.org/)
-    * GitHub (source, packaging, and images)
-- Docs
-    * [Sphinx](https://www.sphinx-doc.org/)
-    * [pandoc](https://pypi.org/project/pandoc/)
-    * [Jupyter](https://pypi.org/project/jupyter/)
-
+## Dependencies
+Dependencies are managed with a `requirements.txt` file for core dependencies. A `pyproject.toml` file contains the optional development dependencies and reads the `requirements.txt` file for the core dependencies. Please see those files for a complete list of dependencies used by gval.
 
 ## Versioning
 
@@ -92,30 +97,30 @@ The repository will adhere to the [Semantic Versioning 2.0.0.](https://semver.or
 
 ## Docker Use
 
-(In this case, the image name, "gval-image", and container name, "gval-python" can be changed
-to whatever name is more suitable.  Script, "test.py", does not exist and is an arbitrary placeholder for
-script of choice.)
+A Docker container is available for your convenience.
+
+**Note**: Anything within angle brackets `<>` is meant to be user-specified with the brackets removed. Additionally note that the use of sudo maybe optional dependening on how Docker was setup on your system.
 
 First setup docker instance and in the root directory of the project:
 
-`[sudo] docker build -t gval-image --target development . `
+`[sudo] docker build -t <your_image_name> --target development . `
 
 The default user named 'user' with UID 1001 is created.  To use the same user and permissions you
 currently have on your machine override with build arguments:
 
-`[sudo] docker build -t gval-image --build-arg UID=$(id -u) --target development .`
+`[sudo] docker build -t <your_image_name> --build-arg UID=$(id -u) --target development .`
 
 Standard run examples from the command line (standard, or overriding user with root):
 
-- `[sudo] docker run -v $(pwd):/home/user/gval --name gval-python gval-image`
-- `[sudo] docker run -v $(pwd):/home/user/gval --user root --name gval-python gval-image`
+- `[sudo] docker run -v $(pwd):/home/user/gval --name <your_container_name> <your_image_name>`
+- `[sudo] docker run -v $(pwd):/home/user/gval --user root --name <your_container_name> <your_image_name>`
 
 If given access keys for retrieving test data you can mount the volume as such:
 
-`[sudo] docker run -v ~/.aws:/home/user/.aws -v $(pwd):/home/user/gval --name gval-python gval-image`
+`[sudo] docker run -v ~/.aws:/home/user/.aws -v $(pwd):/home/user/gval --name <your_container_name> <your_image_name>`
 
 To keep your container running, try adding `tail -f /dev/null` as your command ensuring to detach with `-d`:
-- `[sudo] docker run -d -v $(pwd):/home/user/gval --name gval-python gval-image tail -f /dev/null`
+- `[sudo] docker run -d -v $(pwd):/home/user/gval --name <your_container_name> <your_image_name> tail -f /dev/null`
 
 You can also set up your IDE to run this docker image directly:
 - [PyCharm](https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker)
@@ -123,19 +128,7 @@ You can also set up your IDE to run this docker image directly:
 
 If the container already exists you can start as follows:
 
-`[sudo] docker start gval-python`
+`[sudo] docker start <your_container_name>`
 
 To enter the container interactively:
-`[sudo] docker exec gval-python bash`
-
-## Packaging
-
-To build the gval package and install locally:
-
-- In the root directory install the gval package:
-
-  `pip install . .[dev]`
-
-The packaging process using docker container would look as follows (on linux):
-
-`sudo docker exec -v $(pwd):/home/user/ --user root python -m build && pip install . .[dev]`
+`[sudo] docker exec <your_container_name> bash`
