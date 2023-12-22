@@ -57,13 +57,11 @@ If you would like to contribute, please follow the following steps from your ter
 3. If you setup a virtual environment, make sure to activate it then run `pip install nox`. Alternatively, one could install all the development dependencies with `pip install -e .[dev]`.
 4. Set up automatic tasks with pre-commit hooks which are ran prior to every git commit via `pre-commit install`.  This will run [flake8-black](https://pypi.org/project/flake8-black/) to auto-format code and [flake8](https://github.com/PyCQA/flake8) for linting.
 5. Code changes: Make your changes and commit them the repo with `git add . && git commit`.
-6. Nox: Prior to submitting a PR, run linting, tests, and doc building with nox. Nox automates various tasks across Python environments.
+6. Nox: Prior to submitting a PR, run linting, pre-commits, tests, coverage, and doc building with nox. Nox automates various tasks across Python environments.
     - To test across Python versions, you would need to install [conda](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html) or [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html). Otherwise, nox will just test in your current Python version.
     - To run all sessions with nox do: `nox`
     - The above could take too long since the tests session is replicated with all Python versions. Try some of the possible variants to reduce computational time:
-        - Just black: `nox -s black`
-        - Just flake8: `nox -s flake8`
-        - Just linting (black and flake8): `nox -t linting`
+        - Just precommits: `nox -t precommit`
         - Just tests: `nox -s tests`
         - Just a specific version of Python: `nox -p 3.8`
         - Alternative virtual environment backend: `nox -db mamba`
@@ -74,10 +72,11 @@ If you would like to contribute, please follow the following steps from your ter
     - Existing branch with upstream set: `git push`.
 8. Open a pull request on GitHub and review the checklist in PR template before requesting a review.
 
-Note: Keep in mind that nox is available as convenience to conduct linting, testing, coverage, and doc building in an automated fashion. If you choose to do each step manually, please the steps above except for the following steps:
+#### By-passing Nox
+Keep in mind that nox is available as convenience to conduct linting, precommits, testing, coverage, and doc building in an automated fashion. If you choose to do each step manually, please the steps above except for the following steps:
 1. Setup a virtual environment if you desire as explained above then within the activated environment run `pip install -e .[dev]`.
 2. Run the linters by doing `flake8 src tests noxfile.py` and `black src tests noxfile.py`.
-3. Run the tests and coverage by doing `pytest --memray --cov=gval --cov-report term-missing` and ensure 90% test coverage at a minimum.
+3. Run the tests and coverage by doing `pytest` and ensure 95% test coverage at a minimum.
 4. Build the sphinx documentation locally by running `cd docs/sphinx` then do `make clean && make html` to build.
 
 

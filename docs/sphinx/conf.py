@@ -6,7 +6,6 @@ https://www.sphinx-doc.org/en/master/usage/configuration.html
 """
 
 import os
-import sys
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -44,17 +43,13 @@ html_static_path = ["_static"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-pandoc_path
 
 # Set docs path: `gval/docs/`
-docs_dir_path = os.path.dirname(
-    os.path.abspath(
-        os.path.dirname(__file__)
-    )
-)
+docs_dir_path = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 # Set and make pandoc path
-pandoc_dir_path = os.path.join(docs_dir_path, 'pandoc')
+pandoc_dir_path = os.path.join(docs_dir_path, "pandoc")
 
 # Set and make pandoc executable path
-pandoc_executable_path = os.path.join(pandoc_dir_path, 'pandoc')
+pandoc_executable_path = os.path.join(pandoc_dir_path, "pandoc")
 
 # Set pandoc executable path to environment variable
-os.environ.setdefault('PANDOC', pandoc_executable_path)
+os.environ.setdefault("PANDOC", pandoc_executable_path)

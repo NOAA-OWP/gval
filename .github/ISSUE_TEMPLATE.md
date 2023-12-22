@@ -6,12 +6,6 @@ Short description explaining the high-level reason for the new issue.
 ## Expected behavior
 
 
-## Steps to replicate behavior (include URLs)
+## Steps to replicate behavior (include URLs, screenshots, commands, etc)
 
 1.
-
-
-## Screenshots
-
-
-

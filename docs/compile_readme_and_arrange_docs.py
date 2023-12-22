@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
 import os
 import re
 import shutil
 from glob import glob
 from tempfile import mkdtemp
-import stat
-from platform import system
 
 from pypandoc import convert_text
 from pypandoc.pandoc_download import download_pandoc
@@ -26,17 +23,19 @@ def compile_readme() -> None:
     os.makedirs(conf.pandoc_dir_path, exist_ok=True)
 
     # pandoc executable path and add to environment variables
-    os.environ.setdefault('PYPANDOC_PANDOC', conf.pandoc_executable_path)
+    os.environ.setdefault("PYPANDOC_PANDOC", conf.pandoc_executable_path)
 
     # Set pandoc download path
-    pandoc_download_path = mkdtemp('pandoc_tmp')
+    pandoc_download_path = mkdtemp("pandoc_tmp")
 
     # Download pandoc
-    download_pandoc(targetfolder=conf.pandoc_dir_path, download_folder=pandoc_download_path)
+    download_pandoc(
+        targetfolder=conf.pandoc_dir_path, download_folder=pandoc_download_path
+    )
 
     # Define input and output paths
-    input_path = os.path.join(conf.docs_dir_path, 'markdown', '*.MD')
-    output_path = os.path.join(conf.docs_dir_path, '..', 'README.MD')
+    input_path = os.path.join(conf.docs_dir_path, "markdown", "*.MD")
+    output_path = os.path.join(conf.docs_dir_path, "..", "README.MD")
 
     # Get list of markdown files
     md_files = glob(input_path)
@@ -45,16 +44,16 @@ def compile_readme() -> None:
     md_files = sorted(md_files)
 
     # Read and concatenate markdown files
-    concatenated_md = ''
+    concatenated_md = ""
     for md_file in md_files:
-        with open(md_file, 'r') as file:
-            concatenated_md += file.read().strip() + '\n\n'
+        with open(md_file, "r") as file:
+            concatenated_md += file.read().strip() + "\n\n"
 
     # Strip trailing whitespace from concatenated markdown
     concatenated_md = concatenated_md.strip()
 
     # Convert concatenated markdown to README
-    convert_text(concatenated_md, 'gfm', format='gfm', outputfile=output_path)
+    convert_text(concatenated_md, "gfm", format="gfm", outputfile=output_path)
 
     contents = None
     with open(f"{conf.docs_dir_path}/../README.MD", "r") as file:
