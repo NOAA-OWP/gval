@@ -71,7 +71,7 @@ def coverage(session: nox.Session) -> None:
     Report test coverage.
     """
     session.install(".[testing]")
-    
+
     # Run coverage report; configuration in .coveragerc
     session.run("coverage", "report")
 
