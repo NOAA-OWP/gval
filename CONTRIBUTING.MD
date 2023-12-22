@@ -35,64 +35,79 @@ and patterns in the existing code-base.
 
 ![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/ContributionGraphic.png)
 
+Your contributing guidelines are well-structured and detailed, providing clear steps for contributors. Here are some suggestions to enhance clarity, conciseness, and precision:
+
 ### Guidelines
 
-If you would like to contribute, please follow the following steps from your terminal within the project's root director:
+If you would like to contribute to our project, please follow these steps from the terminal within the project's root directory:
 
-**Note**: Anything within angle brackets `<>` is meant to be user-specified with the brackets removed.
+**Note**: Replace anything within angle brackets `<>` with your specific information, removing the brackets.
 
-1. Fork the project on GitHub, clone your fork (`git clone <your_username>/gval`), and create a feature branch (`git checkout -b <your_feature>`).
-2. While not required, it's recommended to setup a virtual environment with the Python tool of your choice. Keep in mind that gval supports Python versions 3.8 to 3.11.
-    - With [venv](https://docs.python.org/3/library/venv.html):
-        - Ensure your environment is not committed to git. You can use one of the environment names within `.gitignore` to prevent this.
-        - To create environment: `python -m venv <your_env_dir>`.
-        - To activate: `source <your_env_dir>/bin/activate`.
-        - To deactivate: `deactivate`
-    - With [conda](https://docs.conda.io/projects/conda/en/latest/index.html):
-        - To create: `conda create -n <your_env_name> python=<X.X.X>`.
-        - To activate: `conda activate <your_env_name>`.
-        - To deactivate: `conda deactivate`.
-    - With [mamba](https://mamba.readthedocs.io/en/latest/):
-        - Same as conda just use `mamba` instead of `conda`.
-3. If you setup a virtual environment, make sure to activate it then run `pip install nox`. Alternatively, one could install all the development dependencies with `pip install -e .[dev]`.
-4. Set up automatic tasks with pre-commit hooks which are ran prior to every git commit via `pre-commit install`.  This will run [flake8-black](https://pypi.org/project/flake8-black/) to auto-format code and [flake8](https://github.com/PyCQA/flake8) for linting.
-5. Code changes: Make your changes and commit them the repo with `git add . && git commit`.
-6. Nox: Prior to submitting a PR, run linting, pre-commits, tests, coverage, and doc building with nox. Nox automates various tasks across Python environments.
-    - To test across Python versions, you would need to install [conda](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html) or [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html). Otherwise, nox will just test in your current Python version.
-    - To run all sessions with nox do: `nox`
-    - The above could take too long since the tests session is replicated with all Python versions. Try some of the possible variants to reduce computational time:
-        - Just precommits: `nox -t precommit`
-        - Just tests: `nox -s tests`
-        - Just a specific version of Python: `nox -p 3.8`
-        - Alternative virtual environment backend: `nox -db mamba`
-        - Adding additional Python versions: `nox --extra-pythons 3.7`
-    - It's a good idea to preview the docs prior to pushing to remote by opening `docs/sphinx/_build/html/index.html` in your browser.
-7. Push to remote with:
-    - New branch: `git push -u origin <your_branch>`.
-    - Existing branch with upstream set: `git push`.
-8. Open a pull request on GitHub and review the checklist in PR template before requesting a review.
+1. **Fork and Clone**: 
+   - Fork the project on GitHub.
+   - Clone your fork (`git clone <your_username>/gval`).
+   - Create a feature branch (`git checkout -b <your_feature>`).
+
+2. **Virtual Environment Setup** (Recommended):
+   - **gval** supports Python versions 3.8 to 3.11.
+   - Ensure your environment is not included in the git commits. Use one of the names listed in `.gitignore`.
+   - Options:
+     - **venv**:
+       - Create: `python -m venv <your_env_dir>`.
+       - Activate: `source <your_env_dir>/bin/activate`.
+       - Deactivate: `deactivate`.
+     - **conda/mamba**:
+       - Create: `[conda|mamba] create -n <your_env_name> python=<X.X.X>`.
+       - Activate: `[conda|mamba] activate <your_env_name>`.
+       - Deactivate: `[conda|mamba] deactivate`.
+
+3. **Dependency Installation**:
+   - Activate your virtual environment.
+   - Install Nox: `pip install nox`.
+   - Alternatively, install all development dependencies: `pip install -e .[dev]`.
+
+4. **Pre-commit Hooks**:
+   - Set up automatic linting tasks: `pre-commit install`.
+
+5. **Making Changes**:
+   - Commit your changes: `git add . && git commit`.
+
+6. **Using Nox**:
+   - Run linting, pre-commits, tests, coverage, and doc building with Nox.
+   - To test across Python versions, install [conda](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html) or [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html).
+   - Run all sessions (time-consuming): `nox`.
+   - Variants to save time:
+     - Pre-commits only (linting): `nox -t precommit`.
+     - Tests only: `nox -s tests`.
+     - Specific Python version: `nox -p 3.8`.
+     - Different virtual environment backend: `nox -db mamba`.
+     - Extra Python versions: `nox --extra-pythons 3.7`.
+   - Preview docs after running `nox` or `nox -s docs`: Open `docs/sphinx/_build/html/index.html` in a browser.
+
+7. **Pushing Changes**:
+   - New branch: `git push -u origin <your_branch>`.
+   - Existing branch: `git push`.
+
+8. **Pull Request**:
+    - Start a PR conforming to the PR template and request a review.
 
 #### By-passing Nox
-Keep in mind that nox is available as convenience to conduct linting, precommits, testing, coverage, and doc building in an automated fashion. If you choose to do each step manually, please the steps above except for the following steps:
-1. Setup a virtual environment if you desire as explained above then within the activated environment run `pip install -e .[dev]`.
-2. Run the linters by doing `flake8 src tests noxfile.py` and `black src tests noxfile.py`.
-3. Run the tests and coverage by doing `pytest` and ensure 95% test coverage at a minimum.
-4. Build the sphinx documentation locally by running `cd docs/sphinx` then do `make clean && make html` to build.
 
-
-## Standards
-- Python 3.8 - 3.11
-- [Numpy&nbsp;Style&nbsp;Docstrings](https://numpydoc.readthedocs.io/en/v1.1.0/format.html#documenting-modules)
-- [Python&nbsp;Type&nbsp;Hints](https://docs.python.org/3/library/typing.html)
-- [PEP8](https://pep8.org/) Styling (and [this](https://peps.python.org/pep-0008/))
+You may manually perform steps handled by Nox:
+1. Setup a virtual environment (as above) and run `pip install -e .[dev]`.
+2. Linting: Execute `flake8` and `black .`.
+3. Testing: Run `pytest` ensuring at least 95% test coverage.
+4. Docs: Navigate (`cd docs/sphinx`) and build (`make clean && make html`).
 
 
 ## Dependencies
-Dependencies are managed with a `requirements.txt` file for core dependencies. A `pyproject.toml` file contains the optional development dependencies and reads the `requirements.txt` file for the core dependencies. Please see those files for a complete list of dependencies used by gval.
+- **Core dependencies** are managed within `requirements.txt`.
+- **Optional dependencies** related to development activities are listed directly within `pyproject.toml`.
+    - There are several groups of optional dependencies but `dev` encompasses all of them.
 
 ## Versioning
 
-The repository will adhere to the [Semantic Versioning 2.0.0.](https://semver.org/)
+The repository adheres to the [Semantic Versioning 2.0.0.](https://semver.org/)
 
 ## Docker Use
 
