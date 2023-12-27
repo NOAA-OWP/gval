@@ -17,7 +17,7 @@ import dask as da
 
 from gval import ContStats
 from gval.utils.schemas import Metrics_df, Subsample_identifiers, Sample_identifiers
-from gval.utils.loading_datasets import _check_dask_array, _convert_to_dataset
+from gval.utils.loading_datasets import _convert_to_dataset
 
 
 def _get_selected_datasets(
@@ -49,51 +49,31 @@ def _get_selected_datasets(
         Datasets with selected coordinates
     """
 
-    is_dsk = _check_dask_array(agreement)
+    # is_dsk = _check_dask_array(agreement)
     cmask, bmask = (
         xr.where(candidate[var_name] == nodata, 0, 1),
         xr.where(benchmark[var_name] == nodata, 0, 1),
     )
     tmask = cmask & bmask
 
-    # Create a coord meshgrid and select appropriate coords to select from xarray
-    if is_dsk:
-        with da.config.set({"array.slicing.split_large_chunks": True}):
-            grid_coords = da.array.asarray(
-                da.array.meshgrid(candidate.coords["x"], candidate.coords["y"])
-            ).T.reshape(-1, 2)
-            picked_coords = grid_coords[da.array.ravel(tmask.data).astype(bool), :]
-    else:
-        grid_coords = np.array(
-            np.meshgrid(candidate.coords["x"], candidate.coords["y"])
-        ).T.reshape(-1, 2)
-        picked_coords = grid_coords[np.ravel(tmask.data).astype(bool), :]
+    # # Create a coord meshgrid and select appropriate coords to select from xarray
+    # if is_dsk:
+    #     with da.config.set({"array.slicing.split_large_chunks": True}):
+    #         grid_coords = da.array.asarray(
+    #             da.array.meshgrid(candidate.coords["x"], candidate.coords["y"])
+    #         ).T.reshape(-1, 2)
+    #         picked_coords = grid_coords[da.array.ravel(tmask.data).astype(bool), :]
+    # else:
+    #     grid_coords = np.array(
+    #         np.meshgrid(candidate.coords["x"], candidate.coords["y"])
+    #     ).T.reshape(-1, 2)
+    #     picked_coords = grid_coords[np.ravel(tmask.data).astype(bool), :]
 
     # Select coordinates from xarray
     with da.config.set({"array.slicing.split_large_chunks": True}):
-        agreement_sel = (
-            agreement[var_name].sel(
-                {"x": picked_coords[:, 0], "y": picked_coords[:, 1]}
-            )
-            if picked_coords is not None
-            else agreement[var_name]
-        )
-
-        candidate_sel = (
-            candidate[var_name].sel(
-                {"x": picked_coords[:, 0], "y": picked_coords[:, 1]}
-            )
-            if picked_coords is not None
-            else candidate[var_name]
-        )
-
-        benchmark_sel = (
-            benchmark[var_name].sel(
-                {"x": picked_coords[:, 0], "y": picked_coords[:, 1]}
-            )
-            if picked_coords is not None
-            else benchmark[var_name]
-        )
+        agreement_sel = agreement[var_name].where(tmask.compute(), drop=True)
+        candidate_sel = candidate[var_name].where(tmask.compute(), drop=True)
+        benchmark_sel = benchmark[var_name].where(tmask.compute(), drop=True)
 
     return (
         agreement_sel,
