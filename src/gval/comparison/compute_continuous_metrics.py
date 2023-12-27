@@ -49,25 +49,11 @@ def _get_selected_datasets(
         Datasets with selected coordinates
     """
 
-    # is_dsk = _check_dask_array(agreement)
     cmask, bmask = (
         xr.where(candidate[var_name] == nodata, 0, 1),
         xr.where(benchmark[var_name] == nodata, 0, 1),
     )
     tmask = cmask & bmask
-
-    # # Create a coord meshgrid and select appropriate coords to select from xarray
-    # if is_dsk:
-    #     with da.config.set({"array.slicing.split_large_chunks": True}):
-    #         grid_coords = da.array.asarray(
-    #             da.array.meshgrid(candidate.coords["x"], candidate.coords["y"])
-    #         ).T.reshape(-1, 2)
-    #         picked_coords = grid_coords[da.array.ravel(tmask.data).astype(bool), :]
-    # else:
-    #     grid_coords = np.array(
-    #         np.meshgrid(candidate.coords["x"], candidate.coords["y"])
-    #     ).T.reshape(-1, 2)
-    #     picked_coords = grid_coords[np.ravel(tmask.data).astype(bool), :]
 
     # Select coordinates from xarray
     with da.config.set({"array.slicing.split_large_chunks": True}):
