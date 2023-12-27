@@ -37,7 +37,24 @@ def test_stac_api_call(
         nodata_fill=nodata_fill,
     )
 
-    agreement, metrics = candidate.gval.continuous_compare(benchmark)
+    # Registered metrics from previous tests affect this comparison so metrics are explicit
+    agreement, metrics = candidate.gval.continuous_compare(
+        benchmark,
+        metrics=[
+            "coefficient_of_determination",
+            "mean_absolute_error",
+            "mean_absolute_percentage_error",
+            "mean_normalized_mean_absolute_error",
+            "mean_normalized_root_mean_squared_error",
+            "mean_percentage_error",
+            "mean_signed_error",
+            "mean_squared_error",
+            "range_normalized_mean_absolute_error",
+            "range_normalized_root_mean_squared_error",
+            "root_mean_squared_error",
+            "symmetric_mean_absolute_percentage_error",
+        ],
+    )
 
     bnds = [bands] if isinstance(bands, str) else bands
 

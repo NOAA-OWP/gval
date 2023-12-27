@@ -30,5 +30,7 @@ benchmark = rxr.open_rasterio('benchmark_map_two_class_categorical.tif', mask_an
 
 ![alt text](../images/metric_table.png)
 
+The same can be done for continuous rasters as shown below:
+
 For more details on how to use this software, check out this
 [notebook tutorial](https://github.com/NOAA-OWP/gval/blob/main/notebooks/Tutorial.ipynb).

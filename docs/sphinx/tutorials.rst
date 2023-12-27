@@ -8,3 +8,5 @@ Tutorials
    SphinxTutorial
    SphinxMulticatTutorial
    SphinxContinuousTutorial
+   SphinxSubsamplingTutorial
+   SphinxCatalogTutorial
