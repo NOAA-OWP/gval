@@ -64,7 +64,7 @@ def _load_gpkg(
         geopandas GeoDataFrame.
     """
     file_path = _build_map_file_path(file_name)
-    return gpd.read_file(file_path, *args, **kwargs)
+    return gpd.read_file(file_path, engine="pyogrio", *args, **kwargs)
 
 
 def _load_xarray(
