@@ -85,6 +85,62 @@ def compile_readme():
     )
 
     sphinx_contents = sphinx_contents.replace(
+        "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
+        "continuous_agreement_map.png)",
+        '<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/'
+        'continuous_agreement_map.png" '
+        'width="500" height="150" />',
+    )
+
+    sphinx_contents = sphinx_contents.replace(
+        "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
+        "continuous_metric_table.png)",
+        '<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/'
+        'continuous_metric_table.png" '
+        'width="700" height="180" />',
+    )
+
+    sphinx_contents = sphinx_contents.replace(
+        "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
+        "candidate_catalog.png)",
+        '<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/'
+        'candidate_catalog.png" '
+        'width="450" height="120" />',
+    )
+
+    sphinx_contents = sphinx_contents.replace(
+        "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
+        "benchmark_catalog.png)",
+        '<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/'
+        'benchmark_catalog.png" '
+        'width="350" height="120" />',
+    )
+
+    sphinx_contents = sphinx_contents.replace(
+        "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
+        "catalog_agreement_map.png)",
+        '<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/'
+        'catalog_agreement_map.png" '
+        'width="500" height="150" />',
+    )
+
+    sphinx_contents = sphinx_contents.replace(
+        "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
+        "catalog_agreement_map2.png)",
+        '<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/'
+        'catalog_agreement_map2.png" '
+        'width="700" height="180" />',
+    )
+
+    sphinx_contents = sphinx_contents.replace(
+        "![alt text](https://github.com/NOAA-OWP/gval/raw/main/docs/images/"
+        "catalog_metric_table.png)",
+        '<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/'
+        'catalog_metric_table.png" '
+        'width="700" height="450" />',
+    )
+
+    sphinx_contents = sphinx_contents.replace(
         "\nSee the full documentation [here](noaa-owp.github.io/gval/).\n", ""
     )
 
