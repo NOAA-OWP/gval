@@ -455,7 +455,8 @@ def get_stac_data(
     Returns
     -------
     xr.Dataset
-        Dataset with the time slice and desired bands
+        Xarray object with resepective STAC API data
+
     """
 
     with warnings.catch_warnings():
@@ -480,19 +481,27 @@ def get_stac_data(
 
         # Aggregate if there is more than one time
         if stack.coords["time"].shape[0] > 1:
+            crs = stack.rio.crs
             if time_aggregate == "mean":
                 stack = stack.mean(dim="time")
+                stack.attrs["time_aggregate"] = "mean"
             elif time_aggregate == "min":
                 stack = stack.min(dim="time")
+                stack.attrs["time_aggregate"] = "min"
             elif time_aggregate == "max":
                 stack = stack.max(dim="time")
+                stack.attrs["time_aggregate"] = "max"
             else:
                 raise ValueError("A valid aggregate must be used for time ranges")
+
+            stack.rio.write_crs(crs, inplace=True)
         else:
             stack = stack[0]
+            stack.attrs["time_aggregate"] = "none"
 
         # Select specific bands
         if bands is not None:
+            bands = [bands] if isinstance(bands, str) else bands
             stack = stack.sel({"band": bands})
 
         band_metadata = (

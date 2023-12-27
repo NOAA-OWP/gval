@@ -4,6 +4,7 @@ Test functionality for gval/statistics modules
 
 # __all__ = ['*']
 
+
 import numpy as np
 import pandas as pd
 from pytest_cases import parametrize
@@ -12,7 +13,9 @@ url = "https://earth-search.aws.element84.com/v1"
 collection = "sentinel-2-l2a"
 bbox = [-105.78, 35.79, -105.72, 35.84]
 
+
 bands = ["aot", ["aot"], ["aot"], ["aot"], ["aot", "rededge1"]]
+
 
 time = [
     ["2020-04-01", "2020-04-03"],
