@@ -11,7 +11,6 @@ import contextlib
 
 import nox
 
-MIN_COVERAGE_PERC = 5
 PYTHON_VERSIONS = ["3.8", "3.9", "3.10", "3.11"]
 LINTING_VERSION = "3.11"
 DOCS_VERSION = "3.11"
