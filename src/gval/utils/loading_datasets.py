@@ -240,6 +240,7 @@ def _convert_to_dataset(xr_object=Union[xr.DataArray, xr.Dataset]) -> xr.Dataset
 
 def _get_raster_band_nodata(band_metadata, nodata_fill) -> Number:
     """
+    Extracts nodata information from STAC APIs that implement Raster Extension
 
     Parameters
     ----------
@@ -252,6 +253,11 @@ def _get_raster_band_nodata(band_metadata, nodata_fill) -> Number:
     -------
     Number
         Number representing nodata
+
+    Raises
+    ------
+    ValueError
+
     """
 
     if band_metadata:
@@ -272,6 +278,7 @@ def _set_nodata(
     stack: xr.DataArray, band_metadata: list = None, nodata_fill: Number = None
 ) -> Number:
     """
+    Sets nodata information from STAC APIs that implement Raster Extension
 
     Parameters
     ----------

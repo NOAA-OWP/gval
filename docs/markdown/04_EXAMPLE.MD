@@ -33,7 +33,8 @@ benchmark = rxr.open_rasterio('benchmark_map_two_class_categorical.tif', mask_an
 
 ### Continuous Example
 
-The same can be done for continuous rasters as shown below (in this case only a subset of the default statistics will be run):
+The same can be done for rasters with continuous valued statistical data types as shown below (in this case only a
+subset of the default statistics will be run):
 
 ```python
 import gval
@@ -76,7 +77,9 @@ and benchmark catalog for continuous datasets:
 
 ![alt text](../images/benchmark_catalog.png)
 
-With the following code a comparison of each pair of maps can be run with the following code (note the first pair of
+With the following code a comparison of each pair of maps can be run with the following code.  Since the parameter
+`agreement_map_field` is provided the column `agreement_maps` found in the candidate catalog will be used to
+export the agreement map to that location. (Note the first pair of
 candidate and benchmark maps are single band rasters while the second pair are multiband rasters):
 
 ```python
@@ -91,6 +94,7 @@ arguments = {
     "candidate_catalog": candidate_continuous_catalog,
     "benchmark_catalog": benchmark_continuous_catalog,
     "on": "compare_id",
+    "agreement_map_field": "agreement_maps",
     "map_ids": "map_id",
     "how": "inner",
     "compare_type": "continuous",
@@ -122,6 +126,9 @@ agreement_continuous_catalog = catalog_compare(**arguments)
 `catalog_metrics`
 
 ![alt text](../images/catalog_metric_table.png)
+
+(Note that both catalog level attributes in the candidate and benchmark catalogs are present in the catalog metrics
+table.)
 
 For more detailed examples of how to use this software, check out these
 [notebook tutorials](https://github.com/NOAA-OWP/gval/blob/main/notebooks).

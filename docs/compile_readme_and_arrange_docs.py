@@ -1,30 +1,62 @@
-import subprocess
+#!/usr/bin/env python3
+
 import os
 import re
 import shutil
+from glob import glob
+from tempfile import mkdtemp
+
+from pypandoc import convert_text
+from pypandoc.pandoc_download import download_pandoc
+
+from sphinx import conf
 
 
-def compile_readme():
-    abs_path = os.path.dirname(os.path.abspath(__file__))
+def compile_readme() -> None:
+    """
+    Compiles the README.MD, SPHINX_README.MD, and PYPI_README.MD files from the markdown files in the markdown directory (`docs/markdown`). Replace the path to the images in the local images directory (`docs/images`) with the urls to the images in the main branch of the repository.
 
-    if os.name == "nt":
-        ret = subprocess.call(
-            "where /q pandoc || ECHO Could not find app. && EXIT /B", shell=True
-        )
-        ret_code = 0 if ret != "Could not find app." else 1
-    else:
-        ret_code = subprocess.call("command -v pandoc", shell=True)
+    This also copies the images, notebooks, and CONTRIBUTING.MD file to the sphinx directory (`docs/sphinx`).
+    """
 
-    if ret_code != 0:
-        raise "No Pandoc installed"
+    # Make pandoc path
+    os.makedirs(conf.pandoc_dir_path, exist_ok=True)
 
-    subprocess.call(
-        f"pandoc -f gfm -t gfm {abs_path}/markdown/*.MD >" + f"{abs_path}/../README.MD",
-        shell=True,
+    # pandoc executable path and add to environment variables
+    os.environ.setdefault("PYPANDOC_PANDOC", conf.pandoc_executable_path)
+
+    # Set pandoc download path
+    pandoc_download_path = mkdtemp("pandoc_tmp")
+
+    # Download pandoc
+    download_pandoc(
+        targetfolder=conf.pandoc_dir_path, download_folder=pandoc_download_path
     )
 
+    # Define input and output paths
+    input_path = os.path.join(conf.docs_dir_path, "markdown", "*.MD")
+    output_path = os.path.join(conf.docs_dir_path, "..", "README.MD")
+
+    # Get list of markdown files
+    md_files = glob(input_path)
+
+    # Sort markdown files
+    md_files = sorted(md_files)
+
+    # Read and concatenate markdown files
+    concatenated_md = ""
+    for md_file in md_files:
+        with open(md_file, "r") as file:
+            concatenated_md += file.read().strip() + "\n\n"
+
+    # Strip trailing whitespace from concatenated markdown
+    concatenated_md = concatenated_md.strip()
+
+    # Convert concatenated markdown to README
+    convert_text(concatenated_md, "gfm", format="gfm", outputfile=output_path)
+
     contents = None
-    with open(f"{abs_path}/../README.MD", "r") as file:
+    with open(f"{conf.docs_dir_path}/../README.MD", "r") as file:
         contents = file.read()
         contents = contents.replace(
             "../images", "https://github.com/NOAA-OWP/gval/raw/main/docs/images"
@@ -34,12 +66,11 @@ def compile_readme():
         contents = contents.replace("  -", "-")
 
         matches = re.findall("<code>[^>]*>[^~]*?", contents)
-        print(matches)
 
         for match in matches:
             contents = contents.replace(match, match.replace(" ", "&nbsp;"))
 
-    with open(f"{abs_path}/../README.MD", "w") as file:
+    with open(f"{conf.docs_dir_path}/../README.MD", "w") as file:
         file.write(contents)
 
     # For Sphinx documentation
@@ -49,7 +80,7 @@ def compile_readme():
         "",
     )
 
-    with open(f"{abs_path}/sphinx/PYPI_README.MD", "w") as file:
+    with open(f"{conf.docs_dir_path}/sphinx/PYPI_README.MD", "w") as file:
         file.write(sphinx_contents)
 
     sphinx_contents = sphinx_contents.replace(
@@ -144,37 +175,37 @@ def compile_readme():
         "\nSee the full documentation [here](noaa-owp.github.io/gval/).\n", ""
     )
 
-    with open(f"{abs_path}/sphinx/SPHINX_README.MD", "w") as file:
+    with open(f"{conf.docs_dir_path}/sphinx/SPHINX_README.MD", "w") as file:
         file.write(sphinx_contents)
 
     shutil.copy(
-        f"{abs_path}/../notebooks/Tutorial.ipynb",
-        f"{abs_path}/sphinx/SphinxTutorial.ipynb",
+        f"{conf.docs_dir_path}/../notebooks/Tutorial.ipynb",
+        f"{conf.docs_dir_path}/sphinx/SphinxTutorial.ipynb",
     )
 
     shutil.copy(
-        f"{abs_path}/../notebooks/Continuous Comparison Tutorial.ipynb",
-        f"{abs_path}/sphinx/SphinxContinuousTutorial.ipynb",
+        f"{conf.docs_dir_path}/../notebooks/Continuous Comparison Tutorial.ipynb",
+        f"{conf.docs_dir_path}/sphinx/SphinxContinuousTutorial.ipynb",
     )
 
     shutil.copy(
-        f"{abs_path}/../notebooks/Multi-Class Categorical Statistics.ipynb",
-        f"{abs_path}/sphinx/SphinxMulticatTutorial.ipynb",
+        f"{conf.docs_dir_path}/../notebooks/Multi-Class Categorical Statistics.ipynb",
+        f"{conf.docs_dir_path}/sphinx/SphinxMulticatTutorial.ipynb",
     )
 
     shutil.copy(
-        f"{abs_path}/../notebooks/Subsampling Tutorial.ipynb",
-        f"{abs_path}/sphinx/SphinxSubsamplingTutorial.ipynb",
+        f"{conf.docs_dir_path}/../notebooks/Subsampling Tutorial.ipynb",
+        f"{conf.docs_dir_path}/sphinx/SphinxSubsamplingTutorial.ipynb",
     )
 
     shutil.copy(
-        f"{abs_path}/../notebooks/Catalog Tutorial.ipynb",
-        f"{abs_path}/sphinx/SphinxCatalogTutorial.ipynb",
+        f"{conf.docs_dir_path}/../notebooks/Catalog Tutorial.ipynb",
+        f"{conf.docs_dir_path}/sphinx/SphinxCatalogTutorial.ipynb",
     )
 
     shutil.copy(
-        f"{abs_path}/../CONTRIBUTING.MD",
-        f"{abs_path}/sphinx/SPHINX_CONTRIBUTING.MD",
+        f"{conf.docs_dir_path}/../CONTRIBUTING.MD",
+        f"{conf.docs_dir_path}/sphinx/SPHINX_CONTRIBUTING.MD",
     )
 
 

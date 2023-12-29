@@ -16,8 +16,6 @@
 
 1.
 
-## Screenshots
-
 
 ## Notes
 
@@ -29,12 +27,11 @@
 
 ## Checklist
 
-- [ ] PR has an informative and human-readable title
-- [ ] Changes are limited to a single goal (no scope creep)
-- [ ] Code can be automatically merged (no conflicts)
-- [ ] Code follows project standards documented [here](https://github.com/NOAA-OWP/gval/blob/main/docs/markdown/05_CONTRIBUTING.MD)
-- [ ] Passes all existing automated tests
-- [ ] Any _change_ in functionality is tested
-- [ ] New functions are documented (with a description, list of inputs, and expected output)
-- [ ] Placeholder code is flagged / future todos are captured in comments
+- [ ] PR has an informative and human-readable title and description.
+- [ ] Changes are limited to a single goal (no scope creep).
+- [ ] Code can be automatically merged (no conflicts).
+- [ ] Code follows project standards documented on the [Contributing page](https://github.com/NOAA-OWP/gval/blob/main/docs/markdown/05_CONTRIBUTING.MD).
+- [ ] Passes all existing automated sessions using `nox`. This includes linting, testing, and doc building.
+    - [ ] Test coverage is at 95% or above.
+- [ ] Placeholder code is flagged (`# PLACEHOLDER:`) and future TODOs are captured in comments (`# TODO:`).
 - [ ] Reviewers requested with the [Reviewers tool](https://help.github.com/articles/requesting-a-pull-request-review/) :arrow_right:

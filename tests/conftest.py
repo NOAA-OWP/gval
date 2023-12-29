@@ -44,11 +44,7 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
 
 
 def _load_gpkg(
-    file_name: Union[str, os.PathLike],
-    *args,
-    **kwargs
-    # masked: bool = False,
-    # mask_and_scale: bool = False,
+    file_name: Union[str, os.PathLike], *args, engine: str = "pyogrio", **kwargs
 ) -> gpd.GeoDataFrame:
     """
     Loads geopackage given a base file name.
@@ -57,6 +53,8 @@ def _load_gpkg(
     ----------
     file_name : Union[str, os.PathLike]
         Base file name of file within local TEST_DATA_DIR or TEST_DATA_S3_NAME.
+    engine : str, default = "pyogrio"
+        Engine to use to read file. Accepts "fiona" or "pyogrio".
 
     Returns
     -------
@@ -64,7 +62,12 @@ def _load_gpkg(
         geopandas GeoDataFrame.
     """
     file_path = _build_map_file_path(file_name)
-    return gpd.read_file(file_path, engine="pyogrio", *args, **kwargs)
+
+    # pop engine from kwargs if it exists
+    if "engine" in kwargs:
+        engine = kwargs.pop("engine")
+
+    return gpd.read_file(file_path, engine=engine, *args, **kwargs)
 
 
 def _load_xarray(

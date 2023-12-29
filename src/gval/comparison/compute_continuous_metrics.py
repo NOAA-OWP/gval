@@ -20,7 +20,7 @@ from gval.utils.schemas import Metrics_df, Subsample_identifiers, Sample_identif
 from gval.utils.loading_datasets import _convert_to_dataset
 
 
-def _get_selected_datasets(
+def _get_masked_data(
     agreement: xr.Dataset,
     candidate: xr.Dataset,
     benchmark: xr.Dataset,
@@ -28,7 +28,7 @@ def _get_selected_datasets(
     var_name: str,
 ) -> List[xr.Dataset]:
     """
-    Selects specific coordinates for integer valued datasets to not process nodata values
+    Gets masked data for integer valued datasets in order to not process nodata values
 
     Parameters
     ----------
@@ -140,7 +140,7 @@ def _compute_continuous_metrics(
             # Iterate through each band and gather statistics
             for nodata_idx, var_name in enumerate(agreement.data_vars):
                 # Create mask for all nodata values
-                agreement_sel, candidate_sel, benchmark_sel = _get_selected_datasets(
+                agreement_sel, candidate_sel, benchmark_sel = _get_masked_data(
                     agreement, candidate, benchmark, nodata[nodata_idx], var_name
                 )
 

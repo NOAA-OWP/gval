@@ -15,37 +15,101 @@ license = {text = "MIT"}
 version = "0.2.5"
 dynamic = ["readme", "dependencies"]
 
-
 [project.optional-dependencies]
-dev = ["pytest==7.2.2",
+dev = [
+    #### linting ####
+    "flake8==6.0.0",
+    "flake8-black==0.3.6",
+
+    #### testing ####
+    "pytest==7.2.2",
     "pytest-benchmark==4.0.0",
     "pytest-cov==4.1.0",
     "pytest-cases==3.6.14",
-    "flake8==6.0.0",
-    "flake8-black==0.3.6",
     "allure-pytest==2.13.2",
-    "jupyter==1.0.0",
-    "sphinx==6.2.1",
     "pytest-memray==1.4.1",
     "pytest-monitor==1.6.6",
-    "sphinx-rtd-theme==1.2.2",
-    "pre-commit==3.3.3",
     "boto3==1.26.164",
-    "myst_parser==2.0.0",
-    "nbsphinx==0.9.2",
     "sqlalchemy==2.0.17",
     "colorama==0.4.6",
+    "deepdiff==6.7.1",
+
+    #### docs ####
+    "sphinx==6.2.1",
+    "sphinx-rtd-theme==1.2.2",
+    "myst_parser==2.0.0",
+    "nbsphinx==0.9.2",
+    "pypandoc==1.12",
+    "jupyter==1.0.0",
+
+    #### ci/cd automation ####
+    "nox==2023.04.22",
+    "pre-commit==3.3.3",
+
+    ## other ##
     "build==0.10.0",
-    "twine==4.0.2",
-    "deepdiff==6.7.1"
+    "twine==3.4.2"
+]
+linting = [
+    "flake8==6.0.0",
+    "flake8-black==0.3.6"
+]
+testing = [
+    "pytest==7.2.2",
+    "pytest-benchmark==4.0.0",
+    "pytest-cov==4.1.0",
+    "pytest-cases==3.6.14",
+    "allure-pytest==2.13.2",
+    "pytest-memray==1.4.1",
+    "pytest-monitor==1.6.6",
+    "boto3==1.26.164",
+    "sqlalchemy==2.0.17",
+    "colorama==0.4.6",
+    "deepdiff==6.7.1",
+]
+docs = [
+    "sphinx==6.2.1",
+    "sphinx-rtd-theme==1.2.2",
+    "myst_parser==2.0.0",
+    "nbsphinx==0.9.2",
+    "pypandoc==1.12",
+    "jupyter==1.0.0"
+]
+ci_cd_automation = [
+    "nox==2023.04.22",
+    "pre-commit==3.3.3",
+]
+other = [
+    "build==0.10.0",
+    "twine==3.4.2"
 ]
 
 [project.urls]
 Repository = "https://github.com/NOAA-OWP/gval"
 Homepage = "https://noaa-owp.github.io/gval/"
 
-
-
 [tool.setuptools.dynamic]
-dependencies = {file = ["./requirements/base.txt"]}
+dependencies = {file = ["./requirements.txt"]}
 readme = {file = ["./docs/sphinx/PYPI_README.MD"], content-type = "text/markdown"}
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--memray --cov=gval"
+testpaths = [
+    "tests",
+    "gval"
+]
+filterwarnings = [
+    #"ignore:invalid value encountered in szudzik_pair_signed:RuntimeWarning:numba.np.ufunc.dufunc",
+    "ignore:dropping variables using `drop` is deprecated; use drop_vars.:DeprecationWarning:rioxarray._io",
+    "ignore:string or file could not be read to its end due to unmatched data:DeprecationWarning:rioxarray._io",
+    "ignore:Supplying chunks as dimension-order tuples is deprecated:DeprecationWarning:rioxarray._io",
+    "ignore:np.find_common_type is deprecated:DeprecationWarning:odc.geo._blocks",
+    "ignore:Dataset has no geotransform, gcps, or rpcs:Warning:rasterio.warp",
+    "ignore:The occurrence of roundoff error is detected:Warning:properscoring._crps",
+    "ignore:invalid value encountered in _crps_cdf_single:RuntimeWarning",
+    "ignore:Conversion of an array with ndim > 0 to a scalar is deprecated:DeprecationWarning",
+    "ignore:pkg_resources is deprecated:DeprecationWarning:xskillscore",
+    "ignore:Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.:DeprecationWarning:pkg_resources*",
+    "ignore:dropping variables using `drop` will be deprecated; using drop_vars is:PendingDeprecationWarning:xarray",
+]
