@@ -87,7 +87,7 @@ def _crosstab_2d_DataArrays(
 
     is_dsk = False
     if _check_dask_array(agreement_map):
-        agreement_map = agreement_map.drop("spatial_ref")
+        agreement_map = agreement_map.drop_vars("spatial_ref")
         is_dsk = True
 
     agreement_map.name = "group"
