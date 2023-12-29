@@ -41,6 +41,7 @@ def precommit(session: nox.Session) -> None:
 
 
 '''
+# PLACEHOLDER: FOR STATIC TYPE CHECKING
 @nox.session(python=LINTING_VERSION, tags=["linting"])
 def type_check(session: nox.Session) -> None:
     """
