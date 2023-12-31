@@ -44,10 +44,7 @@ def _build_map_file_path(file_name: Union[str, os.PathLike]) -> Union[str, os.Pa
 
 
 def _load_gpkg(
-    file_name: Union[str, os.PathLike],
-    *args,
-    engine: str = "pyogrio",
-    **kwargs
+    file_name: Union[str, os.PathLike], *args, engine: str = "pyogrio", **kwargs
 ) -> gpd.GeoDataFrame:
     """
     Loads geopackage given a base file name.
@@ -65,7 +62,7 @@ def _load_gpkg(
         geopandas GeoDataFrame.
     """
     file_path = _build_map_file_path(file_name)
-    
+
     # pop engine from kwargs if it exists
     if "engine" in kwargs:
         engine = kwargs.pop("engine")
