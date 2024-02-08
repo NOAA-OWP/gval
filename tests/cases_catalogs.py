@@ -472,15 +472,21 @@ bbox = [-105.78, 35.79, -105.72, 35.84]
 assets = ["aot"]
 
 expected_stac_df = {
-    0: [
-        "sentinel-2-l2a",
-        "S2B_13SDV_20200401_1_L2A",
+    "collection_id_candidate": ["sentinel-2-l2a", "sentinel-2-l2a"],
+    "item_id_candidate": ["S2B_13SDV_20200401_1_L2A", "S2B_13SDV_20200401_0_L2A"],
+    "item_time_candidate": [
         Timestamp("2020-04-01 18:04:04.327000+0000", tz="utc"),
-        "2023-10-07T12:09:07.273Z",
+        Timestamp("2020-04-01 18:04:04.327000+0000", tz="utc"),
+    ],
+    "create_time_candidate": ["2023-10-07T12:09:07.273Z", "2022-11-06T10:14:16.681Z"],
+    "map_id_candidate": [
         "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2B_13SDV_20200401_1_L2A/AOT.tif",
-        "aot",
-        1,
-        "Polygon",
+        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2B_13SDV_20200401_0_L2A/AOT.tif",
+    ],
+    "map_name_candidate": ["aot", "aot"],
+    "compare_id": [1, 2],
+    "coverage_geometry_type_candidate": ["Polygon", "Polygon"],
+    "coverage_geometry_coords_candidate": [
         [
             [
                 [-106.11191385205835, 36.13972769324406],
@@ -493,40 +499,6 @@ expected_stac_df = {
                 [-106.11191385205835, 36.13972769324406],
             ]
         ],
-        "4326",
-        32613,
-        "sentinel-2-l2a",
-        "S2A_13SDV_20200403_1_L2A",
-        Timestamp("2020-04-03 17:54:07.524000+0000", tz="utc"),
-        "2023-10-08T00:32:51.304Z",
-        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2A_13SDV_20200403_1_L2A/AOT.tif",
-        "aot",
-        "Polygon",
-        [
-            [
-                [-106.11191385205835, 36.13972769324406],
-                [-106.09828205302668, 35.1499211736146],
-                [-104.89285176524281, 35.154851672138626],
-                [-104.89152152018616, 36.14484027029347],
-                [-106.11191385205835, 36.13972769324406],
-            ]
-        ],
-        "4326",
-        32613,
-        "1",
-        -1.449866533279419,
-        25.393386840820312,
-        0.2044084370136261,
-    ],
-    1: [
-        "sentinel-2-l2a",
-        "S2B_13SDV_20200401_0_L2A",
-        Timestamp("2020-04-01 18:04:04.327000+0000", tz="utc"),
-        "2022-11-06T10:14:16.681Z",
-        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2B_13SDV_20200401_0_L2A/AOT.tif",
-        "aot",
-        2,
-        "Polygon",
         [
             [
                 [-106.11191385205835, 36.13972769324406],
@@ -538,15 +510,32 @@ expected_stac_df = {
                 [-106.11191385205835, 36.13972769324406],
             ]
         ],
-        "4326",
-        32613,
-        "sentinel-2-l2a",
-        "S2A_13SDV_20200403_0_L2A",
+    ],
+    "coverage_epsg_candidate": ["4326", "4326"],
+    "asset_epsg_candidate": [32613, 32613],
+    "collection_id_benchmark": ["sentinel-2-l2a", "sentinel-2-l2a"],
+    "item_id_benchmark": ["S2A_13SDV_20200403_1_L2A", "S2A_13SDV_20200403_0_L2A"],
+    "item_time_benchmark": [
         Timestamp("2020-04-03 17:54:07.524000+0000", tz="utc"),
-        "2022-11-06T07:21:36.990Z",
+        Timestamp("2020-04-03 17:54:07.524000+0000", tz="utc"),
+    ],
+    "create_time_benchmark": ["2023-10-08T00:32:51.304Z", "2022-11-06T07:21:36.990Z"],
+    "map_id_benchmark": [
+        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2A_13SDV_20200403_1_L2A/AOT.tif",
         "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2A_13SDV_20200403_0_L2A/AOT.tif",
-        "aot",
-        "Polygon",
+    ],
+    "map_name_benchmark": ["aot", "aot"],
+    "coverage_geometry_type_benchmark": ["Polygon", "Polygon"],
+    "coverage_geometry_coords_benchmark": [
+        [
+            [
+                [-106.11191385205835, 36.13972769324406],
+                [-106.09828205302668, 35.1499211736146],
+                [-104.89285176524281, 35.154851672138626],
+                [-104.89152152018616, 36.14484027029347],
+                [-106.11191385205835, 36.13972769324406],
+            ]
+        ],
         [
             [
                 [-106.11191385205835, 36.13972769324406],
@@ -556,35 +545,38 @@ expected_stac_df = {
                 [-106.11191385205835, 36.13972769324406],
             ]
         ],
-        "4326",
-        32613,
-        "1",
-        -0.46196842193603516,
-        11.947012901306152,
-        0.15074075758457184,
     ],
+    "coverage_epsg_benchmark": ["4326", "4326"],
+    "asset_epsg_benchmark": [32613, 32613],
+    "band": ["1", "1"],
+    "coefficient_of_determination": [-1.449866533279419, -0.46196842193603516],
+    "mean_absolute_error": [25.393386840820312, 11.947012901306152],
+    "mean_absolute_percentage_error": [0.2044084370136261, 0.15074075758457184],
 }
 
 
-@parametrize(
-    "url, collection, times, bbox, assets, expected_catalog_df",
-    list(zip([url], [collection], [times], [bbox], [assets], [expected_stac_df])),
-)
-def stac_catalog_comparison_success(
-    url, collection, times, bbox, assets, expected_catalog_df
-):
-    return (url, collection, times, bbox, assets, pd.DataFrame(expected_catalog_df))
+def case_stac_catalog_comparison_success():
+    return url, collection, times, bbox, assets, pd.DataFrame(expected_stac_df)
 
 
 bad_url = "https://google.com"
-bad_times = ["2018-04-01", "2020-04-03", "2018-04-01"]
+bad_times = ["2018-04-01", "1940-04-03", "2020-04-01"]
 bad_assets = ["aot", "aot", "surface_water"]
 exceptions = [JSONDecodeError, ValueError, ValueError]
 
 
 @parametrize(
     "url, collection, time, bbox, assets, exception",
-    list(zip([bad_url, url, url], [collection] * 3, bad_times, bbox * 3, bad_assets)),
+    list(
+        zip(
+            [bad_url, url, url],
+            [collection] * 3,
+            bad_times,
+            [bbox] * 3,
+            bad_assets,
+            exceptions,
+        )
+    ),
 )
-def stac_catalog_comparison_fail(url, collection, time, bbox, assets, exception):
-    return (url, collection, time, bbox, assets, exception)
+def case_stac_catalog_comparison_fail(url, collection, time, bbox, assets, exception):
+    return url, collection, time, bbox, assets, exception

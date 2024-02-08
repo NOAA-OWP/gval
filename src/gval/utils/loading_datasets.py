@@ -8,7 +8,6 @@ import warnings
 from typing import Union, Optional, Tuple, Iterable
 from numbers import Number
 import ast
-from json import JSONDecodeError
 
 import pandas as pd
 import rioxarray as rxr
@@ -545,7 +544,7 @@ def _stac_to_df(stac_items: list, assets: list = None) -> pd.DataFrame:
         dfs.append(pd.DataFrame(df_contents))
 
     combined_df = pd.concat(dfs)
-    if combined_df.empty():
+    if combined_df.empty:
         raise ValueError("No entries in DataFrame due to nonexistent asset")
 
     return combined_df
@@ -596,18 +595,15 @@ def stac_catalog(
 
     """
 
-    try:
-        stac_items = query_stac(
-            url=url,
-            time=time,
-            collections=collections,
-            max_items=max_items,
-            intersects=intersects,
-            bbox=bbox,
-            query=query,
-        )
-    except JSONDecodeError as e:
-        raise e("Unable to make STAC query")
+    stac_items = query_stac(
+        url=url,
+        time=time,
+        collections=collections,
+        max_items=max_items,
+        intersects=intersects,
+        bbox=bbox,
+        query=query,
+    )
 
     if len(stac_items) == 0:
         raise ValueError("No items returned from query")
