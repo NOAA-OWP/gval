@@ -8,7 +8,9 @@ import warnings
 from typing import Union, Optional, Tuple, Iterable
 from numbers import Number
 import ast
+from json import JSONDecodeError
 
+import pandas as pd
 import rioxarray as rxr
 import xarray as xr
 import numpy as np
@@ -323,6 +325,58 @@ def _set_crs(stack: xr.DataArray, band_metadata: list = None) -> Number:
         return stack.rio.write_crs(f"EPSG:{band_metadata['epsg'].values}")
 
 
+def query_stac(
+    url: str,
+    collections: str,
+    time: str,
+    query: str = None,
+    max_items: int = None,
+    intersects: dict = None,
+    bbox: list = None,
+) -> list:
+    """Return items from a stac query
+
+    Parameters
+    ----------
+    url : str
+        Address hosting the STAC API
+    collections : Union[str, list]
+        Name of collection to get (currently limited to one)
+    time : str
+        Single or range of values to query in the time dimension
+    bands: list, default = None
+        Bands to retrieve from service
+    query : str, default = None
+        String command to filter data
+    max_items : int, default = None
+        The maximum amount of records to retrieve
+    intersects : dict, default = None
+        Dictionary representing the type of geometry and its respective coordinates
+    bbox : list, default = None
+        Coordinates to filter the spatial range of request
+
+    Returns
+    -------
+    list
+        An iterable of STAC items
+
+    """
+
+    if not isinstance(collections, Iterable):
+        collections = [collections]
+
+    catalog = pystac_client.Client.open(url)
+
+    return catalog.search(
+        datetime=time,
+        collections=[collections],
+        max_items=max_items,
+        intersects=intersects,
+        bbox=bbox,
+        query=query,
+    ).item_collection()
+
+
 def get_stac_data(
     url: str,
     collection: str,
@@ -372,17 +426,17 @@ def get_stac_data(
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        # Call cataloging url, search, and convert to xarray
-        catalog = pystac_client.Client.open(url)
 
-        stac_items = catalog.search(
-            datetime=time,
-            collections=[collection],
+        # Call cataloging url, search, and convert to xarray
+        stac_items = query_stac(
+            url=url,
+            time=time,
+            collections=collection,
             max_items=max_items,
             intersects=intersects,
             bbox=bbox,
             query=query,
-        ).get_all_items()
+        )
 
         stack = stackstac.stack(stac_items, resolution=resolution)
 
@@ -437,6 +491,128 @@ def get_stac_data(
             )
 
         return stack
+
+
+def _stac_to_df(stac_items: list, assets: list = None) -> pd.DataFrame:
+    """Convert a list of stac items to a DataFrame
+
+    Parameters
+    ----------
+    stac_items: list
+        List of stac items to create a catalog with
+    assets : list, default = None
+        Assets to keep, (keep all if None)
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame with rows for each unique item/asset combination
+
+    Raises
+    ------
+    ValueError
+        No entries in DataFrame due to nonexistent asset
+
+    """
+
+    dfs, compare_idx = [], 1
+    for stac_item in stac_items:
+        map_name, map_id, compare_id = [], [], []
+        for key, item in stac_item.assets.items():
+            if assets is None or key in assets:
+                map_name.append(key)
+                map_id.append(item.href)
+                compare_id.append(compare_idx)
+                compare_idx += 1
+
+        len_assets = len(map_name)
+
+        df_contents = {
+            "collection_id": [stac_item.collection_id] * len_assets,
+            "item_id": [stac_item.id] * len_assets,
+            "item_time": [stac_item.get_datetime()] * len_assets,
+            "create_time": [stac_item.properties["created"]] * len_assets,
+            "map_id": map_id,
+            "map_name": map_name,
+            "compare_id": compare_id,
+            "coverage_geometry_type": [stac_item.geometry["type"]] * len_assets,
+            "coverage_geometry_coords": [stac_item.geometry["coordinates"]]
+            * len_assets,
+            "coverage_epsg": ["4326"] * len_assets,
+            "asset_epsg": [stac_item.properties["proj:epsg"]] * len_assets,
+        }
+
+        dfs.append(pd.DataFrame(df_contents))
+
+    combined_df = pd.concat(dfs)
+    if combined_df.empty():
+        raise ValueError("No entries in DataFrame due to nonexistent asset")
+
+    return combined_df
+
+
+def stac_catalog(
+    url: str,
+    collections: Union[str, list],
+    time: str,
+    query: str = None,
+    max_items: int = None,
+    intersects: dict = None,
+    bbox: list = None,
+    assets: list = None,
+) -> pd.DataFrame:
+    """Create a STAC Catalog from a STAC query
+
+    Parameters
+    ----------
+    url : str
+        Address hosting the STAC API
+    collections : Union[str, list]
+        Name of collection/s to get
+    time : str
+        Single or range of values to query in the time dimension
+    query : str, default = None
+        String command to filter data
+    max_items : int, default = None
+        The maximum amount of records to retrieve
+    intersects : dict, default = None
+        Dictionary representing the type of geometry and its respective coordinates
+    bbox : list, default = None
+        Coordinates to filter the spatial range of request
+    assets : list, default = None
+        Assets to keep, (keep all if None)
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame representing a catalog based on STAC query
+
+    Raises
+    ------
+    JSONDecodeError
+        Unable to make STAC query
+    ValueError
+        No items returned from query
+
+    """
+
+    try:
+        stac_items = query_stac(
+            url=url,
+            time=time,
+            collections=collections,
+            max_items=max_items,
+            intersects=intersects,
+            bbox=bbox,
+            query=query,
+        )
+    except JSONDecodeError as e:
+        raise e("Unable to make STAC query")
+
+    if len(stac_items) == 0:
+        raise ValueError("No items returned from query")
+
+    return _stac_to_df(stac_items, assets).reset_index(drop=True)
 
 
 def _create_circle_mask(

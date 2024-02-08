@@ -7,9 +7,11 @@ Test cases for catalogs module.
 from pytest_cases import parametrize
 
 import pandas as pd
+from pandas import Timestamp
 from dask import dataframe as dd
 import xarray as xr
 import numpy as np
+from json import JSONDecodeError
 
 from tests.conftest import TEST_DATA_DIR
 
@@ -461,3 +463,128 @@ def case_compare_catalogs_fail(
         agreement_map_field,
         expected_exception,
     )
+
+
+url = "https://earth-search.aws.element84.com/v1"
+collection = "sentinel-2-l2a"
+times = ["2020-04-01", "2020-04-03"]
+bbox = [-105.78, 35.79, -105.72, 35.84]
+assets = ["aot"]
+
+expected_stac_df = {
+    0: [
+        "sentinel-2-l2a",
+        "S2B_13SDV_20200401_1_L2A",
+        Timestamp("2020-04-01 18:04:04.327000+0000", tz="utc"),
+        "2023-10-07T12:09:07.273Z",
+        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2B_13SDV_20200401_1_L2A/AOT.tif",
+        "aot",
+        1,
+        "Polygon",
+        [
+            [
+                [-106.11191385205835, 36.13972769324406],
+                [-106.0982941692468, 35.150822790058335],
+                [-105.85393882465051, 35.15385918076215],
+                [-105.68102037327243, 35.69893282033011],
+                [-105.59450557216445, 35.97641506053815],
+                [-105.56226433775963, 36.07584727804726],
+                [-105.53827534157463, 36.14367977962539],
+                [-106.11191385205835, 36.13972769324406],
+            ]
+        ],
+        "4326",
+        32613,
+        "sentinel-2-l2a",
+        "S2A_13SDV_20200403_1_L2A",
+        Timestamp("2020-04-03 17:54:07.524000+0000", tz="utc"),
+        "2023-10-08T00:32:51.304Z",
+        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2A_13SDV_20200403_1_L2A/AOT.tif",
+        "aot",
+        "Polygon",
+        [
+            [
+                [-106.11191385205835, 36.13972769324406],
+                [-106.09828205302668, 35.1499211736146],
+                [-104.89285176524281, 35.154851672138626],
+                [-104.89152152018616, 36.14484027029347],
+                [-106.11191385205835, 36.13972769324406],
+            ]
+        ],
+        "4326",
+        32613,
+        "1",
+        -1.449866533279419,
+        25.393386840820312,
+        0.2044084370136261,
+    ],
+    1: [
+        "sentinel-2-l2a",
+        "S2B_13SDV_20200401_0_L2A",
+        Timestamp("2020-04-01 18:04:04.327000+0000", tz="utc"),
+        "2022-11-06T10:14:16.681Z",
+        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2B_13SDV_20200401_0_L2A/AOT.tif",
+        "aot",
+        2,
+        "Polygon",
+        [
+            [
+                [-106.11191385205835, 36.13972769324406],
+                [-105.53527335203748, 36.14369323431527],
+                [-105.56579262097148, 36.05653228802631],
+                [-105.68980719734964, 35.659112338538634],
+                [-105.85157080324588, 35.15190642354915],
+                [-106.09828205302668, 35.1499211736146],
+                [-106.11191385205835, 36.13972769324406],
+            ]
+        ],
+        "4326",
+        32613,
+        "sentinel-2-l2a",
+        "S2A_13SDV_20200403_0_L2A",
+        Timestamp("2020-04-03 17:54:07.524000+0000", tz="utc"),
+        "2022-11-06T07:21:36.990Z",
+        "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/13/S/DV/2020/4/S2A_13SDV_20200403_0_L2A/AOT.tif",
+        "aot",
+        "Polygon",
+        [
+            [
+                [-106.11191385205835, 36.13972769324406],
+                [-104.89152152018616, 36.14484027029347],
+                [-104.89285176524281, 35.154851672138626],
+                [-106.09828205302668, 35.1499211736146],
+                [-106.11191385205835, 36.13972769324406],
+            ]
+        ],
+        "4326",
+        32613,
+        "1",
+        -0.46196842193603516,
+        11.947012901306152,
+        0.15074075758457184,
+    ],
+}
+
+
+@parametrize(
+    "url, collection, times, bbox, assets, expected_catalog_df",
+    list(zip([url], [collection], [times], [bbox], [assets], [expected_stac_df])),
+)
+def stac_catalog_comparison_success(
+    url, collection, times, bbox, assets, expected_catalog_df
+):
+    return (url, collection, times, bbox, assets, pd.DataFrame(expected_catalog_df))
+
+
+bad_url = "https://google.com"
+bad_times = ["2018-04-01", "2020-04-03", "2018-04-01"]
+bad_assets = ["aot", "aot", "surface_water"]
+exceptions = [JSONDecodeError, ValueError, ValueError]
+
+
+@parametrize(
+    "url, collection, time, bbox, assets, exception",
+    list(zip([bad_url, url, url], [collection] * 3, bad_times, bbox * 3, bad_assets)),
+)
+def stac_catalog_comparison_fail(url, collection, time, bbox, assets, exception):
+    return (url, collection, time, bbox, assets, exception)

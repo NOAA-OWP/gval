@@ -12,6 +12,7 @@ import xarray as xr
 
 from tests.conftest import _attributes_to_string
 from gval.catalogs.catalogs import catalog_compare
+from gval.utils.loading_datasets import stac_catalog
 
 
 @parametrize_with_cases(
@@ -218,4 +219,53 @@ def test_compare_catalogs_fail(
             compare_kwargs=compare_kwargs,
             open_kwargs=open_kwargs,
             agreement_map_field=agreement_map_field,
+        )
+
+
+@parametrize_with_cases(
+    "url, collection, times, bbox, assets, expected_catalog_df",
+    glob="stac_catalog_comparison_success",
+)
+def test_stac_catalog_comparison_success(
+    url, collection, times, bbox, assets, expected_catalog_df
+):
+    candidate_catalog = stac_catalog(
+        url=url, collections=collection, time=times[0], bbox=bbox, assets=assets
+    )
+    benchmark_catalog = stac_catalog(
+        url=url, collections=collection, time=times[1], bbox=bbox, assets=assets
+    )
+
+    arguments = {
+        "candidate_catalog": candidate_catalog,
+        "benchmark_catalog": benchmark_catalog,
+        "on": "compare_id",
+        "map_ids": "map_id",
+        "how": "inner",
+        "compare_type": "continuous",
+        "compare_kwargs": {
+            "metrics": (
+                "coefficient_of_determination",
+                "mean_absolute_error",
+                "mean_absolute_percentage_error",
+            ),
+            "encode_nodata": True,
+            "nodata": -9999,
+        },
+        "open_kwargs": {"mask_and_scale": True, "masked": True},
+    }
+
+    stac_clog = catalog_compare(**arguments)
+
+    assert stac_clog.equals(expected_catalog_df)
+
+
+@parametrize_with_cases(
+    "url, collection, time, bbox, assets, exception",
+    glob="stac_catalog_comparison_fail",
+)
+def test_stac_catalog_comparison_fail(url, collection, time, bbox, assets, exception):
+    with raises(exception):
+        _ = stac_catalog(
+            url=url, collections=collection, time=time, bbox=bbox, assets=assets
         )
