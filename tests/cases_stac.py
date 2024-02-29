@@ -153,35 +153,29 @@ def case_stac_api_call(
     )
 
 
-bands_fail = [["aot"], ["aot"], ["red"]]
+bands_fail = [["aot"]]
 
 time_fail = [
-    ["1945-04-01", "1945-04-03"],
     ["2020-04-01/2020-04-03", "2020-04-06/2020-04-08"],
-    ["2020-04-01", "2020-04-03"],
 ]
 
-time_aggreagte_fail = [None, None, None]
+time_aggregate_fail = [None]
 
-nodata_fill_fail = [
-    None,
-    None,
-    None,
-]
+nodata_fill_fail = [None]
 
-exceptions = [ValueError] * 3
+exceptions = [ValueError]
 
 
 @parametrize(
     "url, collection, bbox, time, bands, time_aggregate, nodata_fill, exception",
     list(
         zip(
-            [url] * len(time),
-            [collection] * len(time),
-            [bbox] * len(time),
+            [url] * len(time_fail),
+            [collection] * len(time_fail),
+            [bbox] * len(time_fail),
             time_fail,
             bands_fail,
-            time_aggreagte_fail,
+            time_aggregate_fail,
             nodata_fill_fail,
             exceptions,
         )

@@ -2,6 +2,7 @@ from pytest_cases import parametrize_with_cases
 from pytest import raises
 import xarray as xr
 import pandas as pd
+import pystac_client
 
 from gval.utils.loading_datasets import get_stac_data
 
@@ -17,22 +18,30 @@ def test_stac_api_call(
     Tests call for stac API, (IDK if this data can be mocked, API calls in unit tests are dubious)
     """
 
-    candidate = get_stac_data(
-        url=url,
-        collection=collection,
-        time=time[0],
-        bands=bands,
+    catalog = pystac_client.Client.open(url)
+
+    candidate_items = catalog.search(
+        datetime=time[0],
+        collections=[collection],
         bbox=bbox,
+    ).item_collection()
+
+    candidate = get_stac_data(
+        stac_items=candidate_items,
+        bands=bands,
         time_aggregate=time_aggregate,
         nodata_fill=nodata_fill,
     )
 
-    benchmark = get_stac_data(
-        url=url,
-        collection=collection,
-        time=time[1],
-        bands=bands,
+    benchmark_items = catalog.search(
+        datetime=time[1],
+        collections=[collection],
         bbox=bbox,
+    ).item_collection()
+
+    benchmark = get_stac_data(
+        stac_items=benchmark_items,
+        bands=bands,
         time_aggregate=time_aggregate,
         nodata_fill=nodata_fill,
     )
@@ -80,12 +89,17 @@ def test_stac_api_call_fail(
     """
 
     with raises(exception):
-        _ = get_stac_data(
-            url=url,
-            collection=collection,
-            time=time[0],
-            bands=bands,
+        catalog = pystac_client.Client.open(url)
+
+        candidate_items = catalog.search(
+            datetime=time[0],
+            collections=[collection],
             bbox=bbox,
+        ).item_collection()
+
+        _ = get_stac_data(
+            stac_items=candidate_items,
+            bands=bands,
             time_aggregate=time_aggregate,
             nodata_fill=nodata_fill,
         )

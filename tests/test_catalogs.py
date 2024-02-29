@@ -9,10 +9,11 @@ import pandas as pd
 import dask.dataframe as dd
 import rioxarray as rxr
 import xarray as xr
+import pystac_client
 
 from tests.conftest import _attributes_to_string
 from gval.catalogs.catalogs import catalog_compare
-from gval.utils.loading_datasets import stac_catalog
+from gval.utils.loading_datasets import stac_to_df
 
 
 @parametrize_with_cases(
@@ -229,12 +230,23 @@ def test_compare_catalogs_fail(
 def test_stac_catalog_comparison_success(
     url, collection, times, bbox, assets, expected_catalog_df
 ):
-    candidate_catalog = stac_catalog(
-        url=url, collections=collection, time=times[0], bbox=bbox, assets=assets
-    )
-    benchmark_catalog = stac_catalog(
-        url=url, collections=collection, time=times[1], bbox=bbox, assets=assets
-    )
+    catalog = pystac_client.Client.open(url)
+
+    candidate_items = catalog.search(
+        datetime=times[0],
+        collections=[collection],
+        bbox=bbox,
+    ).item_collection()
+
+    candidate_catalog = stac_to_df(stac_items=candidate_items, assets=assets)
+
+    benchmark_items = catalog.search(
+        datetime=times[1],
+        collections=[collection],
+        bbox=bbox,
+    ).item_collection()
+
+    benchmark_catalog = stac_to_df(stac_items=benchmark_items, assets=assets)
 
     arguments = {
         "candidate_catalog": candidate_catalog,
@@ -268,6 +280,12 @@ def test_stac_catalog_comparison_success(
 )
 def test_stac_catalog_comparison_fail(url, collection, time, bbox, assets, exception):
     with raises(exception):
-        _ = stac_catalog(
-            url=url, collections=collection, time=time, bbox=bbox, assets=assets
-        )
+        catalog = pystac_client.Client.open(url)
+
+        candidate_items = catalog.search(
+            datetime=time,
+            collections=[collection],
+            bbox=bbox,
+        ).item_collection()
+
+        _ = stac_to_df(stac_items=candidate_items, assets=assets)
