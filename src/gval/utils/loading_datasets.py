@@ -416,7 +416,12 @@ def get_stac_data(
     return stack
 
 
-def stac_to_df(stac_items: ItemCollection, assets: list = None) -> pd.DataFrame:
+def stac_to_df(
+    stac_items: ItemCollection,
+    assets: list = None,
+    column_allow_list: list = None,
+    column_block_list: list = None,
+) -> pd.DataFrame:
     """Convert STAC Items in to a DataFrame
 
     Parameters
@@ -425,6 +430,10 @@ def stac_to_df(stac_items: ItemCollection, assets: list = None) -> pd.DataFrame:
         STAC Item Collection returned from pystac client
     assets : list, default = None
         Assets to keep, (keep all if None)
+    column_allow_list: list, default = None
+        List of columns to allow in the result DataFrame
+    column_block_list: list, default = None
+        List of columns to remove in the result DataFrame
 
     Returns
     -------
@@ -481,7 +490,16 @@ def stac_to_df(stac_items: ItemCollection, assets: list = None) -> pd.DataFrame:
 
         item_dfs.append(pd.concat(asset_dfs))
 
-    return pd.concat(item_dfs, ignore_index=True)
+    # Concatenate the DataFrames and remove unwanted columns if allow and block lists exist
+    catalog_df = pd.concat(item_dfs, ignore_index=True)
+
+    if column_allow_list is not None:
+        catalog_df = catalog_df[column_allow_list]
+
+    if column_block_list is not None:
+        catalog_df = catalog_df.drop(column_block_list, axis=1)
+
+    return catalog_df
 
 
 def _create_circle_mask(

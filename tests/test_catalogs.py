@@ -224,11 +224,11 @@ def test_compare_catalogs_fail(
 
 
 @parametrize_with_cases(
-    "url, collection, times, bbox, assets, expected_catalog_df",
+    "url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df",
     glob="stac_catalog_comparison_success",
 )
 def test_stac_catalog_comparison_success(
-    url, collection, times, bbox, assets, expected_catalog_df
+    url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df
 ):
     catalog = pystac_client.Client.open(url)
 
@@ -238,7 +238,12 @@ def test_stac_catalog_comparison_success(
         bbox=bbox,
     ).item_collection()
 
-    candidate_catalog = stac_to_df(stac_items=candidate_items, assets=assets)
+    candidate_catalog = stac_to_df(
+        stac_items=candidate_items,
+        assets=assets,
+        column_allow_list=allow_list,
+        column_block_list=block_list,
+    )
 
     benchmark_items = catalog.search(
         datetime=times[1],
@@ -246,7 +251,12 @@ def test_stac_catalog_comparison_success(
         bbox=bbox,
     ).item_collection()
 
-    benchmark_catalog = stac_to_df(stac_items=benchmark_items, assets=assets)
+    benchmark_catalog = stac_to_df(
+        stac_items=benchmark_items,
+        assets=assets,
+        column_allow_list=allow_list,
+        column_block_list=block_list,
+    )
 
     arguments = {
         "candidate_catalog": candidate_catalog,
@@ -275,10 +285,12 @@ def test_stac_catalog_comparison_success(
 
 
 @parametrize_with_cases(
-    "url, collection, time, bbox, assets, exception",
+    "url, collection, time, bbox, assets, allow_list, block_list, exception",
     glob="stac_catalog_comparison_fail",
 )
-def test_stac_catalog_comparison_fail(url, collection, time, bbox, assets, exception):
+def test_stac_catalog_comparison_fail(
+    url, collection, time, bbox, assets, allow_list, block_list, exception
+):
     with raises(exception):
         catalog = pystac_client.Client.open(url)
 
@@ -288,4 +300,9 @@ def test_stac_catalog_comparison_fail(url, collection, time, bbox, assets, excep
             bbox=bbox,
         ).item_collection()
 
-        _ = stac_to_df(stac_items=candidate_items, assets=assets)
+        _ = stac_to_df(
+            stac_items=candidate_items,
+            assets=assets,
+            column_allow_list=allow_list,
+            column_block_list=block_list,
+        )
