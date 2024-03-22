@@ -241,8 +241,8 @@ def test_stac_catalog_comparison_success(
     candidate_catalog = stac_to_df(
         stac_items=candidate_items,
         assets=assets,
-        column_allow_list=allow_list,
-        column_block_list=block_list,
+        attribute_allow_list=allow_list,
+        attribute_block_list=block_list,
     )
 
     benchmark_items = catalog.search(
@@ -254,8 +254,8 @@ def test_stac_catalog_comparison_success(
     benchmark_catalog = stac_to_df(
         stac_items=benchmark_items,
         assets=assets,
-        column_allow_list=allow_list,
-        column_block_list=block_list,
+        attribute_allow_list=allow_list,
+        attribute_block_list=block_list,
     )
 
     arguments = {
@@ -303,6 +303,6 @@ def test_stac_catalog_comparison_fail(
         _ = stac_to_df(
             stac_items=candidate_items,
             assets=assets,
-            column_allow_list=allow_list,
-            column_block_list=block_list,
+            attribute_allow_list=allow_list,
+            attribute_block_list=block_list,
         )
