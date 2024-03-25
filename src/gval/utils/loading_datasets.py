@@ -7,6 +7,7 @@ __author__ = "Fernando Aristizabal"
 from typing import Union, Optional, Tuple, Iterable
 from numbers import Number
 import ast
+from collections import Counter
 
 import pandas as pd
 import rioxarray as rxr
@@ -263,11 +264,30 @@ def stac_to_df(
     Raises
     ------
     ValueError
+        Allow and block lists should be mutually exclusive
+    ValueError
         No entries in DataFrame due to nonexistent asset
+    ValueError
+        There are no assets in this query to run a catalog comparison
 
     """
 
     item_dfs, compare_idx = [], 1
+
+    # Check for mutually exclusive lists
+    if (
+        len(
+            list(
+                (
+                    Counter(attribute_allow_list) & Counter(attribute_block_list)
+                ).elements()
+            )
+        )
+        > 0
+    ):
+        raise ValueError(
+            "There are no assets in this query to run a catalog comparison"
+        )
 
     # Iterate through each STAC Item and make a unique row for each asset
     for item in stac_items:
@@ -297,7 +317,10 @@ def stac_to_df(
                 dfs.append(concat_df.loc[:, ~concat_df.columns.duplicated()])
 
         if len(dfs) < 1:
-            raise ValueError()
+            raise ValueError(
+                "There are no assets in this query to run a catalog comparison.  "
+                "Please revisit original query."
+            )
 
         item_dfs.append(pd.concat(dfs, ignore_index=True))
 
