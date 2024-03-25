@@ -14,4 +14,4 @@ flox==0.7.2
 xskillscore==0.0.24
 pyogrio==0.7.2
 pystac-client==0.7.5
-s3fs==2023.1.1
+s3fs==2023.5.0
