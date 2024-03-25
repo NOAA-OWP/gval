@@ -243,6 +243,15 @@ def _crosstab_Datasets(agreement_map: xr.DataArray) -> DataFrame[Crosstab_df]:
     # loop variables
     previous_crosstab_df = None  # initializing to avoid having unset
     for i, b in enumerate(agreement_variable_names):
+        # Pass pairing dictionary to variable if necessary
+        if (
+            agreement_map[b].attrs.get("pairing_dictionary") is None
+            and agreement_map.attrs.get("pairing_dictionary") is not None
+        ):
+            agreement_map[b].attrs["pairing_dictionary"] = agreement_map.attrs[
+                "pairing_dictionary"
+            ]
+
         crosstab_df = _crosstab_2d_DataArrays(
             agreement_map=agreement_map[b], band_value=b
         )

@@ -93,15 +93,18 @@ class GVALXarray:
                 else:
                     del attribute_tracking_kwargs["agreement_map"]
 
-            results = candidate_map.gval.attribute_tracking_xarray(
+            results = _attribute_tracking_xarray(
+                candidate_map=candidate_map,
                 benchmark_map=benchmark_map,
                 agreement_map=agreement_map,
                 **attribute_tracking_kwargs,
             )
 
         else:
-            results = candidate_map.gval.attribute_tracking_xarray(
-                benchmark_map=benchmark_map, agreement_map=agreement_map
+            results = _attribute_tracking_xarray(
+                candidate_map=candidate_map,
+                benchmark_map=benchmark_map,
+                agreement_map=agreement_map,
             )
 
         return results
