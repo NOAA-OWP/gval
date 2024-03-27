@@ -461,3 +461,77 @@ def case_compare_catalogs_fail(
         agreement_map_field,
         expected_exception,
     )
+
+
+url = "https://earth-search.aws.element84.com/v1"
+collection = "sentinel-2-l2a"
+times = ["2020-04-01", "2020-04-03"]
+bbox = [-105.78, 35.79, -105.72, 35.84]
+assets = ["aot"]
+
+expected_stac_df = [
+    f"{TEST_DATA_DIR}/expected_catalog_df_no_filter.pkl",
+    f"{TEST_DATA_DIR}/expected_catalog_df_allow_list.pkl",
+    f"{TEST_DATA_DIR}/expected_catalog_df_block_list.pkl",
+]
+
+allow_list = [None, ["map_id", "compare_id"], None]
+block_list = [None, None, ["properties.mgrs:utm_zone"]]
+
+
+@parametrize(
+    "url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df",
+    list(
+        zip(
+            [url] * 3,
+            [collection] * 3,
+            [times] * 3,
+            [bbox] * 3,
+            [assets] * 3,
+            allow_list,
+            block_list,
+            expected_stac_df,
+        )
+    ),
+)
+def case_stac_catalog_comparison_success(
+    url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df
+):
+    return (
+        url,
+        collection,
+        times,
+        bbox,
+        assets,
+        allow_list,
+        block_list,
+        pd.read_pickle(expected_catalog_df),
+    )
+
+
+bad_times = ["2020-04-01"]
+bad_assets = [["surface_water"], None, None, None]
+exceptions = [ValueError, ValueError, KeyError, KeyError]
+bad_allow_list = [None, ["arb"], ["arb"], None]
+bad_block_list = [None, ["arb"], None, ["arb"]]
+
+
+@parametrize(
+    "url, collection, time, bbox, assets, allow_list, block_list, exception",
+    list(
+        zip(
+            [url] * len(bad_assets),
+            [collection] * len(bad_assets),
+            bad_times * len(bad_assets),
+            [bbox] * len(bad_assets),
+            bad_assets,
+            bad_allow_list,
+            bad_block_list,
+            exceptions,
+        )
+    ),
+)
+def case_stac_catalog_comparison_fail(
+    url, collection, time, bbox, assets, allow_list, block_list, exception
+):
+    return url, collection, time, bbox, assets, allow_list, block_list, exception
