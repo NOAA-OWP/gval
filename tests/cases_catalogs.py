@@ -79,15 +79,15 @@ expected = [
     pd.DataFrame(
         {
             "map_id_candidate": [
-                "s3://gval-test/candidate_continuous_0.tif",
-                "s3://gval-test/candidate_continuous_1.tif",
-                "s3://gval-test/candidate_continuous_1.tif",
+                f"{TEST_DATA_DIR}/candidate_continuous_0.tif",
+                f"{TEST_DATA_DIR}/candidate_continuous_1.tif",
+                f"{TEST_DATA_DIR}/candidate_continuous_1.tif",
             ],
             "compare_id": ["compare1", "compare2", "compare2"],
             "map_id_benchmark": [
-                "s3://gval-test/benchmark_continuous_0.tif",
-                "s3://gval-test/benchmark_continuous_1.tif",
-                "s3://gval-test/benchmark_continuous_1.tif",
+                f"{TEST_DATA_DIR}/benchmark_continuous_0.tif",
+                f"{TEST_DATA_DIR}/benchmark_continuous_1.tif",
+                f"{TEST_DATA_DIR}/benchmark_continuous_1.tif",
             ],
             "value1_candidate": [1, 2, 2],
             "value2_candidate": [5, 6, 6],
