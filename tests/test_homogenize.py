@@ -193,7 +193,10 @@ def test_vectorize_raster_success(raster_map, expected):
 
     assert isinstance(vector_df, gpd.GeoDataFrame)
     assert_geodataframe_equal(
-        vector_df, expected, check_index_type=False, check_dtype=False
+        vector_df.sort_values("geometry", ignore_index=True),
+        expected.sort_values("geometry", ignore_index=True),
+        check_index_type=False,
+        check_dtype=False,
     )
 
 
