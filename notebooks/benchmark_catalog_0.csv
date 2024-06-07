@@ -1,3 +1,7 @@
 map_id,compare_id
-./benchmark_continuous_0.tif,compare1
-./benchmark_continuous_1.tif,compare2
+./prism_2011_precip.tif,compare1
+./prism_2011_precip.tif,compare2
+./prism_2011_precip.tif,compare3
+./prism_2011_precip.tif,compare4
+./prism_2011_precip.tif,compare5
+./prism_2011_precip.tif,compare6

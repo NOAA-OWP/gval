@@ -1,3 +1,7 @@
 map_id,compare_id,agreement_maps
-./candidate_continuous_0.tif,compare1,./agreement_continuous_0.tif
-./candidate_continuous_1.tif,compare2,./agreement_continuous_1.tif
+./livneh_2011_precip.tif,compare1,./agreement_continuous_0.tif
+./livneh_2011_precip.tif,compare2,./agreement_continuous_1.tif
+./livneh_2011_precip.tif,compare3,./agreement_continuous_0.tif
+./livneh_2011_precip.tif,compare4,./agreement_continuous_1.tif
+./livneh_2011_precip.tif,compare5,./agreement_continuous_0.tif
+./livneh_2011_precip.tif,compare6,./agreement_continuous_1.tif

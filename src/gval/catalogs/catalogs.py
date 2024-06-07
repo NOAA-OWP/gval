@@ -6,6 +6,7 @@ from __future__ import annotations
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
+import gc
 from typing import Iterable, Optional, Callable, Tuple
 import os
 
@@ -172,7 +173,7 @@ def catalog_compare(
         else:
             raise ValueError("compare_type must be str or Callable")
 
-        # write agreement map to file
+        # Write agreement map to file
         if (agreement_map_field is not None) & isinstance(
             agreement_map, (xr.DataArray, xr.Dataset)
         ):
@@ -180,6 +181,10 @@ def catalog_compare(
                 agreement_map.rio.to_raster(
                     row[agreement_map_field], **agreement_map_write_kwargs
                 )
+
+        # Unfortunately necessary until a fix is found in xarray/rioxarray io
+        del candidate_map, benchmark_map, agreement_map
+        gc.collect()
 
         return metrics_df
 
