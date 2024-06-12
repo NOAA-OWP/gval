@@ -91,16 +91,20 @@ def _crosstab_2d_DataArrays(
         is_dsk = True
 
     agreement_map.name = "group"
+    ag_dtype = agreement_map.dtype
 
     if is_dsk:
         agreement_counts = xarray_reduce(
             agreement_map,
             agreement_map,
+            engine="numba",
             expected_groups=dask.array.unique(agreement_map.data),
             func="count",
         )
     else:
-        agreement_counts = xarray_reduce(agreement_map, agreement_map, func="count")
+        agreement_counts = xarray_reduce(
+            agreement_map, agreement_map, engine="numba", func="count"
+        )
 
     def not_nan(number):
         return not np.isnan(number)
@@ -129,13 +133,15 @@ def _crosstab_2d_DataArrays(
                 for x in filter(not_nan, agreement_counts.coords["group"].values)
             ],
             "agreement_values": list(
-                filter(not_nan, agreement_counts.coords["group"].values.astype(float))
+                filter(
+                    not_nan, agreement_counts.coords["group"].values.astype(ag_dtype)
+                )
             ),
             "counts": [
                 x
                 for x, y in zip(
-                    agreement_counts.values.astype(float),
-                    agreement_counts.coords["group"].values.astype(float),
+                    agreement_counts.values.astype(ag_dtype),
+                    agreement_counts.coords["group"].values.astype(ag_dtype),
                 )
                 if not np.isnan(y)
             ],

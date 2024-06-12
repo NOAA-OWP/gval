@@ -18,7 +18,7 @@ from deepdiff import DeepDiff
 from gval.comparison.pairing_functions import PairingDict
 
 # name of S3 for test data
-TEST_DATA_S3_NAME = "gval-test"
+TEST_DATA_S3_NAME = "gval"
 TEST_DATA_DIR = f"s3://{TEST_DATA_S3_NAME}"
 
 

@@ -17,10 +17,34 @@ from typing import Iterable, Tuple, Optional, Dict
 from numbers import Number
 
 import numpy as np
-import numba as nb
+from numba import vectorize, uint8, int32, int64, float32, float64, boolean
 
 
-@nb.vectorize(nopython=True)
+# Numba Type Definitions
+one_param_function_types = [
+    uint8(uint8),
+    int32(int32),
+    int64(int64),
+    float32(float32),
+    float64(float64),
+]
+two_param_function_types = [
+    uint8(uint8, uint8),
+    int32(int32, int32),
+    int64(int64, int64),
+    float32(float32, float32),
+    float64(float64, float64),
+]
+not_natural_number_types = [
+    boolean(uint8, boolean),
+    boolean(int32, boolean),
+    int64(int64, boolean),
+    float32(float32, boolean),
+    float64(float64, boolean),
+]
+
+
+@vectorize(not_natural_number_types, nopython=True)
 def _is_not_natural_number(
     x: Number, raise_exception: bool
 ) -> bool:  # pragma: no cover
@@ -49,7 +73,7 @@ def _is_not_natural_number(
         return False  # treated as natural for this use case
 
     # checks for non-negative and whole number
-    elif (x < 0) | ((x - nb.int64(x)) != 0):
+    elif (x < 0) | ((x - int64(x)) != 0):
         if raise_exception:
             raise ValueError(
                 "Non natural number found (non-negative integers, excluding Inf) [0, 1, 2, 3, 4, ...)"
@@ -62,7 +86,7 @@ def _is_not_natural_number(
         return False
 
 
-@nb.vectorize(nopython=True)
+@vectorize(two_param_function_types, nopython=True)
 def cantor_pair(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Produces unique natural number for two non-negative natural numbers (0,1,2,...)
@@ -92,7 +116,7 @@ def cantor_pair(c: Number, b: Number) -> Number:  # pragma: no cover
         return 0.5 * (c**2 + c + 2 * c * b + 3 * b + b**2)
 
 
-@nb.vectorize(nopython=True)
+@vectorize(two_param_function_types, nopython=True)
 def szudzik_pair(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Produces unique natural number for two non-negative natural numbers (0,1,2,3,...).
@@ -122,7 +146,7 @@ def szudzik_pair(c: Number, b: Number) -> Number:  # pragma: no cover
         return c**2 + c + b if c >= b else b**2 + c
 
 
-@nb.vectorize(nopython=True)
+@vectorize(one_param_function_types, nopython=True)
 def _negative_value_transformation(x: Number) -> Number:  # pragma: no cover
     """
     Transforms negative values for use with pairing functions that only accept non-negative integers.
@@ -147,7 +171,7 @@ def _negative_value_transformation(x: Number) -> Number:  # pragma: no cover
         return 2 * x if x >= 0 else -2 * x - 1
 
 
-@nb.vectorize(nopython=True)
+@vectorize(two_param_function_types, nopython=True)
 def cantor_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Output unique natural number for each unique combination of whole numbers using Cantor signed method.
@@ -177,7 +201,12 @@ def cantor_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
         return cantor_pair(ct, bt)
 
 
-@nb.vectorize(nopython=True)
+# from typing import TypeVar
+#
+# T = TypeVar("T")
+
+
+@vectorize(two_param_function_types, nopython=True)
 def szudzik_pair_signed(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Output unique natural number for each unique combination of whole numbers using Szudzik signed method._summary_
@@ -386,10 +415,10 @@ def _make_pairing_dict_fn(
                 "Value combination found not accounted for in pairing dictionary"
             )
 
-    return nb.vectorize(nopython=True)(pairing_dict_fn)
+    return vectorize(two_param_function_types, nopython=True)(pairing_dict_fn)
 
 
-@nb.vectorize(nopython=True)
+@vectorize(two_param_function_types, nopython=True)
 def difference(c: Number, b: Number) -> Number:  # pragma: no cover
     """
     Calculates the difference between candidate and benchmark.
