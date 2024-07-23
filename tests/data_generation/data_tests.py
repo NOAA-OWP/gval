@@ -85,7 +85,7 @@ def generate_aligned_and_agreement_maps(
                     allow_benchmark_values=allow_benchmark_values,
                 )
 
-                agreement_map_computed.rio.set_crs(cam.rio.crs)
+                agreement_map_computed.rio.write_crs(cam.rio.crs, inplace=True)
 
                 agreement_map_computed.rio.set_nodata(-9999)
                 if np.nan in agreement_map_computed:
