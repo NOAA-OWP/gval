@@ -146,7 +146,7 @@ def _compute_agreement_map(
                     nodata, encoded=encode_nodata, inplace=True
                 )
             else:
-                agreement_map.rio.set_nodata(nodata, inplace=True)
+                agreement_map.rio.write_nodata(nodata, inplace=True)
 
         return agreement_map
 
