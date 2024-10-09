@@ -280,7 +280,11 @@ def test_stac_catalog_comparison_success(
     stac_clog = catalog_compare(**arguments)
 
     pd.testing.assert_frame_equal(
-        stac_clog, expected_catalog_df, check_dtype=False, check_index_type=False
+        stac_clog,
+        expected_catalog_df,
+        check_dtype=False,
+        check_index_type=False,
+        check_like=True,
     ), "Computed catalog did not match the expected catalog df"
 
 

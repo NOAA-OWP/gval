@@ -60,7 +60,7 @@ def _rasterize_data(
     if isinstance(candidate_map, xr.DataArray):
         rasterized_data = rasterized_data.to_array()
         # Nodata resolve
-        rasterized_data.rio.set_nodata(np.nan)
+        rasterized_data.rio.write_nodata(np.nan, encoded=True, inplace=True)
         rasterized_data.rio.write_nodata(
             candidate_map.rio.encoded_nodata, encoded=True, inplace=True
         )
@@ -94,7 +94,9 @@ def _rasterize_data(
         for var_name in rasterized_data.data_vars.keys():
             # Resolve nodata issues
 
-            rasterized_data[var_name] = rasterized_data[var_name].rio.set_nodata(np.nan)
+            rasterized_data[var_name] = rasterized_data[var_name].rio.write_nodata(
+                np.nan, encoded=True, inplace=True
+            )
 
             if rasterized_data[var_name].rio.encoded_nodata is None:
                 rasterized_data[var_name] = rasterized_data[var_name].rio.write_nodata(

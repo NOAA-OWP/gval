@@ -87,7 +87,7 @@ def generate_aligned_and_agreement_maps(
 
                 agreement_map_computed.rio.write_crs(cam.rio.crs, inplace=True)
 
-                agreement_map_computed.rio.set_nodata(-9999)
+                agreement_map_computed.rio.write_nodata(-9999, inplace=True)
                 if np.nan in agreement_map_computed:
                     agreement_map_computed = xr.where(
                         np.isnan(agreement_map_computed), -9999, agreement_map_computed
