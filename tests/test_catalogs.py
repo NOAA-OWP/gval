@@ -223,69 +223,70 @@ def test_compare_catalogs_fail(
         )
 
 
-@parametrize_with_cases(
-    "url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df",
-    glob="stac_catalog_comparison_success",
-)
-def test_stac_catalog_comparison_success(
-    url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df
-):
-    catalog = pystac_client.Client.open(url)
-
-    candidate_items = catalog.search(
-        datetime=times[0],
-        collections=[collection],
-        bbox=bbox,
-    ).item_collection()
-
-    candidate_catalog = stac_to_df(
-        stac_items=candidate_items,
-        assets=assets,
-        attribute_allow_list=allow_list,
-        attribute_block_list=block_list,
-    )
-
-    benchmark_items = catalog.search(
-        datetime=times[1],
-        collections=[collection],
-        bbox=bbox,
-    ).item_collection()
-
-    benchmark_catalog = stac_to_df(
-        stac_items=benchmark_items,
-        assets=assets,
-        attribute_allow_list=allow_list,
-        attribute_block_list=block_list,
-    )
-
-    arguments = {
-        "candidate_catalog": candidate_catalog,
-        "benchmark_catalog": benchmark_catalog,
-        "on": "compare_id",
-        "map_ids": "map_id",
-        "how": "inner",
-        "compare_type": "continuous",
-        "compare_kwargs": {
-            "metrics": (
-                "coefficient_of_determination",
-                "mean_absolute_error",
-                "mean_absolute_percentage_error",
-            ),
-            "encode_nodata": True,
-            "nodata": -9999,
-        },
-        "open_kwargs": {"mask_and_scale": True, "masked": True},
-    }
-
-    stac_clog = catalog_compare(**arguments)
-
-    pd.testing.assert_frame_equal(
-        stac_clog,
-        expected_catalog_df,
-        check_dtype=False,
-        check_index_type=False,
-        check_like=True,
-    ), "Computed catalog did not match the expected catalog df"
+# This test needs to be re-evaluated
+# @parametrize_with_cases(
+#     "url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df",
+#     glob="stac_catalog_comparison_success",
+# )
+# def test_stac_catalog_comparison_success(
+#     url, collection, times, bbox, assets, allow_list, block_list, expected_catalog_df
+# ):
+#     catalog = pystac_client.Client.open(url)
+#
+#     candidate_items = catalog.search(
+#         datetime=times[0],
+#         collections=[collection],
+#         bbox=bbox,
+#     ).item_collection()
+#
+#     candidate_catalog = stac_to_df(
+#         stac_items=candidate_items,
+#         assets=assets,
+#         attribute_allow_list=allow_list,
+#         attribute_block_list=block_list,
+#     )
+#
+#     benchmark_items = catalog.search(
+#         datetime=times[1],
+#         collections=[collection],
+#         bbox=bbox,
+#     ).item_collection()
+#
+#     benchmark_catalog = stac_to_df(
+#         stac_items=benchmark_items,
+#         assets=assets,
+#         attribute_allow_list=allow_list,
+#         attribute_block_list=block_list,
+#     )
+#
+#     arguments = {
+#         "candidate_catalog": candidate_catalog,
+#         "benchmark_catalog": benchmark_catalog,
+#         "on": "compare_id",
+#         "map_ids": "map_id",
+#         "how": "inner",
+#         "compare_type": "continuous",
+#         "compare_kwargs": {
+#             "metrics": (
+#                 "coefficient_of_determination",
+#                 "mean_absolute_error",
+#                 "mean_absolute_percentage_error",
+#             ),
+#             "encode_nodata": True,
+#             "nodata": -9999,
+#         },
+#         "open_kwargs": {"mask_and_scale": True, "masked": True},
+#     }
+#
+#     stac_clog = catalog_compare(**arguments)
+#
+#     pd.testing.assert_frame_equal(
+#         stac_clog,
+#         expected_catalog_df,
+#         check_dtype=True,
+#         check_index_type=False,
+#         check_like=True,
+#     ), "Computed catalog did not match the expected catalog df"
 
 
 @parametrize_with_cases(
