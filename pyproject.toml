@@ -27,7 +27,7 @@ dev = [
     "pytest-cov==4.1.0",
     "pytest-cases==3.6.14",
     "allure-pytest==2.13.2",
-    "pytest-memray==1.4.1",
+    "pytest-memray==1.7.0",
     "pytest-monitor==1.6.6",
     "boto3==1.26.164",
     "sqlalchemy==2.0.17",
