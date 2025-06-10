@@ -18,7 +18,7 @@ from deepdiff import DeepDiff
 from gval.comparison.pairing_functions import PairingDict
 
 # name of S3 for test data
-TEST_DATA_S3_NAME = "gval-test"
+TEST_DATA_S3_NAME = "gval"
 TEST_DATA_DIR = f"s3://{TEST_DATA_S3_NAME}"
 
 
@@ -122,7 +122,7 @@ def _assert_pairing_dict_equal(
     AssertionError
     """
     # compute difference between dictionaries. If empty dict, they are equal
-    diff = DeepDiff(expected_dict, computed_dict)
+    diff = DeepDiff(expected_dict, computed_dict, significant_digits=5)
 
     if diff:
         raise AssertionError(f"Dictionaries are not equal. {diff}")

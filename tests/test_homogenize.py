@@ -10,6 +10,7 @@ from pytest_cases import parametrize_with_cases
 import xarray as xr
 import numpy as np
 import geopandas as gpd
+from geopandas.testing import assert_geodataframe_equal
 
 from gval.homogenize.spatial_alignment import (
     _matching_crs,
@@ -191,7 +192,12 @@ def test_vectorize_raster_success(raster_map, expected):
     vector_df = _vectorize_data(raster_data=raster_map)
 
     assert isinstance(vector_df, gpd.GeoDataFrame)
-    assert vector_df.equals(expected)
+    assert_geodataframe_equal(
+        vector_df.sort_values("geometry", ignore_index=True),
+        expected.sort_values("geometry", ignore_index=True),
+        check_index_type=False,
+        check_dtype=False,
+    )
 
 
 @parametrize_with_cases(

@@ -11,7 +11,7 @@ import gval  # noqa: F401
     glob="categorical_plot_success",
 )
 def test_categorical_plot_success(candidate_map, crs, entries):
-    candidate_map.rio.set_crs(crs)
+    candidate_map.rio.write_crs(crs, inplace=True)
     viz_object = candidate_map.gval.cat_plot(basemap=None)
     assert len(viz_object.axes.get_legend().texts) == entries
 

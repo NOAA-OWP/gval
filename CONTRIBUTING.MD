@@ -43,7 +43,7 @@ If you would like to contribute to our project, please follow these steps from t
 
 **Note**: Replace anything within angle brackets `<>` with your specific information, removing the brackets.
 
-1. **Fork and Clone**: 
+1. **Fork and Clone**:
    - Fork the project on GitHub.
    - Clone your fork (`git clone <your_username>/gval`).
    - Create a feature branch (`git checkout -b <your_feature>`).
@@ -59,7 +59,7 @@ If you would like to contribute to our project, please follow these steps from t
      - **conda/mamba**:
        - Create: `[conda|mamba] create -n <your_env_name> python=<X.X.X>`.
        - Activate: `[conda|mamba] activate <your_env_name>`.
-       - Deactivate: `[conda|mamba] deactivate`.
+       - Deactivate: `[conda|mamba] deactivate`
 
 3. **Dependency Installation**:
    - Activate your virtual environment.

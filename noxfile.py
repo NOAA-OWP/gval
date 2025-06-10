@@ -11,7 +11,7 @@ import contextlib
 
 import nox
 
-PYTHON_VERSIONS = ["3.8", "3.9", "3.10", "3.11"]
+PYTHON_VERSIONS = ["3.10", "3.11", "3.12", "3.13"]
 LINTING_VERSION = "3.11"
 DOCS_VERSION = "3.11"
 

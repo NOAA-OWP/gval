@@ -225,7 +225,7 @@ def case_make_pairing_dict(
 pairing_dict_fn_inputs = [
     (1, 2, {(1, 2): 3}, 3),
     (9, 10, {(9, 10.0): 1}, 1),
-    (-1, 10, {(-1, 10): np.nan}, np.nan),
+    (-1.0, 10.0, {(-1.0, 10.0): np.nan}, np.nan),
 ]
 
 

@@ -131,7 +131,7 @@ def _compute_agreement_map(
         """
 
         # sets CRS that is lost with `xr.apply_ufunc`
-        agreement_map.rio.set_crs(crs, inplace=True)
+        agreement_map.rio.write_crs(crs, inplace=True)
 
         # setting agreement map nodata and encoded nodata
         if nodata is not None:
@@ -146,7 +146,7 @@ def _compute_agreement_map(
                     nodata, encoded=encode_nodata, inplace=True
                 )
             else:
-                agreement_map.rio.set_nodata(nodata, inplace=True)
+                agreement_map.rio.write_nodata(nodata, inplace=True)
 
         return agreement_map
 
