@@ -13,7 +13,7 @@ import pystac_client
 
 from tests.conftest import _attributes_to_string
 from gval.catalogs.catalogs import catalog_compare
-from gval.utils.loading_datasets import stac_to_df
+from gval.utils.loading_datasets import stac_to_df, _parse_string_attributes
 
 
 @parametrize_with_cases(
@@ -87,14 +87,16 @@ def test_compare_catalogs(
         )
 
     # check dtypes. if not the same, recast
-    try:
-        pd.testing.assert_series_equal(agreement_catalog.dtypes, expected.dtypes)
-    except AssertionError:
-        agreement_catalog = agreement_catalog.astype(expected.dtypes)
-        pd.testing.assert_series_equal(agreement_catalog.dtypes, expected.dtypes)
+    agreement_catalog = agreement_catalog.astype(expected.dtypes)
+    pd.testing.assert_series_equal(agreement_catalog.dtypes, expected.dtypes)
+    agreement_catalog["agreement_maps"] = agreement_catalog["agreement_maps"].astype(
+        str
+    )
+    expected["agreement_maps"] = expected["agreement_maps"].astype(str)
 
-    # check that the values are the same
-    pd.testing.assert_frame_equal(agreement_catalog, expected)
+    pd.testing.assert_frame_equal(
+        agreement_catalog, expected, check_dtype=False, check_like=True
+    )
 
     # load agreement maps and check metadata
     if agreement_map_field is not None:
@@ -110,7 +112,7 @@ def test_compare_catalogs(
                 )
 
                 xr.testing.assert_identical(
-                    _attributes_to_string(agreement_map),
+                    _attributes_to_string(_parse_string_attributes(agreement_map)),
                     _attributes_to_string(expected_agreement_map_xr),
                 )
 

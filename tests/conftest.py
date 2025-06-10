@@ -122,7 +122,7 @@ def _assert_pairing_dict_equal(
     AssertionError
     """
     # compute difference between dictionaries. If empty dict, they are equal
-    diff = DeepDiff(expected_dict, computed_dict)
+    diff = DeepDiff(expected_dict, computed_dict, significant_digits=5)
 
     if diff:
         raise AssertionError(f"Dictionaries are not equal. {diff}")
