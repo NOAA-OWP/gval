@@ -59,7 +59,7 @@ If you would like to contribute to our project, please follow these steps from t
      - **conda/mamba**:
        - Create: `[conda|mamba] create -n <your_env_name> python=<X.X.X>`.
        - Activate: `[conda|mamba] activate <your_env_name>`.
-       - Deactivate: `[conda|mamba] deactivate`.
+       - Deactivate: `[conda|mamba] deactivate`
 
 3. **Dependency Installation**:
    - Activate your virtual environment.
