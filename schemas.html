@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schemas &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Exceptions" href="exceptions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">GVAL API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="extension.html">Core Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison.html">Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subsampling.html">Subsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.html">Catalogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="utils.html">Utilities</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="loading_datasets.html">Loading Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Schemas</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.AttributeTrackingDf"><code class="docutils literal notranslate"><span class="pre">AttributeTrackingDf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Conditions_df"><code class="docutils literal notranslate"><span class="pre">Conditions_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Crosstab_df"><code class="docutils literal notranslate"><span class="pre">Crosstab_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Metrics_df"><code class="docutils literal notranslate"><span class="pre">Metrics_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Pivoted_crosstab_df"><code class="docutils literal notranslate"><span class="pre">Pivoted_crosstab_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Prob_metrics_df"><code class="docutils literal notranslate"><span class="pre">Prob_metrics_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Sample_identifiers"><code class="docutils literal notranslate"><span class="pre">Sample_identifiers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Subsample_identifiers"><code class="docutils literal notranslate"><span class="pre">Subsample_identifiers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.SubsamplingDf"><code class="docutils literal notranslate"><span class="pre">SubsamplingDf</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.Xrspatial_crosstab_df"><code class="docutils literal notranslate"><span class="pre">Xrspatial_crosstab_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.utils.schemas.columns_method"><code class="docutils literal notranslate"><span class="pre">columns_method</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">GVAL API</a></li>
+          <li class="breadcrumb-item"><a href="utils.html">Utilities</a></li>
+      <li class="breadcrumb-item active">Schemas</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/schemas.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="schemas">
+<h1>Schemas<a class="headerlink" href="#schemas" title="Permalink to this heading"></a></h1>
+<p><a class="reference internal" href="index.html"><span class="doc">Return to Homepage</span></a></p>
+<span class="target" id="module-gval.utils.schemas"></span><p>DataFrame Schemas with Pandera.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">AttributeTrackingDf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the schema for output of <cite>_attribute_tracking_xarray()</cite>
+The attributes could be of any datatype. For instance, if your attributes are of float type,
+you can use Series[float] instead of Series[object].</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'AttributeTrackingDf'</span></em><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.attribute_1_benchmark">
+<span class="sig-name descname"><span class="pre">attribute_1_benchmark</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'attribute_1_benchmark'</span></em><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.attribute_1_benchmark" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.attribute_1_candidate">
+<span class="sig-name descname"><span class="pre">attribute_1_candidate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'attribute_1_candidate'</span></em><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.attribute_1_candidate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.attribute_2_benchmark">
+<span class="sig-name descname"><span class="pre">attribute_2_benchmark</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'attribute_2_benchmark'</span></em><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.attribute_2_benchmark" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.attribute_2_candidate">
+<span class="sig-name descname"><span class="pre">attribute_2_candidate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'attribute_2_candidate'</span></em><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.attribute_2_candidate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.utils.schemas.AttributeTrackingDf.validate_column_suffixes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_column_suffixes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.utils.schemas.AttributeTrackingDf.validate_column_suffixes" title="Permalink to this definition"></a></dt>
+<dd><p>Checks that each column name in the dataframe ends with either ‘_candidate’ or ‘_benchmark’.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Conditions_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Conditions_df" title="Permalink to this definition"></a></dt>
+<dd><p>Cateogrical conditions df</p>
+<p>Inherits columns from <cite>Sample_identifiers</cite></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Conditions_df.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Conditions_df.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conditions_df'</span></em><a class="headerlink" href="#gval.utils.schemas.Conditions_df.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.Config.ordered">
+<span class="sig-name descname"><span class="pre">ordered</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gval.utils.schemas.Conditions_df.Config.ordered" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.fn">
+<span class="sig-name descname"><span class="pre">fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fn'</span></em><a class="headerlink" href="#gval.utils.schemas.Conditions_df.fn" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.fp">
+<span class="sig-name descname"><span class="pre">fp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'fp'</span></em><a class="headerlink" href="#gval.utils.schemas.Conditions_df.fp" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.tn">
+<span class="sig-name descname"><span class="pre">tn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tn'</span></em><a class="headerlink" href="#gval.utils.schemas.Conditions_df.tn" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Conditions_df.tp">
+<span class="sig-name descname"><span class="pre">tp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tp'</span></em><a class="headerlink" href="#gval.utils.schemas.Conditions_df.tp" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Crosstab_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Crosstab_df" title="Permalink to this definition"></a></dt>
+<dd><p>Crosstab DF schema</p>
+<p>Inherits columns from <cite>Sample_identifiers</cite></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Crosstab_df'</span></em><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.agreement_values">
+<span class="sig-name descname"><span class="pre">agreement_values</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'agreement_values'</span></em><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.agreement_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.benchmark_values">
+<span class="sig-name descname"><span class="pre">benchmark_values</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'benchmark_values'</span></em><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.benchmark_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.candidate_values">
+<span class="sig-name descname"><span class="pre">candidate_values</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'candidate_values'</span></em><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.candidate_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Crosstab_df.counts">
+<span class="sig-name descname"><span class="pre">counts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'counts'</span></em><a class="headerlink" href="#gval.utils.schemas.Crosstab_df.counts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Metrics_df">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Metrics_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Metrics_df" title="Permalink to this definition"></a></dt>
+<dd><p>Metrics DF schema</p>
+<p>Inherits columns from <cite>Conditions_df</cite></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Metrics_df.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Metrics_df.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Metrics_df.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Metrics_df.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Metrics_df.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Metrics_df'</span></em><a class="headerlink" href="#gval.utils.schemas.Metrics_df.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Metrics_df.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gval.utils.schemas.Metrics_df.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Pivoted_crosstab_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df" title="Permalink to this definition"></a></dt>
+<dd><p>Pivoted Crosstab DF schema</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Pivoted_crosstab_df'</span></em><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df.col_idx">
+<span class="sig-name descname"><span class="pre">col_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'col_idx'</span></em><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df.col_idx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df.column_index_name">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column_index_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df.column_index_name" title="Permalink to this definition"></a></dt>
+<dd><p>Checks that column index name is ‘benchmark_values’</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Pivoted_crosstab_df.row_idx">
+<span class="sig-name descname"><span class="pre">row_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Index</span><span class="p"><span class="pre">[</span></span><span class="pre">Int64</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Schema</span> <span class="pre">Index(name=candidate_values,</span> <span class="pre">type=None)&gt;</span></em><a class="headerlink" href="#gval.utils.schemas.Pivoted_crosstab_df.row_idx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Prob_metrics_df">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Prob_metrics_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Prob_metrics_df" title="Permalink to this definition"></a></dt>
+<dd><p>Probabilistic metrics DF schema</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Prob_metrics_df.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Prob_metrics_df.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Prob_metrics_df.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gval.utils.schemas.Prob_metrics_df.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Prob_metrics_df.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Prob_metrics_df'</span></em><a class="headerlink" href="#gval.utils.schemas.Prob_metrics_df.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Prob_metrics_df.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gval.utils.schemas.Prob_metrics_df.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Prob_metrics_df.metrics">
+<span class="sig-name descname"><span class="pre">metrics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'metrics'</span></em><a class="headerlink" href="#gval.utils.schemas.Prob_metrics_df.metrics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Sample_identifiers">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Sample_identifiers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Sample_identifiers" title="Permalink to this definition"></a></dt>
+<dd><p>Crosstab DF schema</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Sample_identifiers.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Sample_identifiers.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Sample_identifiers.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Sample_identifiers.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Sample_identifiers.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Sample_identifiers'</span></em><a class="headerlink" href="#gval.utils.schemas.Sample_identifiers.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Sample_identifiers.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Sample_identifiers.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Sample_identifiers.band">
+<span class="sig-name descname"><span class="pre">band</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'band'</span></em><a class="headerlink" href="#gval.utils.schemas.Sample_identifiers.band" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Sample_identifiers.idx">
+<span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Index</span><span class="p"><span class="pre">[</span></span><span class="pre">Int64</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'idx'</span></em><a class="headerlink" href="#gval.utils.schemas.Sample_identifiers.idx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Subsample_identifiers">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Subsample_identifiers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Subsample_identifiers" title="Permalink to this definition"></a></dt>
+<dd><p>Crosstab DF schema</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Subsample_identifiers.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Subsample_identifiers.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Subsample_identifiers.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Subsample_identifiers.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Subsample_identifiers.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Subsample_identifiers'</span></em><a class="headerlink" href="#gval.utils.schemas.Subsample_identifiers.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Subsample_identifiers.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Subsample_identifiers.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Subsample_identifiers.idx">
+<span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Index</span><span class="p"><span class="pre">[</span></span><span class="pre">Int64</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'idx'</span></em><a class="headerlink" href="#gval.utils.schemas.Subsample_identifiers.idx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Subsample_identifiers.subsample">
+<span class="sig-name descname"><span class="pre">subsample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'subsample'</span></em><a class="headerlink" href="#gval.utils.schemas.Subsample_identifiers.subsample" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">SubsamplingDf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the schema for subsampling DataFrame`</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SubsamplingDf'</span></em><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.geometry">
+<span class="sig-name descname"><span class="pre">geometry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">Geometry</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'geometry'</span></em><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.geometry" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.subsample_id">
+<span class="sig-name descname"><span class="pre">subsample_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'subsample_id'</span></em><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.subsample_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.subsample_type">
+<span class="sig-name descname"><span class="pre">subsample_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'subsample_type'</span></em><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.subsample_type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.SubsamplingDf.weights">
+<span class="sig-name descname"><span class="pre">weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'weights'</span></em><a class="headerlink" href="#gval.utils.schemas.SubsamplingDf.weights" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Xrspatial_crosstab_df">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">Xrspatial_crosstab_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.Xrspatial_crosstab_df" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the schema for output of <cite>xrspatial.zonal.crosstab()</cite></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.Xrspatial_crosstab_df.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.Xrspatial_crosstab_df.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Xrspatial_crosstab_df.Config.coerce">
+<span class="sig-name descname"><span class="pre">coerce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#gval.utils.schemas.Xrspatial_crosstab_df.Config.coerce" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Xrspatial_crosstab_df.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Xrspatial_crosstab_df'</span></em><a class="headerlink" href="#gval.utils.schemas.Xrspatial_crosstab_df.Config.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Xrspatial_crosstab_df.Config.strict">
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gval.utils.schemas.Xrspatial_crosstab_df.Config.strict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.Xrspatial_crosstab_df.zone">
+<span class="sig-name descname"><span class="pre">zone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'zone'</span></em><a class="headerlink" href="#gval.utils.schemas.Xrspatial_crosstab_df.zone" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.columns_method">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.utils.schemas.</span></span><span class="sig-name descname"><span class="pre">columns_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.utils.schemas.columns_method" title="Permalink to this definition"></a></dt>
+<dd><p>Defines base data frame model with columns method</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.utils.schemas.columns_method.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="headerlink" href="#gval.utils.schemas.columns_method.Config" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="gval.utils.schemas.columns_method.Config.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'columns_method'</span></em><a class="headerlink" href="#gval.utils.schemas.columns_method.Config.name" title="Permalink to this definition"></a></dt>
+<dd><p>name of schema</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.utils.schemas.columns_method.columns">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.utils.schemas.columns_method.columns" title="Permalink to this definition"></a></dt>
+<dd><p>Gives access to columns from DataFrameModel</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="exceptions.html" class="btn btn-neutral float-left" title="Exceptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
