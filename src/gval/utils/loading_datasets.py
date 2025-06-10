@@ -177,7 +177,17 @@ def _parse_string_attributes(
         obj.attrs["pairing_dictionary"], str
     ):
         eval_str = ast.literal_eval(
-            obj.attrs["pairing_dictionary"].replace("nan", '"nan"')
+            obj.attrs["pairing_dictionary"]
+            .replace("nan", '"nan"')
+            .replace("np.int64(", "")
+            .replace("np.float64(", "")
+            .replace("np.int32(", "")
+            .replace("np.float32(", "")
+            .replace("np.int16(", "")
+            .replace("np.int8(", "")
+            .replace("),", ",")
+            .replace("))", ")")
+            .replace(")}", "}")
         )
         obj.attrs["pairing_dictionary"] = {
             (float(k[0]), float(k[1])): float(v) for k, v in eval_str.items()
