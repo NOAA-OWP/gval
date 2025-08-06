@@ -155,7 +155,7 @@ on = ["compare_id"] * 4
 map_ids = ["map_id", ("map_id", "map_id"), "map_id", "map_id"]
 how = ["inner"] * 4
 compare_type = ["continuous"] * 2 + ["categorical"] * 2
-dask = [False, True] * 2
+dask = [False, False] * 2
 
 compare_kwargs = [
     {

@@ -5,7 +5,7 @@ Computes categorical metrics given a crosstab df.
 # __all__ = ['*']
 __author__ = "Fernando Aristizabal"
 
-from typing import Iterable, Optional, Union
+from typing import Iterable, Optional, Union, Dict
 from numbers import Number
 
 # deprecation warnings: DeprecationWarning: In a future version, `df.iloc[:, i] = newvals` will attempt to set the values inplace instead of always setting a new array. To retain the old behavior, use either `df[df.columns[i]] = newvals` or, if columns are non-unique, `df.isetitem(i, newvals)
@@ -13,7 +13,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
-import pandera as pa
+import pandera.pandas as pa
 from pandera.typing import DataFrame
 
 from gval import CatStats
@@ -25,49 +25,89 @@ from gval.utils.schemas import (
 )
 
 
+def _create_set_dict(categories):
+    """Creates set valued dictionary"""
+    if not isinstance(categories, dict):
+        categories = {"candidate": categories, "benchmark": categories}
+
+    categories["candidate"] = _convert_to_set(categories["candidate"])
+    categories["benchmark"] = _convert_to_set(categories["benchmark"])
+
+    return categories
+
+
+def _convert_to_set(data):
+    """Converts data to set"""
+    if data is None:
+        data = set()
+    else:
+        data = {data} if isinstance(data, Number) else set(data)
+
+    return data
+
+
+def _get_unique_values(crosstab_df, column):
+    """Get unique values from a Dataframe"""
+
+    return set(
+        [
+            item
+            for item in crosstab_df.loc[:, column].to_numpy().ravel()
+            if not isinstance(item, list)
+        ]
+    )
+
+
 def _handle_positive_negative_categories(
     crosstab_df, positive_categories, negative_categories
 ):  # pragma: no cover
     """Input handling for use case with positive and negative categories"""
 
-    # convert to positive categories to sets
-    if isinstance(positive_categories, Number):
-        positive_categories = {positive_categories}
-    else:
-        positive_categories = set(positive_categories)
-
-    # convert to negative categories to sets
-    if isinstance(negative_categories, Number):
-        negative_categories = {negative_categories}
-    elif negative_categories is None:
-        # TODO: Currently not working bc process_statistics requires all four conditions for "all" case
-        negative_categories = set()
-    else:
-        negative_categories = set(negative_categories)
+    positive_categories = _create_set_dict(positive_categories)
+    negative_categories = _create_set_dict(negative_categories)
 
     # input check to make sure the same value isn't repeated in positive and negative categories
-    if positive_categories.intersection(negative_categories):
-        raise ValueError("Value is shared in positive and negative categories.")
+    if positive_categories["candidate"].intersection(negative_categories["candidate"]):
+        raise ValueError(
+            "Value is shared in candidate positive and negative categories."
+        )
 
-    # finds the unique values in the sample's candidate and benchmark values
-    unique_values = set(
-        [
-            item
-            for item in crosstab_df.loc[:, ["candidate_values", "benchmark_values"]]
-            .to_numpy()
-            .ravel()
-            if not isinstance(item, list)
-        ]
-    )
+    if positive_categories["benchmark"].intersection(negative_categories["benchmark"]):
+        raise ValueError(
+            "Value is shared in benchmark positive and negative categories."
+        )
 
-    # this checks that user passed positive or negative categories exist in sample df
-    def categories_exist_in_crosstab_df(categories, cat_name):
+    # Finds the unique values in the sample's candidate and benchmark values
+    candidate_unique_values = _get_unique_values(crosstab_df, "candidate_values")
+    benchmark_unique_values = _get_unique_values(crosstab_df, "benchmark_values")
+
+    # Share unique values if both candidate and benchmark share the same categories
+    if (
+        positive_categories["candidate"] == positive_categories["benchmark"]
+        and negative_categories["candidate"] == negative_categories["benchmark"]
+    ):
+        candidate_unique_values = (
+            benchmark_unique_values
+        ) = candidate_unique_values.union(benchmark_unique_values)
+
+    # This checks that user passed positive or negative categories exist in sample df
+    def categories_exist_in_crosstab_df(categories, cat_name, unique_values):
         for c in categories:
             if c not in unique_values:
                 raise ValueError(f"{cat_name} category {c} not found in crosstab df.")
 
-    categories_exist_in_crosstab_df(positive_categories, "positive")
-    categories_exist_in_crosstab_df(negative_categories, "negative")
+    categories_exist_in_crosstab_df(
+        positive_categories["candidate"], "positive", candidate_unique_values
+    )
+    categories_exist_in_crosstab_df(
+        negative_categories["candidate"], "negative", candidate_unique_values
+    )
+    categories_exist_in_crosstab_df(
+        positive_categories["benchmark"], "positive", benchmark_unique_values
+    )
+    categories_exist_in_crosstab_df(
+        negative_categories["benchmark"], "negative", benchmark_unique_values
+    )
 
     return positive_categories, negative_categories
 
@@ -75,8 +115,12 @@ def _handle_positive_negative_categories(
 @pa.check_types
 def _compute_categorical_metrics(
     crosstab_df: DataFrame[Crosstab_df],
-    positive_categories: Optional[Union[Number, Iterable[Number]]],
-    negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
+    positive_categories: Optional[
+        Union[Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]]
+    ],
+    negative_categories: Optional[
+        Union[Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]]
+    ] = None,
     metrics: Union[str, Iterable[str]] = "all",
     average: str = "micro",
     weights: Optional[Iterable[Number]] = None,
@@ -148,22 +192,33 @@ def _compute_categorical_metrics(
     )
 
     # check to make sure that macro and weighted average are not used with only one category
-    if average in ["macro", "weighted"] and len(positive_categories) == 1:
+    if average in ["macro", "weighted"] and len(positive_categories["candidate"]) == 1:
         raise ValueError(
             f"Cannot use average type '{average}' with only one positive category."
         )
 
     # check to make sure length of weights is the same as positive categories
     if average == "weighted":
-        if len(weights) != len(positive_categories):
+        if len(weights) != len(positive_categories["candidate"]):
             raise ValueError(
-                f"Number of weights ({len(weights)}) must be the same as the number of positive categories ({len(positive_categories)})."
+                f"Number of positive category weights ({len(weights)}) must be the same as the number of positive "
+                f"categories ({len(positive_categories['candidate'])})."
             )
 
     # make sure negative categories are not used with macro or weighted average
-    if average in ["macro", "weighted"] and negative_categories:
+    if average in ["macro", "weighted"] and negative_categories["candidate"]:
         raise ValueError(
-            f"Cannot use average type '{average}' with negative_categories as not None. Set negative_categories to None for this average type."
+            f"Cannot use average type '{average}' with negative_categories as not None. "
+            f"Set negative_categories to None for this average type."
+        )
+
+    if (
+        average in ["macro", "weighted"]
+        and positive_categories["candidate"] != positive_categories["benchmark"]
+    ):
+        raise ValueError(
+            f"Cannot use average type '{average}' with different classes in positive candidate and benchmark values. "
+            f"Make sure they are the same."
         )
 
     #########################################################################################
@@ -172,23 +227,23 @@ def _compute_categorical_metrics(
     def assign_condition_to_pairing(row, positive_categories, negative_categories):
         """This is used to create a conditions column"""
         # predicted positive
-        if row["candidate_values"] in positive_categories:
-            if row["benchmark_values"] in positive_categories:
+        if row["candidate_values"] in positive_categories["candidate"]:
+            if row["benchmark_values"] in positive_categories["benchmark"]:
                 return "tp"
             elif (
-                row["benchmark_values"] in negative_categories
-                or len(negative_categories) == 0
+                row["benchmark_values"] in negative_categories["benchmark"]
+                or len(negative_categories["benchmark"]) == 0
             ):
                 return "fp"
 
         # predicted negative
         elif (
-            row["candidate_values"] in negative_categories
-            or len(negative_categories) == 0
+            row["candidate_values"] in negative_categories["candidate"]
+            or len(negative_categories["candidate"]) == 0
         ):
-            if row["benchmark_values"] in positive_categories:
+            if row["benchmark_values"] in positive_categories["benchmark"]:
                 return "fn"
-            elif row["benchmark_values"] in negative_categories:
+            elif row["benchmark_values"] in negative_categories["benchmark"]:
                 return "tn"
 
     #########################################################################################
@@ -220,9 +275,6 @@ def _compute_categorical_metrics(
     # computes metrics per category or micro level category
 
     def compute_metrics_per_category(pos_cats, neg_cats, groupby_cols):
-        if not isinstance(pos_cats, set):
-            pos_cats = set([pos_cats])
-
         # assign conditions to crosstab_df
         crosstab_df["conditions"] = crosstab_df.apply(
             assign_condition_to_pairing, axis=1, args=(pos_cats, neg_cats)
@@ -244,14 +296,14 @@ def _compute_categorical_metrics(
         with warnings.catch_warnings(record=True):
             # Filter warnings by category, in this case, DeprecationWarning
             warnings.simplefilter("always", DeprecationWarning)
-            if len(pos_cats) == 1:
+            if len(pos_cats["candidate"]) == 1:
                 metric_df.insert(
                     loc=metric_df.columns.get_loc("fn"),
                     column="positive_categories",
                     value=None,
                 )
-                metric_df.loc[:, "positive_categories"] = pos_cats.pop()
-            elif len(metric_df) == len(pos_cats):
+                metric_df.loc[:, "positive_categories"] = pos_cats["candidate"].pop()
+            elif len(metric_df) == len(pos_cats["candidate"]):
                 metric_df.insert(
                     loc=metric_df.columns.get_loc("fn"),
                     column="positive_categories",
@@ -281,14 +333,22 @@ def _compute_categorical_metrics(
             positive_categories, negative_categories, groupby
         )
     elif (average == "macro") or (average == "weighted") or (average is None):
-        metric_df = pd.concat(
-            [
-                compute_metrics_per_category(
-                    pos_cat, positive_categories.difference({pos_cat}), groupby
-                )
-                for pos_cat in positive_categories
-            ]
-        )
+        # Make copies to mutate
+        positive_copy = positive_categories.copy()
+        negative_copy = negative_categories.copy()
+        metrics_dfs = []
+
+        # One vs All Class Multi-categorical
+        for pos_cat in positive_categories["candidate"]:
+            positive_copy["candidate"] = positive_copy["benchmark"] = {pos_cat}
+            negative_copy["candidate"] = negative_copy[
+                "benchmark"
+            ] = positive_categories["candidate"].difference({pos_cat})
+            metrics_dfs.append(
+                compute_metrics_per_category(positive_copy, negative_copy, groupby)
+            )
+
+        metric_df = pd.concat(metrics_dfs)
 
     #########################################################################################
     # aggregate metrics

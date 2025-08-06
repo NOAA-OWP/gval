@@ -113,7 +113,9 @@ class GVALXarray:
     def categorical_compare(
         self,
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
-        positive_categories: Optional[Union[Number, Iterable[Number]]],
+        positive_categories: Union[
+            Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]
+        ],
         comparison_function: Union[
             Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str
         ] = "szudzik",
@@ -126,7 +128,9 @@ class GVALXarray:
         nodata: Optional[Number] = None,
         encode_nodata: Optional[bool] = False,
         exclude_value: Optional[Number] = None,
-        negative_categories: Optional[Union[Number, Iterable[Number]]] = None,
+        negative_categories: Union[
+            Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]
+        ] = None,
         average: str = "micro",
         weights: Optional[Iterable[Number]] = None,
         rasterize_attributes: Optional[list] = None,
@@ -164,7 +168,7 @@ class GVALXarray:
         ----------
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray]
             Benchmark map.
-        positive_categories : Optional[Union[Number, Iterable[Number]]]
+        positive_categories: Union[Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]], default = None
             Number or list of numbers representing the values to consider as the positive condition. When the average argument is either "macro" or "weighted", this represents the categories to compute metrics for.
         comparison_function : Union[Callable, nb.np.ufunc.dufunc.DUFunc, np.ufunc, np.vectorize, str], default = 'szudzik'
             Comparison function. Created by decorating function with @nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include "pairing_dict". If passing "pairing_dict" value, please see the description for the argument for more information on behaviour.
@@ -191,7 +195,7 @@ class GVALXarray:
             Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use `rxr.rio.write_nodata(nodata, encode=encode_nodata)`.
         exclude_value : Optional[Number], default = None
             Value to exclude from crosstab. This could be used to denote a no data value if masking wasn't used. By default, NaNs are not cross-tabulated.
-        negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+        negative_categories: Union[Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]], default=None
             Number or list of numbers representing the values to consider as the negative condition. This should be set to None when no negative categories are used or when the average type is "macro" or "weighted".
         average : str, default = "micro"
             Type of average to use when computing metrics. Options are "micro", "macro", and "weighted".
