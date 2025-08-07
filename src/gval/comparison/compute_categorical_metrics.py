@@ -29,6 +29,12 @@ def _create_set_dict(categories):
     """Creates set valued dictionary"""
     if not isinstance(categories, dict):
         categories = {"candidate": categories, "benchmark": categories}
+    else:
+        if "candidate" not in categories or "benchmark" not in categories:
+            raise ValueError(
+                "Make sure both candidate and benchmark entries are in the dictionary passed"
+                "in to negative_categories, positive_categories, or both."
+            )
 
     categories["candidate"] = _convert_to_set(categories["candidate"])
     categories["benchmark"] = _convert_to_set(categories["benchmark"])
