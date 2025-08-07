@@ -9,10 +9,10 @@ authors = [
     {name = "Fernando Aristizabal", email = "fernando.aristizabal@noaa.gov"},
     {name = "Gregory Petrochenkov", email = "gregory.petrochenkov@noaa.gov"}
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 keywords = ["geospatial", "evaluations"]
 license = {text = "MIT"}
-version = "0.2.10"
+version = "0.2.11"
 dynamic = ["readme", "dependencies"]
 
 [project.optional-dependencies]
