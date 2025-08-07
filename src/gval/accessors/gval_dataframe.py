@@ -1,5 +1,5 @@
 from numbers import Number
-from typing import Union, Iterable, Optional, List
+from typing import Union, Iterable, Optional, List, Dict
 
 import pandas as pd
 from shapely import Geometry
@@ -28,8 +28,12 @@ class GVALDataFrame:
 
     def compute_categorical_metrics(
         self,
-        positive_categories: Union[Number, Iterable[Number]],
-        negative_categories: Union[Number, Iterable[Number]],
+        positive_categories: Union[
+            Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]
+        ],
+        negative_categories: Union[
+            Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]
+        ],
         metrics: Union[str, Iterable[str]] = "all",
         average: str = "micro",
         weights: Optional[Iterable[Number]] = None,
@@ -42,9 +46,9 @@ class GVALDataFrame:
         ----------
         crosstab_df : DataFrame[Crosstab_df]
             Crosstab DataFrame with candidate, benchmark, and agreement values as well as the counts for each occurrence.
-        positive_categories : Optional[Union[Number, Iterable[Number]]]
+        positive_categories : Optional[Union[Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]]]
             Number or list of numbers representing the values to consider as the positive condition. For average types "macro" and "weighted", this represents the categories to compute metrics for.
-        negative_categories : Optional[Union[Number, Iterable[Number]]], default = None
+        negative_categories : Optional[UUnion[Number, Iterable[Number], Dict[str, Union[Number, Iterable[Number]]]]], default = None
             Number or list of numbers representing the values to consider as the negative condition. This should be set to None when no negative categories are used or when the average type is "macro" or "weighted".
         metrics : Union[str, Iterable[str]], default = "all"
             String or list of strings representing metrics to compute.

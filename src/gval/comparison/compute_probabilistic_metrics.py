@@ -8,7 +8,7 @@ from typing import Optional, Any, Union
 
 import numpy as np
 import pandas as pd
-import pandera as pa
+import pandera.pandas as pa
 from pandera.typing import DataFrame
 import xskillscore as xs
 import xarray as xr

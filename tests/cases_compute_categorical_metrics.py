@@ -133,6 +133,56 @@ expected_dfs = [
             "true_positive_rate": {0: 0.692265, 1: 0.567729},
         }
     ),
+    pd.DataFrame(
+        {
+            "band": {0: "1", 1: "2"},
+            "fn": {0: 1098.0, 1: 3689.0},
+            "fp": {0: 5444.0, 1: 2470.0},
+            "tn": {0: 9489.0, 1: 5200.0},
+            "tp": {0: 2470.0, 1: 4845.0},
+            "accuracy": {0: 0.646397492027458, 1: 0.6199086645272772},
+            "balanced_accuracy": {0: 0.6638514325121567, 1: 0.6228475926801269},
+            "critical_success_index": {
+                0: 0.2740790057700843,
+                1: 0.44029443838604143,
+            },
+            "equitable_threat_score": {0: 0.12607286705706663, 1: 0.1387798441467566},
+            "f_score": {0: 0.43023863438425364, 1: 0.6113950406965739},
+            "false_discovery_rate": {0: 0.6878948698508971, 1: 0.33766233766233766},
+            "false_negative_rate": {0: 0.3077354260089686, 1: 0.43227091633466136},
+            "false_omission_rate": {0: 0.10371209974497024, 1: 0.4150073124085949},
+            "false_positive_rate": {0: 0.364561708966718, 1: 0.3220338983050847},
+            "fowlkes_mallows_index": {
+                0: 0.46482182066151334,
+                1: 0.6132115084666983,
+            },
+            "matthews_correlation_coefficient": {
+                0: 0.2613254543945788,
+                1: 0.2465114118474816,
+            },
+            "negative_likelihood_ratio": {
+                0: 0.4842884515325037,
+                1: 0.6375996015936255,
+            },
+            "negative_predictive_value": {
+                0: 0.8962879002550298,
+                1: 0.5849926875914051,
+            },
+            "overall_bias": {0: 2.2180493273542603, 1: 0.8571595969064917},
+            "positive_likelihood_ratio": {
+                0: 1.898895459847184,
+                1: 1.762948207171315,
+            },
+            "positive_predictive_value": {
+                0: 0.31210513014910285,
+                1: 0.6623376623376623,
+            },
+            "prevalence": {0: 0.1928544403005243, 1: 0.5266600839298938},
+            "prevalence_threshold": {0: 0.4205207112769604, 1: 0.42959744253992793},
+            "true_negative_rate": {0: 0.635438291033282, 1: 0.6779661016949152},
+            "true_positive_rate": {0: 0.6922645739910314, 1: 0.5677290836653387},
+        }
+    ),
 ]
 
 input_dfs = [
@@ -288,6 +338,32 @@ input_dfs = [
             },
         }
     ),
+    pd.DataFrame(
+        {
+            "band": {
+                0: "1",
+                1: "1",
+                2: "1",
+                3: "1",
+                4: "2",
+                5: "2",
+                6: "2",
+                7: "2",
+            },
+            "candidate_values": {0: 1, 1: 1, 2: 2, 3: 2, 4: 1, 5: 1, 6: 2, 7: 2},
+            "benchmark_values": {0: 4, 1: 3, 2: 4, 3: 3, 4: 4, 5: 3, 6: 4, 7: 3},
+            "counts": {
+                0: 9489,
+                1: 1098,
+                2: 5444,
+                3: 2470,
+                4: 5200,
+                5: 3689,
+                6: 2470,
+                7: 4845,
+            },
+        }
+    ),
 ]
 
 metrics_input = [
@@ -296,9 +372,10 @@ metrics_input = [
     "accuracy",
     ["accuracy", "critical_success_index", "f_score"],
     "all",
+    "all",
 ]
-positive_categories_input = [(1, 3), 2, 2, 2, 2]
-negative_categories_input = [2, 1, 1, 1, None]
+positive_categories_input = [(1, 3), 2, 2, 2, 2, {"candidate": [2], "benchmark": [3]}]
+negative_categories_input = [2, 1, 1, 1, None, {"candidate": [1], "benchmark": [4]}]
 
 
 @parametrize(
@@ -368,11 +445,11 @@ input_dfs = [
             },
         }
     )
-] * 3
+] * 4
 
-negative_categories_input = [None, 4, (2, 3)]
-positive_categories_input = [4, 3, (1, 2)]
-exceptions = [ValueError, ValueError, ValueError]
+negative_categories_input = [None, 4, (2, 3), {"candidate": [1], "benchmark_fail": [2]}]
+positive_categories_input = [4, 3, (1, 2), {"candidate": [2], "arbitrary_fail": [5]}]
+exceptions = [ValueError, ValueError, ValueError, ValueError]
 
 
 @parametrize(

@@ -7,7 +7,7 @@ from typing import List, Optional, Union
 __author__ = "Fernando Aristizabal"
 
 import pandas as pd
-import pandera as pa
+import pandera.pandas as pa
 from pandera.typing import Series, Index, Int64
 from shapely import Geometry
 

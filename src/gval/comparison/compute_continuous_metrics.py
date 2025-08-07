@@ -8,7 +8,7 @@ __author__ = "Fernando Aristizabal"
 from typing import Iterable, Union, List
 
 import numpy as np
-import pandera as pa
+import pandera.pandas as pa
 import pandas as pd
 from pandera.typing import DataFrame
 import xarray as xr
