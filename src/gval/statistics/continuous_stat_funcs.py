@@ -116,7 +116,7 @@ def mean_percentage_error(
     benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
-    Compute mean percentage error (MPE).
+    Compute mean percentage error (MPE) as a fraction.
 
     Either (`error` and `benchmark_map`) or (`candidate_map` and `benchmark_map`) must be provided.
 
@@ -130,7 +130,7 @@ def mean_percentage_error(
     Returns
     -------
     MPE : Number
-        Mean percentage error.
+        Mean percentage error as a fraction.
 
     References
     ----------
@@ -143,9 +143,10 @@ def mean_percentage_error(
 def mean_absolute_percentage_error(
     error: Union[xr.DataArray, xr.Dataset],
     benchmark_map: Union[xr.DataArray, xr.Dataset],
+    epsilon: float = 1e-10,
 ) -> Number:
     """
-    Compute mean absolute percentage error (MAPE).
+    Compute mean absolute percentage error (MAPE) as a fraction.
 
     Either (`error` and `benchmark_map`) or (`candidate_map` and `benchmark_map`) must be provided.
 
@@ -159,13 +160,14 @@ def mean_absolute_percentage_error(
     Returns
     -------
     MAPE : Number
-        Mean absolute percentage error.
+        Mean absolute percentage error as a fraction.
 
     References
     ----------
     .. [1] `Mean absolute percentage error <https://en.wikipedia.org/wiki/Mean_absolute_percentage_error>`_
     """
-
+    mask = benchmark_map < epsilon
+    benchmark_map = benchmark_map.where(~mask, other=epsilon)
     return np.abs(error / benchmark_map).mean()
 
 
@@ -323,7 +325,7 @@ def symmetric_mean_absolute_percentage_error(
     benchmark_map: Union[xr.DataArray, xr.Dataset],
 ) -> Number:
     """
-    Compute symmetric mean absolute percentage error (sMAPE).
+    Compute symmetric mean absolute percentage error (sMAPE) as a fraction.
 
     Both `candidate_map` and `benchmark_map` must be provided. `error` can be provided to avoid recomputing it.
 
@@ -339,7 +341,7 @@ def symmetric_mean_absolute_percentage_error(
     Returns
     -------
     sMAPE : Number
-        Symmetric mean absolute percentage error.
+        Symmetric mean absolute percentage error as a fraction.
 
     References
     ----------
