@@ -47,6 +47,7 @@ class ContinuousStatistics(BaseStatistics):
                 "error": self.required_param,
                 "candidate_map": self.optional_param,
                 "benchmark_map": self.optional_param,
+                "epsilon": self.optional_param,
             },
             "required": [
                 self.required_param,
@@ -58,9 +59,10 @@ class ContinuousStatistics(BaseStatistics):
                 "xarray.core.dataarray.DataArray",
                 "Union[xarray.core.dataarray.DataArray, xarray.core.dataset.Dataset]",
                 "Union[xarray.core.dataset.Dataset, xarray.core.dataarray.DataArray]",
+                "float",
             ],
             "return_type": [float, Number],
-            "no_of_args": [1, 2, 3],
+            "no_of_args": [1, 2, 3, 4],
         }
 
         self.registered_functions = {
@@ -251,13 +253,12 @@ class ContinuousStatistics(BaseStatistics):
         for name in func_list:
             if name in self.registered_functions:
                 params = self.get_parameters(name)
-                required = self._signature_validation["required"]
 
                 func = getattr(self, name)
 
                 # Necessary for numba functions which cannot accept keyword arguments
                 func_args, skip_function, return_nan = [], False, False
-                for param, req in zip(params, required):
+                for param in params:
                     if param in kwargs and kwargs[param] is not None:
                         func_args.append(kwargs[param])
                     elif not self._signature_validation["names"][param]:
