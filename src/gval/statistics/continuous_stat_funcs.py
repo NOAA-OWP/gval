@@ -168,7 +168,7 @@ def mean_absolute_percentage_error(
     ----------
     .. [1] `Mean absolute percentage error <https://en.wikipedia.org/wiki/Mean_absolute_percentage_error>`_
     """
-    mask = benchmark_map < epsilon
+    mask = np.abs(benchmark_map) < epsilon
     benchmark_map = benchmark_map.where(~mask, other=epsilon)
     return np.abs(error / benchmark_map).mean()
 
