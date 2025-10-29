@@ -156,6 +156,8 @@ def mean_absolute_percentage_error(
         Candidate minus benchmark error.
     benchmark_map : Union[xr.DataArray, xr.Dataset]
         Benchmark map.
+    epsilon : float, default = 1e-10
+        Small value to avoid division by zero.
 
     Returns
     -------
