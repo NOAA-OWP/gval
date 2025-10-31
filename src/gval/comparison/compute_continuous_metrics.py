@@ -76,6 +76,7 @@ def _compute_continuous_metrics(
     metrics: Union[str, Iterable[str]] = "all",
     subsampling_average: str = "micro",
     subsampling_df: gpd.GeoDataFrame = None,
+    epsilon: float = 1e-10,
 ) -> DataFrame[Metrics_df]:
     """
     Computes continuous metrics.
@@ -94,6 +95,8 @@ def _compute_continuous_metrics(
         Strategy to average samples if there is more than one in the agreement map
     subsampling_df : gpd.GeoDataFrame, default = None
         DataFrame with geometries to subsample or use as exclusionary masks and optional sample weights
+    epsilon : float, default = 1e-10
+        Small value to avoid division by zero in some metrics.
 
     Returns
     -------
@@ -149,6 +152,7 @@ def _compute_continuous_metrics(
                     error=agreement_sel,
                     candidate_map=candidate_sel,
                     benchmark_map=benchmark_sel,
+                    epsilon=epsilon,
                 )
 
                 del agreement_sel, candidate_sel, benchmark_sel
@@ -166,6 +170,7 @@ def _compute_continuous_metrics(
                 error=agreement,
                 candidate_map=candidate,
                 benchmark_map=benchmark,
+                epsilon=epsilon,
             )
 
         # create metrics_df

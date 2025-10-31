@@ -303,6 +303,7 @@ class GVALXarray:
         attribute_tracking_kwargs: Optional[Dict] = None,
         subsampling_df: Optional[gpd.GeoDataFrame] = None,
         subsampling_average: str = "none",
+        epsilon: float = 1e-10,
     ) -> Tuple[
         Union[
             Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]],
@@ -351,6 +352,8 @@ class GVALXarray:
             Band calculates metrics and averages all the metrics by band
             Weighted calculates metrics, scales by the weight and then averages them based on the weights
             Full-detail provides full detailed table
+        epsilon : float, default = 1e-10
+            Small value to avoid division by zero in some metrics.
 
         Returns
         -------
@@ -387,6 +390,7 @@ class GVALXarray:
             metrics=metrics,
             subsampling_average=subsampling_average,
             subsampling_df=subsampling_df,
+            epsilon=epsilon,
         )
 
         if attribute_tracking:
