@@ -261,7 +261,12 @@ class ContinuousStatistics(BaseStatistics):
                 for param in params:
                     if param in kwargs and kwargs[param] is not None:
                         func_kwargs[param] = kwargs[param]
-                    elif self._signature_validation["names"].get(param, self.optional_param) == self.required_param:
+                    elif (
+                        self._signature_validation["names"].get(
+                            param, self.optional_param
+                        )
+                        == self.required_param
+                    ):
                         # Mandatory parameter missing
                         skip_function = True
                         break
