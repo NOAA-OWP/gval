@@ -262,14 +262,15 @@ class ContinuousStatistics(BaseStatistics):
                     if param in kwargs and kwargs[param] is not None:
                         func_args.append(kwargs[param])
                     elif not self._signature_validation["names"].get(param, self.optional_param):
+                        # Mandatory parameter missing
                         skip_function = True
                         break
                     else:
-                        print(
-                            f"Parameter {param} missing from kwargs of {name}, returning nan"
-                        )
-                        return_nan = True
-                        break
+                        # Optional parameter missing, use default value
+                        continue
+                        #print(f"Parameter {param} missing from kwargs of {name}, returning nan")
+                        #return_nan = True
+                        #break
 
                 if skip_function:
                     continue
