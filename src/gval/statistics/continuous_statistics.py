@@ -256,11 +256,15 @@ class ContinuousStatistics(BaseStatistics):
 
                 func = getattr(self, name)
 
+                func_kwargs = {}
+                skip_function = False
+
                 # Necessary for numba functions which cannot accept keyword arguments
                 func_args, skip_function, return_nan = [], False, False
                 for param in params:
                     if param in kwargs and kwargs[param] is not None:
-                        func_args.append(kwargs[param])
+                        #func_args.append(kwargs[param])
+                        func_kwargs[param] = kwargs[param]
                     elif not self._signature_validation["names"].get(param, self.optional_param):
                         # Mandatory parameter missing
                         skip_function = True
@@ -275,7 +279,8 @@ class ContinuousStatistics(BaseStatistics):
                 if skip_function:
                     continue
 
-                stat_val = np.nan if return_nan else func(*func_args)
+                #stat_val = np.nan if return_nan else func(*func_args)
+                stat_val = func(**func_kwargs)
 
                 def check_value(stat_name: str, stat: Number):
                     if (np.isnan(stat) or np.isinf(stat)) and not return_nan:
