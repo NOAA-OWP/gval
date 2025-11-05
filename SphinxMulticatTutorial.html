@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Class Categorical Comparisons &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Continuous Comparisons" href="SphinxContinuousTutorial.html" />
+    <link rel="prev" title="Two-Class Categorical Comparisons" href="SphinxTutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SphinxTutorial.html">Two-Class Categorical Comparisons</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Multi-Class Categorical Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Load-Datasets">Load Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Homogenize-Datasets-and-Make-Agreement-Map">Homogenize Datasets and Make Agreement Map</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Homogenize">Homogenize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Agreement-Map">Agreement Map</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Comparisons">Comparisons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Save-Output">Save Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxContinuousTutorial.html">Continuous Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxSubsamplingTutorial.html">Subsampling Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxCatalogTutorial.html">Catalog Comparisons</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GVAL API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Multi-Class Categorical Comparisons</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/SphinxMulticatTutorial.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><img alt="20d97ad7d6364571b852d4feadad8f69" src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png" /></p>
+<section id="Multi-Class-Categorical-Comparisons">
+<h1>Multi-Class Categorical Comparisons<a class="headerlink" href="#Multi-Class-Categorical-Comparisons" title="Permalink to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rioxarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rxr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gval</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Load-Datasets">
+<h2>Load Datasets<a class="headerlink" href="#Load-Datasets" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidate</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span>
+    <span class="s2">&quot;./candidate_map_multi_categorical.tif&quot;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span>
+    <span class="s2">&quot;./benchmark_map_multi_categorical.tif&quot;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">depth_raster</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span>
+    <span class="s2">&quot;./candidate_raw_elevation_multi_categorical.tif&quot;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Homogenize-Datasets-and-Make-Agreement-Map">
+<h2>Homogenize Datasets and Make Agreement Map<a class="headerlink" href="#Homogenize-Datasets-and-Make-Agreement-Map" title="Permalink to this heading"></a></h2>
+<p>Although one can call <code class="docutils literal notranslate"><span class="pre">candidate.gval.categorical_compare</span></code> to run the entire workflow, in this case homogenization and creation of an agreement map will be done separately to show more options for multi-class comparisons.</p>
+<section id="Homogenize">
+<h3>Homogenize<a class="headerlink" href="#Homogenize" title="Permalink to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidate_r</span><span class="p">,</span> <span class="n">benchmark_r</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">homogenize</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
+<span class="n">depth_raster_r</span><span class="p">,</span> <span class="n">arb</span> <span class="o">=</span> <span class="n">depth_raster</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">homogenize</span><span class="p">(</span><span class="n">benchmark_r</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">arb</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Agreement-Map">
+<h3>Agreement Map<a class="headerlink" href="#Agreement-Map" title="Permalink to this heading"></a></h3>
+<p>The following makes a pairing dictionary which maps combinations of values in the candidate and benchmark maps to unique values in the agreement map. In this case we will encode each value as concatenation of what the values are. Instead of making a pairing dictionary one can use the <code class="docutils literal notranslate"><span class="pre">szudzik</span></code> or <code class="docutils literal notranslate"><span class="pre">cantor</span></code> pairing functions to make unique values for each combination of candidate and benchmark map values. e.g. 12 represents a class 1 for the candidate and a class 2 for the benchmark.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">pairing_dictionary</span> <span class="o">=</span> <span class="p">{(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="nb">int</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="si">}{</span><span class="n">y</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">([</span><span class="n">classes</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">))}</span>
+
+<span class="c1"># Showing the first 6 entries</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span>  <span class="ow">in</span> <span class="n">pairing_dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">()][:</span><span class="mi">6</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(1, 1): 11
+(1, 2): 12
+(1, 3): 13
+(1, 4): 14
+(1, 5): 15
+(2, 1): 21
+</pre></div></div>
+</div>
+<p>The benchmark map has an extra class 0 which is very similar to nodata so it will not be included in <code class="docutils literal notranslate"><span class="pre">allow_benchmark_values</span></code> in the following methods.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agreement_map</span> <span class="o">=</span> <span class="n">candidate_r</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_agreement_map</span><span class="p">(</span>
+    <span class="n">benchmark_r</span><span class="p">,</span>
+    <span class="n">nodata</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span>
+    <span class="n">encode_nodata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">comparison_function</span><span class="o">=</span><span class="s2">&quot;pairing_dict&quot;</span><span class="p">,</span>
+    <span class="n">pairing_dict</span><span class="o">=</span><span class="n">pairing_dictionary</span><span class="p">,</span>
+    <span class="n">allow_candidate_values</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+    <span class="n">allow_benchmark_values</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">crosstab</span> <span class="o">=</span> <span class="n">agreement_map</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_crosstab</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>The following only shows a small subset of the map for memory purposes:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agreement_map</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cat_plot</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Agreement Map&#39;</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;tab20b&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7f99a1e34b50&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxMulticatTutorial_15_1.png" src="_images/SphinxMulticatTutorial_15_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Comparisons">
+<h2>Comparisons<a class="headerlink" href="#Comparisons" title="Permalink to this heading"></a></h2>
+<p>For multi-categorical statistics GVAL offers 4 methods of averaging:</p>
+<ol class="arabic simple">
+<li><p>No Averaging which provides one vs. all metrics on a class basis</p></li>
+<li><p>Micro Averaging which sums up the contingencies of each class defined as either positive or negative</p></li>
+<li><p>Macro Averaging which sums up the contingencies of one class vs all and then averages them</p></li>
+<li><p>Weighted Averaging which does macro averaging with the inclusion of weights to be applied to each positive category.</p></li>
+</ol>
+<p>Using <code class="docutils literal notranslate"><span class="pre">None</span></code> for the averaging argument runs a one class vs. all methodology for each class and reports their metrics on a class basis:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">no_averaged_metrics</span> <span class="o">=</span> <span class="n">crosstab</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_categorical_metrics</span><span class="p">(</span>
+    <span class="n">positive_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="n">negative_categories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span>
+<span class="n">no_averaged_metrics</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>positive_categories</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>fn</th>
+      <td>6.0</td>
+      <td>1043.0</td>
+      <td>318274.0</td>
+      <td>516572.0</td>
+      <td>364147.0</td>
+    </tr>
+    <tr>
+      <th>fp</th>
+      <td>172762.0</td>
+      <td>561004.0</td>
+      <td>462496.0</td>
+      <td>3775.0</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>tn</th>
+      <td>1043592.0</td>
+      <td>653360.0</td>
+      <td>422623.0</td>
+      <td>693617.0</td>
+      <td>852206.0</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>0.0</td>
+      <td>953.0</td>
+      <td>12967.0</td>
+      <td>2396.0</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.857963</td>
+      <td>0.537927</td>
+      <td>0.358109</td>
+      <td>0.57221</td>
+      <td>0.700622</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.428984</td>
+      <td>0.507741</td>
+      <td>0.258311</td>
+      <td>0.499602</td>
+      <td>0.5</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.0</td>
+      <td>0.001693</td>
+      <td>0.016337</td>
+      <td>0.004584</td>
+      <td>0.000005</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>-0.000005</td>
+      <td>0.000055</td>
+      <td>-0.175401</td>
+      <td>-0.000455</td>
+      <td>-0.0</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.0</td>
+      <td>0.00338</td>
+      <td>0.032148</td>
+      <td>0.009125</td>
+      <td>0.000011</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>1.0</td>
+      <td>0.998304</td>
+      <td>0.972728</td>
+      <td>0.611732</td>
+      <td>0.714286</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>1.0</td>
+      <td>0.522545</td>
+      <td>0.960853</td>
+      <td>0.995383</td>
+      <td>0.999995</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.000006</td>
+      <td>0.001594</td>
+      <td>0.429579</td>
+      <td>0.426852</td>
+      <td>0.299376</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.142033</td>
+      <td>0.461974</td>
+      <td>0.522524</td>
+      <td>0.005413</td>
+      <td>0.000006</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.0</td>
+      <td>0.028455</td>
+      <td>0.032675</td>
+      <td>0.042339</td>
+      <td>0.001253</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>-0.000904</td>
+      <td>0.001257</td>
+      <td>-0.440983</td>
+      <td>-0.005543</td>
+      <td>-0.000072</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>1.165546</td>
+      <td>0.971226</td>
+      <td>2.01236</td>
+      <td>1.000801</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.999994</td>
+      <td>0.998406</td>
+      <td>0.570421</td>
+      <td>0.573148</td>
+      <td>0.700624</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>28793.666667</td>
+      <td>281.541583</td>
+      <td>1.435399</td>
+      <td>0.011891</td>
+      <td>0.000019</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>0.0</td>
+      <td>1.033511</td>
+      <td>0.074919</td>
+      <td>0.852916</td>
+      <td>0.936112</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.0</td>
+      <td>0.001696</td>
+      <td>0.027272</td>
+      <td>0.388268</td>
+      <td>0.285714</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.000005</td>
+      <td>0.001641</td>
+      <td>0.272322</td>
+      <td>0.426657</td>
+      <td>0.299376</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>1.0</td>
+      <td>0.49588</td>
+      <td>0.785107</td>
+      <td>0.519876</td>
+      <td>0.508252</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.857967</td>
+      <td>0.538026</td>
+      <td>0.477476</td>
+      <td>0.994587</td>
+      <td>0.999994</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.0</td>
+      <td>0.477455</td>
+      <td>0.039147</td>
+      <td>0.004617</td>
+      <td>0.000005</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The following is an example of a using micro averaging to combine classes to process two-class categorical statistics. In this example we will use classes 1 and 2 as positive classes and classes 3, 4, and 5 as negative classes:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micro_averaged_metrics</span> <span class="o">=</span> <span class="n">crosstab</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_categorical_metrics</span><span class="p">(</span>
+    <span class="n">positive_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">negative_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="n">average</span><span class="o">=</span><span class="s2">&quot;micro&quot;</span>
+<span class="p">)</span>
+<span class="n">micro_averaged_metrics</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>fn</th>
+      <td>382.0</td>
+    </tr>
+    <tr>
+      <th>fp</th>
+      <td>733099.0</td>
+    </tr>
+    <tr>
+      <th>tn</th>
+      <td>481259.0</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>1620.0</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.396987</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.602749</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.002204</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>0.00056</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.004398</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>0.997795</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>0.190809</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.000793</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.603693</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.04224</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>0.017033</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>0.481468</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.999207</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>366.992507</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>1.340402</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.002205</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.001646</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>0.463444</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.396307</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.809191</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The following shows macro averaging and is equivalent to the values of shared columns in <code class="docutils literal notranslate"><span class="pre">no_averaged_comps.mean()</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">macro_averaged_metrics</span> <span class="o">=</span> <span class="n">crosstab</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_categorical_metrics</span><span class="p">(</span>
+    <span class="n">positive_categories</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+    <span class="n">negative_categories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s2">&quot;macro&quot;</span>
+<span class="p">)</span>
+<span class="n">macro_averaged_metrics</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.605366</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.438927</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.004524</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>-0.035161</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.008933</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>0.85941</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>0.895755</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.231481</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.22639</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.020944</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>-0.089249</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>1.229986</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.768519</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>5815.331112</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>0.579492</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.14059</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>0.661823</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.77361</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.104245</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>To further enhance <code class="docutils literal notranslate"><span class="pre">macro-averaging</span></code>, we can apply weights to the classes of interest in order to appropriately change the strength of evaluations for each class. For instance, if we applied the following vector the classes uses in this notebook, <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">4,</span> <span class="pre">1,</span> <span class="pre">5,</span> <span class="pre">1]</span></code>, classes 2 and 4 would have greater influence on the final averaging of the scores for all classes. (All weight values are in reference to the other weight values respectively. e.g. the vector <code class="docutils literal notranslate"><span class="pre">[5,</span> <span class="pre">5,</span> <span class="pre">5,</span> <span class="pre">5,</span> <span class="pre">5]</span></code> would cause no
+change in the averaging because each weight value is equivalent to a ll other weight values.) Let’s use the first weight vector mentioned in weighted averaging:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weight_averaged_metrics</span> <span class="o">=</span> <span class="n">crosstab</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_categorical_metrics</span><span class="p">(</span>
+    <span class="n">positive_categories</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+    <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">negative_categories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">average</span><span class="o">=</span><span class="s2">&quot;weighted&quot;</span>
+<span class="p">)</span>
+<span class="n">weight_averaged_metrics</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.577454</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.476356</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.003836</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>-0.014789</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.007609</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>0.811574</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>0.835662</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.239133</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.211627</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.029953</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>-0.03872</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>1.088901</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.760867</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>2493.443989</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>0.784138</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.188426</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.225962</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>0.573022</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.788373</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.164338</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Regardless of the averaging methodology it seems as though the candidate does not agree with the benchmark. We can now save the output.</p>
+</section>
+<section id="Save-Output">
+<h2>Save Output<a class="headerlink" href="#Save-Output" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># output agreement map</span>
+<span class="n">agreement_file</span> <span class="o">=</span> <span class="s1">&#39;multi_categorical_agreement_map.tif&#39;</span>
+<span class="n">metric_file</span> <span class="o">=</span> <span class="s1">&#39;macro_averaged_metric_file.csv&#39;</span>
+
+<span class="n">agreement_map</span><span class="o">.</span><span class="n">rio</span><span class="o">.</span><span class="n">to_raster</span><span class="p">(</span><span class="n">agreement_file</span><span class="p">)</span>
+<span class="n">macro_averaged_metrics</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">metric_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SphinxTutorial.html" class="btn btn-neutral float-left" title="Two-Class Categorical Comparisons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SphinxContinuousTutorial.html" class="btn btn-neutral float-right" title="Continuous Comparisons" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

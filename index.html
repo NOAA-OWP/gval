@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GVAL Documentation &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GVAL API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">GVAL Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gval-documentation">
+<h1>GVAL Documentation<a class="headerlink" href="#gval-documentation" title="Permalink to this heading"></a></h1>
+<p><img alt="alttext" src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png#gh-light-mode-only" /></p>
+<p><img alt="Build andTest" src="https://github.com/NOAA-OWP/gval/actions/workflows/python-app.yml/badge.svg" /><img alt="Coverage" src="https://github.com/NOAA-OWP/gval/raw/testing/docs/images/coverage.svg" /><a class="reference external" href="https://badge.fury.io/py/gval"><img alt="PyPIversion" src="https://badge.fury.io/py/gval.svg" /></a></p>
+<p>GVAL (pronounced “g-val”) is a high-level Python framework to evaluate
+the skill of geospatial datasets by comparing candidates to benchmark
+maps producing agreement maps and metrics.</p>
+<p>GVAL is intended to work on raster and vector files as xarray and
+geopandas objects, respectively. Abilities to prepare or homogenize maps
+for comparison are included. The comparisons are based on scoring
+philosophies for three statistical data types including categorical,
+continuous, and probabilistic.</p>
+<p>See the full <a class="reference external" href="https://noaa-owp.github.io/gval/">documentation</a>.</p>
+<p>WARNING:</p>
+<ul class="simple">
+<li><p>Our current public API and output formats are likely to change in the
+future.</p></li>
+<li><p>Software is provided “AS-IS” without any guarantees. Please QA/QC your
+metrics carefully until this project matures.</p></li>
+</ul>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<section id="general-use">
+<h3>General Use<a class="headerlink" href="#general-use" title="Permalink to this heading"></a></h3>
+<p>To use this package:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">gval</span></code></p>
+<p>Or for bleeding edge updates install from the repository:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'git+https://github.com/NOAA-OWP/gval'</span></code></p>
+</section>
+</section>
+<section id="using-gval">
+<h2>Using GVAL<a class="headerlink" href="#using-gval" title="Permalink to this heading"></a></h2>
+<section id="categorical-example">
+<h3>Categorical Example<a class="headerlink" href="#categorical-example" title="Permalink to this heading"></a></h3>
+<p>An example of running the entire process for two-class categorical
+rasters with one function using minimal arguments is demonstrated below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gval</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rioxarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rxr</span>
+
+<span class="n">candidate</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="s1">&#39;candidate_map_two_class_categorical.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="s1">&#39;benchmark_map_two_class_categorical.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">agreement_map</span><span class="p">,</span>
+ <span class="n">crosstab_table</span><span class="p">,</span>
+ <span class="n">metric_table</span><span class="p">)</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">categorical_compare</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span>
+                                                   <span class="n">positive_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                                   <span class="n">negative_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<section id="categorical-outputs">
+<h4>Categorical Outputs<a class="headerlink" href="#categorical-outputs" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">agreement_map</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/agreement_map.png" width="500" height="180" />
+<p><code class="docutils literal notranslate"><span class="pre">crosstab_table</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/cross_table.png" width="450" height="120" />
+<p><code class="docutils literal notranslate"><span class="pre">metric_table</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/metric_table.png" width="700" height="180" />
+</section>
+</section>
+<section id="continuous-example">
+<h3>Continuous Example<a class="headerlink" href="#continuous-example" title="Permalink to this heading"></a></h3>
+<p>The same can be done for rasters with continuous valued statistical data
+types as shown below (in this case only a subset of the default
+statistics will be run):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gval</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rioxarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rxr</span>
+
+<span class="n">candidate</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="s1">&#39;livneh_2011_precip.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># VIC</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="s1">&#39;prism_2011_precip.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># PRISM</span>
+
+<span class="n">agreement</span><span class="p">,</span> <span class="n">metric_table</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span>
+    <span class="n">benchmark</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;coefficient_of_determination&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mean_percentage_error&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mean_absolute_percentage_error&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mean_normalized_mean_absolute_error&quot;</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="continuous-outputs">
+<h4>Continuous Outputs<a class="headerlink" href="#continuous-outputs" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">agreement_map</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/continuous_agreement_map.png" width="500" height="150" />
+<p><code class="docutils literal notranslate"><span class="pre">metric_table</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/continuous_metric_table.png" width="700" height="180" />
+</section>
+</section>
+<section id="catalog-example">
+<h3>Catalog Example<a class="headerlink" href="#catalog-example" title="Permalink to this heading"></a></h3>
+<p>Entire catalogs can be compared in GVAL, which are represented by
+dataframes of maps. The following is a candidate and benchmark catalog
+for continuous datasets:</p>
+<p><code class="docutils literal notranslate"><span class="pre">candidate_catalog</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/candidate_catalog.png" width="450" height="120" />
+<p><code class="docutils literal notranslate"><span class="pre">benchmark_catalog</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/benchmark_catalog.png" width="350" height="120" />
+<p>With the following code a comparison of each pair of maps can be run
+with the following code. Since the parameter <code class="docutils literal notranslate"><span class="pre">agreement_map_field</span></code> is
+provided the column <code class="docutils literal notranslate"><span class="pre">agreement_maps</span></code> found in the candidate catalog will
+be used to export the agreement map to that location. (Note the first
+pair of candidate and benchmark maps are single band rasters while the
+second pair are multiband rasters):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">gval.catalogs.catalogs</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalog_compare</span>
+
+<span class="n">candidate_continuous_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;candidate_catalog_0.csv&#39;</span><span class="p">)</span>
+<span class="n">benchmark_continuous_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;benchmark_catalog_0.csv&#39;</span><span class="p">)</span>
+
+<span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;candidate_catalog&quot;</span><span class="p">:</span> <span class="n">candidate_continuous_catalog</span><span class="p">,</span>
+    <span class="s2">&quot;benchmark_catalog&quot;</span><span class="p">:</span> <span class="n">benchmark_continuous_catalog</span><span class="p">,</span>
+    <span class="s2">&quot;on&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;agreement_map_field&quot;</span><span class="p">:</span> <span class="s2">&quot;agreement_maps&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;map_ids&quot;</span><span class="p">:</span> <span class="s2">&quot;map_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;how&quot;</span><span class="p">:</span> <span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compare_type&quot;</span><span class="p">:</span> <span class="s2">&quot;continuous&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compare_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">&quot;coefficient_of_determination&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mean_absolute_error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mean_absolute_percentage_error&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;encode_nodata&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;nodata&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">9999</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;open_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;mask_and_scale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;masked&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">agreement_continuous_catalog</span> <span class="o">=</span> <span class="n">catalog_compare</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="catalog-outputs">
+<h4>Catalog Outputs<a class="headerlink" href="#catalog-outputs" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">agreement_map</span></code></p>
+<p><img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/catalog_agreement_map.png" width="500" height="150" /> <img alt="alttext" src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/catalog_agreement_map2.png" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">catalog_metrics</span></code></p>
+<img src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/catalog_metric_table.png" width="700" height="450" />
+<p>(Note that both catalog level attributes in the candidate and benchmark
+catalogs are present in the catalog metrics table.)</p>
+<p>For more detailed examples of how to use this software, check out these
+<a class="reference external" href="https://github.com/NOAA-OWP/gval/blob/main/notebooks">notebook
+tutorials</a>.</p>
+</section>
+</section>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h2>
+<p>Guidelines for contributing to this repository can be found at
+<a class="reference external" href="https://github.com/NOAA-OWP/gval/blob/main/CONTRIBUTING.MD">CONTRIBUTING</a>.</p>
+</section>
+<section id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this heading"></a></h2>
+<p>Please cite our work if using this package. See ‘cite this repository’
+in the about section on <a class="reference external" href="https://github.com/NOAA-OWP/gval/">GitHub</a> or
+refer to
+<a class="reference external" href="https://github.com/NOAA-OWP/gval/blob/main/CITATION.cff">CITATION.cff</a></p>
+</section>
+<hr class="docutils" />
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="SphinxTutorial.html">Two-Class Categorical Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="SphinxTutorial.html#Load-Datasets">Load Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxTutorial.html#Run-GVAL-Categorical-Compare">Run GVAL Categorical Compare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxTutorial.html#Output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxTutorial.html#Access-to-Individual-GVAL-Operations">Access to Individual GVAL Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxTutorial.html#Save-Output">Save Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxMulticatTutorial.html">Multi-Class Categorical Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="SphinxMulticatTutorial.html#Load-Datasets">Load Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxMulticatTutorial.html#Homogenize-Datasets-and-Make-Agreement-Map">Homogenize Datasets and Make Agreement Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxMulticatTutorial.html#Comparisons">Comparisons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxMulticatTutorial.html#Save-Output">Save Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxContinuousTutorial.html">Continuous Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="SphinxContinuousTutorial.html#Load-Datasets">Load Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxContinuousTutorial.html#Run-GVAL-Continuous-Compare">Run GVAL Continuous Compare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxContinuousTutorial.html#Output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxContinuousTutorial.html#Alternative-Uses-of-GVAL-Continuous-Operations">Alternative Uses of GVAL Continuous Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxContinuousTutorial.html#Save-Output">Save Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxSubsamplingTutorial.html">Subsampling Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="SphinxSubsamplingTutorial.html#Create-Subsampling-DataFrame">Create Subsampling DataFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxSubsamplingTutorial.html#Continuous-Compare-Subsampling">Continuous Compare Subsampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxSubsamplingTutorial.html#Categorical">Categorical</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxCatalogTutorial.html">Catalog Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="SphinxCatalogTutorial.html#Initializing-Catalogs">Initializing Catalogs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxCatalogTutorial.html#Categorical-Catalog-Comparison">Categorical Catalog Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SphinxCatalogTutorial.html#Continuous-Catalog-Compare">Continuous Catalog Compare</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GVAL API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="extension.html">Core Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gval_xarray.html">Shared Xarray Functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gval_array.html">Xarray DataArray Functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gval_dataset.html">Xarray Dataset Functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gval_dataframe.html">DataFrame Functionality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="comparison.html">Comparison</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compute_comparison.html">Compute Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairing_functions.html">Pairing Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="subsampling.html">Subsampling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subsampling.html#gval.subsampling.subsampling.get_subsample_percent"><code class="docutils literal notranslate"><span class="pre">get_subsample_percent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subsampling.html#gval.subsampling.subsampling.subsample"><code class="docutils literal notranslate"><span class="pre">subsample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.html">Catalogs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="catalog.html#gval.catalogs.catalogs.catalog_compare"><code class="docutils literal notranslate"><span class="pre">catalog_compare()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="categorical_stat_funcs.html">Categorical Statistics Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="categorical_statistics.html">Categorical Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="continuous_stat_funcs.html">Continuous Statistics Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="continuous_statistics.html">Continuous Statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loading_datasets.html">Loading Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="schemas.html">Schemas</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#using-the-issue-tracker">Using the issue tracker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#changing-the-code-base">Changing the code-base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#guidelines">Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#versioning">Versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#docker-use">Docker Use</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

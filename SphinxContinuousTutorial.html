@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Continuous Comparisons &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Subsampling Comparisons" href="SphinxSubsamplingTutorial.html" />
+    <link rel="prev" title="Multi-Class Categorical Comparisons" href="SphinxMulticatTutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SphinxTutorial.html">Two-Class Categorical Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxMulticatTutorial.html">Multi-Class Categorical Comparisons</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Continuous Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Load-Datasets">Load Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Run-GVAL-Continuous-Compare">Run GVAL Continuous Compare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Output">Output</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Agreement-Map">Agreement Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Metric-Table">Metric Table</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Alternative-Uses-of-GVAL-Continuous-Operations">Alternative Uses of GVAL Continuous Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Save-Output">Save Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxSubsamplingTutorial.html">Subsampling Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxCatalogTutorial.html">Catalog Comparisons</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GVAL API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Continuous Comparisons</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/SphinxContinuousTutorial.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><img alt="8a7b5591a422401b849eedbfac5b97da" src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png" /></p>
+<section id="Continuous-Comparisons">
+<h1>Continuous Comparisons<a class="headerlink" href="#Continuous-Comparisons" title="Permalink to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rioxarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rxr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gval</span>
+</pre></div>
+</div>
+</div>
+<section id="Load-Datasets">
+<h2>Load Datasets<a class="headerlink" href="#Load-Datasets" title="Permalink to this heading"></a></h2>
+<p>In this example, the comparisons output of Variable Infiltration Capacity Model total annual CONUS precipitation in 2011 with that of the model output of PRISM, also total annual CONUS precipitation in 2011.</p>
+<ul class="simple">
+<li><p>Livneh B., E.A. Rosenberg, C. Lin, B. Nijssen, V. Mishra, K.M. Andreadis, E.P. Maurer, and D.P. Lettenmaier, 2013: A Long-Term Hydrologically Based Dataset of Land Surface Fluxes and States for the Conterminous United States: Update and Extensions, Journal of Climate, 26, 9384⦣8364;⬓9392. <a class="reference external" href="https://psl.noaa.gov/data/gridded/data.livneh.html">https://psl.noaa.gov/data/gridded/data.livneh.html</a></p></li>
+<li><p>PRISM Climate Group, Oregon State University, <a class="reference external" href="https://prism.oregonstate.edu">https://prism.oregonstate.edu</a>, data created 4 Feb 2014, accessed 16 Dec 2020. <a class="reference external" href="https://prism.oregonstate.edu/recent/">https://prism.oregonstate.edu/recent/</a></p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidate</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span>
+    <span class="s1">&#39;./livneh_2011_precip.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span> <span class="c1"># VIC</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span>
+    <span class="s1">&#39;./prism_2011_precip.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span> <span class="c1"># PRISM</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Run-GVAL-Continuous-Compare">
+<h2>Run GVAL Continuous Compare<a class="headerlink" href="#Run-GVAL-Continuous-Compare" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agreement</span><span class="p">,</span> <span class="n">metric_table</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Output">
+<h2>Output<a class="headerlink" href="#Output" title="Permalink to this heading"></a></h2>
+<section id="Agreement-Map">
+<h3>Agreement Map<a class="headerlink" href="#Agreement-Map" title="Permalink to this heading"></a></h3>
+<p>The agreement map in this case will be simply the difference between the two modeling outputs.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agreement</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7f01f38bba60&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxContinuousTutorial_11_1.png" src="_images/SphinxContinuousTutorial_11_1.png" />
+</div>
+</div>
+<p>In this case it is a bit difficult to see the variability of the precipitation difference, but if extreme values are masked out the map will look like the following:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agreement</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">agreement</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">nanquantile</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">))</span> <span class="o">|</span>
+    <span class="p">(</span><span class="n">agreement</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">nanquantile</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">)),</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+    <span class="n">agreement</span>
+<span class="p">)</span>
+<span class="n">agreement</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7f01f385b430&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxContinuousTutorial_13_1.png" src="_images/SphinxContinuousTutorial_13_1.png" />
+</div>
+</div>
+</section>
+<section id="Metric-Table">
+<h3>Metric Table<a class="headerlink" href="#Metric-Table" title="Permalink to this heading"></a></h3>
+<p>A metric table contains information about the unit of analysis, (a single band in this case), and selected continuous metrics. Since we did not provide the metrics argument GVAL computed all of the available continuous statistics.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metric_table</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>coefficient_of_determination</th>
+      <td>0.685261</td>
+    </tr>
+    <tr>
+      <th>mean_absolute_error</th>
+      <td>216.089706</td>
+    </tr>
+    <tr>
+      <th>mean_absolute_percentage_error</th>
+      <td>0.319234</td>
+    </tr>
+    <tr>
+      <th>mean_normalized_mean_absolute_error</th>
+      <td>0.267845</td>
+    </tr>
+    <tr>
+      <th>mean_normalized_root_mean_squared_error</th>
+      <td>0.372578</td>
+    </tr>
+    <tr>
+      <th>mean_percentage_error</th>
+      <td>0.010022</td>
+    </tr>
+    <tr>
+      <th>mean_signed_error</th>
+      <td>8.085411</td>
+    </tr>
+    <tr>
+      <th>mean_squared_error</th>
+      <td>90351.664062</td>
+    </tr>
+    <tr>
+      <th>range_normalized_mean_absolute_error</th>
+      <td>0.033065</td>
+    </tr>
+    <tr>
+      <th>range_normalized_root_mean_squared_error</th>
+      <td>0.045995</td>
+    </tr>
+    <tr>
+      <th>root_mean_squared_error</th>
+      <td>300.585541</td>
+    </tr>
+    <tr>
+      <th>symmetric_mean_absolute_percentage_error</th>
+      <td>0.269394</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+</section>
+<section id="Alternative-Uses-of-GVAL-Continuous-Operations">
+<h2>Alternative Uses of GVAL Continuous Operations<a class="headerlink" href="#Alternative-Uses-of-GVAL-Continuous-Operations" title="Permalink to this heading"></a></h2>
+<p>Aside form running the entire process, it is possible to run each of the following steps individually: homogenizing maps, computing an agreement map. This allows for flexibility in workflows so that a user may use as much or as little functionality as needed.</p>
+<p>Just like in continuous comparisons, homogenizing can be done as follows:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidate</span><span class="p">,</span> <span class="n">benchmark</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">homogenize</span><span class="p">(</span>
+    <span class="n">benchmark_map</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span>
+    <span class="n">target_map</span> <span class="o">=</span> <span class="s2">&quot;candidate&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The “difference” comparison function is the default used for the <code class="docutils literal notranslate"><span class="pre">comparison_function</span></code> argument in <code class="docutils literal notranslate"><span class="pre">gval.continuous_compare</span></code> and is the only continuous comparison function available by default. It would be advised not to use a categorical comparison function such as ‘cantor’, ‘szudzik’, or a pairing dicitonary because it could result in a very large number of classes.</p>
+<p>Using difference in comparison:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agreement_map</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_agreement_map</span><span class="p">(</span>
+    <span class="n">benchmark_map</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span>
+    <span class="n">comparison_function</span><span class="o">=</span><span class="s2">&quot;difference&quot;</span><span class="p">,</span>
+    <span class="n">continuous</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">agreement_map</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7f01f37525c0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxContinuousTutorial_25_1.png" src="_images/SphinxContinuousTutorial_25_1.png" />
+</div>
+</div>
+<p>The following uses an abritrary custom registered function for use in a continuous agreement map:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">gval</span><span class="w"> </span><span class="kn">import</span> <span class="n">Comparison</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
+
+<span class="nd">@Comparison</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;divide&#39;</span><span class="p">,</span> <span class="n">vectorize_func</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Number</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">c</span> <span class="o">/</span> <span class="n">b</span>
+
+<span class="n">agreement_map</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">compute_agreement_map</span><span class="p">(</span>
+    <span class="n">benchmark_map</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span>
+    <span class="n">comparison_function</span><span class="o">=</span><span class="s2">&quot;divide&quot;</span><span class="p">,</span>
+    <span class="n">continuous</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">agreement_map</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7f01f3635cc0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxContinuousTutorial_27_1.png" src="_images/SphinxContinuousTutorial_27_1.png" />
+</div>
+</div>
+<p>Like in cateogrical compare, all metrics are computed by default if no argument is provided, <code class="docutils literal notranslate"><span class="pre">metrics</span></code> can also take a list of the desired metrics and will only return metrics in this list.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">metric_table</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span>
+    <span class="n">benchmark</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean_absolute_error&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_squared_error&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">metric_table</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>band</th>
+      <th>mean_absolute_error</th>
+      <th>mean_squared_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>215.106232</td>
+      <td>89814.117188</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Just like registering comparison functions, you are able to register a metric function on both a method and a class of functions. Below is registering a metric function:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gval</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContStats</span>
+
+<span class="nd">@ContStats</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;min_error&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">min_error</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">error</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<p>The following is registering a class of metric functions. In this case, the names associated with each function will respond to each method’s name.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@ContStats</span><span class="o">.</span><span class="n">register_function_class</span><span class="p">()</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetricFunctions</span><span class="p">:</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">median_error</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">error</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_error</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">error</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">metric_table</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span>
+    <span class="n">benchmark</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;min_error&#39;</span><span class="p">,</span> <span class="s1">&#39;median_error&#39;</span><span class="p">,</span> <span class="s1">&#39;max_error&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">metric_table</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>band</th>
+      <th>min_error</th>
+      <th>median_error</th>
+      <th>max_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>-3035.655273</td>
+      <td>25.858208</td>
+      <td>4263.23291</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Save-Output">
+<h2>Save Output<a class="headerlink" href="#Save-Output" title="Permalink to this heading"></a></h2>
+<p>Finally, a user can take the results and save them to a directory of their choice. The following is an example of saving the agreement map and then the metric table:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># output agreement map</span>
+<span class="n">agreement_file</span> <span class="o">=</span> <span class="s1">&#39;continuous_agreement_map.tif&#39;</span>
+<span class="n">metric_file</span> <span class="o">=</span> <span class="s1">&#39;continuous_metric_file.csv&#39;</span>
+
+<span class="n">agreement_map</span><span class="o">.</span><span class="n">rio</span><span class="o">.</span><span class="n">to_raster</span><span class="p">(</span><span class="n">agreement_file</span><span class="p">)</span>
+<span class="n">metric_table</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">metric_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SphinxMulticatTutorial.html" class="btn btn-neutral float-left" title="Multi-Class Categorical Comparisons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SphinxSubsamplingTutorial.html" class="btn btn-neutral float-right" title="Subsampling Comparisons" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

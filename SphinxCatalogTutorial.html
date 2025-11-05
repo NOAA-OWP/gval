@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalog Comparisons &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GVAL API" href="api.html" />
+    <link rel="prev" title="Subsampling Comparisons" href="SphinxSubsamplingTutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SphinxTutorial.html">Two-Class Categorical Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxMulticatTutorial.html">Multi-Class Categorical Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxContinuousTutorial.html">Continuous Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxSubsamplingTutorial.html">Subsampling Comparisons</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Catalog Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Initializing-Catalogs">Initializing Catalogs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Candidate-Catalog">Candidate Catalog</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Benchmark-Catalog">Benchmark Catalog</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Categorical-Catalog-Comparison">Categorical Catalog Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Continuous-Catalog-Compare">Continuous Catalog Compare</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GVAL API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Catalog Comparisons</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/SphinxCatalogTutorial.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><img alt="d6835b4669264b09956f4e6b7e56c052" src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png" /></p>
+<section id="Catalog-Comparisons">
+<h1>Catalog Comparisons<a class="headerlink" href="#Catalog-Comparisons" title="Permalink to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rioxarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rxr</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">gval.catalogs.catalogs</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalog_compare</span>
+</pre></div>
+</div>
+</div>
+<section id="Initializing-Catalogs">
+<h2>Initializing Catalogs<a class="headerlink" href="#Initializing-Catalogs" title="Permalink to this heading"></a></h2>
+<p>The cataloging functionality was designed to easily facilitate batch comparisons of maps residing locally, in a service, or in the cloud. The format of such catalogs are as follows:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_DATA_DIR</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span>
+
+<span class="n">candidate_continuous_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">TEST_DATA_DIR</span><span class="si">}</span><span class="s1">candidate_catalog_0.csv&#39;</span><span class="p">)</span>
+<span class="n">benchmark_continuous_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">TEST_DATA_DIR</span><span class="si">}</span><span class="s1">benchmark_catalog_0.csv&#39;</span><span class="p">)</span>
+<span class="n">candidate_categorical_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">TEST_DATA_DIR</span><span class="si">}</span><span class="s1">candidate_catalog_1.csv&#39;</span><span class="p">)</span>
+<span class="n">benchmark_categorical_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">TEST_DATA_DIR</span><span class="si">}</span><span class="s1">benchmark_catalog_1.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Candidate-Catalog">
+<h3>Candidate Catalog<a class="headerlink" href="#Candidate-Catalog" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidate_categorical_catalog</span><span class="p">[</span><span class="s1">&#39;catalog_attribute_1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">candidate_categorical_catalog</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>map_id</th>
+      <th>compare_id</th>
+      <th>agreement_maps</th>
+      <th>catalog_attribute_1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>./candidate_categorical_0.tif</td>
+      <td>compare1</td>
+      <td>agreement_categorical_0.tif</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>./candidate_categorical_1.tif</td>
+      <td>compare2</td>
+      <td>agreement_categorical_1.tif</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The catalog should have columns representing: 1. An identifier of a candidate map, (in this case <code class="docutils literal notranslate"><span class="pre">compare_id</span></code>) 2. The location of the candidate map, (in this case <code class="docutils literal notranslate"><span class="pre">map_id</span></code>) 3. The name of the agreement map to be created named <code class="docutils literal notranslate"><span class="pre">agreement_maps</span></code></p>
+</section>
+<section id="Benchmark-Catalog">
+<h3>Benchmark Catalog<a class="headerlink" href="#Benchmark-Catalog" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">benchmark_categorical_catalog</span><span class="p">[</span><span class="s1">&#39;catalog_attribute_2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">benchmark_categorical_catalog</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>map_id</th>
+      <th>compare_id</th>
+      <th>catalog_attribute_2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>./benchmark_categorical_0.tif</td>
+      <td>compare1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>./benchmark_categorical_1.tif</td>
+      <td>compare2</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Similar to the previous catalog, the benchmark catalog should have columns representing: 1. An identifier of a candidate map, (in this case <code class="docutils literal notranslate"><span class="pre">compare_id</span></code>) 2. The location of the candidate map, (in this case <code class="docutils literal notranslate"><span class="pre">map_id</span></code>)</p>
+</section>
+</section>
+<section id="Categorical-Catalog-Comparison">
+<h2>Categorical Catalog Comparison<a class="headerlink" href="#Categorical-Catalog-Comparison" title="Permalink to this heading"></a></h2>
+<p>When <code class="docutils literal notranslate"><span class="pre">compare_type</span></code> is set to ‘categorical’ the catalog will be run as categorical comparisons. See arguments and output below for the comparison metrics:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;candidate_catalog&quot;</span><span class="p">:</span> <span class="n">candidate_categorical_catalog</span><span class="p">,</span>
+    <span class="s2">&quot;benchmark_catalog&quot;</span><span class="p">:</span> <span class="n">benchmark_categorical_catalog</span><span class="p">,</span>
+    <span class="s2">&quot;on&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;map_ids&quot;</span><span class="p">:</span> <span class="s2">&quot;map_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;how&quot;</span><span class="p">:</span> <span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compare_type&quot;</span><span class="p">:</span> <span class="s2">&quot;categorical&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compare_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">&quot;critical_success_index&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;true_positive_rate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;positive_predictive_value&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;encode_nodata&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;nodata&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">9999</span><span class="p">,</span>
+        <span class="s2">&quot;positive_categories&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;negative_categories&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;open_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;mask_and_scale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;masked&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">agreement_categorical_catalog</span> <span class="o">=</span> <span class="n">catalog_compare</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+<span class="n">agreement_categorical_catalog</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>map_id_candidate</th>
+      <td>./candidate_categorical_0.tif</td>
+      <td>./candidate_categorical_1.tif</td>
+      <td>./candidate_categorical_1.tif</td>
+    </tr>
+    <tr>
+      <th>compare_id</th>
+      <td>compare1</td>
+      <td>compare2</td>
+      <td>compare2</td>
+    </tr>
+    <tr>
+      <th>agreement_maps</th>
+      <td>agreement_categorical_0.tif</td>
+      <td>agreement_categorical_1.tif</td>
+      <td>agreement_categorical_1.tif</td>
+    </tr>
+    <tr>
+      <th>catalog_attribute_1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>map_id_benchmark</th>
+      <td>./benchmark_categorical_0.tif</td>
+      <td>./benchmark_categorical_1.tif</td>
+      <td>./benchmark_categorical_1.tif</td>
+    </tr>
+    <tr>
+      <th>catalog_attribute_2</th>
+      <td>3</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>fn</th>
+      <td>844.0</td>
+      <td>844.0</td>
+      <td>844.0</td>
+    </tr>
+    <tr>
+      <th>fp</th>
+      <td>844.0</td>
+      <td>844.0</td>
+      <td>844.0</td>
+    </tr>
+    <tr>
+      <th>tn</th>
+      <td>5939.0</td>
+      <td>5939.0</td>
+      <td>5939.0</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>1977.0</td>
+      <td>1977.0</td>
+      <td>1977.0</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.539427</td>
+      <td>0.539427</td>
+      <td>0.539427</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.700815</td>
+      <td>0.700815</td>
+      <td>0.700815</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.700815</td>
+      <td>0.700815</td>
+      <td>0.700815</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We can see the agreement maps below (and why the metrics are similar as the datasets were essentially equivalent):</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ag_map</span> <span class="ow">in</span> <span class="n">agreement_categorical_catalog</span><span class="p">[</span><span class="s1">&#39;agreement_maps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="n">ag_map</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cat_plot</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Agreement Map </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">ag_map</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxCatalogTutorial_16_0.png" src="_images/SphinxCatalogTutorial_16_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxCatalogTutorial_16_1.png" src="_images/SphinxCatalogTutorial_16_1.png" />
+</div>
+</div>
+</section>
+<section id="Continuous-Catalog-Compare">
+<h2>Continuous Catalog Compare<a class="headerlink" href="#Continuous-Catalog-Compare" title="Permalink to this heading"></a></h2>
+<p>The continuous catalogs are as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidate_continuous_catalog</span><span class="p">[</span><span class="s1">&#39;catalog_attribute_1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">candidate_continuous_catalog</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>map_id</th>
+      <th>compare_id</th>
+      <th>agreement_maps</th>
+      <th>catalog_attribute_1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>./candidate_continuous_0.tif</td>
+      <td>compare1</td>
+      <td>./agreement_continuous_0.tif</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>./candidate_continuous_1.tif</td>
+      <td>compare2</td>
+      <td>./agreement_continuous_1.tif</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">benchmark_continuous_catalog</span><span class="p">[</span><span class="s1">&#39;catalog_attribute_2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">benchmark_continuous_catalog</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>map_id</th>
+      <th>compare_id</th>
+      <th>catalog_attribute_2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>./benchmark_continuous_0.tif</td>
+      <td>compare1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>./benchmark_continuous_1.tif</td>
+      <td>compare2</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Just like before, <code class="docutils literal notranslate"><span class="pre">compare_type</span></code> is set to ‘continuous’ and the catalog will be run as continuous comparisons:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;candidate_catalog&quot;</span><span class="p">:</span> <span class="n">candidate_continuous_catalog</span><span class="p">,</span>
+    <span class="s2">&quot;benchmark_catalog&quot;</span><span class="p">:</span> <span class="n">benchmark_continuous_catalog</span><span class="p">,</span>
+    <span class="s2">&quot;on&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;map_ids&quot;</span><span class="p">:</span> <span class="s2">&quot;map_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;how&quot;</span><span class="p">:</span> <span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compare_type&quot;</span><span class="p">:</span> <span class="s2">&quot;continuous&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compare_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">&quot;coefficient_of_determination&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mean_absolute_error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mean_absolute_percentage_error&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;encode_nodata&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;nodata&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">9999</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;open_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;mask_and_scale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;masked&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">agreement_continuous_catalog</span> <span class="o">=</span> <span class="n">catalog_compare</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+<span class="n">agreement_continuous_catalog</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>map_id_candidate</th>
+      <td>./candidate_continuous_0.tif</td>
+      <td>./candidate_continuous_1.tif</td>
+      <td>./candidate_continuous_1.tif</td>
+    </tr>
+    <tr>
+      <th>compare_id</th>
+      <td>compare1</td>
+      <td>compare2</td>
+      <td>compare2</td>
+    </tr>
+    <tr>
+      <th>agreement_maps</th>
+      <td>./agreement_continuous_0.tif</td>
+      <td>./agreement_continuous_1.tif</td>
+      <td>./agreement_continuous_1.tif</td>
+    </tr>
+    <tr>
+      <th>catalog_attribute_1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>map_id_benchmark</th>
+      <td>./benchmark_continuous_0.tif</td>
+      <td>./benchmark_continuous_1.tif</td>
+      <td>./benchmark_continuous_1.tif</td>
+    </tr>
+    <tr>
+      <th>catalog_attribute_2</th>
+      <td>3</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>coefficient_of_determination</th>
+      <td>-0.06616</td>
+      <td>-2.829421</td>
+      <td>0.10903</td>
+    </tr>
+    <tr>
+      <th>mean_absolute_error</th>
+      <td>0.317389</td>
+      <td>0.485031</td>
+      <td>0.485031</td>
+    </tr>
+    <tr>
+      <th>mean_absolute_percentage_error</th>
+      <td>0.159568</td>
+      <td>0.202235</td>
+      <td>0.153235</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We can see the continuous agreement maps below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ag_map</span> <span class="ow">in</span> <span class="n">agreement_continuous_catalog</span><span class="p">[</span><span class="s1">&#39;agreement_maps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="n">ag_map</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Agreement Map </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">ag_map</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxCatalogTutorial_24_0.png" src="_images/SphinxCatalogTutorial_24_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxCatalogTutorial_24_1.png" src="_images/SphinxCatalogTutorial_24_1.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SphinxSubsamplingTutorial.html" class="btn btn-neutral float-left" title="Subsampling Comparisons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="GVAL API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

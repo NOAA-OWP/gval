@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subsampling Comparisons &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Catalog Comparisons" href="SphinxCatalogTutorial.html" />
+    <link rel="prev" title="Continuous Comparisons" href="SphinxContinuousTutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SphinxTutorial.html">Two-Class Categorical Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxMulticatTutorial.html">Multi-Class Categorical Comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxContinuousTutorial.html">Continuous Comparisons</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Subsampling Comparisons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Create-Subsampling-DataFrame">Create Subsampling DataFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Continuous-Compare-Subsampling">Continuous Compare Subsampling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Full-Detail">Full-Detail</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Band">Band</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Subsample">Subsample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Weighted">Weighted</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Categorical">Categorical</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Full-detail">Full-detail</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Band</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Subsample</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SphinxCatalogTutorial.html">Catalog Comparisons</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GVAL API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Subsampling Comparisons</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/SphinxSubsamplingTutorial.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><img alt="4324b87f9cd14f2682d6e116a514b6f5" src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/gval_light_mode.png" /></p>
+<section id="Subsampling-Comparisons">
+<h1>Subsampling Comparisons<a class="headerlink" href="#Subsampling-Comparisons" title="Permalink to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rioxarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rxr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely</span><span class="w"> </span><span class="kn">import</span> <span class="n">unary_union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">gval</span><span class="w"> </span><span class="kn">import</span> <span class="n">CatStats</span>
+</pre></div>
+</div>
+</div>
+<section id="Create-Subsampling-DataFrame">
+<h2>Create Subsampling DataFrame<a class="headerlink" href="#Create-Subsampling-DataFrame" title="Permalink to this heading"></a></h2>
+<p>Let’s open up a geopackage with polygons to use for subsampling:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span>
+<span class="n">polygons_continuous</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s1">/subsample_continuous_polygons.gpkg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>To use this DataFrame as a subsampling DataFrame let’s use <code class="docutils literal notranslate"><span class="pre">create_subsampling_df</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">polygons_continuous</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">create_subsampling_df</span><span class="p">(</span><span class="n">subsampling_type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="s2">&quot;include&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">polygons_continuous</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>geometry</th>
+      <th>subsample_type</th>
+      <th>subsample_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>POLYGON ((-97.72375 29.56328, -97.72304 29.558...</td>
+      <td>include</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>POLYGON ((-97.71604 29.55635, -97.71587 29.551...</td>
+      <td>include</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The DataFrame above has a geometry column, a subsample type with the value of “include” (calculating data within the geometry) or “exclude” (remove all data contained within the geometry), and subsample_id.</p>
+<p>There is also the ability to add subsampling_weights:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">polygons_continuous</span> <span class="o">=</span> <span class="n">polygons_continuous</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">create_subsampling_df</span><span class="p">(</span><span class="n">subsampling_type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;exclude&quot;</span><span class="p">,</span> <span class="s2">&quot;exclude&quot;</span><span class="p">],</span> <span class="n">subsampling_weights</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">polygons_continuous</span><span class="o">.</span><span class="n">explore</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+
+        &lt;script&gt;
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        &lt;/script&gt;
+
+    &lt;style&gt;html, body {width: 100%;height: 100%;margin: 0;padding: 0;}&lt;/style&gt;
+    &lt;style&gt;#map {position:absolute;top:0;bottom:0;right:0;left:0;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-1.12.4.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_fae377627d9b5a9583e577b12fcf8d5a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+
+                    &lt;style&gt;
+                        .foliumtooltip {
+
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    &lt;/style&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+
+
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_fae377627d9b5a9583e577b12fcf8d5a&quot; &gt;&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;script&gt;
+
+
+            var map_fae377627d9b5a9583e577b12fcf8d5a = L.map(
+                &quot;map_fae377627d9b5a9583e577b12fcf8d5a&quot;,
+                {
+                    center: [29.558023998293017, -97.71753025470662],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+            L.control.scale().addTo(map_fae377627d9b5a9583e577b12fcf8d5a);
+
+
+
+
+
+            var tile_layer_a5dcad47f74f579e058588c60d39abd0 = L.tileLayer(
+                &quot;https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&quot;,
+                {&quot;attribution&quot;: &quot;Data by \u0026copy; \u003ca target=\&quot;_blank\&quot; href=\&quot;http://openstreetmap.org\&quot;\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\&quot;_blank\&quot; href=\&quot;http://www.openstreetmap.org/copyright\&quot;\u003eODbL\u003c/a\u003e.&quot;, &quot;detectRetina&quot;: false, &quot;maxNativeZoom&quot;: 18, &quot;maxZoom&quot;: 18, &quot;minZoom&quot;: 0, &quot;noWrap&quot;: false, &quot;opacity&quot;: 1, &quot;subdomains&quot;: &quot;abc&quot;, &quot;tms&quot;: false}
+            ).addTo(map_fae377627d9b5a9583e577b12fcf8d5a);
+
+
+            map_fae377627d9b5a9583e577b12fcf8d5a.fitBounds(
+                [[29.551956909232516, -97.72374664573506], [29.56409108735352, -97.71131386367819]],
+                {}
+            );
+
+
+        function geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.5, &quot;weight&quot;: 2};
+            }
+        }
+        function geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.75};
+            }
+        }
+        function geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_pointToLayer(feature, latlng) {
+            var opts = {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;#3388ff&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;opacity&quot;: 1.0, &quot;radius&quot;: 2, &quot;stroke&quot;: true, &quot;weight&quot;: 3};
+
+            let style = geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_styler(feature)
+            Object.assign(opts, style)
+
+            return new L.CircleMarker(latlng, opts)
+        }
+
+        function geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_onEachFeature(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        geo_json_ca4e4a81d59de75107d8373f4a4ab3f7.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        const highlightStyle = geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_ca4e4a81d59de75107d8373f4a4ab3f7 = L.geoJson(null, {
+                onEachFeature: geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_onEachFeature,
+
+                style: geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_styler,
+                pointToLayer: geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_pointToLayer
+        });
+
+        function geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_add (data) {
+            geo_json_ca4e4a81d59de75107d8373f4a4ab3f7
+                .addData(data)
+                .addTo(map_fae377627d9b5a9583e577b12fcf8d5a);
+        }
+            geo_json_ca4e4a81d59de75107d8373f4a4ab3f7_add({&quot;bbox&quot;: [-97.72374664573506, 29.551956909232516, -97.71131386367819, 29.56409108735352], &quot;features&quot;: [{&quot;bbox&quot;: [-97.72374664573506, 29.558580487446218, -97.71573863109144, 29.56409108735352], &quot;geometry&quot;: {&quot;coordinates&quot;: [[[-97.72374664573506, 29.563276712982983], [-97.72304085461393, 29.558580487446218], [-97.71573863109144, 29.558743362320325], [-97.72038056500351, 29.56409108735352], [-97.72374664573506, 29.563276712982983]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;id&quot;: &quot;0&quot;, &quot;properties&quot;: {&quot;subsample_id&quot;: 1, &quot;subsample_type&quot;: &quot;exclude&quot;, &quot;weights&quot;: 2}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-97.7160372350273, 29.551956909232516, -97.71131386367819, 29.556354530833417], &quot;geometry&quot;: {&quot;coordinates&quot;: [[[-97.7160372350273, 29.556354530833417], [-97.7158743601532, 29.551956909232516], [-97.71131386367819, 29.55277128360305], [-97.7118024883005, 29.55518726090231], [-97.71267115429575, 29.556191655959307], [-97.7160372350273, 29.556354530833417]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;id&quot;: &quot;1&quot;, &quot;properties&quot;: {&quot;subsample_id&quot;: 2, &quot;subsample_type&quot;: &quot;exclude&quot;, &quot;weights&quot;: 1}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+
+
+    geo_json_ca4e4a81d59de75107d8373f4a4ab3f7.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create(&#x27;div&#x27;);
+
+    let handleObject = feature=&gt;typeof(feature)==&#x27;object&#x27; ? JSON.stringify(feature) : feature;
+    let fields = [&quot;subsample_type&quot;, &quot;weights&quot;, &quot;subsample_id&quot;];
+    let aliases = [&quot;subsample_type&quot;, &quot;weights&quot;, &quot;subsample_id&quot;];
+    let table = &#x27;&lt;table&gt;&#x27; +
+        String(
+        fields.map(
+        (v,i)=&gt;
+        `&lt;tr&gt;
+            &lt;th&gt;${aliases[i]}&lt;/th&gt;
+
+            &lt;td&gt;${handleObject(layer.feature.properties[v])}&lt;/td&gt;
+        &lt;/tr&gt;`).join(&#x27;&#x27;))
+    +&#x27;&lt;/table&gt;&#x27;;
+    div.innerHTML=table;
+
+    return div
+    }
+    ,{&quot;className&quot;: &quot;foliumtooltip&quot;, &quot;sticky&quot;: true});
+
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div></div>
+</div>
+</section>
+<section id="Continuous-Compare-Subsampling">
+<h2>Continuous Compare Subsampling<a class="headerlink" href="#Continuous-Compare-Subsampling" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cds</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s1">/candidate_continuous_1.tif&#39;</span><span class="p">,</span> <span class="n">band_as_variable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">bds</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s1">/benchmark_continuous_1.tif&#39;</span><span class="p">,</span> <span class="n">band_as_variable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cds</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Candidate Map&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa3aac9af50&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_12_1.png" src="_images/SphinxSubsamplingTutorial_12_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bds</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Benchmark Map&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa3aaa6d180&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_13_1.png" src="_images/SphinxSubsamplingTutorial_13_1.png" />
+</div>
+</div>
+<p>Let’s use this newly created subsampling dataframe on a continuous comparison. For each subsample an agreement map is created and then used to calculate continuous statistics. There are four subsampling-average types:</p>
+<ol class="arabic simple">
+<li><p>full-detail: reports all metrics calculated on separate bands and subsamples.</p></li>
+<li><p>band: reports all metrics on subsamples with band values averaged.</p></li>
+<li><p>subsample: reports all metrics on bands with subsample values averaged.</p></li>
+<li><p>weighted: reports all metrics on bands with subsample values averaged and scaled by weights.</p></li>
+</ol>
+<section id="Full-Detail">
+<h3>Full-Detail<a class="headerlink" href="#Full-Detail" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cds</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bds</span><span class="p">,</span>
+                                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mean_percentage_error&quot;</span><span class="p">],</span>
+                                      <span class="n">subsampling_df</span><span class="o">=</span><span class="n">polygons_continuous</span><span class="p">,</span>
+                                      <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;full-detail&quot;</span><span class="p">)</span>
+<span class="n">met</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subsample</th>
+      <th>band</th>
+      <th>mean_percentage_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0.125928</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>-0.111844</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1</td>
+      <td>0.167116</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>2</td>
+      <td>-0.143187</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The agreement maps for each subsample will look as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map 1st Exclusion&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa3aa732590&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_18_1.png" src="_images/SphinxSubsamplingTutorial_18_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map 2nd Exclusion&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa3aa6e5cc0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_19_1.png" src="_images/SphinxSubsamplingTutorial_19_1.png" />
+</div>
+</div>
+</section>
+<section id="Band">
+<h3>Band<a class="headerlink" href="#Band" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cds</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bds</span><span class="p">,</span>
+                                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mean_percentage_error&quot;</span><span class="p">],</span>
+                                     <span class="n">subsampling_df</span><span class="o">=</span><span class="n">polygons_continuous</span><span class="p">,</span>
+                                     <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;band&quot;</span><span class="p">)</span>
+<span class="n">met</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subsample</th>
+      <th>band</th>
+      <th>mean_percentage_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>averaged</td>
+      <td>0.007042</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>averaged</td>
+      <td>0.011964</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Subsample">
+<h3>Subsample<a class="headerlink" href="#Subsample" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cds</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bds</span><span class="p">,</span>
+                                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mean_percentage_error&quot;</span><span class="p">],</span>
+                                     <span class="n">subsampling_df</span><span class="o">=</span><span class="n">polygons_continuous</span><span class="p">,</span>
+                                     <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;subsample&quot;</span><span class="p">)</span>
+<span class="n">met</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subsample</th>
+      <th>band</th>
+      <th>mean_percentage_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>averaged</td>
+      <td>1</td>
+      <td>0.146522</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>averaged</td>
+      <td>2</td>
+      <td>-0.127515</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Weighted">
+<h3>Weighted<a class="headerlink" href="#Weighted" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cds</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bds</span><span class="p">,</span>
+                                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mean_percentage_error&quot;</span><span class="p">],</span>
+                                      <span class="n">subsampling_df</span><span class="o">=</span><span class="n">polygons_continuous</span><span class="p">,</span>
+                                      <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;weighted&quot;</span><span class="p">)</span>
+<span class="n">met</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subsample</th>
+      <th>band</th>
+      <th>mean_percentage_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>averaged</td>
+      <td>1</td>
+      <td>0.083952</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>averaged</td>
+      <td>2</td>
+      <td>-0.037281</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>If one desires to have only one subsample with all of the exclusions combined use Shapely’s <code class="docutils literal notranslate"><span class="pre">unary_union</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">combined_df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">geometry</span><span class="o">=</span><span class="p">[</span><span class="n">unary_union</span><span class="p">(</span><span class="n">polygons_continuous</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">])],</span>
+                               <span class="n">crs</span><span class="o">=</span><span class="n">polygons_continuous</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+<span class="n">combined_df</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">create_subsampling_df</span><span class="p">(</span><span class="n">subsampling_type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;exclude&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ag</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cds</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">continuous_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bds</span><span class="p">,</span>
+                                      <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mean_percentage_error&quot;</span><span class="p">],</span>
+                                      <span class="n">subsampling_df</span><span class="o">=</span><span class="n">combined_df</span><span class="p">,</span>
+                                      <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;full-detail&quot;</span><span class="p">)</span>
+<span class="n">met</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subsample</th>
+      <th>band</th>
+      <th>mean_percentage_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0.133122</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>-0.117482</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cont_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map Exclusion&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa3aa4e0820&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_28_1.png" src="_images/SphinxSubsamplingTutorial_28_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Categorical">
+<h2>Categorical<a class="headerlink" href="#Categorical" title="Permalink to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Subsampling DF</span>
+<span class="n">polygons_categorical</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s1">/subsample_two-class_polygons.gpkg&#39;</span><span class="p">)</span>
+<span class="n">polygons_categorical</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">create_subsampling_df</span><span class="p">(</span><span class="n">subsampling_type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="s2">&quot;include&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">polygons_categorical</span><span class="o">.</span><span class="n">explore</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+
+        &lt;script&gt;
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        &lt;/script&gt;
+
+    &lt;style&gt;html, body {width: 100%;height: 100%;margin: 0;padding: 0;}&lt;/style&gt;
+    &lt;style&gt;#map {position:absolute;top:0;bottom:0;right:0;left:0;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-1.12.4.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_7a482419a882361faafe71791ce249e6 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+
+                    &lt;style&gt;
+                        .foliumtooltip {
+
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    &lt;/style&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+
+
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_7a482419a882361faafe71791ce249e6&quot; &gt;&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;script&gt;
+
+
+            var map_7a482419a882361faafe71791ce249e6 = L.map(
+                &quot;map_7a482419a882361faafe71791ce249e6&quot;,
+                {
+                    center: [30.00813899359811, -97.33918187936801],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+            L.control.scale().addTo(map_7a482419a882361faafe71791ce249e6);
+
+
+
+
+
+            var tile_layer_c35eec0dfcda0a07ce9d98360ffc13c2 = L.tileLayer(
+                &quot;https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&quot;,
+                {&quot;attribution&quot;: &quot;Data by \u0026copy; \u003ca target=\&quot;_blank\&quot; href=\&quot;http://openstreetmap.org\&quot;\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\&quot;_blank\&quot; href=\&quot;http://www.openstreetmap.org/copyright\&quot;\u003eODbL\u003c/a\u003e.&quot;, &quot;detectRetina&quot;: false, &quot;maxNativeZoom&quot;: 18, &quot;maxZoom&quot;: 18, &quot;minZoom&quot;: 0, &quot;noWrap&quot;: false, &quot;opacity&quot;: 1, &quot;subdomains&quot;: &quot;abc&quot;, &quot;tms&quot;: false}
+            ).addTo(map_7a482419a882361faafe71791ce249e6);
+
+
+            map_7a482419a882361faafe71791ce249e6.fitBounds(
+                [[29.938469924981753, -97.56735097529567], [30.077808062214462, -97.11101278344036]],
+                {}
+            );
+
+
+        function geo_json_42f502bfad8fb4b20ee4ac133ef66803_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.5, &quot;weight&quot;: 2};
+            }
+        }
+        function geo_json_42f502bfad8fb4b20ee4ac133ef66803_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {&quot;fillOpacity&quot;: 0.75};
+            }
+        }
+        function geo_json_42f502bfad8fb4b20ee4ac133ef66803_pointToLayer(feature, latlng) {
+            var opts = {&quot;bubblingMouseEvents&quot;: true, &quot;color&quot;: &quot;#3388ff&quot;, &quot;dashArray&quot;: null, &quot;dashOffset&quot;: null, &quot;fill&quot;: true, &quot;fillColor&quot;: &quot;#3388ff&quot;, &quot;fillOpacity&quot;: 0.2, &quot;fillRule&quot;: &quot;evenodd&quot;, &quot;lineCap&quot;: &quot;round&quot;, &quot;lineJoin&quot;: &quot;round&quot;, &quot;opacity&quot;: 1.0, &quot;radius&quot;: 2, &quot;stroke&quot;: true, &quot;weight&quot;: 3};
+
+            let style = geo_json_42f502bfad8fb4b20ee4ac133ef66803_styler(feature)
+            Object.assign(opts, style)
+
+            return new L.CircleMarker(latlng, opts)
+        }
+
+        function geo_json_42f502bfad8fb4b20ee4ac133ef66803_onEachFeature(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        geo_json_42f502bfad8fb4b20ee4ac133ef66803.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === &quot;function&quot;){
+                        const highlightStyle = geo_json_42f502bfad8fb4b20ee4ac133ef66803_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_42f502bfad8fb4b20ee4ac133ef66803 = L.geoJson(null, {
+                onEachFeature: geo_json_42f502bfad8fb4b20ee4ac133ef66803_onEachFeature,
+
+                style: geo_json_42f502bfad8fb4b20ee4ac133ef66803_styler,
+                pointToLayer: geo_json_42f502bfad8fb4b20ee4ac133ef66803_pointToLayer
+        });
+
+        function geo_json_42f502bfad8fb4b20ee4ac133ef66803_add (data) {
+            geo_json_42f502bfad8fb4b20ee4ac133ef66803
+                .addData(data)
+                .addTo(map_7a482419a882361faafe71791ce249e6);
+        }
+            geo_json_42f502bfad8fb4b20ee4ac133ef66803_add({&quot;bbox&quot;: [-97.56735097529567, 29.938469924981753, -97.11101278344036, 30.077808062214462], &quot;features&quot;: [{&quot;bbox&quot;: [-97.56735097529567, 29.96872487790609, -97.29513995428285, 30.07450190965067], &quot;geometry&quot;: {&quot;coordinates&quot;: [[[-97.56735097529567, 30.07450190965067], [-97.5180015379423, 29.96872487790609], [-97.29513995428285, 29.97237224487936], [-97.36734101708505, 30.04412406749238], [-97.44813361508811, 30.06807403338502], [-97.56735097529567, 30.07450190965067]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;id&quot;: &quot;0&quot;, &quot;properties&quot;: {&quot;subsample_id&quot;: 1, &quot;subsample_type&quot;: &quot;include&quot;}, &quot;type&quot;: &quot;Feature&quot;}, {&quot;bbox&quot;: [-97.2165793929137, 29.938469924981753, -97.11101278344036, 30.077808062214462], &quot;geometry&quot;: {&quot;coordinates&quot;: [[[-97.2165793929137, 30.070110147912505], [-97.20986142764495, 29.95981101477043], [-97.11101278344036, 29.938469924981753], [-97.1296905666604, 30.077808062214462], [-97.2165793929137, 30.070110147912505]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;id&quot;: &quot;1&quot;, &quot;properties&quot;: {&quot;subsample_id&quot;: 2, &quot;subsample_type&quot;: &quot;include&quot;}, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+
+
+
+    geo_json_42f502bfad8fb4b20ee4ac133ef66803.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create(&#x27;div&#x27;);
+
+    let handleObject = feature=&gt;typeof(feature)==&#x27;object&#x27; ? JSON.stringify(feature) : feature;
+    let fields = [&quot;subsample_type&quot;, &quot;subsample_id&quot;];
+    let aliases = [&quot;subsample_type&quot;, &quot;subsample_id&quot;];
+    let table = &#x27;&lt;table&gt;&#x27; +
+        String(
+        fields.map(
+        (v,i)=&gt;
+        `&lt;tr&gt;
+            &lt;th&gt;${aliases[i]}&lt;/th&gt;
+
+            &lt;td&gt;${handleObject(layer.feature.properties[v])}&lt;/td&gt;
+        &lt;/tr&gt;`).join(&#x27;&#x27;))
+    +&#x27;&lt;/table&gt;&#x27;;
+    div.innerHTML=table;
+
+    return div
+    }
+    ,{&quot;className&quot;: &quot;foliumtooltip&quot;, &quot;sticky&quot;: true});
+
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Candidate and Benchmark</span>
+<span class="n">cda</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s1">/candidate_map_multiband_two_class_categorical.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">bda</span> <span class="o">=</span> <span class="n">rxr</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s1">/benchmark_map_multiband_two_class_categorical.tif&#39;</span><span class="p">,</span> <span class="n">mask_and_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cda</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cat_plot</span><span class="p">(</span><span class="s2">&quot;Candidate Map&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa399f6e290&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_32_1.png" src="_images/SphinxSubsamplingTutorial_32_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bda</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cat_plot</span><span class="p">(</span><span class="s2">&quot;Benchmark Map&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa38a781ba0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_33_1.png" src="_images/SphinxSubsamplingTutorial_33_1.png" />
+</div>
+</div>
+<p>Just as done earlier in continuous comparison, the following performs subsampling on categorical comparisons.. For each subsample an agreement map, a cross-tabulation table, and a metric table is created. There are three subsampling-average types:</p>
+<ol class="arabic simple">
+<li><p>full-detail: reports all metrics calculated on separate bands and subsamples.</p></li>
+<li><p>band: reports all metrics on subsamples with band values averaged.</p></li>
+<li><p>subsample: reports all metrics on bands with subsample values averaged.</p></li>
+</ol>
+<section id="Full-detail">
+<h3>Full-detail<a class="headerlink" href="#Full-detail" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">,</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cda</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">categorical_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bda</span><span class="p">,</span>
+                                             <span class="n">metrics</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                                             <span class="n">positive_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                             <span class="n">negative_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                             <span class="n">subsampling_df</span><span class="o">=</span><span class="n">polygons_categorical</span><span class="p">,</span>
+                                             <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;full-detail&quot;</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>subsample</th>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>fn</th>
+      <td>201953.0</td>
+      <td>182389.0</td>
+      <td>68239.0</td>
+      <td>58638.0</td>
+    </tr>
+    <tr>
+      <th>fp</th>
+      <td>761242.0</td>
+      <td>397531.0</td>
+      <td>43646.0</td>
+      <td>65967.0</td>
+    </tr>
+    <tr>
+      <th>tn</th>
+      <td>762262.0</td>
+      <td>398338.0</td>
+      <td>1479858.0</td>
+      <td>729902.0</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>201936.0</td>
+      <td>181301.0</td>
+      <td>335650.0</td>
+      <td>305052.0</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.50026</td>
+      <td>0.499879</td>
+      <td>0.94195</td>
+      <td>0.892541</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.500157</td>
+      <td>0.499506</td>
+      <td>0.901198</td>
+      <td>0.877941</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.173316</td>
+      <td>0.238171</td>
+      <td>0.749997</td>
+      <td>0.70999</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>0.000104</td>
+      <td>-0.000426</td>
+      <td>0.696008</td>
+      <td>0.602268</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.29543</td>
+      <td>0.384715</td>
+      <td>0.857141</td>
+      <td>0.830402</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>0.790344</td>
+      <td>0.686781</td>
+      <td>0.115071</td>
+      <td>0.1778</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>0.500021</td>
+      <td>0.501496</td>
+      <td>0.168955</td>
+      <td>0.161231</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.209448</td>
+      <td>0.31407</td>
+      <td>0.044079</td>
+      <td>0.074363</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.499665</td>
+      <td>0.499493</td>
+      <td>0.028648</td>
+      <td>0.082887</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.323765</td>
+      <td>0.395147</td>
+      <td>0.857564</td>
+      <td>0.830444</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>0.000255</td>
+      <td>-0.000918</td>
+      <td>0.821398</td>
+      <td>0.751849</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>0.999373</td>
+      <td>1.001976</td>
+      <td>0.173938</td>
+      <td>0.175802</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.790552</td>
+      <td>0.68593</td>
+      <td>0.955921</td>
+      <td>0.925637</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>2.384759</td>
+      <td>1.591553</td>
+      <td>0.93911</td>
+      <td>1.020152</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>1.000628</td>
+      <td>0.99802</td>
+      <td>29.0084</td>
+      <td>10.119461</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.209656</td>
+      <td>0.313219</td>
+      <td>0.884929</td>
+      <td>0.8222</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.209552</td>
+      <td>0.313645</td>
+      <td>0.209552</td>
+      <td>0.313645</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>0.499922</td>
+      <td>0.500248</td>
+      <td>0.156594</td>
+      <td>0.239171</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.500335</td>
+      <td>0.500507</td>
+      <td>0.971352</td>
+      <td>0.917113</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.499979</td>
+      <td>0.498504</td>
+      <td>0.831045</td>
+      <td>0.838769</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The agreement map will look as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cat_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map 1st Inclusion&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa39a335600&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_38_1.png" src="_images/SphinxSubsamplingTutorial_38_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cat_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map 2nd Inclusion&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa3a6fa5d80&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_39_1.png" src="_images/SphinxSubsamplingTutorial_39_1.png" />
+</div>
+</div>
+</section>
+<section id="id2">
+<h3>Band<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">,</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cda</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">categorical_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bda</span><span class="p">,</span>
+                                             <span class="n">metrics</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                                             <span class="n">positive_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                             <span class="n">negative_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                             <span class="n">subsampling_df</span><span class="o">=</span><span class="n">polygons_categorical</span><span class="p">,</span>
+                                             <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;band&quot;</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>subsample</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>band</th>
+      <td>averaged</td>
+      <td>averaged</td>
+    </tr>
+    <tr>
+      <th>fn</th>
+      <td>270192.0</td>
+      <td>241027.0</td>
+    </tr>
+    <tr>
+      <th>fp</th>
+      <td>804888.0</td>
+      <td>463498.0</td>
+    </tr>
+    <tr>
+      <th>tn</th>
+      <td>2242120.0</td>
+      <td>1128240.0</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>537586.0</td>
+      <td>486353.0</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.721105</td>
+      <td>0.69621</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.700678</td>
+      <td>0.688723</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.333352</td>
+      <td>0.408399</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>0.192488</td>
+      <td>0.211025</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.500021</td>
+      <td>0.579948</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>0.599556</td>
+      <td>0.487969</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>0.334488</td>
+      <td>0.331363</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.107547</td>
+      <td>0.176026</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.264157</td>
+      <td>0.29119</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.516237</td>
+      <td>0.585118</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>0.342864</td>
+      <td>0.356123</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>0.454564</td>
+      <td>0.467492</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.892453</td>
+      <td>0.823974</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>1.661934</td>
+      <td>1.305853</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>2.519382</td>
+      <td>2.296222</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.400444</td>
+      <td>0.512031</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.209552</td>
+      <td>0.313645</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>0.38651</td>
+      <td>0.397562</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.735843</td>
+      <td>0.70881</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.665512</td>
+      <td>0.668637</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="id3">
+<h3>Subsample<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">,</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cda</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">categorical_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bda</span><span class="p">,</span>
+                                             <span class="n">metrics</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                                             <span class="n">positive_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                             <span class="n">negative_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                             <span class="n">subsampling_df</span><span class="o">=</span><span class="n">polygons_categorical</span><span class="p">,</span>
+                                             <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;subsample&quot;</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>subsample</th>
+      <td>averaged</td>
+      <td>averaged</td>
+    </tr>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>fn</th>
+      <td>384342.0</td>
+      <td>126877.0</td>
+    </tr>
+    <tr>
+      <th>fp</th>
+      <td>1158773.0</td>
+      <td>109613.0</td>
+    </tr>
+    <tr>
+      <th>tn</th>
+      <td>1160600.0</td>
+      <td>2209760.0</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>383237.0</td>
+      <td>640702.0</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.500117</td>
+      <td>0.92339</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.499837</td>
+      <td>0.893723</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.198944</td>
+      <td>0.730401</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>-0.000122</td>
+      <td>0.657571</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.331866</td>
+      <td>0.844199</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>0.751469</td>
+      <td>0.146089</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>0.50072</td>
+      <td>0.165295</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.248774</td>
+      <td>0.054299</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.499606</td>
+      <td>0.04726</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.352259</td>
+      <td>0.844253</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>-0.000282</td>
+      <td>0.793505</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>1.000651</td>
+      <td>0.173494</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.751226</td>
+      <td>0.945701</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>2.008927</td>
+      <td>0.977509</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>0.999348</td>
+      <td>17.662067</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.248531</td>
+      <td>0.853911</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.248653</td>
+      <td>0.248653</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>0.500082</td>
+      <td>0.192211</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.500394</td>
+      <td>0.95274</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.49928</td>
+      <td>0.834705</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>As done earlier, if one wants to combine the inclusion of multiple polygons use <code class="docutils literal notranslate"><span class="pre">unary_union</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">combined_df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">geometry</span><span class="o">=</span><span class="p">[</span><span class="n">unary_union</span><span class="p">(</span><span class="n">polygons_categorical</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">])],</span>
+                               <span class="n">crs</span><span class="o">=</span><span class="n">polygons_continuous</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+<span class="n">combined_df</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">create_subsampling_df</span><span class="p">(</span><span class="n">subsampling_type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ag</span><span class="p">,</span> <span class="n">ctab</span><span class="p">,</span> <span class="n">met</span> <span class="o">=</span> <span class="n">cda</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">categorical_compare</span><span class="p">(</span><span class="n">benchmark_map</span><span class="o">=</span><span class="n">bda</span><span class="p">,</span>
+                                             <span class="n">metrics</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                                             <span class="n">positive_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                             <span class="n">negative_categories</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                             <span class="n">subsampling_df</span><span class="o">=</span><span class="n">combined_df</span><span class="p">,</span>
+                                             <span class="n">subsampling_average</span><span class="o">=</span><span class="s2">&quot;full-detail&quot;</span><span class="p">)</span>
+<span class="n">met</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>band</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>subsample</th>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>fn</th>
+      <td>384342.0</td>
+      <td>126877.0</td>
+    </tr>
+    <tr>
+      <th>fp</th>
+      <td>1158773.0</td>
+      <td>109613.0</td>
+    </tr>
+    <tr>
+      <th>tn</th>
+      <td>1160600.0</td>
+      <td>2209760.0</td>
+    </tr>
+    <tr>
+      <th>tp</th>
+      <td>383237.0</td>
+      <td>640702.0</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.500117</td>
+      <td>0.92339</td>
+    </tr>
+    <tr>
+      <th>balanced_accuracy</th>
+      <td>0.499837</td>
+      <td>0.893723</td>
+    </tr>
+    <tr>
+      <th>critical_success_index</th>
+      <td>0.198944</td>
+      <td>0.730401</td>
+    </tr>
+    <tr>
+      <th>equitable_threat_score</th>
+      <td>-0.000122</td>
+      <td>0.657571</td>
+    </tr>
+    <tr>
+      <th>f_score</th>
+      <td>0.331866</td>
+      <td>0.844199</td>
+    </tr>
+    <tr>
+      <th>false_discovery_rate</th>
+      <td>0.751469</td>
+      <td>0.146089</td>
+    </tr>
+    <tr>
+      <th>false_negative_rate</th>
+      <td>0.50072</td>
+      <td>0.165295</td>
+    </tr>
+    <tr>
+      <th>false_omission_rate</th>
+      <td>0.248774</td>
+      <td>0.054299</td>
+    </tr>
+    <tr>
+      <th>false_positive_rate</th>
+      <td>0.499606</td>
+      <td>0.04726</td>
+    </tr>
+    <tr>
+      <th>fowlkes_mallows_index</th>
+      <td>0.352259</td>
+      <td>0.844253</td>
+    </tr>
+    <tr>
+      <th>matthews_correlation_coefficient</th>
+      <td>-0.000282</td>
+      <td>0.793505</td>
+    </tr>
+    <tr>
+      <th>negative_likelihood_ratio</th>
+      <td>1.000651</td>
+      <td>0.173494</td>
+    </tr>
+    <tr>
+      <th>negative_predictive_value</th>
+      <td>0.751226</td>
+      <td>0.945701</td>
+    </tr>
+    <tr>
+      <th>overall_bias</th>
+      <td>2.008927</td>
+      <td>0.977509</td>
+    </tr>
+    <tr>
+      <th>positive_likelihood_ratio</th>
+      <td>0.999348</td>
+      <td>17.662067</td>
+    </tr>
+    <tr>
+      <th>positive_predictive_value</th>
+      <td>0.248531</td>
+      <td>0.853911</td>
+    </tr>
+    <tr>
+      <th>prevalence</th>
+      <td>0.248653</td>
+      <td>0.248653</td>
+    </tr>
+    <tr>
+      <th>prevalence_threshold</th>
+      <td>0.500082</td>
+      <td>0.192211</td>
+    </tr>
+    <tr>
+      <th>true_negative_rate</th>
+      <td>0.500394</td>
+      <td>0.95274</td>
+    </tr>
+    <tr>
+      <th>true_positive_rate</th>
+      <td>0.49928</td>
+      <td>0.834705</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gval</span><span class="o">.</span><span class="n">cat_plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Agreement Map Inclusion&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.QuadMesh at 0x7fa3a1331e40&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/SphinxSubsamplingTutorial_46_1.png" src="_images/SphinxSubsamplingTutorial_46_1.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SphinxContinuousTutorial.html" class="btn btn-neutral float-left" title="Continuous Comparisons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SphinxCatalogTutorial.html" class="btn btn-neutral float-right" title="Catalog Comparisons" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

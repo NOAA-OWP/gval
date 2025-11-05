@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Continuous Statistics Functions &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Continuous Statistics" href="continuous_statistics.html" />
+    <link rel="prev" title="Categorical Statistics" href="categorical_statistics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">GVAL API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="extension.html">Core Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison.html">Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subsampling.html">Subsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.html">Catalogs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="statistics.html">Statistics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="categorical_stat_funcs.html">Categorical Statistics Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="categorical_statistics.html">Categorical Statistics</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Continuous Statistics Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.coefficient_of_determination"><code class="docutils literal notranslate"><span class="pre">coefficient_of_determination()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.mean_absolute_error"><code class="docutils literal notranslate"><span class="pre">mean_absolute_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.mean_absolute_percentage_error"><code class="docutils literal notranslate"><span class="pre">mean_absolute_percentage_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.mean_normalized_mean_absolute_error"><code class="docutils literal notranslate"><span class="pre">mean_normalized_mean_absolute_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.mean_normalized_root_mean_squared_error"><code class="docutils literal notranslate"><span class="pre">mean_normalized_root_mean_squared_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.mean_percentage_error"><code class="docutils literal notranslate"><span class="pre">mean_percentage_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.mean_signed_error"><code class="docutils literal notranslate"><span class="pre">mean_signed_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.mean_squared_error"><code class="docutils literal notranslate"><span class="pre">mean_squared_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.range_normalized_mean_absolute_error"><code class="docutils literal notranslate"><span class="pre">range_normalized_mean_absolute_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.range_normalized_root_mean_squared_error"><code class="docutils literal notranslate"><span class="pre">range_normalized_root_mean_squared_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.root_mean_squared_error"><code class="docutils literal notranslate"><span class="pre">root_mean_squared_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.continuous_stat_funcs.symmetric_mean_absolute_percentage_error"><code class="docutils literal notranslate"><span class="pre">symmetric_mean_absolute_percentage_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="continuous_statistics.html">Continuous Statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">GVAL API</a></li>
+          <li class="breadcrumb-item"><a href="statistics.html">Statistics</a></li>
+      <li class="breadcrumb-item active">Continuous Statistics Functions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/continuous_stat_funcs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="continuous-statistics-functions">
+<h1>Continuous Statistics Functions<a class="headerlink" href="#continuous-statistics-functions" title="Permalink to this heading"></a></h1>
+<p><a class="reference internal" href="index.html"><span class="doc">Return to Homepage</span></a></p>
+<span class="target" id="module-gval.statistics.continuous_stat_funcs"></span><p>Continuous Statistics Functions From Error Based Agreement Maps.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.coefficient_of_determination">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">coefficient_of_determination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.coefficient_of_determination" title="Permalink to this definition"></a></dt>
+<dd><p>Compute coefficient of determination (R2).</p>
+<p>Either (error and benchmark_map) or (candidate_map and benchmark_map) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>R2</strong> – Coefficient of determination.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id1" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Coefficient_of_determination">Coefficient of determination</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.mean_absolute_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">mean_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.mean_absolute_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute mean absolute error (MAE).</p>
+<p>Either <cite>error</cite> or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MAE</strong> – Mean absolute error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mean_absolute_error">Mean absolute error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.mean_absolute_percentage_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">mean_absolute_percentage_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.mean_absolute_percentage_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute mean absolute percentage error (MAPE) as a fraction.</p>
+<p>Either (<cite>error</cite> and <cite>benchmark_map</cite>) or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>default = 1e-10</em>) – Small value to avoid division by zero.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MAPE</strong> – Mean absolute percentage error as a fraction.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mean_absolute_percentage_error">Mean absolute percentage error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.mean_normalized_mean_absolute_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">mean_normalized_mean_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.mean_normalized_mean_absolute_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute mean normalized mean absolute error (NMAE).</p>
+<p>Either (<cite>error</cite> and <cite>benchmark_map</cite>) or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NMAE</strong> – Normalized mean absolute error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error">Normalized mean absolute error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.mean_normalized_root_mean_squared_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">mean_normalized_root_mean_squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.mean_normalized_root_mean_squared_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute mean normalized root mean squared error (NRMSE).</p>
+<p>Either (<cite>error</cite> and <cite>benchmark_map</cite>) or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>mNRMSE</strong> – Mean normalized root mean squared error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation">Normalized root-mean-square deviation</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.mean_percentage_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">mean_percentage_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.mean_percentage_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute mean percentage error (MPE) as a fraction.</p>
+<p>Either (<cite>error</cite> and <cite>benchmark_map</cite>) or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MPE</strong> – Mean percentage error as a fraction.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mean_percentage_error">Mean percentage error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.mean_signed_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">mean_signed_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.mean_signed_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute mean signed error (MSiE).</p>
+<p>Either <cite>error</cite> or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MSiE</strong> – Mean signed error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mean_signed_difference">Mean signed error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.mean_squared_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">mean_squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.mean_squared_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute mean squared error (MSE).</p>
+<p>Either <cite>error</cite> or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MSE</strong> – Mean squared error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id8" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mean_squared_error">Mean squared error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.range_normalized_mean_absolute_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">range_normalized_mean_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.range_normalized_mean_absolute_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute range normalized mean absolute error (RNMAE).</p>
+<p>Either (<cite>error</cite> and <cite>benchmark_map</cite>) or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>rNMAE</strong> – Range normalized mean absolute error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id9" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mean_absolute_error#Normalized_mean_absolute_error">Normalized mean absolute error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.range_normalized_root_mean_squared_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">range_normalized_root_mean_squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.range_normalized_root_mean_squared_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute range normalized root mean squared error (RNRMSE).</p>
+<p>Either (<cite>error</cite> and <cite>benchmark_map</cite>) or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>rNRMSE</strong> – Range normalized root mean squared error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Root-mean-square_deviation#Normalized_root-mean-square_deviation">Normalized root-mean-square deviation</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.root_mean_squared_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">root_mean_squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.root_mean_squared_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute root mean squared error (RMSE).</p>
+<p>Either <cite>error</cite> or (<cite>candidate_map</cite> and <cite>benchmark_map</cite>) must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RMSE</strong> – Root mean squared error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Root-mean-square_deviation">Root mean square deviation</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.continuous_stat_funcs.symmetric_mean_absolute_percentage_error">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.continuous_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">symmetric_mean_absolute_percentage_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="headerlink" href="#gval.statistics.continuous_stat_funcs.symmetric_mean_absolute_percentage_error" title="Permalink to this definition"></a></dt>
+<dd><p>Compute symmetric mean absolute percentage error (sMAPE) as a fraction.</p>
+<p>Both <cite>candidate_map</cite> and <cite>benchmark_map</cite> must be provided. <cite>error</cite> can be provided to avoid recomputing it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate minus benchmark error.</p></li>
+<li><p><strong>candidate_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Candidate map.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sMAPE</strong> – Symmetric mean absolute percentage error as a fraction.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id14" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error">Symmetric mean absolute percentage error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="categorical_statistics.html" class="btn btn-neutral float-left" title="Categorical Statistics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="continuous_statistics.html" class="btn btn-neutral float-right" title="Continuous Statistics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
