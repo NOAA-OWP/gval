@@ -1,5 +1,5 @@
 [build-system]
-requires = ['setuptools>=42']
+requires = ['setuptools<=80.8.0']
 build-backend = 'setuptools.build_meta'
 
 [project]
@@ -12,7 +12,7 @@ authors = [
 requires-python = ">=3.9"
 keywords = ["geospatial", "evaluations"]
 license = {text = "MIT"}
-version = "0.2.11"
+version = "0.2.12"
 dynamic = ["readme", "dependencies"]
 
 [project.optional-dependencies]
