@@ -45,9 +45,10 @@ jobs:
       - name: Test with pytest
         run: |
           for f in tests/test*; do
-            pytest $f --memray --cov=gval --cov-report=xml:coverage.xml term-missing --cov-append --db ./monitordb
+            pytest $f --memray --cov=gval --cov-report term-missing --cov-append --db ./monitordb
           done
           python ./tests/remote_benchmark.py
+          coverage xml -o coverage.xml
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
