@@ -48,13 +48,16 @@ jobs:
             pytest $f --memray --cov=gval --cov-report term-missing --cov-append --db ./monitordb
           done
           python ./tests/remote_benchmark.py
+          coverage xml -o coverage.xml
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      - name: Install dependencies and genbadge
+        run: |
+          pip install genbadge[all]
       - name: Coverage Badge
-        uses: tj-actions/coverage-badge-py@v2
-        with:
-          output: docs/images/coverage.svg
+        run: |
+          genbadge coverage -i coverage.xml -o filedocs/images/coverage.svg
       - uses: stefanzweifel/git-auto-commit-action@v4
         if: ${{ github.event_name == 'pull_request' && matrix.python == '3.10'}}
         with:
