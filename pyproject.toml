@@ -1,5 +1,5 @@
 [build-system]
-requires = ['setuptools<=80.8.0']
+requires = ['setuptools>=60']
 build-backend = 'setuptools.build_meta'
 
 [project]
@@ -9,7 +9,7 @@ authors = [
     {name = "Fernando Aristizabal", email = "fernando.aristizabal@noaa.gov"},
     {name = "Gregory Petrochenkov", email = "gregory.petrochenkov@noaa.gov"}
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["geospatial", "evaluations"]
 license = {text = "MIT"}
 version = "0.2.12"
