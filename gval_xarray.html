@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shared Xarray Functionality &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Xarray DataArray Functionality" href="gval_array.html" />
+    <link rel="prev" title="Core Operations" href="extension.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">GVAL API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="extension.html">Core Operations</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Shared Xarray Functionality</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gval.accessors.gval_xarray.GVALXarray"><code class="docutils literal notranslate"><span class="pre">GVALXarray</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gval_array.html">Xarray DataArray Functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gval_dataset.html">Xarray Dataset Functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gval_dataframe.html">DataFrame Functionality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="comparison.html">Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subsampling.html">Subsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.html">Catalogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">GVAL API</a></li>
+          <li class="breadcrumb-item"><a href="extension.html">Core Operations</a></li>
+      <li class="breadcrumb-item active">Shared Xarray Functionality</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gval_xarray.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="shared-xarray-functionality">
+<h1>Shared Xarray Functionality<a class="headerlink" href="#shared-xarray-functionality" title="Permalink to this heading"></a></h1>
+<p><a class="reference internal" href="index.html"><span class="doc">Return to Homepage</span></a></p>
+<span class="target" id="module-gval.accessors.gval_xarray"></span><p>Defines gval accessor for xarray objects.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.accessors.gval_xarray.</span></span><span class="sig-name descname"><span class="pre">GVALXarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xarray_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray" title="Permalink to this definition"></a></dt>
+<dd><p>Class for extending xarray functionality.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray._obj">
+<span class="sig-name descname"><span class="pre">_obj</span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray._obj" title="Permalink to this definition"></a></dt>
+<dd><p>Object to use off the accessor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[xr.Dataset, xr.DataArray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.data_type" title="Permalink to this definition"></a></dt>
+<dd><p>Data type of the _obj</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.attribute_tracking">
+<span class="sig-name descname"><span class="pre">attribute_tracking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agreement_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_candidate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_benchmark'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_exclude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_exclude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.AttributeTrackingDf" title="gval.utils.schemas.AttributeTrackingDf"><span class="pre">AttributeTrackingDf</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.AttributeTrackingDf" title="gval.utils.schemas.AttributeTrackingDf"><span class="pre">AttributeTrackingDf</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.attribute_tracking" title="Permalink to this definition"></a></dt>
+<dd><p>Concatenate xarray attributes into a single pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidate_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Self. Candidate map xarray object.</p></li>
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map xarray object.</p></li>
+<li><p><strong>candidate_suffix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default = '_candidate'</em>) – Suffix to append to candidate map xarray attributes, by default ‘_candidate’.</p></li>
+<li><p><strong>benchmark_suffix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default = '_benchmark'</em>) – Suffix to append to benchmark map xarray attributes, by default ‘_benchmark’.</p></li>
+<li><p><strong>candidate_include</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of attributes to include from candidate map. candidate_include and candidate_exclude are mutually exclusive arguments.</p></li>
+<li><p><strong>candidate_exclude</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of attributes to exclude from candidate map. candidate_include and candidate_exclude are mutually exclusive arguments.</p></li>
+<li><p><strong>benchmark_include</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of attributes to include from benchmark map. benchmark_include and benchmark_exclude are mutually exclusive arguments.</p></li>
+<li><p><strong>benchmark_exclude</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of attributes to exclude from benchmark map. benchmark_include and benchmark_exclude are mutually exclusive arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If candidate_include and candidate_exclude are both not None.</p></li>
+<li><p><strong>ValueError</strong> – If benchmark_include and benchmark_exclude are both not None.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas dataframe with concatenated attributes from candidate and benchmark maps. If agreement_map is not None, returns a tuple with the dataframe and the agreement map.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Union[DataFrame[<a class="reference internal" href="schemas.html#gval.utils.schemas.AttributeTrackingDf" title="gval.utils.schemas.AttributeTrackingDf">AttributeTrackingDf</a>], Tuple[DataFrame[<a class="reference internal" href="schemas.html#gval.utils.schemas.AttributeTrackingDf" title="gval.utils.schemas.AttributeTrackingDf">AttributeTrackingDf</a>], Union[xr.DataArray, xr.Dataset]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.cat_plot">
+<span class="sig-name descname"><span class="pre">cat_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Categorical</span> <span class="pre">Map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_bands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basemap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TileProvider</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'attribution':</span> <span class="pre">'(C)</span> <span class="pre">OpenStreetMap</span> <span class="pre">contributors',</span> <span class="pre">'html_attribution':</span> <span class="pre">'&amp;copy;</span> <span class="pre">&lt;a</span> <span class="pre">href=&quot;https://www.openstreetmap.org/copyright&quot;&gt;OpenStreetMap&lt;/a&gt;</span> <span class="pre">contributors',</span> <span class="pre">'max_zoom':</span> <span class="pre">19,</span> <span class="pre">'name':</span> <span class="pre">'OpenStreetMap.Mapnik',</span> <span class="pre">'url':</span> <span class="pre">'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.cat_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Plots categorical Map for xarray object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em>) – Title of map, default = “Categorical Map”</p></li>
+<li><p><strong>colormap</strong> (<em>str</em><em>, </em><em>default = &quot;viridis&quot;</em>) – Colormap of data</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=None</em>) – Size of the plot</p></li>
+<li><p><strong>legend_labels</strong> (<em>list</em><em>, </em><em>default = None</em>) – Override labels in legend</p></li>
+<li><p><strong>plot_bands</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>list</em><em>]</em><em>, </em><em>default='all'</em>) – What bands to plot</p></li>
+<li><p><strong>color_bar_label</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>list</em><em>]</em><em>, </em><em>default =&quot;&quot;</em>) – Label or labels for colorbar in the case of continuous plots</p></li>
+<li><p><strong>basemap</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>xyzservices.lib.TileProvider</em><em>]</em><em>, </em><em>default = cx.providers.Stamen.Terrain</em>) – Add basemap to the plot</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id1" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html">Matplotlib figure</a></p>
+</aside>
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html">Matplotlib legend</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.categorical_compare">
+<span class="sig-name descname"><span class="pre">categorical_compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparison_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DUFunc</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ufunc</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">vectorize</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'szudzik'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'benchmark'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Resampling</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Resampling.nearest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_candidate_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_benchmark_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encode_nodata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative_categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rasterize_attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_tracking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_tracking_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Crosstab_df" title="gval.utils.schemas.Crosstab_df"><span class="pre">Crosstab_df</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Metrics_df" title="gval.utils.schemas.Metrics_df"><span class="pre">Metrics_df</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Crosstab_df" title="gval.utils.schemas.Crosstab_df"><span class="pre">Crosstab_df</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Metrics_df" title="gval.utils.schemas.Metrics_df"><span class="pre">Metrics_df</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.AttributeTrackingDf" title="gval.utils.schemas.AttributeTrackingDf"><span class="pre">AttributeTrackingDf</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.categorical_compare" title="Permalink to this definition"></a></dt>
+<dd><p>Computes comparison between two categorical value xarray’s.</p>
+<dl class="simple">
+<dt>Conducts the following steps:</dt><dd><ul class="simple">
+<li><p>homogenize: aligns data types, spatial alignment, and rasterizes data</p></li>
+<li><p>compute_agreement: computes agreement map</p></li>
+<li><p>compute_crosstab: computes crosstabulation</p></li>
+<li><p>compute_metrics: computes metrics</p></li>
+</ul>
+</dd>
+</dl>
+<p>Spatially aligning the xarray’s produces copies of the original candidate and benchmark maps. To reduce memory usage, consider using the <cite>homogenize()</cite> accessor method to overwrite the original maps in memory or saving them on disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>gpd.GeoDataFrame</em><em>, </em><em>xr.Dataset</em><em>, </em><em>xr.DataArray</em><em>]</em>) – Benchmark map.</p></li>
+<li><p><strong>positive_categories</strong> (<em>Union</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>]</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – Number or list of numbers representing the values to consider as the positive condition. When the average argument is either “macro” or “weighted”, this represents the categories to compute metrics for.</p></li>
+<li><p><strong>comparison_function</strong> (<em>Union</em><em>[</em><em>Callable</em><em>, </em><em>nb.np.ufunc.dufunc.DUFunc</em><em>, </em><em>np.ufunc</em><em>, </em><em>np.vectorize</em><em>, </em><em>str</em><em>]</em><em>, </em><em>default = 'szudzik'</em>) – Comparison function. Created by decorating function with &#64;nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include “pairing_dict”. If passing “pairing_dict” value, please see the description for the argument for more information on behaviour.
+All available comparison functions can be found with gval.Comparison.available_functions().</p></li>
+<li><p><strong>metrics</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = &quot;all&quot;</em>) – Statistics to return in metric table.  All returns every default and registered metric.  This can be seen with gval.CatStats.available_functions().</p></li>
+<li><p><strong>target_map</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>xr.Dataset</em><em>, </em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = &quot;benchmark&quot;</em>) – xarray object to match the CRS’s and coordinates of candidates and benchmarks to or str with ‘candidate’ or ‘benchmark’ as accepted values.</p></li>
+<li><p><strong>resampling</strong> (<em>rasterio.enums.Resampling</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">rasterio.warp.reproject()</span></code> for more details.</p></li>
+<li><p><strong>pairing_dict</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>Tuple</em><em>[</em><em>Number</em><em>, </em><em>Number</em><em>]</em><em>, </em><em>Number</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – <p>When “pairing_dict” is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as <cite>{(c, b) : a}</cite> where <cite>(c, b)</cite> is a tuple of the candidate and benchmark value pairing, respectively, and <cite>a</cite> is the value for the agreement array to be used for this pairing.</p>
+<p>If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.</p>
+<p>A pairing dictionary can be used by the user to note which values to allow and which to ignore for comparisons. It can also be used to decide how nans are handled for cases where either the candidate and benchmark maps have nans or both.</p>
+</p></li>
+<li><p><strong>allow_candidate_values</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>,</em><em>float</em><em>]</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of values in candidate to include in computation of agreement map. Remaining values are excluded. If “pairing_dict” is provided for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.</p></li>
+<li><p><strong>allow_benchmark_values</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>,</em><em>float</em><em>]</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of values in benchmark to include in computation of agreement map. Remaining values are excluded. If “pairing_dict” is provided for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.</p></li>
+<li><p><strong>nodata</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>default = None</em>) – No data value to write to agreement map output. This will use <cite>rxr.rio.write_nodata(nodata)</cite>.</p></li>
+<li><p><strong>encode_nodata</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>default = False</em>) – Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use <cite>rxr.rio.write_nodata(nodata, encode=encode_nodata)</cite>.</p></li>
+<li><p><strong>exclude_value</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>default = None</em>) – Value to exclude from crosstab. This could be used to denote a no data value if masking wasn’t used. By default, NaNs are not cross-tabulated.</p></li>
+<li><p><strong>negative_categories</strong> (<em>Union</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>]</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – Number or list of numbers representing the values to consider as the negative condition. This should be set to None when no negative categories are used or when the average type is “macro” or “weighted”.</p></li>
+<li><p><strong>average</strong> (<em>str</em><em>, </em><em>default = &quot;micro&quot;</em>) – Type of average to use when computing metrics. Options are “micro”, “macro”, and “weighted”.
+Micro weighing computes the conditions, tp, tn, fp, and fn, for each category and then sums them.
+Macro weighing computes the metrics for each category then averages them.
+Weighted average computes the metrics for each category then averages them weighted by the number of weights argument in each category.</p></li>
+<li><p><strong>weights</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – <p>Weights to use when computing weighted average, specifically when the average argument is “weighted”. Elements correspond to positive categories in order.</p>
+<p>Example:</p>
+<p><cite>positive_categories = [1, 2]; weights = [0.25, 0.75]</cite></p>
+</p></li>
+<li><p><strong>rasterize_attributes</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em><em>, </em><em>default = None</em>) – Numerical attributes of a Benchmark Map GeoDataFrame to rasterize.  Only applicable if benchmark map is a vector file.
+This cannot be none if the benchmark map is a vector file.</p></li>
+<li><p><strong>attribute_tracking</strong> (<em>bool</em><em>, </em><em>default = False</em>) – Whether to return a dataframe with the attributes of the candidate and benchmark maps.</p></li>
+<li><p><strong>attribute_tracking_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em><em>, </em><em>default = None</em>) – Keyword arguments to pass to <cite>gval.attribute_tracking()</cite>.  This is only used if <cite>attribute_tracking</cite> is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See <cite>gval.attribute_tracking</cite> for more information.</p></li>
+<li><p><strong>subsampling_df</strong> (<em>Optional</em><em>[</em><em>gpd.GeoDataFrame</em><em>]</em><em>, </em><em>default = None</em>) – DataFrame with spatial geometries and method types to subsample</p></li>
+<li><p><strong>subsampling_average</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default = None</em>) – Way to aggregate statistics for subsamples if provided. Options are “sample”, “band”, and “full-detail”
+Sample calculates metrics and averages the results by subsample
+Band calculates metrics and averages all the metrics by band
+Full-detail does not aggregation on subsample or band</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Union[</em> – Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]],
+Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]]</p></li>
+<li><p><em>]</em> – Tuple with agreement map/s, cross-tabulation table, and metric table. Possibly attribute tracking table as well.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.check_same_type">
+<span class="sig-name descname"><span class="pre">check_same_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.check_same_type" title="Permalink to this definition"></a></dt>
+<dd><p>Makes sure benchmark map is the same data type as the candidate object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.Dataset</em><em>, </em><em>xr.DataArray</em><em>]</em>) – Benchmark Map</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.compute_agreement_map">
+<span class="sig-name descname"><span class="pre">compute_agreement_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparison_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DUFunc</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ufunc</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">vectorize</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'szudzik'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_candidate_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_benchmark_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encode_nodata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.compute_agreement_map" title="Permalink to this definition"></a></dt>
+<dd><p>Computes agreement map as xarray from candidate and benchmark xarray’s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>xr.Dataset</em><em>, </em><em>xr.DataArray</em><em>]</em>) – Benchmark map.</p></li>
+<li><p><strong>comparison_function</strong> (<em>Union</em><em>[</em><em>Callable</em><em>, </em><em>nb.np.ufunc.dufunc.DUFunc</em><em>, </em><em>np.ufunc</em><em>, </em><em>np.vectorize</em><em>, </em><em>str</em><em>]</em><em>, </em><em>default = 'szudzik'</em>) – Comparison function. Created by decorating function with &#64;nb.vectorize() or using np.ufunc(). Use of numba is preferred as it is faster. Strings with registered comparison_functions are also accepted. Possible options include “pairing_dict”. If passing “pairing_dict” value, please see the description for the argument for more information on behaviour.</p></li>
+<li><p><strong>pairing_dict</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>Tuple</em><em>[</em><em>Number</em><em>, </em><em>Number</em><em>]</em><em>, </em><em>Number</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – <p>When “pairing_dict” is used for the comparison_function argument, a pairing dictionary can be passed by user. A pairing dictionary is structured as <cite>{(c, b) : a}</cite> where <cite>(c, b)</cite> is a tuple of the candidate and benchmark value pairing, respectively, and <cite>a</cite> is the value for the agreement array to be used for this pairing.</p>
+<p>If None is passed for pairing_dict, the allow_candidate_values and allow_benchmark_values arguments are required. For this case, the pairings in these two iterables will be paired in the order provided and an agreement value will be assigned to each pairing starting with 0 and ending with the number of possible pairings.</p>
+<p>A pairing dictionary can be used by the user to note which values to allow and which to ignore for comparisons. It can also be used to decide how nans are handled for cases where either the candidate and benchmark maps have nans or both.</p>
+</p></li>
+<li><p><strong>allow_candidate_values</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>,</em><em>float</em><em>]</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of values in candidate to include in computation of agreement map. Remaining values are excluded. If “pairing_dict” is set selected for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.</p></li>
+<li><p><strong>allow_benchmark_values</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>,</em><em>float</em><em>]</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – List of values in benchmark to include in computation of agreement map. Remaining values are excluded. If “pairing_dict” is set selected for comparison_function and pairing_function is None, this argument is necessary to construct the dictionary. Otherwise, this argument is optional and by default this value is set to None and all values are considered.</p></li>
+<li><p><strong>nodata</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>default = None</em>) – No data value to write to agreement map output. This will use <cite>rxr.rio.write_nodata(nodata)</cite>.</p></li>
+<li><p><strong>encode_nodata</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>default = False</em>) – Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use <cite>rxr.rio.write_nodata(nodata, encode=encode_nodata)</cite>.</p></li>
+<li><p><strong>subsampling_df</strong> (<em>Optional</em><em>[</em><em>gpd.GeoDataFrame</em><em>]</em><em>, </em><em>default = None</em>) – DataFrame with geometries to subsample data with or use as an exclusionary mask</p></li>
+<li><p><strong>continuous</strong> (<em>bool</em><em>, </em><em>default = False</em>) – Whether to return modified candidate and benchmark maps</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Agreement map.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[Union[xr.Dataset, xr.DataArray, List[Union[xr.Dataset, xr.DataArray]]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.compute_crosstab">
+<span class="sig-name descname"><span class="pre">compute_crosstab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agreement_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">DataArray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Crosstab_df" title="gval.utils.schemas.Crosstab_df"><span class="pre">Crosstab_df</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.compute_crosstab" title="Permalink to this definition"></a></dt>
+<dd><p>Crosstab 2 or 3-dimensional xarray DataArray to produce Crosstab DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agreement_map</strong> (<em>Union</em><em>[</em><em>xr.Dataset</em><em>, </em><em>xr.DataArray</em><em>]</em><em>, </em><em>default = None</em>) – Benchmark map, {dimension}-dimensional.</p></li>
+<li><p><strong>subsampling_df</strong> (<em>Optional</em><em>[</em><em>gpd.GeoDataFrame</em><em>]</em><em>, </em><em>default = None</em>) – DataFrame with spatial geometries and method types to subsample</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Crosstab DataFrame</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame[<a class="reference internal" href="schemas.html#gval.utils.schemas.Crosstab_df" title="gval.utils.schemas.Crosstab_df">Crosstab_df</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.cont_plot">
+<span class="sig-name descname"><span class="pre">cont_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Continuous</span> <span class="pre">Map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_bands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basemap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TileProvider</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'attribution':</span> <span class="pre">'(C)</span> <span class="pre">OpenStreetMap</span> <span class="pre">contributors',</span> <span class="pre">'html_attribution':</span> <span class="pre">'&amp;copy;</span> <span class="pre">&lt;a</span> <span class="pre">href=&quot;https://www.openstreetmap.org/copyright&quot;&gt;OpenStreetMap&lt;/a&gt;</span> <span class="pre">contributors',</span> <span class="pre">'max_zoom':</span> <span class="pre">19,</span> <span class="pre">'name':</span> <span class="pre">'OpenStreetMap.Mapnik',</span> <span class="pre">'url':</span> <span class="pre">'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.cont_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Plots categorical Map for xarray object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em>) – Title of map, default = “Categorical Map”</p></li>
+<li><p><strong>colormap</strong> (<em>str</em><em>, </em><em>default = &quot;viridis&quot;</em>) – Colormap of data</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=None</em>) – Size of the plot</p></li>
+<li><p><strong>plot_bands</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>list</em><em>]</em><em>, </em><em>default='all'</em>) – What bands to plot</p></li>
+<li><p><strong>colorbar_label</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>list</em><em>]</em><em>, </em><em>default =&quot;&quot;</em>) – Label or labels for colorbar in the case of continuous plots</p></li>
+<li><p><strong>basemap</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>xyzservices.lib.TileProvider</em><em>]</em><em>, </em><em>default = cx.providers.Stamen.Terrain</em>) – Add basemap to the plot</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html">Matplotlib figure</a></p>
+</aside>
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html">Matplotlib legend</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.continuous_compare">
+<span class="sig-name descname"><span class="pre">continuous_compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'benchmark'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Resampling</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Resampling.nearest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encode_nodata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rasterize_attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_tracking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_tracking_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Metrics_df" title="gval.utils.schemas.Metrics_df"><span class="pre">Metrics_df</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Metrics_df" title="gval.utils.schemas.Metrics_df"><span class="pre">Metrics_df</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.AttributeTrackingDf" title="gval.utils.schemas.AttributeTrackingDf"><span class="pre">AttributeTrackingDf</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.continuous_compare" title="Permalink to this definition"></a></dt>
+<dd><p>Computes comparison between two continuous value xarray’s.</p>
+<dl class="simple">
+<dt>Conducts the following steps:</dt><dd><ul class="simple">
+<li><p>homogenize: aligns data types, spatial alignment, and rasterizes data</p></li>
+<li><p>compute_agreement: computes agreement map which is error or candidate minus benchmark</p></li>
+<li><p>compute_metrics: computes metrics</p></li>
+</ul>
+</dd>
+</dl>
+<p>Spatially aligning the xarray’s produces copies of the original candidate and benchmark maps. To reduce memory usage, consider using the <cite>homogenize()</cite> accessor method to overwrite the original maps in memory or saving them on disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>gpd.GeoDataFrame</em><em>, </em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>]</em>) – Benchmark map.</p></li>
+<li><p><strong>metrics</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = &quot;all&quot;</em>) – Statistics to return in metric table.  This can be seen with gval.ContStats.available_functions().</p></li>
+<li><p><strong>target_map</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>xr.Dataset</em><em>, </em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = &quot;benchmark&quot;</em>) – xarray object to match the CRS’s and coordinates of candidates and benchmarks to or str with ‘candidate’ or ‘benchmark’ as accepted values.</p></li>
+<li><p><strong>resampling</strong> (<em>rasterio.enums.Resampling</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">rasterio.warp.reproject()</span></code> for more details.</p></li>
+<li><p><strong>nodata</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>default = None</em>) – No data value to write to agreement map output. This will use <cite>rxr.rio.write_nodata(nodata)</cite>.</p></li>
+<li><p><strong>encode_nodata</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>default = False</em>) – Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use <cite>rxr.rio.write_nodata(nodata, encode=encode_nodata)</cite>.</p></li>
+<li><p><strong>rasterize_attributes</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em><em>, </em><em>default = None</em>) – Numerical attributes of a GeoDataFrame to rasterize.</p></li>
+<li><p><strong>attribute_tracking</strong> (<em>bool</em><em>, </em><em>default = False</em>) – Whether to return a dataframe with the attributes of the candidate and benchmark maps.</p></li>
+<li><p><strong>attribute_tracking_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em><em>, </em><em>default = None</em>) – Keyword arguments to pass to <cite>gval.attribute_tracking()</cite>.  This is only used if <cite>attribute_tracking</cite> is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See <cite>gval.attribute_tracking</cite> for more information.</p></li>
+<li><p><strong>subsampling_df</strong> (<em>Optional</em><em>[</em><em>gpd.GeoDataFrame</em><em>]</em><em>, </em><em>default = None</em>) – DataFrame with spatial geometries and method types to subsample</p></li>
+<li><p><strong>subsampling_average</strong> (<em>str</em><em>, </em><em>default = None</em>) – Way to aggregate statistics for subsamples if provided. Options are “sample”, “band”, “weighted”, and “none”
+Sample calculates metrics and averages the results by subsample
+Band calculates metrics and averages all the metrics by band
+Weighted calculates metrics, scales by the weight and then averages them based on the weights
+Full-detail provides full detailed table</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>default = 1e-10</em>) – Small value to avoid division by zero in some metrics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Union[</em> – Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]],
+Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]]</p></li>
+<li><p><em>]</em> – Tuple with agreement map and metric table, possibly attribute tracking table as well.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.homogenize">
+<span class="sig-name descname"><span class="pre">homogenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'benchmark'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Resampling</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Resampling.nearest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rasterize_attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.homogenize" title="Permalink to this definition"></a></dt>
+<dd><p>Homogenize candidate and benchmark maps to prepare for comparison.</p>
+<dl class="simple">
+<dt>Currently supported operations include:</dt><dd><ul class="simple">
+<li><p>Matching projections and coordinates (spatial alignment)</p></li>
+<li><p>Homogenize file formats (xarray/rasters)</p></li>
+<li><p>Homogenize numerical data types (int, float, etc.).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>benchmark_map</strong> (<em>Union</em><em>[</em><em>gpd.GeoDataFrame</em><em>, </em><em>xr.Dataset</em><em>, </em><em>xr.DataArray</em><em>]</em>) – Benchmark map.</p></li>
+<li><p><strong>target_map</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>xr.DataArray</em><em>, </em><em>xr.Dataset</em><em>, </em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = &quot;benchmark&quot;</em>) – xarray object to match candidates and benchmarks to or str with ‘candidate’ or ‘benchmark’ as accepted values.</p></li>
+<li><p><strong>resampling</strong> (<em>rasterio.enums.Resampling</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">rasterio.warp.reproject()</span></code> for more details.</p></li>
+<li><p><strong>rasterize_attributes</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em><em>, </em><em>default = None</em>) – Numerical attributes of a GeoDataFrame to rasterize</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple with candidate and benchmark map respectively.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[xr.Dataset, xr.DataArray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.probabilistic_compare">
+<span class="sig-name descname"><span class="pre">probabilistic_compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_on_error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'benchmark'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Resampling</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Resampling.nearest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rasterize_attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_tracking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_tracking_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Prob_metrics_df" title="gval.utils.schemas.Prob_metrics_df"><span class="pre">Prob_metrics_df</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.probabilistic_compare" title="Permalink to this definition"></a></dt>
+<dd><p>Computes probabilistic metrics from candidate and benchmark maps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>benchmark_map</strong> (<em>xr.DataArray</em><em> or </em><em>xr.Dataset</em>) – Benchmark map.</p></li>
+<li><p><strong>metric_kwargs</strong> (<em>dict</em>) – Dictionary of keyword arguments to metric functions. Keys must be metrics. Values are keyword arguments to metric functions. Don’t pass keys or values for ‘observations’ or ‘forecasts’ as these are handled internally with <cite>benchmark_map</cite> and <cite>candidate_map</cite>, respectively. Available keyword arguments by metric are available in <cite>DEFAULT_METRIC_KWARGS</cite>. If values are None or empty dictionary, default values in <cite>DEFAULT_METRIC_KWARGS</cite> are used.</p></li>
+<li><p><strong>return_on_error</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>default = None</em>) – Value to return within metrics dataframe if an error occurs when computing a metric. If None, the metric is not computed and None is returned. If ‘error’, the raised error is returned.</p></li>
+<li><p><strong>target_map</strong> (<em>Optional</em><em>[</em><em>xr.Dataset</em><em> or </em><em>str</em><em>]</em><em>, </em><em>default = &quot;benchmark&quot;</em>) – xarray object to match the CRS’s and coordinates of candidates and benchmarks to or str with ‘candidate’ or ‘benchmark’ as accepted values.</p></li>
+<li><p><strong>resampling</strong> (<em>rasterio.enums.Resampling</em>) – See <code class="xref py py-func docutils literal notranslate"><span class="pre">rasterio.warp.reproject()</span></code> for more details.</p></li>
+<li><p><strong>nodata</strong> (<em>Optional</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>default = None</em>) – No data value to write to agreement map output. This will use <cite>rxr.rio.write_nodata(nodata)</cite>.</p></li>
+<li><p><strong>encode_nodata</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>default = False</em>) – Encoded no data value to write to agreement map output. A nodata argument must be passed. This will use <cite>rxr.rio.write_nodata(nodata, encode=encode_nodata)</cite>.</p></li>
+<li><p><strong>rasterize_attributes</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em><em>, </em><em>default = None</em>) – Numerical attributes of a GeoDataFrame to rasterize.</p></li>
+<li><p><strong>attribute_tracking</strong> (<em>bool</em><em>, </em><em>default = False</em>) – Whether to return a dataframe with the attributes of the candidate and benchmark maps.</p></li>
+<li><p><strong>attribute_tracking_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em><em>, </em><em>default = None</em>) – Keyword arguments to pass to <cite>gval.attribute_tracking()</cite>.  This is only used if <cite>attribute_tracking</cite> is True. By default, agreement maps are used for attribute tracking but this can be set to None within this argument to override. See <cite>gval.attribute_tracking</cite> for more information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Probabilistic metrics Pandas DataFrame with computed xarray’s per metric and sample.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame[<a class="reference internal" href="schemas.html#gval.utils.schemas.Prob_metrics_df" title="gval.utils.schemas.Prob_metrics_df">Prob_metrics_df</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If keyword argument is required for metric but not passed.
+    If keyword argument is not available for metric but passed.
+    If metric is not available.</p>
+</dd>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>UserWarning</strong> – Warns if a metric cannot be computed. <cite>return_on_error</cite> determines whether the metric is not computed and None is returned or if the raised error is returned.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Scoring_rule#Examples_of_proper_scoring_rules">Scoring rule</a></p>
+</aside>
+<aside class="footnote brackets" id="id8" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf">Strictly Proper Scoring Rules, Prediction, and Estimation</a></p>
+</aside>
+<aside class="footnote brackets" id="id9" role="note">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/properscoring/properscoring">Properscoring/properscoring</a></p>
+</aside>
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://xskillscore.readthedocs.io/en/stable/api.html#probabilistic-metrics">xskillscore/xskillscore</a></p>
+</aside>
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://statisticaloddsandends.wordpress.com/2021/03/27/what-is-a-proper-scoring-rule/">What is a proper scoring rule?</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_xarray.GVALXarray.vectorize_data">
+<span class="sig-name descname"><span class="pre">vectorize_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GeoDataFrame</span></span></span><a class="headerlink" href="#gval.accessors.gval_xarray.GVALXarray.vectorize_data" title="Permalink to this definition"></a></dt>
+<dd><p>Vectorize an xarray DataArray or Dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vectorized data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>gpd.GeoDataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="extension.html" class="btn btn-neutral float-left" title="Core Operations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gval_array.html" class="btn btn-neutral float-right" title="Xarray DataArray Functionality" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

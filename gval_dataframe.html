@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataFrame Functionality &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Comparison" href="comparison.html" />
+    <link rel="prev" title="Xarray Dataset Functionality" href="gval_dataset.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">GVAL API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="extension.html">Core Operations</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="gval_xarray.html">Shared Xarray Functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gval_array.html">Xarray DataArray Functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gval_dataset.html">Xarray Dataset Functionality</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DataFrame Functionality</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gval.accessors.gval_dataframe.GVALDataFrame"><code class="docutils literal notranslate"><span class="pre">GVALDataFrame</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="comparison.html">Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subsampling.html">Subsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.html">Catalogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">GVAL API</a></li>
+          <li class="breadcrumb-item"><a href="extension.html">Core Operations</a></li>
+      <li class="breadcrumb-item active">DataFrame Functionality</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gval_dataframe.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dataframe-functionality">
+<h1>DataFrame Functionality<a class="headerlink" href="#dataframe-functionality" title="Permalink to this heading"></a></h1>
+<p><a class="reference internal" href="index.html"><span class="doc">Return to Homepage</span></a></p>
+<span class="target" id="module-gval.accessors.gval_dataframe"></span><dl class="py class">
+<dt class="sig sig-object py" id="gval.accessors.gval_dataframe.GVALDataFrame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gval.accessors.gval_dataframe.</span></span><span class="sig-name descname"><span class="pre">GVALDataFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pandas_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gval.accessors.gval_dataframe.GVALDataFrame" title="Permalink to this definition"></a></dt>
+<dd><p>Class for extending pandas DataFrame functionality</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gval.accessors.gval_dataframe.GVALDataFrame._obj">
+<span class="sig-name descname"><span class="pre">_obj</span></span><a class="headerlink" href="#gval.accessors.gval_dataframe.GVALDataFrame._obj" title="Permalink to this definition"></a></dt>
+<dd><p>Object to use off the accessor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_dataframe.GVALDataFrame.compute_categorical_metrics">
+<span class="sig-name descname"><span class="pre">compute_categorical_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positive_categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative_categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Number</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'micro'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Number</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="schemas.html#gval.utils.schemas.Metrics_df" title="gval.utils.schemas.Metrics_df"><span class="pre">Metrics_df</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gval.accessors.gval_dataframe.GVALDataFrame.compute_categorical_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes categorical metrics from a crosstab df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>crosstab_df</strong> (<em>DataFrame</em><em>[</em><a class="reference internal" href="schemas.html#gval.utils.schemas.Crosstab_df" title="gval.utils.schemas.Crosstab_df"><em>Crosstab_df</em></a><em>]</em>) – Crosstab DataFrame with candidate, benchmark, and agreement values as well as the counts for each occurrence.</p></li>
+<li><p><strong>positive_categories</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>]</em><em>]</em><em>]</em><em>]</em>) – Number or list of numbers representing the values to consider as the positive condition. For average types “macro” and “weighted”, this represents the categories to compute metrics for.</p></li>
+<li><p><strong>negative_categories</strong> (<em>Optional</em><em>[</em><em>UUnion</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>Number</em><em>, </em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>]</em><em>]</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – Number or list of numbers representing the values to consider as the negative condition. This should be set to None when no negative categories are used or when the average type is “macro” or “weighted”.</p></li>
+<li><p><strong>metrics</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Iterable</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = &quot;all&quot;</em>) – String or list of strings representing metrics to compute.</p></li>
+<li><p><strong>average</strong> (<em>str</em><em>, </em><em>default = &quot;micro&quot;</em>) – Type of average to use when computing metrics. Options are “micro”, “macro”, and “weighted”.
+Micro weighing computes the conditions, tp, tn, fp, and fn, for each category and then sums them.
+Macro weighing computes the metrics for each category then averages them.
+Weighted average computes the metrics for each category then averages them weighted by the number of weights argument in each category.</p></li>
+<li><p><strong>weights</strong> (<em>Optional</em><em>[</em><em>Iterable</em><em>[</em><em>Number</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – <p>Weights to use when computing weighted average. Elements correspond to positive categories in order.</p>
+<p>Example:</p>
+<p><cite>positive_categories = [1, 2]; weights = [0.25, 0.75]</cite></p>
+</p></li>
+<li><p><strong>subsampling_average</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default = None</em>) – Way to aggregate statistics for subsamples if provided. Options are “sample”, “band”, and “full-detail”
+Sample calculates metrics and averages the results by subsample
+Band calculates metrics and averages all the metrics by band
+Full-detail does not aggregation on subsample or band</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Metrics DF with computed metrics per sample.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame[<a class="reference internal" href="schemas.html#gval.utils.schemas.Metrics_df" title="gval.utils.schemas.Metrics_df">Metrics_df</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – Value is shared in positive and negative categories.</p></li>
+<li><p><strong>ValueError</strong> – Category not found in crosstab df.</p></li>
+<li><p><strong>ValueError</strong> – Cannot use average type with only one positive category.</p></li>
+<li><p><strong>ValueError</strong> – Number of weights must be the same as the number of positive categories.</p></li>
+<li><p><strong>ValueError</strong> – Cannot use average type with negative_categories as not None. Set negative_categories to None for this average type.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id1" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Evaluation_of_binary_classifiers">Evaluation of binary classifiers</a></p>
+</aside>
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.cawcr.gov.au/projects/verification/#Contingency_table">7th International Verification Methods Workshop</a></p>
+</aside>
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://scikit-learn.org/stable/modules/model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_dataframe.GVALDataFrame.create_subsampling_df">
+<span class="sig-name descname"><span class="pre">create_subsampling_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Geometry</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'exclude'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsampling_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="schemas.html#gval.utils.schemas.SubsamplingDf" title="gval.utils.schemas.SubsamplingDf"><span class="pre">SubsamplingDf</span></a></span></span><a class="headerlink" href="#gval.accessors.gval_dataframe.GVALDataFrame.create_subsampling_df" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geometries</strong> (<em>List</em><em>[</em><em>Geometry</em><em>]</em><em>, </em><em>default = None</em>) – Geometries if none are already in the GeoDataFrame</p></li>
+<li><p><strong>crs</strong> (<em>str</em>) – The spatial reference for the geometries provided</p></li>
+<li><p><strong>subsampling_type</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default = &quot;exclude&quot;</em>) – Whether each geometry should be an inclusive subsample or an exclusionary mask</p></li>
+<li><p><strong>subsampling_weights</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em><em>, </em><em>default = None</em>) – Values to scale the numeric impact of a particular sample</p></li>
+<li><p><strong>inplace</strong> (<em>bool</em><em>, </em><em>default = False</em>) – Whether to adjust the GeoDataFrame calling the operation or a return a new one</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – List provided has more or less entries than the DataFrame</p></li>
+<li><p><strong>TypeError</strong> – CRS must be provided if geometries are provided</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GeoDataFrame adhering to subsampling dataframe if not inplace, otherwise None</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Union[None, <a class="reference internal" href="schemas.html#gval.utils.schemas.SubsamplingDf" title="gval.utils.schemas.SubsamplingDf">SubsamplingDf</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gval.accessors.gval_dataframe.GVALDataFrame.rasterize_data">
+<span class="sig-name descname"><span class="pre">rasterize_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rasterize_attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataArray</span></span></span><a class="headerlink" href="#gval.accessors.gval_dataframe.GVALDataFrame.rasterize_data" title="Permalink to this definition"></a></dt>
+<dd><p>Convenience function for rasterizing vector data using a reference raster.  For more control use <cite>make_geocube</cite>
+from the geocube package.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference_map</strong> (<em>Union</em><em>[</em><em>xr.Dataset</em><em>, </em><em>xr.DataArray</em><em>]</em>) – Map to reference in creation of rasterized vector map</p></li>
+<li><p><strong>rasterize_attributes</strong> (<em>list</em>) – Attributes to rasterize</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rasterized Data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[xr.Dataset, xr.DataArray]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KeyError</strong> – </p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://corteva.github.io/geocube/html/geocube.html">make_geocube</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gval_dataset.html" class="btn btn-neutral float-left" title="Xarray Dataset Functionality" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="comparison.html" class="btn btn-neutral float-right" title="Comparison" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
