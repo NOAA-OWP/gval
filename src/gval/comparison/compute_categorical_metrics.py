@@ -289,7 +289,7 @@ def _compute_categorical_metrics(
         # groupby sample identifiers then compute metrics
         metric_df = (
             crosstab_df.groupby(groupby_cols)
-            .apply(compute_metrics_per_sample)
+            .apply(compute_metrics_per_sample, include_groups=False)
             .reset_index()
         )
 
