@@ -1,0 +1,322 @@
+,Test,Performance Status,Latest Time (s),Previous Time (s),Difference (s)
+0,"test_accessor_attributes[accessor_attributes, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, agreement_map0]",Performance Increase,0.3500000000000085,0.35999999999999943,-0.009999999999990905
+1,"test_align_rasters[align_rasters, candidate_map_0.tif, benchmark_map_0.tif, resampling0, candidate, False, None]",No Change,0.33000000000000007,0.33000000000000007,0.0
+2,"test_align_rasters[align_rasters, candidate_map_1.tif, benchmark_map_1.tif, resampling1, benchmark, False, None]",Performance Increase,0.7799999999999994,0.7899999999999991,-0.009999999999999787
+3,"test_align_rasters[align_rasters, candidate_map_1.tif, benchmark_map_1.tif, resampling2, target_map2, False, None]",Performance Increase,1.0399999999999991,1.0500000000000007,-0.010000000000001563
+4,"test_align_rasters[align_rasters, candidate_map_1.tif, benchmark_map_1.tif, resampling3, candidate, False, None]",Performance Increase,0.5900000000000034,0.6099999999999994,-0.01999999999999602
+5,"test_align_rasters[align_rasters, candidate_map_1.tif, benchmark_map_1.tif, resampling4, candidate, False, None]",Performance Decrease,0.6999999999999993,0.6899999999999977,0.010000000000001563
+6,"test_align_rasters[align_rasters, candidate_map_1.tif, benchmark_map_1.tif, resampling5, candidate, False, auto]",Performance Decrease,0.39000000000000057,0.38000000000000256,0.00999999999999801
+7,"test_align_rasters[align_rasters, candidate_map_1.tif, benchmark_map_1.tif, resampling6, candidate, True, auto]",Performance Increase,0.3999999999999986,0.41000000000000014,-0.010000000000001563
+8,"test_align_rasters_fail[align_rasters_fail, candidate_map_1.tif, benchmark_map_1.tif, resampling0, None]",Performance Increase,0.3099999999999987,0.31999999999999673,-0.00999999999999801
+9,"test_align_rasters_fail[align_rasters_fail, candidate_map_1.tif, benchmark_map_1.tif, resampling1, 4.3]",Performance Decrease,0.33000000000000185,0.3200000000000003,0.010000000000001563
+10,"test_align_rasters_fail_nodata[align_rasters_fail_nodata, candidate_map0, benchmark_map0, resampling0, candidate]",Performance Decrease,0.2699999999999996,0.26000000000000156,0.00999999999999801
+11,"test_align_rasters_fail_nodata[align_rasters_fail_nodata, candidate_map1, benchmark_map1, resampling1, candidate]",Performance Decrease,0.2699999999999996,0.26000000000000156,0.00999999999999801
+12,"test_attribute_tracking[attribute_tracking, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, None, _c, _b, None, None, None, None, expected_df1, None]",Performance Decrease,0.379999999999999,0.370000000000001,0.00999999999999801
+13,"test_attribute_tracking[attribute_tracking, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, None, _candidate, _benchmark, None, None, None, benchmark_exclude5, expected_df5, None]",Performance Decrease,0.39000000000000057,0.3800000000000008,0.009999999999999787
+14,"test_attribute_tracking[attribute_tracking, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, None, _candidate, _benchmark, None, None, benchmark_include4, None, expected_df4, None]",Performance Decrease,0.3899999999999988,0.3699999999999992,0.019999999999999574
+15,"test_attribute_tracking[attribute_tracking, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, None, _candidate, _benchmark, None, candidate_exclude3, None, None, expected_df3, None]",Performance Decrease,0.3800000000000008,0.370000000000001,0.009999999999999787
+16,"test_attribute_tracking[attribute_tracking, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, None, _candidate, _benchmark, candidate_include2, None, None, None, expected_df2, None]",Performance Decrease,0.3800000000000008,0.379999999999999,1.7763568394002505e-15
+17,"test_attribute_tracking[attribute_tracking, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, agreement_map0, _candidate, _benchmark, None, None, None, None, expected_df0, expected_attr0]",No Change,0.41999999999999993,0.41999999999999993,0.0
+18,"test_attribute_tracking_fail[attribute_tracking_fail, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, None, None, benchmark_include1, benchmark_exclude1, ValueError]",No Change,0.39000000000000057,0.39000000000000057,0.0
+19,"test_attribute_tracking_fail[attribute_tracking_fail, candidate_map_attrs_1.tif, benchmark_map_attrs_1.tif, candidate_include0, candidate_exclude0, None, None, ValueError]",Performance Decrease,0.41999999999999993,0.3699999999999992,0.05000000000000071
+20,test_available_functions,Performance Decrease,0.259999999999998,0.23000000000000043,0.029999999999997584
+21,test_available_functions_continuous,Performance Decrease,0.25,0.22999999999999865,0.02000000000000135
+22,"test_cantor_pair[cantor_pair, 1, 0, 1]",Performance Decrease,0.26000000000000156,0.240000000000002,0.019999999999999574
+23,"test_cantor_pair[cantor_pair, 1, 13, 118]",Performance Increase,0.23999999999999844,0.25,-0.010000000000001563
+24,"test_cantor_pair[cantor_pair, 6, 0, 21]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+25,"test_cantor_pair[cantor_pair, 6, 13, 203]",No Change,0.25,0.25,0.0
+26,"test_cantor_pair_signed[cantor_pair_signed, , 1, 0, 1]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+27,"test_cantor_pair_signed[cantor_pair_signed, , 6, 0, 66]",No Change,0.25,0.25,0.0
+28,"test_cantor_pair_signed[cantor_pair_signed, 1, , 13, 403]",Performance Decrease,0.25,0.23000000000000043,0.019999999999999574
+29,"test_cantor_pair_signed[cantor_pair_signed, 6, , 130, 37115]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+30,"test_cantor_pair_signed[cantor_pair_signed, nan, , 130, nan]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+31,"test_categorical_plot_fail[categorical_plot_fail, candidate_map0, None, 30]",Performance Increase,3.1999999999999993,3.210000000000001,-0.010000000000001563
+32,"test_categorical_plot_fail[categorical_plot_fail, candidate_map1, legend_labels1, 2]",Performance Increase,3.0799999999999983,3.09,-0.010000000000001563
+33,"test_categorical_plot_fail[categorical_plot_fail, candidate_map2, legend_labels2, 2]",Performance Increase,1.5300000000000011,1.5500000000000007,-0.019999999999999574
+34,"test_categorical_plot_success[categorical_plot_success, candidate_map0, EPSG:5070, 2]",Performance Decrease,3.75,3.710000000000001,0.03999999999999915
+35,"test_categorical_plot_success[categorical_plot_success, candidate_map1, PROJCS[""NAD27 / California zone II"",\\n                                       GEOGCS[""GCS_North_American_1927"",DATUM[""D_North_American_1927"",\\n                                       SPHEROID[""Clarke_1866"",6378206.4,294.9786982138982]],\\n                                       PRIMEM[""Greenwich"",0],UNIT[""Degree"",0.017453292519943295]],\\n                                       PROJECTION[""Lambert_Conformal_Conic_2SP""],\\n                                       PARAMETER[""standard_parallel_1"",39.83333333333334],\\n                                       PARAMETER[""standard_parallel_2"",38.33333333333334],\\n                                       PARAMETER[""latitude_of_origin"",37.66666666666666],\\n                                       PARAMETER[""central_meridian"",, 122],\\n                                       PARAMETER[""false_easting"",2000000],\\n                                       PARAMETER[""false_northing"",0],UNIT[""Foot_US"",0.30480060960121924]], 2]",Performance Decrease,3.700000000000001,3.6900000000000013,0.009999999999999787
+36,"test_categorical_plot_success[categorical_plot_success, candidate_map2, EPSG:5070, 3]",Performance Increase,0.5,0.5500000000000007,-0.05000000000000071
+37,"test_categorical_plot_success[categorical_plot_success, candidate_map3, EPSG:5070, 3]",Performance Increase,0.6499999999999986,0.6799999999999997,-0.030000000000001137
+38,"test_categorical_plot_success[categorical_plot_success, candidate_map4, EPSG:5070, 4]",Performance Increase,0.7800000000000011,0.7899999999999991,-0.00999999999999801
+39,"test_categorical_statistics[categorical_statistics, names0, args0, funcs0, expected0]",Performance Decrease,0.2599999999999998,0.25,0.009999999999999787
+40,"test_categorical_subsampling[categorical_subsample, candidate0, benchmark0, subsample_df0, expected_df0, full, detail]",Performance Increase,6.710000000000001,6.77,-0.05999999999999872
+41,"test_categorical_subsampling[categorical_subsample, candidate1, benchmark1, subsample_df1, expected_df1, band]",Performance Increase,3.969999999999999,4.030000000000001,-0.060000000000002274
+42,"test_categorical_subsampling[categorical_subsample, candidate2, benchmark2, subsample_df2, expected_df2, subsample]",Performance Increase,3.91,3.9899999999999984,-0.0799999999999983
+43,"test_coefficient_of_determination[coefficient_of_determination, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, , 0.06615996360778809]",Performance Increase,0.29999999999999716,0.3000000000000007,-3.552713678800501e-15
+44,"test_coefficient_of_determination[coefficient_of_determination, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Increase,0.38000000000000256,0.39000000000000057,-0.00999999999999801
+45,"test_compare_catalogs[compare_catalogs, candidate_catalog0, benchmark_catalog0, compare_id, map_id, inner, continuous, compare_kwargs0, open_kwargs0, agreement_maps, False, expected0, expected_agreement_map0]",Performance Decrease,1.2199999999999989,1.17,0.049999999999998934
+46,"test_compare_catalogs[compare_catalogs, candidate_catalog1, benchmark_catalog1, compare_id, map_ids1, inner, continuous, compare_kwargs1, open_kwargs1, agreement_maps, False, expected1, expected_agreement_map1]",Performance Increase,1.4399999999999995,1.4600000000000009,-0.02000000000000135
+47,"test_compare_catalogs[compare_catalogs, candidate_catalog2, benchmark_catalog2, compare_id, map_id, inner, categorical, compare_kwargs2, open_kwargs2, agreement_maps, False, expected2, expected_agreement_map2]",Performance Increase,2.0500000000000007,2.0600000000000005,-0.009999999999999787
+48,"test_compare_catalogs[compare_catalogs, candidate_catalog3, benchmark_catalog3, compare_id, map_id, inner, categorical, compare_kwargs3, open_kwargs3, agreement_maps, False, expected3, expected_agreement_map3]",Performance Decrease,1.1799999999999997,1.1699999999999982,0.010000000000001563
+49,"test_compare_catalogs_fail[compare_catalogs_fail, candidate_catalog0, benchmark_catalog0, compare_id, 1, inner, continuous, compare_kwargs0, None, agreement_maps, False, ValueError]",Performance Decrease,0.3099999999999987,0.28999999999999915,0.019999999999999574
+50,"test_compare_catalogs_fail[compare_catalogs_fail, candidate_catalog1, benchmark_catalog1, compare_id, map_id, inner, probabilistic, compare_kwargs1, None, agreement_maps, False, NotImplementedError]",Performance Increase,0.360000000000003,0.379999999999999,-0.01999999999999602
+51,"test_compare_catalogs_fail[compare_catalogs_fail, candidate_catalog2, benchmark_catalog2, compare_id, map_id, inner, test_anything, compare_kwargs2, None, agreement_maps, False, ValueError]",Performance Increase,0.35999999999999943,0.370000000000001,-0.010000000000001563
+52,"test_compare_catalogs_fail[compare_catalogs_fail, candidate_catalog3, benchmark_catalog3, compare_id, map_id, inner, 100000.0, compare_kwargs3, None, agreement_maps, False, ValueError]",Performance Increase,0.360000000000003,0.370000000000001,-0.00999999999999801
+53,"test_compare_catalogs_no_kwargs[compare_catalogs_no_kwargs, candidate_catalog0, benchmark_catalog0, compare_id, map_id, inner, <lambda>, None, None, agreement_maps, False, expected0, expected_agreement_map0]",Performance Decrease,0.9100000000000001,0.9000000000000021,0.00999999999999801
+54,"test_compare_catalogs_no_kwargs[compare_catalogs_no_kwargs, candidate_catalog1, benchmark_catalog1, compare_id, map_ids1, inner, <lambda>, None, None, agreement_maps, False, expected1, expected_agreement_map1]",Performance Increase,0.8900000000000006,0.9100000000000001,-0.019999999999999574
+55,test_comparison_get_all_param,Performance Increase,0.2599999999999909,0.2600000000000051,-1.4210854715202004e-14
+56,"test_comparison_get_param[comparison_get_param, pairing_dict, params1]",Performance Increase,0.2599999999999909,0.27000000000001023,-0.010000000000019327
+57,"test_comparison_get_param[comparison_get_param, szudzik, params0]",Performance Decrease,0.269999999999996,0.2600000000000051,0.009999999999990905
+58,"test_comparison_get_param_fail[comparison_get_param_fail, arbitrary]",No Change,0.269999999999996,0.269999999999996,0.0
+59,"test_comparison_processing_agreement_map_success[comparison_processing_agreement_maps_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map0, szudzik, None, None, None, None]",Performance Increase,1.6399999999999935,1.6799999999999997,-0.04000000000000625
+60,"test_comparison_processing_agreement_map_success[comparison_processing_agreement_maps_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map1, cantor, None, None, None, None]",Performance Increase,1.6899999999999977,1.759999999999991,-0.06999999999999318
+61,"test_comparison_processing_agreement_map_success[comparison_processing_agreement_maps_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map2, pairing_dict, allow_candidate_values2, allow_benchmark_values2, None, None]",Performance Decrease,2.3200000000000074,2.2700000000000102,0.04999999999999716
+62,"test_comparison_processing_agreement_map_success[comparison_processing_agreement_maps_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map3, szudzik, None, None, 399900006, None]",Performance Increase,2.200000000000003,2.269999999999996,-0.06999999999999318
+63,"test_comparison_processing_agreement_map_success[comparison_processing_agreement_maps_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map4, szudzik, None, None, 399900006, True]",Performance Increase,2.0,2.039999999999992,-0.03999999999999204
+64,"test_comparison_processing_agreement_maps_fail[comparison_processing_agreement_maps_fail, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, arb, None, None, None, True, KeyError]",Performance Decrease,0.3299999999999983,0.3100000000000023,0.01999999999999602
+65,"test_comparison_processing_agreement_maps_fail[comparison_processing_agreement_maps_fail, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, pairing_dict, None, None, None, None, ValueError]",Performance Increase,0.3199999999999932,0.3299999999999983,-0.010000000000005116
+66,"test_comparison_processing_agreement_maps_fail[comparison_processing_agreement_maps_fail, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, szudzik, None, None, None, True, ValueError]",Performance Increase,0.3200000000000074,0.3299999999999983,-0.009999999999990905
+67,"test_comparison_register_class_fail[comparison_register_class_fail, args0, TesterFail1, TypeError]",Performance Decrease,0.269999999999996,0.25,0.01999999999999602
+68,"test_comparison_register_class_fail[comparison_register_class_fail, args1, TesterFail2, KeyError]",No Change,0.27000000000001023,0.27000000000001023,0.0
+69,"test_comparison_register_function[comparison_register_function, args0, pass1]",Performance Increase,0.2599999999999909,0.269999999999996,-0.010000000000005116
+70,"test_comparison_register_function[comparison_register_function, args1, pass2]",No Change,0.2600000000000051,0.2600000000000051,0.0
+71,"test_comparison_register_function_fail[comparison_register_function_fail, args0, fail1, KeyError]",No Change,0.269999999999996,0.269999999999996,0.0
+72,"test_comparison_register_function_fail[comparison_register_function_fail, args1, fail2, TypeError]",Performance Decrease,0.27000000000001023,0.269999999999996,1.4210854715202004e-14
+73,"test_comparison_register_function_fail[comparison_register_function_fail, args2, fail3, TypeError]",Performance Decrease,0.269999999999996,0.2600000000000051,0.009999999999990905
+74,"test_comparison_register_function_fail[comparison_register_function_fail, args3, fail4, TypeError]",No Change,0.2599999999999909,0.2599999999999909,0.0
+75,"test_compute_agreement_map_fail[compute_agreement_map_fail, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, pairing_dict, None, None, None, None]",Performance Increase,0.3200000000000003,0.3400000000000034,-0.020000000000003126
+76,"test_compute_agreement_map_fail[compute_agreement_map_fail, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, szudzik_pair_signed, None, None, None, True]",Performance Increase,0.30999999999999517,0.3100000000000023,-7.105427357601002e-15
+77,"test_compute_agreement_map_success[compute_agreement_map_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map0, szudzik_pair_signed, None, None, None, None, None]",Performance Increase,1.6499999999999986,1.6899999999999977,-0.03999999999999915
+78,"test_compute_agreement_map_success[compute_agreement_map_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map1, cantor_pair_signed, None, None, None, None, None]",Performance Decrease,1.7100000000000009,1.7000000000000028,0.00999999999999801
+79,"test_compute_agreement_map_success[compute_agreement_map_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map2, pairing_dict, None, allow_candidate_values2, allow_benchmark_values2, None, None]",Performance Decrease,2.280000000000001,2.25,0.030000000000001137
+80,"test_compute_agreement_map_success[compute_agreement_map_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map3, pairing_dict, pairing_dict3, None, None, None, None]",Performance Decrease,2.0,1.9600000000000009,0.03999999999999915
+81,"test_compute_agreement_map_success[compute_agreement_map_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map4, szudzik_pair_signed, None, None, None, 399900006, None]",Performance Decrease,1.75,1.7199999999999989,0.030000000000001137
+82,"test_compute_agreement_map_success[compute_agreement_map_success, candidate_map_0_aligned_to_candidate_map_0.tif, benchmark_map_0_aligned_to_candidate_map_0.tif, agreement_map5, szudzik_pair_signed, None, None, None, 399900006, True]",Performance Increase,1.9100000000000037,1.9399999999999977,-0.02999999999999403
+83,"test_compute_categorical_metrics_fail[compute_categorical_metrics_fail, crosstab_df0, 4, None, ValueError]",No Change,0.2599999999999998,0.2599999999999998,0.0
+84,"test_compute_categorical_metrics_fail[compute_categorical_metrics_fail, crosstab_df1, 3, 4, ValueError]",Performance Increase,0.2699999999999996,0.27000000000000135,-1.7763568394002505e-15
+85,"test_compute_categorical_metrics_fail[compute_categorical_metrics_fail, crosstab_df2, positive_categories2, negative_categories2, ValueError]",Performance Decrease,0.2699999999999996,0.2599999999999998,0.009999999999999787
+86,"test_compute_categorical_metrics_fail[compute_categorical_metrics_fail, crosstab_df3, positive_categories3, negative_categories3, ValueError]",Performance Decrease,0.2599999999999998,0.25,0.009999999999999787
+87,"test_compute_categorical_metrics_success[compute_categorical_metrics_success, crosstab_df0, all, positive_categories0, 2, expected_df0]",Performance Increase,2.2799999999999994,2.3199999999999985,-0.03999999999999915
+88,"test_compute_categorical_metrics_success[compute_categorical_metrics_success, crosstab_df1, all, 2, 1, expected_df1]",Performance Decrease,0.3000000000000007,0.28000000000000114,0.019999999999999574
+89,"test_compute_categorical_metrics_success[compute_categorical_metrics_success, crosstab_df2, accuracy, 2, 1, expected_df2]",No Change,0.27999999999999936,0.27999999999999936,0.0
+90,"test_compute_categorical_metrics_success[compute_categorical_metrics_success, crosstab_df3, metrics3, 2, 1, expected_df3]",Performance Decrease,0.28000000000000114,0.27999999999999936,1.7763568394002505e-15
+91,"test_compute_categorical_metrics_success[compute_categorical_metrics_success, crosstab_df4, all, 2, None, expected_df4]",Performance Decrease,0.28999999999999915,0.28000000000000114,0.00999999999999801
+92,"test_compute_categorical_metrics_success[compute_categorical_metrics_success, crosstab_df5, all, positive_categories5, negative_categories5, expected_df5]",Performance Decrease,0.3000000000000007,0.27999999999999936,0.02000000000000135
+93,"test_compute_continuous_metrics_success[compute_continuous_metrics_success, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, all, expected_df0]",Performance Decrease,0.41000000000000014,0.40000000000000036,0.009999999999999787
+94,"test_compute_continuous_metrics_success[compute_continuous_metrics_success, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, metrics1, expected_df1]",Performance Decrease,0.40000000000000036,0.39000000000000057,0.009999999999999787
+95,"test_compute_continuous_statistics_fail[compute_continuous_statistics_fail, non_existent_function, candidate_continuous_0_fail.tif, TypeError]",Performance Decrease,0.27999999999999936,0.2699999999999996,0.009999999999999787
+96,"test_compute_multi_categorical_metrics_fail[compute_multi_categorical_metrics_fail, crosstab_df0, all, 1, 2, macro, None, ValueError]",Performance Increase,0.259999999999998,0.26000000000000156,-3.552713678800501e-15
+97,"test_compute_multi_categorical_metrics_fail[compute_multi_categorical_metrics_fail, crosstab_df1, all, 2, 1, weighted, weights1, ValueError]",Performance Decrease,0.26000000000000156,0.259999999999998,3.552713678800501e-15
+98,"test_compute_multi_categorical_metrics_fail[compute_multi_categorical_metrics_fail, crosstab_df2, all, positive_categories2, 1, weighted, weights2, ValueError]",Performance Decrease,0.26000000000000156,0.259999999999998,3.552713678800501e-15
+99,"test_compute_multi_categorical_metrics_fail[compute_multi_categorical_metrics_fail, crosstab_df3, all, positive_categories3, negative_categories3, macro, None, ValueError]",Performance Decrease,0.2699999999999996,0.26000000000000156,0.00999999999999801
+100,"test_compute_multi_categorical_metrics_success[compute_multi_categorical_metrics_success, crosstab_df0, critical_success_index, positive_categories0, negative_categories0, micro, None, expected_df0]",Performance Decrease,0.28000000000000114,0.27999999999999936,1.7763568394002505e-15
+101,"test_compute_multi_categorical_metrics_success[compute_multi_categorical_metrics_success, crosstab_df1, metrics1, positive_categories1, None, macro, None, expected_df1]",Performance Increase,0.28999999999999915,0.3000000000000007,-0.010000000000001563
+102,"test_compute_multi_categorical_metrics_success[compute_multi_categorical_metrics_success, crosstab_df2, metrics2, positive_categories2, None, weighted, weights2, expected_df2]",No Change,0.2900000000000009,0.2900000000000009,0.0
+103,"test_compute_multi_categorical_metrics_success[compute_multi_categorical_metrics_success, crosstab_df3, metrics3, 1, None, None, None, expected_df3]",Performance Increase,0.2599999999999998,0.28999999999999915,-0.02999999999999936
+104,"test_compute_multi_categorical_metrics_success[compute_multi_categorical_metrics_success, crosstab_df4, metrics4, positive_categories4, None, None, None, expected_df4]",No Change,0.28999999999999915,0.28999999999999915,0.0
+105,test_compute_probabilistic_metrics[compute_prob_metrics_crps_quadrature_success],Performance Increase,1.8000000000000007,1.8200000000000003,-0.019999999999999574
+106,test_compute_probabilistic_metrics_fail[compute_prob_metrics_kwargs_extra_fail],No Change,0.25,0.25,0.0
+107,test_compute_probabilistic_metrics_fail[compute_prob_metrics_kwargs_required_fail],Performance Increase,0.25,0.2599999999999998,-0.009999999999999787
+108,test_compute_probabilistic_metrics_fail[compute_prob_metrics_missing_metric_fail],Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+109,test_compute_probabilistic_metrics_fail[compute_prob_metrics_specific_kwargs_required_fail],Performance Increase,0.23999999999999844,0.2599999999999998,-0.02000000000000135
+110,test_compute_probabilistic_metrics_warns[compute_prob_metrics_metric_func_warns],No Change,0.25,0.25,0.0
+111,"test_compute_statistics[compute_statistics, accuracy, args1, expected1]",Performance Decrease,0.27000000000000135,0.2599999999999998,0.010000000000001563
+112,"test_compute_statistics[compute_statistics, all, args0, expected0]",Performance Decrease,2.469999999999999,2.4499999999999993,0.019999999999999574
+113,"test_compute_statistics[compute_statistics, all, args3, expected3]",Performance Decrease,0.2599999999999998,0.2400000000000002,0.019999999999999574
+114,"test_compute_statistics[compute_statistics, names2, args2, expected2]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+115,"test_compute_statistics_fail[compute_statistics_fail, all, args0, TypingError]",Performance Increase,0.27999999999999936,0.28000000000000114,-1.7763568394002505e-15
+116,"test_compute_statistics_fail[compute_statistics_fail, non_existent_function, args1, KeyError]",Performance Decrease,0.25,0.22999999999999865,0.02000000000000135
+117,"test_continuous_plot_fail[continuous_plot_fail, candidate_map0]",Performance Increase,0.28000000000000114,0.3000000000000007,-0.019999999999999574
+118,"test_continuous_plot_fail[continuous_plot_fail, candidate_map1]",No Change,0.28999999999999915,0.28999999999999915,0.0
+119,"test_continuous_plot_success[continuous_plot_success, candidate_map0, 2]",Performance Increase,2.8900000000000006,2.9299999999999997,-0.03999999999999915
+120,"test_continuous_plot_success[continuous_plot_success, candidate_map1, 6]",Performance Increase,0.46999999999999886,0.5,-0.030000000000001137
+121,"test_continuous_subsampling[continuous_subsample, candidate0, benchmark0, subsample_df0, expected_df0, full, detail]",Performance Increase,0.8699999999999974,0.8999999999999986,-0.030000000000001137
+122,"test_continuous_subsampling[continuous_subsample, candidate1, benchmark1, subsample_df1, expected_df1, band]",Performance Increase,0.8900000000000006,0.8999999999999986,-0.00999999999999801
+123,"test_continuous_subsampling[continuous_subsample, candidate2, benchmark2, subsample_df2, expected_df2, subsample]",Performance Increase,0.8899999999999935,0.8900000000000006,-7.105427357601002e-15
+124,"test_continuous_subsampling[continuous_subsample, candidate3, benchmark3, subsample_df3, expected_df3, weighted]",Performance Increase,0.9000000000000057,0.9099999999999966,-0.009999999999990905
+125,"test_create_sampling_dataframes[create_sampling_dataframes, df0, args0]",No Change,0.2599999999999998,0.2599999999999998,0.0
+126,"test_create_sampling_dataframes[create_sampling_dataframes, df1, args1]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+127,"test_create_sampling_dataframes_fail[create_sampling_dataframes_fail, df0, args0]",Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+128,test_create_xarray[create_xarray_array_success],Performance Decrease,0.27999999999999936,0.27000000000000135,0.00999999999999801
+129,test_create_xarray[create_xarray_dataset_success],No Change,0.25,0.25,0.0
+130,test_create_xarray_pairs[create_xarray_pairs],No Change,0.2599999999999998,0.2599999999999998,0.0
+131,test_create_xarray_unsupported_shape_fail[create_xarray_unsupported_shape_fail],Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+132,"test_crosstab_2d_DataArrays[crosstab_2d_DataArrays, agreement_map0, expected_df0]",Performance Decrease,1.9000000000000021,1.8200000000000003,0.08000000000000185
+133,"test_crosstab_2d_DataArrays[crosstab_2d_DataArrays, agreement_map1, expected_df1]",Performance Increase,0.4399999999999977,0.4400000000000013,-3.552713678800501e-15
+134,"test_crosstab_3d_DataArrays[crosstab_3d_DataArrays, agreement_map0, expected_df0]",Performance Increase,2.900000000000002,2.91,-0.00999999999999801
+135,"test_crosstab_3d_DataArrays[crosstab_3d_DataArrays, agreement_map1, expected_df1]",Performance Decrease,2.759999999999998,2.6799999999999997,0.0799999999999983
+136,"test_crosstab_DataArrays_fail[crosstab_DataArrays_fail, agreement_map0]",Performance Increase,0.259999999999998,0.2600000000000051,-7.105427357601002e-15
+137,"test_crosstab_DataArrays_success[crosstab_DataArrays_success, agreement_map0, expected_df0]",No Change,0.6799999999999997,0.6799999999999997,0.0
+138,"test_crosstab_DataArrays_success[crosstab_DataArrays_success, agreement_map1, expected_df1]",Performance Decrease,0.38000000000000256,0.36999999999999744,0.010000000000005116
+139,"test_crosstab_DataArrays_success[crosstab_DataArrays_success, agreement_map2, expected_df2]",Performance Decrease,2.9499999999999957,2.8800000000000026,0.06999999999999318
+140,"test_crosstab_DataArrays_success[crosstab_DataArrays_success, agreement_map3, expected_df3]",Performance Decrease,2.710000000000001,2.6899999999999977,0.020000000000003126
+141,"test_crosstab_Datasets[crosstab_Datasets, agreement_map0, expected_df0]",Performance Decrease,3.6400000000000006,3.5799999999999983,0.060000000000002274
+142,"test_crosstab_Datasets[crosstab_Datasets, agreement_map1, expected_df1]",Performance Decrease,3.4299999999999997,3.3800000000000026,0.04999999999999716
+143,"test_data_array_accessor_compute_agreement_fail[data_array_accessor_compute_agreement, candidate_map0, benchmark_map0, False]",Performance Decrease,0.29999999999999716,0.269999999999996,0.030000000000001137
+144,"test_data_array_accessor_compute_agreement_fail[data_array_accessor_compute_agreement, candidate_map1, benchmark_map1, True]",Performance Decrease,0.28999999999999204,0.28000000000000114,0.009999999999990905
+145,"test_data_array_accessor_compute_agreement_success[data_array_accessor_compute_agreement, candidate_map0, benchmark_map0, False]",Performance Decrease,1.1800000000000068,1.1400000000000006,0.04000000000000625
+146,"test_data_array_accessor_compute_agreement_success[data_array_accessor_compute_agreement, candidate_map1, benchmark_map1, True]",Performance Decrease,1.1600000000000108,1.1099999999999994,0.05000000000001137
+147,"test_data_array_accessor_continuous[data_array_accessor_continuous, candidate_continuous_0.tif, benchmark_continuous_0.tif]",Performance Decrease,0.4199999999999875,0.39000000000000057,0.029999999999986926
+148,"test_data_array_accessor_continuous[data_array_accessor_continuous, candidate_continuous_1.tif, benchmark_continuous_1.tif]",Performance Decrease,0.4200000000000017,0.4100000000000108,0.009999999999990905
+149,"test_data_array_accessor_crosstab_table_fail[data_array_accessor_crosstab_table_fail, agreement_map0, KeyError]",Performance Decrease,0.29999999999999716,0.28999999999999204,0.010000000000005116
+150,"test_data_array_accessor_crosstab_table_success[data_array_accessor_crosstab_table_success, agreement_map0]",Performance Decrease,1.5800000000000125,1.3799999999999955,0.20000000000001705
+151,"test_data_array_accessor_crosstab_table_success[data_array_accessor_crosstab_table_success, agreement_map1]",Performance Decrease,1.5699999999999932,1.3800000000000097,0.18999999999998352
+152,"test_data_array_accessor_fail[data_array_accessor_fail, candidate_map0, benchmark_map0, positive_categories0, negative_categories0, moderate, OSError]",Performance Decrease,0.29999999999999716,0.28999999999999204,0.010000000000005116
+153,"test_data_array_accessor_fail[data_array_accessor_fail, candidate_map1, benchmark_map1, positive_categories1, negative_categories1, arb_error, ValueError]",Performance Decrease,0.28000000000000114,0.27000000000001023,0.009999999999990905
+154,"test_data_array_accessor_fail[data_array_accessor_fail, candidate_map2, benchmark_map2, positive_categories2, negative_categories2, normal, TypeError]",Performance Decrease,0.29000000000000625,0.2600000000000051,0.030000000000001137
+155,"test_data_array_accessor_homogenize[data_array_accessor_homogenize, candidate_map0, benchmark_map0, None]",Performance Decrease,0.9599999999999937,0.9299999999999926,0.030000000000001137
+156,"test_data_array_accessor_homogenize[data_array_accessor_homogenize, candidate_map1, benchmark_map1, rasterize_attributes1]",Performance Decrease,0.5400000000000063,0.480000000000004,0.060000000000002274
+157,test_data_array_accessor_probabilistic_success[data_array_accessor_probabilistic_success],Performance Decrease,0.3299999999999983,0.3199999999999932,0.010000000000005116
+158,"test_data_array_accessor_success[data_array_accessor_success, candidate_map0, benchmark_map0, positive_categories0, negative_categories0, None, normal, szudzik]",Performance Decrease,4.760000000000002,4.739999999999998,0.020000000000003126
+159,"test_data_array_accessor_success[data_array_accessor_success, candidate_map1, benchmark_map1, positive_categories1, negative_categories1, None, normal, szudzik]",Performance Increase,2.0699999999999967,2.120000000000001,-0.05000000000000426
+160,"test_data_array_accessor_success[data_array_accessor_success, candidate_map2, benchmark_map2, positive_categories2, negative_categories2, rasterize_attributes2, normal, szudzik]",Performance Decrease,3.34,3.3200000000000003,0.019999999999999574
+161,"test_data_array_accessor_success[data_array_accessor_success, candidate_map3, benchmark_map3, positive_categories3, negative_categories3, None, normal, szudzik]",Performance Increase,8.010000000000002,8.05,-0.03999999999999915
+162,"test_data_array_accessor_success[data_array_accessor_success, candidate_map4, benchmark_map4, positive_categories4, negative_categories4, None, moderate, szudzik]",Performance Decrease,20.09,19.659999999999997,0.43000000000000327
+163,"test_data_array_accessor_success[data_array_accessor_success, candidate_map5, benchmark_map5, positive_categories5, negative_categories5, None, aggressive, szudzik]",Performance Decrease,21.029999999999994,20.500000000000007,0.5299999999999869
+164,"test_data_array_accessor_success[data_array_accessor_success, candidate_map6, benchmark_map6, positive_categories6, negative_categories6, None, normal, pairing_dict]",Performance Decrease,3.0600000000000023,2.969999999999999,0.09000000000000341
+165,"test_data_frame_accessor_compute_metrics[data_frame_accessor_compute_metrics, crosstab_df0, positive_categories0, negative_categories0]",Performance Decrease,0.3299999999999983,0.3100000000000023,0.01999999999999602
+166,"test_data_frame_accessor_compute_metrics[data_frame_accessor_compute_metrics, crosstab_df1, positive_categories1, negative_categories1]",Performance Decrease,0.3300000000000125,0.30999999999998806,0.020000000000024443
+167,"test_data_set_accessor_compute_agreement_fail[data_set_accessor_compute_agreement, candidate_map0, benchmark_map0]",Performance Decrease,0.3100000000000023,0.28000000000000114,0.030000000000001137
+168,"test_data_set_accessor_compute_agreement_success[data_set_accessor_compute_agreement, candidate_map0, benchmark_map0]",Performance Decrease,1.3900000000000006,1.2800000000000011,0.10999999999999943
+169,"test_data_set_accessor_continuous[data_set_accessor_continuous, candidate_continuous_0.tif, benchmark_continuous_0.tif]",Performance Decrease,0.45000000000000284,0.4299999999999926,0.020000000000010232
+170,"test_data_set_accessor_continuous[data_set_accessor_continuous, candidate_continuous_1.tif, benchmark_continuous_1.tif]",Performance Decrease,0.5099999999999909,0.5,0.009999999999990905
+171,"test_data_set_accessor_crosstab_table_fail[data_set_accessor_crosstab_table_fail, agreement_map0]",Performance Decrease,0.30999999999998806,0.29999999999999716,0.009999999999990905
+172,"test_data_set_accessor_crosstab_table_success[data_set_accessor_crosstab_table_success, agreement_map0]",Performance Decrease,1.4899999999999949,1.4000000000000057,0.0899999999999892
+173,"test_data_set_accessor_homogenize[data_set_accessor_homogenize, candidate_map0, benchmark_map0, None]",Performance Decrease,1.1300000000000097,1.039999999999992,0.09000000000001762
+174,"test_data_set_accessor_homogenize[data_set_accessor_homogenize, candidate_map1, benchmark_map1, rasterize_attributes1]",Performance Decrease,0.45999999999999375,0.4200000000000017,0.03999999999999204
+175,"test_data_set_accessor_success[data_set_accessor_success, candidate_map0, benchmark_map0, positive_categories0, negative_categories0, None]",Performance Decrease,2.200000000000003,2.1500000000000057,0.04999999999999716
+176,"test_data_set_accessor_success[data_set_accessor_success, candidate_map1, benchmark_map1, positive_categories1, negative_categories1, rasterize_attributes1]",Performance Decrease,3.269999999999996,3.200000000000003,0.06999999999999318
+177,"test_data_set_accessor_success[data_set_accessor_success, candidate_map2, benchmark_map2, positive_categories2, negative_categories2, None]",Performance Decrease,9.099999999999994,8.939999999999998,0.1599999999999966
+178,"test_dataframe_accessor_rasterize[dataframe_accessor_rasterize, vector_map0, reference_map0, attributes0]",Performance Decrease,0.4899999999999949,0.46000000000000796,0.029999999999986926
+179,"test_difference[difference, 1, 3, , 2]",Performance Decrease,0.2799999999999976,0.2699999999999996,0.00999999999999801
+180,"test_difference[difference, 10.0, 4.0, 6.0]",No Change,0.26000000000000156,0.26000000000000156,0.0
+181,"test_difference[difference, nan, 10, nan]",Performance Decrease,0.2699999999999996,0.25,0.019999999999999574
+182,"test_difference[difference, nan, nan, nan]",Performance Decrease,0.2699999999999996,0.259999999999998,0.010000000000001563
+183,test_get_all_param,No Change,0.25,0.25,0.0
+184,test_get_all_param_continuous,Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+185,test_get_available_functions,No Change,0.2600000000000051,0.2600000000000051,0.0
+186,"test_get_param[get_param, accuracy, params0]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+187,"test_get_param[get_param, true_positive_rate, params1]",Performance Increase,0.23999999999999844,0.240000000000002,-3.552713678800501e-15
+188,"test_get_param_continuous[get_param_continuous, mean_absolute_error, params0]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+189,"test_get_param_continuous[get_param_continuous, symmetric_mean_absolute_percentage_error, params1]",No Change,0.2400000000000002,0.2400000000000002,0.0
+190,"test_get_param_continuous_fail[get_param_continuous_fail, arbitrary]",No Change,0.2400000000000002,0.2400000000000002,0.0
+191,"test_get_param_fail[get_param_fail, arbitrary]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+192,"test_is_not_natural_number_failures[is_not_natural_number_failures, , 1.0]",No Change,0.23999999999999844,0.23999999999999844,0.0
+193,"test_is_not_natural_number_failures[is_not_natural_number_failures, , 10.39023]",Performance Decrease,0.25,0.240000000000002,0.00999999999999801
+194,"test_is_not_natural_number_failures[is_not_natural_number_failures, , 10]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+195,"test_is_not_natural_number_failures[is_not_natural_number_failures, , 120.0]",No Change,0.25,0.25,0.0
+196,"test_is_not_natural_number_failures[is_not_natural_number_failures, , 13]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+197,"test_is_not_natural_number_failures[is_not_natural_number_failures, , 1]",No Change,0.25,0.25,0.0
+198,"test_is_not_natural_number_failures[is_not_natural_number_failures, 1e+25]",Performance Decrease,0.25,0.23000000000000043,0.019999999999999574
+199,"test_is_not_natural_number_failures[is_not_natural_number_failures, 1e+99]",Performance Decrease,0.25,0.23000000000000043,0.019999999999999574
+200,"test_is_not_natural_number_failures[is_not_natural_number_failures, 48.1]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+201,"test_is_not_natural_number_failures[is_not_natural_number_failures, 98.8048]",No Change,0.240000000000002,0.240000000000002,0.0
+202,"test_is_not_natural_number_failures[is_not_natural_number_failures, inf]",Performance Increase,0.25,0.2699999999999996,-0.019999999999999574
+203,"test_is_not_natural_number_success[is_not_natural_number_successes, , 36.89, True]",No Change,0.2400000000000002,0.2400000000000002,0.0
+204,"test_is_not_natural_number_success[is_not_natural_number_successes, 0, False]",No Change,0.25,0.25,0.0
+205,"test_is_not_natural_number_success[is_not_natural_number_successes, 1.0, False]",Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+206,"test_is_not_natural_number_success[is_not_natural_number_successes, 10000000000.0, False]",No Change,0.2400000000000002,0.2400000000000002,0.0
+207,"test_is_not_natural_number_success[is_not_natural_number_successes, 106.0, False]",Performance Increase,0.22999999999999865,0.2400000000000002,-0.010000000000001563
+208,"test_is_not_natural_number_success[is_not_natural_number_successes, 13, False]",Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+209,"test_is_not_natural_number_success[is_not_natural_number_successes, 190.80928438, True]",Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+210,"test_is_not_natural_number_success[is_not_natural_number_successes, 196, False]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+211,"test_is_not_natural_number_success[is_not_natural_number_successes, 2, False]",Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+212,"test_is_not_natural_number_success[is_not_natural_number_successes, 27, False]",Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+213,"test_is_not_natural_number_success[is_not_natural_number_successes, 5.096279894, True]",No Change,0.2400000000000002,0.2400000000000002,0.0
+214,"test_is_not_natural_number_success[is_not_natural_number_successes, 50.0, False]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+215,"test_is_not_natural_number_success[is_not_natural_number_successes, nan, False0]",Performance Increase,0.2400000000000002,0.2599999999999998,-0.019999999999999574
+216,"test_is_not_natural_number_success[is_not_natural_number_successes, nan, False1]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+217,"test_make_pairing_dict[make_pairing_dict, unique_candidate_values0, unique_benchmark_values0, expected_dict0]",Performance Decrease,0.26000000000000156,0.25,0.010000000000001563
+218,"test_make_pairing_dict[make_pairing_dict, unique_candidate_values1, unique_benchmark_values1, expected_dict1]",No Change,0.25,0.25,0.0
+219,"test_make_pairing_dict[make_pairing_dict, unique_candidate_values2, unique_benchmark_values2, expected_dict2]",Performance Decrease,0.259999999999998,0.25,0.00999999999999801
+220,"test_make_pairing_dict[make_pairing_dict, unique_candidate_values3, unique_benchmark_values3, expected_dict3]",Performance Decrease,0.25,0.240000000000002,0.00999999999999801
+221,"test_make_pairing_dict[make_pairing_dict, unique_candidate_values4, unique_benchmark_values4, expected_dict4]",No Change,0.25,0.25,0.0
+222,"test_matching_crs[matching_crs, candidate_map_0.tif, benchmark_map_0.tif, expected_crs_matches0]",No Change,0.33000000000000007,0.33000000000000007,0.0
+223,"test_matching_crs[matching_crs, candidate_map_1.tif, benchmark_map_1.tif, expected_crs_matches1]",No Change,0.3099999999999987,0.3099999999999987,0.0
+224,"test_matching_spatial_indices_fail[matching_spatial_indices_fail, candidate_map_1.tif, benchmark_map_1.tif, False]",Performance Increase,0.3100000000000005,0.3200000000000003,-0.009999999999999787
+225,"test_matching_spatial_indices_success[matching_spatial_indices_success, candidate_map_0.tif, benchmark_map_0.tif, True]",Performance Increase,0.3200000000000003,0.33000000000000007,-0.009999999999999787
+226,"test_matching_spatial_indices_success[matching_spatial_indices_success, candidate_map_1.tif, benchmark_map_1.tif, False]",Performance Decrease,0.3200000000000003,0.3100000000000005,0.009999999999999787
+227,"test_mean_absolute_error[mean_absolute_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.3173885941505432]",Performance Increase,0.3199999999999985,0.33999999999999986,-0.02000000000000135
+228,"test_mean_absolute_error[mean_absolute_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Increase,0.370000000000001,0.379999999999999,-0.00999999999999801
+229,"test_mean_absolute_percentage_error[mean_absolute_percentage_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.15956786274909973]",Performance Decrease,0.3199999999999985,0.2900000000000009,0.029999999999997584
+230,"test_mean_absolute_percentage_error[mean_absolute_percentage_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Decrease,0.40000000000000036,0.3699999999999992,0.030000000000001137
+231,"test_mean_normalized_mean_absolute_error[mean_normalized_mean_absolute_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.16163060069084167]",Performance Decrease,0.3000000000000007,0.29999999999999893,1.7763568394002505e-15
+232,"test_mean_normalized_mean_absolute_error[mean_normalized_mean_absolute_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Decrease,0.38000000000000256,0.370000000000001,0.010000000000001563
+233,"test_mean_normalized_root_mean_squared_error[mean_normalized_root_mean_squared_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.2802138924598694]",Performance Decrease,0.3000000000000007,0.28999999999999915,0.010000000000001563
+234,"test_mean_normalized_root_mean_squared_error[mean_normalized_root_mean_squared_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Increase,0.379999999999999,0.39000000000000057,-0.010000000000001563
+235,"test_mean_percentage_error[mean_percentage_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, , 0.015025136061012745]",Performance Increase,0.3000000000000007,0.3100000000000005,-0.009999999999999787
+236,"test_mean_percentage_error[mean_percentage_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Decrease,0.39000000000000057,0.3899999999999988,1.7763568394002505e-15
+237,"test_mean_signed_error[mean_signed_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, , 0.02950434572994709]",Performance Decrease,0.2900000000000009,0.28999999999999915,1.7763568394002505e-15
+238,"test_mean_signed_error[mean_signed_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Increase,0.379999999999999,0.3800000000000008,-1.7763568394002505e-15
+239,"test_mean_squared_error[mean_squared_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.30277130007743835]",No Change,0.3000000000000007,0.3000000000000007,0.0
+240,"test_mean_squared_error[mean_squared_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Decrease,0.3899999999999988,0.3800000000000008,0.00999999999999801
+241,"test_numeric_align_dataarrays[numeric_align_dataarrays, candidate_map0, benchmark_map0, int32]",Performance Decrease,0.75,0.6999999999999957,0.05000000000000426
+242,"test_numeric_align_dataarrays[numeric_align_dataarrays, candidate_map1, benchmark_map1, float32]",Performance Decrease,1.0200000000000031,1.019999999999996,7.105427357601002e-15
+243,"test_numeric_align_dataarrays[numeric_align_dataarrays, candidate_map2, benchmark_map2, float]",Performance Increase,0.5399999999999991,0.5700000000000003,-0.030000000000001137
+244,"test_numeric_align_dataarrays[numeric_align_dataarrays, candidate_map3, benchmark_map3, float]",Performance Decrease,0.8800000000000026,0.8299999999999983,0.05000000000000426
+245,"test_numeric_align_datasets[numeric_align_datasets, candidate_map0, benchmark_map0, int32]",Performance Increase,0.75,0.7600000000000051,-0.010000000000005116
+246,"test_numeric_align_datasets[numeric_align_datasets, candidate_map1, benchmark_map1, float32]",No Change,1.019999999999996,1.019999999999996,0.0
+247,"test_numeric_align_datasets[numeric_align_datasets, candidate_map2, benchmark_map2, float]",Performance Increase,0.5500000000000043,0.5799999999999983,-0.02999999999999403
+248,"test_numeric_align_datasets[numeric_align_datasets, candidate_map3, benchmark_map3, float]",Performance Increase,0.8900000000000006,0.9099999999999966,-0.01999999999999602
+249,"test_pairing_dict_fn[pairing_dict_fn, , 1.0, 10.0, pairing_dict2, nan]",Performance Decrease,1.3300000000000018,1.2699999999999996,0.060000000000002274
+250,"test_pairing_dict_fn[pairing_dict_fn, 1, 2, pairing_dict0, 3]",Performance Decrease,1.259999999999998,1.2399999999999984,0.019999999999999574
+251,"test_pairing_dict_fn[pairing_dict_fn, 9, 10, pairing_dict1, 1]",Performance Decrease,1.3000000000000007,1.2699999999999996,0.030000000000001137
+252,"test_range_normalized_mean_absolute_error[range_normalized_mean_absolute_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.27127230167388916]",Performance Increase,0.28999999999999915,0.3099999999999987,-0.019999999999999574
+253,"test_range_normalized_mean_absolute_error[range_normalized_mean_absolute_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Increase,0.38000000000000256,0.3999999999999986,-0.01999999999999602
+254,"test_range_normalized_root_mean_squared_error[range_normalized_root_mean_squared_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.4702962636947632]",Performance Decrease,0.3100000000000005,0.29999999999999893,0.010000000000001563
+255,"test_range_normalized_root_mean_squared_error[range_normalized_root_mean_squared_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Decrease,0.39000000000000057,0.3800000000000008,0.009999999999999787
+256,"test_rasterize_vector_fail[rasterize_vector_fail, candidate_map0, benchmark_map0, rasterize_attributes0]",No Change,0.2699999999999996,0.2699999999999996,0.0
+257,"test_rasterize_vector_fail[rasterize_vector_fail, candidate_map1, benchmark_map1, rasterize_attributes1]",No Change,0.2699999999999996,0.2699999999999996,0.0
+258,"test_rasterize_vector_success[rasterize_vector_success, candidate_map0, benchmark_map0, rasterize_attributes0, expected0]",Performance Increase,1.120000000000001,1.129999999999999,-0.00999999999999801
+259,"test_rasterize_vector_success[rasterize_vector_success, candidate_map1, benchmark_map1, rasterize_attributes1, expected1]",No Change,1.25,1.25,0.0
+260,"test_rasterize_vector_success[rasterize_vector_success, candidate_map2, benchmark_map2, rasterize_attributes2, expected2]",Performance Increase,1.2199999999999989,1.2200000000000024,-3.552713678800501e-15
+261,"test_rasters_intersect_exception[rasters_intersect_exception, candidate_map_1.tif, benchmark_map_0.tif, False]",No Change,0.33000000000000007,0.33000000000000007,0.0
+262,"test_rasters_intersect_no_exception[rasters_intersect_no_exception, candidate_map_0.tif, benchmark_map_0.tif, True]",No Change,0.3200000000000003,0.3200000000000003,0.0
+263,"test_rasters_intersect_no_exception[rasters_intersect_no_exception, candidate_map_0.tif, benchmark_map_1.tif, True]",No Change,0.34999999999999964,0.34999999999999964,0.0
+264,"test_rasters_intersect_no_exception[rasters_intersect_no_exception, candidate_map_1.tif, benchmark_map_0.tif, False]",Performance Increase,0.33999999999999986,0.34999999999999964,-0.009999999999999787
+265,"test_rasters_intersect_no_exception[rasters_intersect_no_exception, candidate_map_1.tif, benchmark_map_1.tif, True]",No Change,0.3200000000000003,0.3200000000000003,0.0
+266,"test_register_class[comparison_register_class, names0, args0, Tester]",No Change,0.2600000000000051,0.2600000000000051,0.0
+267,"test_register_class[comparison_register_class, names1, args1, Tester2]",Performance Decrease,0.269999999999996,0.2599999999999909,0.010000000000005116
+268,"test_register_class[register_class, names0, args0, Tester]",Performance Decrease,0.26000000000000156,0.2400000000000002,0.02000000000000135
+269,"test_register_class[register_class, names1, args1, Tester2]",No Change,0.25,0.25,0.0
+270,"test_register_class_continuous[register_class_continuous, names0, args0, Tester]",Performance Decrease,0.25,0.23000000000000043,0.019999999999999574
+271,"test_register_class_continuous_fail[register_class_continuous_fail, args0, TesterFail1, TypeError]",No Change,0.25,0.25,0.0
+272,"test_register_class_continuous_fail[register_class_continuous_fail, args1, TesterFail2, KeyError]",No Change,0.2400000000000002,0.2400000000000002,0.0
+273,"test_register_class_fail[register_class_fail, args0, TesterFail1, TypeError]",No Change,0.25,0.25,0.0
+274,"test_register_class_fail[register_class_fail, args1, TesterFail2, KeyError]",Performance Decrease,0.240000000000002,0.23999999999999844,3.552713678800501e-15
+275,"test_register_continuous_function[register_continuous_function, args0, pass1]",Performance Increase,0.2400000000000002,0.25,-0.009999999999999787
+276,"test_register_continuous_function[register_continuous_function, args1, pass2]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+277,"test_register_continuous_function_fail[register_continuous_function_fail, args0, fail1, KeyError]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+278,"test_register_continuous_function_fail[register_continuous_function_fail, args1, fail2, TypeError]",No Change,0.2400000000000002,0.2400000000000002,0.0
+279,"test_register_continuous_function_fail[register_continuous_function_fail, args2, fail3, TypeError]",Performance Decrease,0.2400000000000002,0.22999999999999865,0.010000000000001563
+280,"test_register_continuous_function_fail[register_continuous_function_fail, args3, fail4, TypeError]",Performance Decrease,0.25,0.22999999999999865,0.02000000000000135
+281,"test_register_continuous_function_fail[register_continuous_function_fail, args4, fail5, TypeError]",Performance Decrease,0.25,0.23000000000000043,0.019999999999999574
+282,"test_register_function[register_function, args0, pass1]",Performance Decrease,0.2599999999999998,0.25,0.009999999999999787
+283,"test_register_function[register_function, args1, pass2]",Performance Decrease,0.2599999999999998,0.25,0.009999999999999787
+284,"test_register_function_fail[register_function_fail, args0, fail1, KeyError]",Performance Decrease,0.25,0.2400000000000002,0.009999999999999787
+285,"test_register_function_fail[register_function_fail, args1, fail2, TypeError]",Performance Decrease,0.2599999999999998,0.2400000000000002,0.019999999999999574
+286,"test_register_function_fail[register_function_fail, args2, fail3, TypeError]",No Change,0.25,0.25,0.0
+287,"test_register_function_fail[register_function_fail, args3, fail4, TypeError]",No Change,0.25,0.25,0.0
+288,"test_register_function_fail[register_function_fail, args4, fail5, TypeError]",Performance Decrease,0.259999999999998,0.2400000000000002,0.019999999999997797
+289,"test_replace_nans_in_pairing_dict[replace_nans_in_pairing_dict, dict_with_nans0, expected0]",Performance Decrease,0.259999999999998,0.23999999999999844,0.019999999999999574
+290,"test_root_mean_squared_error[root_mean_squared_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.5502465963363647]",Performance Decrease,0.2900000000000009,0.28999999999999915,1.7763568394002505e-15
+291,"test_root_mean_squared_error[root_mean_squared_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Increase,0.379999999999999,0.39000000000000057,-0.010000000000001563
+292,"test_spatial_alignment[spatial_alignment, candidate_map_0.tif, benchmark_map_0.tif, resampling0, benchmark]",Performance Decrease,0.33000000000000185,0.3299999999999983,3.552713678800501e-15
+293,"test_spatial_alignment[spatial_alignment, candidate_map_1.tif, benchmark_map_1.tif, resampling1, candidate]",Performance Increase,0.5899999999999999,0.6000000000000014,-0.010000000000001563
+294,"test_spatial_alignment_fail[spatial_alignment_fail, candidate_map_1.tif, benchmark_map_0.tif, resampling0, candidate]",No Change,0.3299999999999983,0.3299999999999983,0.0
+295,"test_stac_catalog_comparison_fail[stac_catalog_comparison_fail, https://earth, search.aws.element84.com/v1, sentinel, 2, l2a, 2020, 04, 01, bbox0, assets0, None, None, ValueError]",No Change,0.379999999999999,0.379999999999999,0.0
+296,"test_stac_catalog_comparison_fail[stac_catalog_comparison_fail, https://earth, search.aws.element84.com/v1, sentinel, 2, l2a, 2020, 04, 01, bbox1, None, allow_list1, block_list1, ValueError]",Performance Increase,0.370000000000001,0.38000000000000256,-0.010000000000001563
+297,"test_stac_catalog_comparison_fail[stac_catalog_comparison_fail, https://earth, search.aws.element84.com/v1, sentinel, 2, l2a, 2020, 04, 01, bbox2, None, allow_list2, None, KeyError]",Performance Increase,0.6499999999999986,0.6600000000000001,-0.010000000000001563
+298,"test_stac_catalog_comparison_fail[stac_catalog_comparison_fail, https://earth, search.aws.element84.com/v1, sentinel, 2, l2a, 2020, 04, 01, bbox3, None, None, block_list3, KeyError]",Performance Decrease,0.6400000000000006,0.639999999999997,3.552713678800501e-15
+299,"test_subsampling[subsampling, candidate0, benchmark0, subsample_df0, exclude, 2, sample_percent0]",Performance Increase,3.2300000000000004,3.26,-0.02999999999999936
+300,"test_subsampling[subsampling, candidate1, benchmark1, subsample_df1, include, 2, sample_percent1]",Performance Decrease,2.820000000000002,2.8000000000000007,0.02000000000000135
+301,"test_subsampling_fail[subsampling_fail, candidate0, benchmark0, subsample_df0, ValueError]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+302,"test_subsampling_fail[subsampling_fail, candidate1, benchmark1, subsample_df1, NoDataInBounds]",Performance Decrease,0.3000000000000007,0.28999999999999915,0.010000000000001563
+303,"test_symmetric_mean_absolute_percentage_error[symmetric_mean_absolute_percentage_error, candidate_continuous_0.tif, benchmark_continuous_0.tif, load_options0, 0.1628540771054295]",Performance Decrease,0.3000000000000007,0.29999999999999716,3.552713678800501e-15
+304,"test_symmetric_mean_absolute_percentage_error[symmetric_mean_absolute_percentage_error, candidate_continuous_1.tif, benchmark_continuous_1.tif, load_options1, expected_value1]",Performance Increase,0.379999999999999,0.40000000000000213,-0.020000000000003126
+305,"test_szudzik_pair[szudzik_pair, 1, 0, 2]",Performance Decrease,0.26000000000000156,0.240000000000002,0.019999999999999574
+306,"test_szudzik_pair[szudzik_pair, 1, 13, 170]",Performance Decrease,0.25,0.23999999999999844,0.010000000000001563
+307,"test_szudzik_pair[szudzik_pair, 6, 0, 42]",Performance Decrease,0.259999999999998,0.25,0.00999999999999801
+308,"test_szudzik_pair[szudzik_pair, 6, 13, 175]",Performance Decrease,0.26000000000000156,0.25,0.010000000000001563
+309,"test_szudzik_pair_signed[szudzik_pair_signed, , 6, 0, 132]",Performance Decrease,0.25,0.240000000000002,0.00999999999999801
+310,"test_szudzik_pair_signed[szudzik_pair_signed, 1, , 13, 627]",No Change,0.25,0.25,0.0
+311,"test_szudzik_pair_signed[szudzik_pair_signed, 6, , 130, 67093]",No Change,0.25,0.25,0.0
+312,"test_szudzik_pair_signed[szudzik_pair_signed, c0, 0.0, 2]",Performance Decrease,0.26000000000000156,0.25,0.010000000000001563
+313,"test_szudzik_pair_signed[szudzik_pair_signed, nan, , 130, nan]",No Change,0.25,0.25,0.0
+314,"test_vectorize_raster_fail[vectorize_raster_fail, raster_map0]",Performance Decrease,0.2700000000000031,0.25,0.020000000000003126
+315,"test_vectorize_raster_fail[vectorize_raster_fail, raster_map1]",Performance Increase,0.259999999999998,0.2700000000000031,-0.010000000000005116
+316,"test_vectorize_raster_success[vectorize_raster_success, raster_map0, expected0]",Performance Decrease,4.899999999999999,4.879999999999999,0.019999999999999574
+317,"test_vectorize_raster_success[vectorize_raster_success, raster_map1, expected1]",Performance Increase,4.550000000000001,4.590000000000003,-0.0400000000000027
+318,"test_vectorize_raster_success[vectorize_raster_success, raster_map2, expected2]",Performance Decrease,4.880000000000003,4.8799999999999955,7.105427357601002e-15
+319,"test_vectorize_raster_success[vectorize_raster_success, raster_map3, expected3]",Performance Decrease,4.869999999999997,4.800000000000004,0.06999999999999318
+320,"test_vectorize_raster_success[vectorize_raster_success, raster_map4, expected4]",Performance Decrease,1.5399999999999991,1.519999999999996,0.020000000000003126
