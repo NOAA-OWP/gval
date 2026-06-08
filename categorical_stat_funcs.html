@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categorical Statistics Functions &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Categorical Statistics" href="categorical_statistics.html" />
+    <link rel="prev" title="Statistics" href="statistics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">GVAL API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="extension.html">Core Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison.html">Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subsampling.html">Subsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.html">Catalogs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="statistics.html">Statistics</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Categorical Statistics Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.accuracy"><code class="docutils literal notranslate"><span class="pre">accuracy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.balanced_accuracy"><code class="docutils literal notranslate"><span class="pre">balanced_accuracy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.critical_success_index"><code class="docutils literal notranslate"><span class="pre">critical_success_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.equitable_threat_score"><code class="docutils literal notranslate"><span class="pre">equitable_threat_score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.f_score"><code class="docutils literal notranslate"><span class="pre">f_score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.false_discovery_rate"><code class="docutils literal notranslate"><span class="pre">false_discovery_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.false_negative_rate"><code class="docutils literal notranslate"><span class="pre">false_negative_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.false_omission_rate"><code class="docutils literal notranslate"><span class="pre">false_omission_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.false_positive_rate"><code class="docutils literal notranslate"><span class="pre">false_positive_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.fowlkes_mallows_index"><code class="docutils literal notranslate"><span class="pre">fowlkes_mallows_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.matthews_correlation_coefficient"><code class="docutils literal notranslate"><span class="pre">matthews_correlation_coefficient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.negative_likelihood_ratio"><code class="docutils literal notranslate"><span class="pre">negative_likelihood_ratio()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.negative_predictive_value"><code class="docutils literal notranslate"><span class="pre">negative_predictive_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.overall_bias"><code class="docutils literal notranslate"><span class="pre">overall_bias()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.positive_likelihood_ratio"><code class="docutils literal notranslate"><span class="pre">positive_likelihood_ratio()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.positive_predictive_value"><code class="docutils literal notranslate"><span class="pre">positive_predictive_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.prevalence"><code class="docutils literal notranslate"><span class="pre">prevalence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.prevalence_threshold"><code class="docutils literal notranslate"><span class="pre">prevalence_threshold()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.true_negative_rate"><code class="docutils literal notranslate"><span class="pre">true_negative_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gval.statistics.categorical_stat_funcs.true_positive_rate"><code class="docutils literal notranslate"><span class="pre">true_positive_rate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="categorical_statistics.html">Categorical Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="continuous_stat_funcs.html">Continuous Statistics Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="continuous_statistics.html">Continuous Statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">GVAL API</a></li>
+          <li class="breadcrumb-item"><a href="statistics.html">Statistics</a></li>
+      <li class="breadcrumb-item active">Categorical Statistics Functions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/categorical_stat_funcs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="categorical-statistics-functions">
+<h1>Categorical Statistics Functions<a class="headerlink" href="#categorical-statistics-functions" title="Permalink to this heading"></a></h1>
+<p><a class="reference internal" href="index.html"><span class="doc">Return to Homepage</span></a></p>
+<span class="target" id="module-gval.statistics.categorical_stat_funcs"></span><p>Categorical Statistics Functions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.accuracy">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.accuracy" title="Permalink to this definition"></a></dt>
+<dd><p>Computes accuracy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Accuracy from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id1" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Accuracy_and_precision">Accuracy and Precision</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.balanced_accuracy">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">balanced_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.balanced_accuracy" title="Permalink to this definition"></a></dt>
+<dd><p>Computes Balanced Accuracy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Balanced Accuracy from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://neptune.ai/blog/balanced-accuracy#Balanced%20Accuracy">Balanced Accuracy</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.critical_success_index">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">critical_success_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.critical_success_index" title="Permalink to this definition"></a></dt>
+<dd><p>Computes critical success index</p>
+<p><a class="reference external" href="https://www.weather.gov/media/erh/ta2004-03.pdf">https://www.weather.gov/media/erh/ta2004-03.pdf</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Critical success index from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf#page=4">Critical Success Index</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.equitable_threat_score">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">equitable_threat_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.equitable_threat_score" title="Permalink to this definition"></a></dt>
+<dd><p>Computes Equitable Threat Score (Gilbert Score)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Equitable threat score from -1/3 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://resources.eumetrain.org/data/4/451/english/msg/ver_categ_forec/uos2/uos2_ko4.htm">Equitable Threat Score</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.f_score">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">f_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.f_score" title="Permalink to this definition"></a></dt>
+<dd><p>Computes F-score AKA harmonic mean of precision and sensitivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>F-score from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/F-score">F-score</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.false_discovery_rate">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">false_discovery_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.false_discovery_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Computes false discovery rate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>False discovery rate from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/False_discovery_rate">False Discovery Rate</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.false_negative_rate">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">false_negative_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.false_negative_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Computes false negative rate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>False negative rate from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates">Type I and Type II Error</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.false_omission_rate">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">false_omission_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.false_omission_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Computes false omission rate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>False omission rate from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id8" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values">Positive and Negative Predictive Values</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.false_positive_rate">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">false_positive_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.false_positive_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Computes false positive rate AKA fall-out</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>False positive rate from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id9" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates">Type I and Type II Errors</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.fowlkes_mallows_index">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">fowlkes_mallows_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.fowlkes_mallows_index" title="Permalink to this definition"></a></dt>
+<dd><p>Computes Fowlkes-Mallows index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation coefficient from -1 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Fowlkes%E2%80%93Mallows_index">Fowlkes-Mallows Index</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.matthews_correlation_coefficient">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">matthews_correlation_coefficient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.matthews_correlation_coefficient" title="Permalink to this definition"></a></dt>
+<dd><p>Computes matthews correlation coefficient, accounting for accuracy and
+precision of both true positives and true negatives AKA Phi Coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation coefficient from -1 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Phi_coefficient">Matthews Correlation Coefficient</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.negative_likelihood_ratio">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">negative_likelihood_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.negative_likelihood_ratio" title="Permalink to this definition"></a></dt>
+<dd><p>Computes negative likelihood ratio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Negative likelihood from 1 to infinity</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio">Likelihood Ratios</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.negative_predictive_value">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">negative_predictive_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.negative_predictive_value" title="Permalink to this definition"></a></dt>
+<dd><p>Computes negative predictive value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Negative predictive value from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Sensitivity and Specificity</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.overall_bias">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">overall_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.overall_bias" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the degree of correspondence between the mean forecast and the mean observation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Overall Bias</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id14" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.swpc.noaa.gov/sites/default/files/images/u30/Forecast%20Verification%20Glossary.pdf">Forecast Verification Glossary</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.positive_likelihood_ratio">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">positive_likelihood_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.positive_likelihood_ratio" title="Permalink to this definition"></a></dt>
+<dd><p>Computes positive likelihood ratio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Positive likelihood rate from 1 to infinity</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id15" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing#positive_likelihood_ratio">Likelihood Ratios</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.positive_predictive_value">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">positive_predictive_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.positive_predictive_value" title="Permalink to this definition"></a></dt>
+<dd><p>Computes positive predictive value AKA precision</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Positive predictive value from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id17" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Sensitivity and Specificity</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.prevalence">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">prevalence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.prevalence" title="Permalink to this definition"></a></dt>
+<dd><p>Computes prevalence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Prevalence from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id19" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Prevalence">Prevalence</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.prevalence_threshold">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">prevalence_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.prevalence_threshold" title="Permalink to this definition"></a></dt>
+<dd><p>Computes prevalence threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Prevalence threshold from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id20" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7540853/">Prevalence Threshold</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.true_negative_rate">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">true_negative_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.true_negative_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Computes true negative rate, AKA specificity, selectivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tn</strong> (<em>Number</em>) – Count reflecting true negative</p></li>
+<li><p><strong>fp</strong> (<em>Number</em>) – Count reflecting false positive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True negative rate from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id21" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Sensitivity and Specificity</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gval.statistics.categorical_stat_funcs.true_positive_rate">
+<span class="sig-prename descclassname"><span class="pre">gval.statistics.categorical_stat_funcs.</span></span><span class="sig-name descname"><span class="pre">true_positive_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gval.statistics.categorical_stat_funcs.true_positive_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Computes true positive rate, AKA sensitivity, recall, hit rate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tp</strong> (<em>Number</em>) – Count reflecting true positive</p></li>
+<li><p><strong>fn</strong> (<em>Number</em>) – Count reflecting false negative</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True positive rate from 0 to 1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id23" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Sensitivity and Specificity</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="statistics.html" class="btn btn-neutral float-left" title="Statistics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="categorical_statistics.html" class="btn btn-neutral float-right" title="Categorical Statistics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
