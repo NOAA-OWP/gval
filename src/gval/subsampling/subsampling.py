@@ -103,9 +103,11 @@ def get_subsample_percent(
 
     try:
         percent = float(
-            xarray_reduce(mask["subsample_id"], mask["subsample_id"], func="count")
-            / total_size
-            * 100
+            (
+                xarray_reduce(mask["subsample_id"], mask["subsample_id"], func="count")
+                / total_size
+                * 100
+            ).values[0]
         )
     except IndexError as e:  # pragma: no cover
         raise e("No spatial overlap in subsample geometry and candidate/benchmark data")

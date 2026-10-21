@@ -320,6 +320,9 @@ def _spatial_alignment(
     # check if rasters intersect at all
     _rasters_intersect(candidate_map, benchmark_map, raise_exception=True)
 
+    if resampling is None:
+        resampling = Resampling.nearest
+
     # reproject maps to align
     cam, bem = _align_rasters(candidate_map, benchmark_map, target_map, resampling)
 

@@ -11,9 +11,9 @@ import contextlib
 
 import nox
 
-PYTHON_VERSIONS = ["3.10", "3.11", "3.12", "3.13"]
-LINTING_VERSION = "3.11"
-DOCS_VERSION = "3.11"
+PYTHON_VERSIONS = ["3.11", "3.12", "3.13", "3.14", "3.15"]
+LINTING_VERSION = "3.12"
+DOCS_VERSION = "3.12"
 
 nox.options.default_venv_backend = "conda"
 
@@ -59,6 +59,7 @@ def tests(session: nox.Session) -> None:
     """
     Run pytests.
     """
+    session.install(".")
     session.install(".[testing]")
 
     # Run pytests; coverage configuration in .coveragerc and pyproject.toml

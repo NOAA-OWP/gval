@@ -59,6 +59,8 @@ class ContinuousStatistics(BaseStatistics):
                 "xarray.core.dataarray.DataArray",
                 "Union[xarray.core.dataarray.DataArray, xarray.core.dataset.Dataset]",
                 "Union[xarray.core.dataset.Dataset, xarray.core.dataarray.DataArray]",
+                "xarray.core.dataarray.DataArray | xarray.core.dataset.Dataset",
+                "xarray.core.dataset.Dataset | xarray.core.dataarray.DataArray",
                 "float",
             ],
             "return_type": [float, Number],

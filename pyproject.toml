@@ -9,17 +9,17 @@ authors = [
     {name = "Fernando Aristizabal", email = "fernando.aristizabal@noaa.gov"},
     {name = "Gregory Petrochenkov", email = "gregory.petrochenkov@noaa.gov"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 keywords = ["geospatial", "evaluations"]
 license = {text = "MIT"}
-version = "0.2.14"
+version = "0.2.15"
 dynamic = ["readme", "dependencies"]
 
 [project.optional-dependencies]
 dev = [
     #### linting ####
-    "flake8==6.0.0",
-    "flake8-black==0.3.6",
+    "flake8==7.4.1",
+    "flake8-black==0.4.0",
 
     #### testing ####
     "pytest==9.0.3",
@@ -76,8 +76,8 @@ docs = [
     "jupyter==1.0.0"
 ]
 ci_cd_automation = [
-    "nox==2023.04.22",
-    "pre-commit==3.3.3",
+    "nox>=2023.04.22",
+    "pre-commit>=3.3.3",
 ]
 other = [
     "build==0.10.0",

@@ -42,7 +42,7 @@ def _rasterize_data(
 
     for attr in rasterize_attributes:
         if (
-            not issubclass(type(benchmark_map[attr][0]), Number)
+            not issubclass(type(benchmark_map[attr].values[0]), Number)
             or rasterize_attributes is None
             or len(rasterize_attributes) == 0
         ):
