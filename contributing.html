@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing &mdash; GVAL  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Schemas" href="schemas.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GVAL
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">GVAL API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-issue-tracker">Using the issue tracker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#changing-the-code-base">Changing the code-base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#guidelines">Guidelines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#by-passing-nox">By-passing Nox</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versioning">Versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docker-use">Docker Use</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GVAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><p>All contributions to this project will be released to the public domain.
+By submitting a pull request or filing a bug, issue, or
+feature request, you are agreeing to comply with this waiver of copyright interest.
+Details can be found in our <a class="reference external" href="https://github.com/NOAA-OWP/gval/blob/main/TERMS.MD">TERMS</a>
+and <a class="reference external" href="https://github.com/NOAA-OWP/gval/blob/main/LICENSE.MD">LICENSE</a>.</p>
+</div></blockquote>
+<p>There are two primary ways to help:</p>
+<ul class="simple">
+<li><p>Using the issue tracker, and</p></li>
+<li><p>Changing the code-base.</p></li>
+</ul>
+<section id="using-the-issue-tracker">
+<h2>Using the issue tracker<a class="headerlink" href="#using-the-issue-tracker" title="Permalink to this heading"></a></h2>
+<p>Use the issue tracker to suggest feature requests, report bugs, and ask questions.
+This is also a great way to connect with the developers of the project as well
+as others who are interested in this solution.</p>
+<p>Use the issue tracker to find ways to contribute. Find a bug or a feature, mention in
+the issue that you will take on that effort, then follow the <em>Changing the code-base</em>
+guidance below.</p>
+</section>
+<section id="changing-the-code-base">
+<h2>Changing the code-base<a class="headerlink" href="#changing-the-code-base" title="Permalink to this heading"></a></h2>
+<p>Generally speaking, you should fork this repository, make changes in your
+own fork, and then submit a pull request. All new code should have associated
+unit tests that validate implemented features and the presence or lack of defects.
+Additionally, the code should follow any stylistic and architectural guidelines
+prescribed by the project. In the absence of such guidelines, mimic the styles
+and patterns in the existing code-base.</p>
+<p><img alt="alt text" src="https://github.com/NOAA-OWP/gval/raw/main/docs/images/ContributionGraphic.png" /></p>
+<p>Your contributing guidelines are well-structured and detailed, providing clear steps for contributors. Here are some suggestions to enhance clarity, conciseness, and precision:</p>
+<section id="guidelines">
+<h3>Guidelines<a class="headerlink" href="#guidelines" title="Permalink to this heading"></a></h3>
+<p>If you would like to contribute to our project, please follow these steps from the terminal within the project’s root directory:</p>
+<p><strong>Note</strong>: Replace anything within angle brackets <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> with your specific information, removing the brackets.</p>
+<ol class="arabic simple">
+<li><p><strong>Fork and Clone</strong>:</p>
+<ul class="simple">
+<li><p>Fork the project on GitHub.</p></li>
+<li><p>Clone your fork (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">&lt;your_username&gt;/gval</span></code>).</p></li>
+<li><p>Create a feature branch (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">&lt;your_feature&gt;</span></code>).</p></li>
+</ul>
+</li>
+<li><p><strong>Virtual Environment Setup</strong> (Recommended):</p>
+<ul class="simple">
+<li><p><strong>gval</strong> supports Python versions 3.8 to 3.11.</p></li>
+<li><p>Ensure your environment is not included in the git commits. Use one of the names listed in <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>.</p></li>
+<li><p>Options:</p>
+<ul>
+<li><p><strong>venv</strong>:</p>
+<ul>
+<li><p>Create: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">venv</span> <span class="pre">&lt;your_env_dir&gt;</span></code>.</p></li>
+<li><p>Activate: <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">&lt;your_env_dir&gt;/bin/activate</span></code>.</p></li>
+<li><p>Deactivate: <code class="docutils literal notranslate"><span class="pre">deactivate</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>conda/mamba</strong>:</p>
+<ul>
+<li><p>Create: <code class="docutils literal notranslate"><span class="pre">[conda|mamba]</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">&lt;your_env_name&gt;</span> <span class="pre">python=&lt;X.X.X&gt;</span></code>.</p></li>
+<li><p>Activate: <code class="docutils literal notranslate"><span class="pre">[conda|mamba]</span> <span class="pre">activate</span> <span class="pre">&lt;your_env_name&gt;</span></code>.</p></li>
+<li><p>Deactivate: <code class="docutils literal notranslate"><span class="pre">[conda|mamba]</span> <span class="pre">deactivate</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Dependency Installation</strong>:</p>
+<ul class="simple">
+<li><p>Activate your virtual environment.</p></li>
+<li><p>Install Nox: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">nox</span></code>.</p></li>
+<li><p>Alternatively, install all development dependencies: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Pre-commit Hooks</strong>:</p>
+<ul class="simple">
+<li><p>Set up automatic linting tasks: <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Making Changes</strong>:</p>
+<ul class="simple">
+<li><p>Commit your changes: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">.</span> <span class="pre">&amp;&amp;</span> <span class="pre">git</span> <span class="pre">commit</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Using Nox</strong>:</p>
+<ul class="simple">
+<li><p>Run linting, pre-commits, tests, coverage, and doc building with Nox.</p></li>
+<li><p>To test across Python versions, install <a class="reference external" href="https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html">conda</a> or <a class="reference external" href="https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html">mamba</a>.</p></li>
+<li><p>Run all sessions (time-consuming): <code class="docutils literal notranslate"><span class="pre">nox</span></code>.</p></li>
+<li><p>Variants to save time:</p>
+<ul>
+<li><p>Pre-commits only (linting): <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-t</span> <span class="pre">precommit</span></code>.</p></li>
+<li><p>Tests only: <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">tests</span></code>.</p></li>
+<li><p>Specific Python version: <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-p</span> <span class="pre">3.8</span></code>.</p></li>
+<li><p>Different virtual environment backend: <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-db</span> <span class="pre">mamba</span></code>.</p></li>
+<li><p>Extra Python versions: <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">--extra-pythons</span> <span class="pre">3.7</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Preview docs after running <code class="docutils literal notranslate"><span class="pre">nox</span></code> or <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">docs</span></code>: Open <code class="docutils literal notranslate"><span class="pre">docs/sphinx/_build/html/index.html</span></code> in a browser.</p></li>
+</ul>
+</li>
+<li><p><strong>Pushing Changes</strong>:</p>
+<ul class="simple">
+<li><p>New branch: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">-u</span> <span class="pre">origin</span> <span class="pre">&lt;your_branch&gt;</span></code>.</p></li>
+<li><p>Existing branch: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Pull Request</strong>:</p>
+<ul class="simple">
+<li><p>Start a PR conforming to the PR template and request a review.</p></li>
+</ul>
+</li>
+</ol>
+<section id="by-passing-nox">
+<h4>By-passing Nox<a class="headerlink" href="#by-passing-nox" title="Permalink to this heading"></a></h4>
+<p>You may manually perform steps handled by Nox:</p>
+<ol class="arabic simple">
+<li><p>Setup a virtual environment (as above) and run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code>.</p></li>
+<li><p>Linting: Execute <code class="docutils literal notranslate"><span class="pre">flake8</span></code> and <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">.</span></code>.</p></li>
+<li><p>Testing: Run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> ensuring at least 95% test coverage.</p></li>
+<li><p>Docs: Navigate (<code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">docs/sphinx</span></code>) and build (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">html</span></code>).</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Core dependencies</strong> are managed within <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>.</p></li>
+<li><p><strong>Optional dependencies</strong> related to development activities are listed directly within <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>.</p>
+<ul>
+<li><p>There are several groups of optional dependencies but <code class="docutils literal notranslate"><span class="pre">dev</span></code> encompasses all of them.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Permalink to this heading"></a></h2>
+<p>The repository adheres to the <a class="reference external" href="https://semver.org/">Semantic Versioning 2.0.0.</a></p>
+</section>
+<section id="docker-use">
+<h2>Docker Use<a class="headerlink" href="#docker-use" title="Permalink to this heading"></a></h2>
+<p>A Docker container is available for your convenience.</p>
+<p><strong>Note</strong>: Anything within angle brackets <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> is meant to be user-specified with the brackets removed. Additionally note that the use of sudo maybe optional dependening on how Docker was setup on your system.</p>
+<p>First setup docker instance and in the root directory of the project:</p>
+<p><code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">&lt;your_image_name&gt;</span> <span class="pre">--target</span> <span class="pre">development</span> <span class="pre">.</span> </code></p>
+<p>The default user named ‘user’ with UID 1001 is created.  To use the same user and permissions you
+currently have on your machine override with build arguments:</p>
+<p><code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">&lt;your_image_name&gt;</span> <span class="pre">--build-arg</span> <span class="pre">UID=$(id</span> <span class="pre">-u)</span> <span class="pre">--target</span> <span class="pre">development</span> <span class="pre">.</span></code></p>
+<p>Standard run examples from the command line (standard, or overriding user with root):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-v</span> <span class="pre">$(pwd):/home/user/gval</span> <span class="pre">--name</span> <span class="pre">&lt;your_container_name&gt;</span> <span class="pre">&lt;your_image_name&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-v</span> <span class="pre">$(pwd):/home/user/gval</span> <span class="pre">--user</span> <span class="pre">root</span> <span class="pre">--name</span> <span class="pre">&lt;your_container_name&gt;</span> <span class="pre">&lt;your_image_name&gt;</span></code></p></li>
+</ul>
+<p>If given access keys for retrieving test data you can mount the volume as such:</p>
+<p><code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-v</span> <span class="pre">~/.aws:/home/user/.aws</span> <span class="pre">-v</span> <span class="pre">$(pwd):/home/user/gval</span> <span class="pre">--name</span> <span class="pre">&lt;your_container_name&gt;</span> <span class="pre">&lt;your_image_name&gt;</span></code></p>
+<p>To keep your container running, try adding <code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">-f</span> <span class="pre">/dev/null</span></code> as your command ensuring to detach with <code class="docutils literal notranslate"><span class="pre">-d</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-d</span> <span class="pre">-v</span> <span class="pre">$(pwd):/home/user/gval</span> <span class="pre">--name</span> <span class="pre">&lt;your_container_name&gt;</span> <span class="pre">&lt;your_image_name&gt;</span> <span class="pre">tail</span> <span class="pre">-f</span> <span class="pre">/dev/null</span></code></p></li>
+</ul>
+<p>You can also set up your IDE to run this docker image directly:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.jetbrains.com/help/pycharm/using-docker-as-a-remote-interpreter.html#config-docker">PyCharm</a></p></li>
+<li><p><a class="reference external" href="https://code.visualstudio.com/docs/containers/quickstart-python">Visual Studio Code</a></p></li>
+</ul>
+<p>If the container already exists you can start as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">start</span> <span class="pre">&lt;your_container_name&gt;</span></code></p>
+<p>To enter the container interactively:
+<code class="docutils literal notranslate"><span class="pre">[sudo]</span> <span class="pre">docker</span> <span class="pre">exec</span> <span class="pre">&lt;your_container_name&gt;</span> <span class="pre">bash</span></code></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="schemas.html" class="btn btn-neutral float-left" title="Schemas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, NOAA-OWP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
