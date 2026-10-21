@@ -1,19 +1,13 @@
-from typing import Union, Callable
+from __future__ import annotations
+from typing import Union, Callable, TYPE_CHECKING
 from functools import wraps
 import inspect
 from numbers import Number
+import asyncio
 
-# import numpy as np
-import numba as nb
-import xarray as xr
 
-from gval.comparison.pairing_functions import (
-    cantor_pair_signed,
-    szudzik_pair_signed,
-    difference,
-    _make_pairing_dict_fn,
-)
-from gval.comparison.agreement import _compute_agreement_map
+if TYPE_CHECKING:
+    import xarray as xr
 
 
 class ComparisonProcessing:
@@ -30,15 +24,16 @@ class ComparisonProcessing:
     def __init__(self):
         # Populates default functions for pairing functions
         self._func_names = ["pairing_dict", "cantor", "szudzik", "difference"]
-        self._funcs = [
-            "pairing_dict",
-            cantor_pair_signed,
-            szudzik_pair_signed,
-            difference,
-        ]
 
-        for name, func in zip(self._func_names, self._funcs):
-            setattr(self, name, func)
+        try:
+            # Get the currently running loop
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            # No loop is running, safe to use asyncio.run()
+            asyncio.run(self.get_numba_functions())
+        else:
+            # Loop is already running, schedule it as a task instead
+            loop.create_task(self.get_numba_functions())
 
         self._signature_validation = {
             "names": [],
@@ -53,6 +48,27 @@ class ComparisonProcessing:
                 self._func_names, [["c", "b"]] * len(self._func_names)
             )
         }
+
+    async def get_numba_functions(self):
+        from gval.comparison.pairing_functions import (
+            cantor_pair_signed,
+            szudzik_pair_signed,
+            difference,
+        )
+
+        funcs = [
+            "pairing_dict",
+            cantor_pair_signed,
+            szudzik_pair_signed,
+            difference,
+        ]
+
+        self._funcs = funcs
+
+        for name, func in zip(self._func_names, funcs):
+            setattr(self, name, func)
+
+        return funcs
 
     def available_functions(self) -> list:
         """
@@ -90,6 +106,7 @@ class ComparisonProcessing:
         -------
         Decorator function
         """
+        import numba as nb
 
         def decorator(func):
             self.function_signature_check(func)
@@ -142,6 +159,7 @@ class ComparisonProcessing:
             dec_self: object
                 Class to register pairing functions
             """
+            import numba as nb
 
             for name, func in inspect.getmembers(dec_self, inspect.isfunction):
                 if name not in self.registered_functions:
@@ -234,6 +252,8 @@ class ComparisonProcessing:
         Agreement map.
         """
 
+        from gval.comparison.agreement import _compute_agreement_map
+
         return self.comparison_function_from_string(func=_compute_agreement_map)(
             **kwargs
         )
@@ -277,6 +297,8 @@ class ComparisonProcessing:
                 if (
                     kwargs["comparison_function"] == "pairing_dict"
                 ):  # when pairing_dict is a dict
+                    from gval.comparison.pairing_functions import _make_pairing_dict_fn
+
                     # this creates the pairing dictionary from the passed allowed values
                     kwargs["comparison_function"] = _make_pairing_dict_fn(
                         pairing_dict=kwargs["pairing_dict"],

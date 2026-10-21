@@ -7,9 +7,8 @@ import geopandas as gpd
 from pandera.typing import DataFrame
 import xarray as xr
 
-from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
+
 from gval.utils.schemas import Metrics_df, SubsamplingDf
-from gval.homogenize.rasterize import _rasterize_data
 
 
 @pd.api.extensions.register_dataframe_accessor("gval")
@@ -94,6 +93,9 @@ class GVALDataFrame:
         .. [2] `7th International Verification Methods Workshop <https://www.cawcr.gov.au/projects/verification/#Contingency_table>`_
         .. [3] `3.3. Metrics and scoring: quantifying the quality of predictions <https://scikit-learn.org/stable/modules/model_evaluation.html>`_
         """
+        from gval.comparison.compute_categorical_metrics import (
+            _compute_categorical_metrics,
+        )
 
         return _compute_categorical_metrics(
             crosstab_df=self._obj,
@@ -133,6 +135,7 @@ class GVALDataFrame:
         .. [1] `make_geocube <https://corteva.github.io/geocube/html/geocube.html>`_
 
         """
+        from gval.homogenize.rasterize import _rasterize_data
 
         return _rasterize_data(
             candidate_map=reference_map,

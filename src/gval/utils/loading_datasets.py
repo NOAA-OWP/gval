@@ -10,12 +10,10 @@ import ast
 from collections import Counter
 
 import pandas as pd
-import rioxarray as rxr
 import xarray as xr
 import numpy as np
 from tempfile import NamedTemporaryFile
-from rio_cogeo.cogeo import cog_translate
-from rio_cogeo.profiles import cog_profiles
+
 from pystac.item_collection import ItemCollection
 
 _MEMORY_STRATEGY = "normal"
@@ -98,6 +96,8 @@ def _handle_xarray_memory(
     elif (
         make_temp is False
     ):  # reload the file with cache on or off depending on strategy
+        import rioxarray as rxr
+
         file_name = (
             data_obj["band_1"].encoding["source"]
             if band_as_var
@@ -115,6 +115,10 @@ def _handle_xarray_memory(
         return new_obj
 
     else:  # make temporary file from lzw compressed COG and load with cache on or off depending on strategy
+        import rioxarray as rxr
+        from rio_cogeo.cogeo import cog_translate
+        from rio_cogeo.profiles import cog_profiles
+
         dst_profile = cog_profiles.get("lzw")
         delete_file = not cache
 

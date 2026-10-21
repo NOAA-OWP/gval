@@ -190,8 +190,11 @@ def _compare_metrics_df_with_xarray(
             e = expected_df.iloc[r, c]
 
             if isinstance(m, (xr.DataArray, xr.Dataset)):
-                xr.testing.assert_allclose(m, e, atol=1e-8)
+                if isinstance(m, xr.Dataset):
+                    xr.testing.assert_allclose(m["variable"], e, atol=1e-8)
+                else:
+                    xr.testing.assert_allclose(m, e, atol=1e-8)
             elif isinstance(m, Exception):
                 assert isinstance(m, e)
             else:
-                assert m == e
+                assert m == e  # A check for similar dimensions
