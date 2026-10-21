@@ -69,7 +69,7 @@ def _crosstab_docstring(dimension: Union[int, str], xarray_obj: str = "xr.DataAr
             .. [1] `flox.xarray.xarray_reduce() <https://flox.readthedocs.io/en/latest/generated/flox.xarray.xarray_reduce.html>`_
             .. [2] `xarray.rio._check_dimensions() <(https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/rioxarray.py)>`_
             .. [3] `xr.rio._obj.dims <https://github.com/corteva/rioxarray/blob/9d5975624fa93b76c451457a97b342ba37dfc792/rioxarray/raster_array.py)`>_
-            """
+        """
         func.__doc__ = docstring.format(dimension, xarray_obj)
         return func
 

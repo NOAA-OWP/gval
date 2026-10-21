@@ -1,40 +1,40 @@
 """
 Defines gval accessor for xarray objects.
 """
-
-from typing import Iterable, Optional, Tuple, Union, Callable, Dict, List, Any
+from __future__ import annotations
+import lazy_loader as lazy
+from typing import (
+    Iterable,
+    Optional,
+    Tuple,
+    Union,
+    Callable,
+    Dict,
+    List,
+    Any,
+    TYPE_CHECKING,
+)
 from numbers import Number
 
-import numpy as np
-import numba as nb
-import pandas as pd
-import xarray as xr
-from rasterio.enums import Resampling
-from pandera.typing import DataFrame
-import geopandas as gpd
-import contextily as cx
-import xyzservices
-
-from gval.homogenize.spatial_alignment import _spatial_alignment
-from gval.homogenize.rasterize import _rasterize_data
-from gval.homogenize.vectorize import _vectorize_data
-from gval.homogenize.numeric_alignment import _align_numeric_data_type
-from gval import Comparison
-from gval.comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
-from gval.comparison.compute_categorical_metrics import _compute_categorical_metrics
-from gval.comparison.compute_continuous_metrics import _compute_continuous_metrics
-from gval.comparison.compute_probabilistic_metrics import _compute_probabilistic_metrics
-from gval.attributes.attributes import _attribute_tracking_xarray
-from gval.utils.loading_datasets import _parse_string_attributes
-from gval.utils.visualize import _map_plot
-from gval.comparison.pairing_functions import difference
-from gval.subsampling.subsampling import subsample
-from gval.utils.schemas import (
+from .. import Comparison
+from ..utils.loading_datasets import _parse_string_attributes
+from ..utils.schemas import (
     Crosstab_df,
     Metrics_df,
     AttributeTrackingDf,
     Prob_metrics_df,
 )
+
+pd = lazy.load("pandas")
+
+if TYPE_CHECKING:
+    import numpy as np
+    import geopandas as gpd
+    import numba as nb
+    import xarray as xr
+    import xyzservices
+    import rasterio
+    import pandera
 
 
 class GVALXarray:
@@ -75,12 +75,13 @@ class GVALXarray:
         self,
         candidate_map: Union[xr.Dataset, xr.DataArray],
         benchmark_map: Union[xr.Dataset, xr.DataArray],
-        agreement_map: Optional[Union[xr.Dataset, xr.DataArray]] = None,
+        agreement_map: Union[xr.Dataset, xr.DataArray] = None,
         attribute_tracking_kwargs: Optional[Dict] = None,
     ):  # pragma: no cover
         """
         Handles attribute tracking for categorical and continuous comparison
         """
+        from ..attributes.attributes import _attribute_tracking_xarray
 
         # use user passed attribute_tracking_kwargs to pass arguments to attribute_tracking_xarray()
         if attribute_tracking_kwargs is not None:
@@ -121,7 +122,7 @@ class GVALXarray:
         ] = "szudzik",
         metrics: Union[str, Iterable[str]] = "all",
         target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
-        resampling: Optional[Resampling] = Resampling.nearest,
+        resampling: Optional[rasterio.enums.Resampling] = None,
         pairing_dict: Optional[Dict[Tuple[Number, Number], Number]] = None,
         allow_candidate_values: Optional[Iterable[Union[int, float]]] = None,
         allow_benchmark_values: Optional[Iterable[Union[int, float]]] = None,
@@ -138,20 +139,18 @@ class GVALXarray:
         attribute_tracking_kwargs: Optional[Dict] = None,
         subsampling_df: Optional[gpd.GeoDataFrame] = None,
         subsampling_average: Optional[str] = None,
-    ) -> Tuple[
-        Union[
-            Tuple[
-                Union[xr.Dataset, xr.DataArray],
-                DataFrame[Crosstab_df],
-                DataFrame[Metrics_df],
-            ],
-            Tuple[
-                Union[xr.Dataset, xr.DataArray],
-                DataFrame[Crosstab_df],
-                DataFrame[Metrics_df],
-                DataFrame[AttributeTrackingDf],
-            ],
-        ]
+    ) -> Union[
+        Tuple[
+            Union[xr.Dataset, xr.DataArray],
+            pandera.typing.DataFrame[Crosstab_df],
+            pandera.typing.DataFrame[Metrics_df],
+        ],
+        Tuple[
+            Union[xr.Dataset, xr.DataArray],
+            pandera.typing.DataFrame[Crosstab_df],
+            pandera.typing.DataFrame[Metrics_df],
+            pandera.typing.DataFrame[AttributeTrackingDf],
+        ],
     ]:
         """
         Computes comparison between two categorical value xarray's.
@@ -226,11 +225,14 @@ class GVALXarray:
         Returns
         -------
         Union[
-            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df]],
-            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Crosstab_df], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]]
+            Tuple[Union[xr.Dataset, xr.DataArray], pandera.typing.DataFrame[Crosstab_df], pandera.typing.DataFrame[Metrics_df]],
+            Tuple[Union[xr.Dataset, xr.DataArray], pandera.typing.DataFrame[Crosstab_df], pandera.typing.DataFrame[Metrics_df], pandera.typing.DataFrame[AttributeTrackingDf]]
         ]
             Tuple with agreement map/s, cross-tabulation table, and metric table. Possibly attribute tracking table as well.
         """
+        from ..comparison.compute_categorical_metrics import (
+            _compute_categorical_metrics,
+        )
 
         # using homogenize accessor to avoid code reuse
         candidate, benchmark = self._obj.gval.homogenize(
@@ -294,8 +296,8 @@ class GVALXarray:
         self,
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
         metrics: Union[str, Iterable[str]] = "all",
-        target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
-        resampling: Optional[Resampling] = Resampling.nearest,
+        target_map: Union[xr.Dataset, str] = "benchmark",
+        resampling: Optional[rasterio.enums.Resampling] = None,
         nodata: Optional[Number] = None,
         encode_nodata: Optional[bool] = False,
         rasterize_attributes: Optional[list] = None,
@@ -304,15 +306,13 @@ class GVALXarray:
         subsampling_df: Optional[gpd.GeoDataFrame] = None,
         subsampling_average: str = "none",
         epsilon: float = 1e-10,
-    ) -> Tuple[
-        Union[
-            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]],
-            Tuple[
-                Union[xr.Dataset, xr.DataArray],
-                DataFrame[Metrics_df],
-                DataFrame[AttributeTrackingDf],
-            ],
-        ]
+    ) -> Union[
+        Tuple[Union[xr.Dataset, xr.DataArray], pandera.typing.DataFrame[Metrics_df]],
+        Tuple[
+            Union[xr.Dataset, xr.DataArray],
+            pandera.typing.DataFrame[Metrics_df],
+            pandera.typing.DataFrame[AttributeTrackingDf],
+        ],
     ]:
         """
         Computes comparison between two continuous value xarray's.
@@ -358,11 +358,14 @@ class GVALXarray:
         Returns
         -------
         Union[
-            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df]],
-            Tuple[Union[xr.Dataset, xr.DataArray], DataFrame[Metrics_df], DataFrame[AttributeTrackingDf]]
+            Tuple[Union[xr.Dataset, xr.DataArray], pandera.typing.DataFrame[Metrics_df]],
+            Tuple[Union[xr.Dataset, xr.DataArray], pandera.typing.DataFrame[Metrics_df], pandera.typing.DataFrame[AttributeTrackingDf]]
         ]
             Tuple with agreement map and metric table, possibly attribute tracking table as well.
         """
+
+        from ..comparison.compute_continuous_metrics import _compute_continuous_metrics
+        from ..comparison.pairing_functions import difference
 
         # using homogenize accessor to avoid code reuse
         candidate, benchmark = self._obj.gval.homogenize(
@@ -416,11 +419,11 @@ class GVALXarray:
         metric_kwargs: dict,
         return_on_error: Optional[Any] = None,
         target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
-        resampling: Optional[Resampling] = Resampling.nearest,
+        resampling: Optional[rasterio.enums.Resampling] = None,
         rasterize_attributes: Optional[list] = None,
         attribute_tracking: bool = False,
         attribute_tracking_kwargs: Optional[Dict] = None,
-    ) -> DataFrame[Prob_metrics_df]:
+    ) -> pandera.typing.DataFrame[Prob_metrics_df]:
         """
         Computes probabilistic metrics from candidate and benchmark maps.
 
@@ -450,7 +453,7 @@ class GVALXarray:
         Returns
         -------
         DataFrame[Prob_metrics_df]
-            Probabilistic metrics Pandas DataFrame with computed xarray's per metric and sample.
+            Probabilistic metrics Pandas pandera.typing.DataFrame with computed xarray's per metric and sample.
 
         Raises
         ------
@@ -472,6 +475,9 @@ class GVALXarray:
         .. [4] `xskillscore/xskillscore <https://xskillscore.readthedocs.io/en/stable/api.html#probabilistic-metrics>`_
         .. [5] `What is a proper scoring rule? <https://statisticaloddsandends.wordpress.com/2021/03/27/what-is-a-proper-scoring-rule/>`_
         """
+        from ..comparison.compute_probabilistic_metrics import (
+            _compute_probabilistic_metrics,
+        )
 
         # agreement_map temporarily None
         agreement_map = None
@@ -510,7 +516,7 @@ class GVALXarray:
         self,
         benchmark_map: Union[gpd.GeoDataFrame, xr.Dataset, xr.DataArray],
         target_map: Optional[Union[xr.Dataset, str]] = "benchmark",
-        resampling: Optional[Resampling] = Resampling.nearest,
+        resampling: Optional[rasterio.enums.Resampling] = None,
         rasterize_attributes: Optional[list] = None,
     ) -> Union[xr.Dataset, xr.DataArray]:
         """
@@ -537,6 +543,11 @@ class GVALXarray:
         Union[xr.Dataset, xr.DataArray]
             Tuple with candidate and benchmark map respectively.
         """
+
+        import geopandas as gpd
+        from ..homogenize.spatial_alignment import _spatial_alignment
+        from ..homogenize.rasterize import _rasterize_data
+        from ..homogenize.numeric_alignment import _align_numeric_data_type
 
         if isinstance(benchmark_map, gpd.GeoDataFrame):
             benchmark_map = _rasterize_data(
@@ -611,6 +622,7 @@ class GVALXarray:
         Union[Union[xr.Dataset, xr.DataArray, List[Union[xr.Dataset, xr.DataArray]]]]
             Agreement map.
         """
+        from ..subsampling.subsampling import subsample
 
         self.check_same_type(benchmark_map)
 
@@ -675,8 +687,8 @@ class GVALXarray:
         agreement_map: Optional[
             Union[xr.DataArray, xr.Dataset, Iterable[Union[xr.DataArray, xr.Dataset]]]
         ] = None,
-        subsampling_df: Optional[gpd.GeoDataFrame] = None,
-    ) -> DataFrame[Crosstab_df]:
+        subsampling_df: Optional[gpd.Geopandera.typing.DataFrame] = None,
+    ) -> pandera.typing.DataFrame[Crosstab_df]:
         """
         Crosstab 2 or 3-dimensional xarray DataArray to produce Crosstab DataFrame.
 
@@ -691,9 +703,12 @@ class GVALXarray:
 
         Returns
         -------
-        DataFrame[Crosstab_df]
+        pandera.typing.DataFrame[Crosstab_df]
             Crosstab DataFrame
         """
+
+        from ..comparison.tabulation import _crosstab_Datasets, _crosstab_DataArrays
+        import xarray as xr
 
         # Use self if agreement_map argument is not provided otherwise use agreement_map parameter
         if agreement_map is not None:
@@ -732,8 +747,11 @@ class GVALXarray:
         benchmark_include: Optional[Iterable[str]] = None,
         benchmark_exclude: Optional[Iterable[str]] = None,
     ) -> Union[
-        DataFrame[AttributeTrackingDf],
-        Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]],
+        pandera.typing.DataFrame[AttributeTrackingDf],
+        Tuple[
+            pandera.typing.DataFrame[AttributeTrackingDf],
+            Union[xr.DataArray, xr.Dataset],
+        ],
     ]:
         """
         Concatenate xarray attributes into a single pandas dataframe.
@@ -766,9 +784,11 @@ class GVALXarray:
 
         Returns
         -------
-        Union[DataFrame[AttributeTrackingDf], Tuple[DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]]]
+        Union[pandera.typing.DataFrame[AttributeTrackingDf], Tuple[pandera.typing.DataFrame[AttributeTrackingDf], Union[xr.DataArray, xr.Dataset]]]
             Pandas dataframe with concatenated attributes from candidate and benchmark maps. If agreement_map is not None, returns a tuple with the dataframe and the agreement map.
         """
+        from ..attributes.attributes import _attribute_tracking_xarray
+
         return _attribute_tracking_xarray(
             candidate_map=self._obj,
             benchmark_map=benchmark_map,
@@ -789,7 +809,7 @@ class GVALXarray:
         legend_labels: list = None,
         plot_bands: Union[str, list] = "all",
         colorbar_label: Union[str, list] = "",
-        basemap: xyzservices.lib.TileProvider = cx.providers.OpenStreetMap.Mapnik,
+        basemap: xyzservices.lib.TileProvider = None,
     ):
         """
         Plots categorical Map for xarray object
@@ -808,7 +828,7 @@ class GVALXarray:
             What bands to plot
         color_bar_label : Union[str, list], default =""
             Label or labels for colorbar in the case of continuous plots
-        basemap : Union[bool, xyzservices.lib.TileProvider], default = cx.providers.Stamen.Terrain
+        basemap : Union[bool, xyzservices.lib.TileProvider], default = None
             Add basemap to the plot
 
         References
@@ -816,6 +836,7 @@ class GVALXarray:
         .. [1] `Matplotlib figure <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html>`_
         .. [2] `Matplotlib legend <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html>`_
         """
+        from ..utils.visualize import _map_plot
 
         return _map_plot(
             self._obj,
@@ -836,7 +857,7 @@ class GVALXarray:
         figsize: Tuple[int, int] = None,
         plot_bands: Union[str, list] = "all",
         colorbar_label: Union[str, list] = "",
-        basemap: xyzservices.lib.TileProvider = cx.providers.OpenStreetMap.Mapnik,
+        basemap: xyzservices.lib.TileProvider = None,
     ):
         """
         Plots categorical Map for xarray object
@@ -853,7 +874,7 @@ class GVALXarray:
             What bands to plot
         colorbar_label : Union[str, list], default =""
             Label or labels for colorbar in the case of continuous plots
-        basemap : Union[bool, xyzservices.lib.TileProvider], default = cx.providers.Stamen.Terrain
+        basemap : Union[bool, xyzservices.lib.TileProvider], default = None
             Add basemap to the plot
 
         References
@@ -861,6 +882,8 @@ class GVALXarray:
         .. [1] `Matplotlib figure <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html>`_
         .. [2] `Matplotlib legend <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html>`_
         """
+
+        from ..utils.visualize import _map_plot
 
         return _map_plot(
             self._obj,
@@ -882,5 +905,6 @@ class GVALXarray:
         gpd.GeoDataFrame
             Vectorized data
         """
+        from ..homogenize.vectorize import _vectorize_data
 
         return _vectorize_data(self._obj)

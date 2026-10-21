@@ -191,7 +191,7 @@ def case_compute_prob_metrics_crps_quadrature_success():
     expected_df = Prob_metrics_df(
         pd.DataFrame({"band": ["1"], "crps_quadrature": [None]})
     )
-    expected_df.loc[0, "crps_quadrature"] = expected_xr
+    expected_df.loc[0, "crps_quadrature"] = expected_xr["variable"]
 
     # Band parameters for candidate
     # background value, circle value, circle center (x, y) , and circle radius
